@@ -1,0 +1,8 @@
+/* Error state displayed when RecordType resolution fails */
+.error-state {
+    padding: 32px;
+    text-align: center;
+    color: var(--negative, #d04040);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+}

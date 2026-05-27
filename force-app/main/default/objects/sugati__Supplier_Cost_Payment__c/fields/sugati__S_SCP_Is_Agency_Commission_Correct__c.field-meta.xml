@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SCP_Is_Agency_Commission_Correct__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>sugati__S_SCP_Actual_Agency_Commission_Due__c == sugati__SCP_Total__c</formula>
+    <label>Is Agency Commission Correct?</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

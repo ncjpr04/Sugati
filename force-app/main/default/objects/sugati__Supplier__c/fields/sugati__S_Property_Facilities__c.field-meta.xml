@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Property_Facilities__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Property Facilities</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>24hr Security</fullName>
+                <default>false</default>
+                <label>24hr Security</label>
+            </value>
+            <value>
+                <fullName>Activity Desk</fullName>
+                <default>false</default>
+                <label>Activity Desk</label>
+            </value>
+            <value>
+                <fullName>Bar</fullName>
+                <default>false</default>
+                <label>Bar</label>
+            </value>
+            <value>
+                <fullName>Barbeque Facilities</fullName>
+                <default>false</default>
+                <label>Barbeque Facilities</label>
+            </value>
+            <value>
+                <fullName>Battery Charging Facilities</fullName>
+                <default>false</default>
+                <label>Battery Charging Facilities</label>
+            </value>
+            <value>
+                <fullName>Business Centre</fullName>
+                <default>false</default>
+                <label>Business Centre</label>
+            </value>
+            <value>
+                <fullName>Chapel</fullName>
+                <default>false</default>
+                <label>Chapel</label>
+            </value>
+            <value>
+                <fullName>Communal Dining</fullName>
+                <default>false</default>
+                <label>Communal Dining</label>
+            </value>
+            <value>
+                <fullName>Conference Centre</fullName>
+                <default>false</default>
+                <label>Conference Centre</label>
+            </value>
+            <value>
+                <fullName>Disability Services</fullName>
+                <default>false</default>
+                <label>Disability Services</label>
+            </value>
+            <value>
+                <fullName>Eco Friendly</fullName>
+                <default>false</default>
+                <label>Eco Friendly</label>
+            </value>
+            <value>
+                <fullName>Gym</fullName>
+                <default>false</default>
+                <label>Gym</label>
+            </value>
+            <value>
+                <fullName>Gym (nearby)</fullName>
+                <default>false</default>
+                <label>Gym (nearby)</label>
+            </value>
+            <value>
+                <fullName>Internet Access</fullName>
+                <default>false</default>
+                <label>Internet Access</label>
+            </value>
+            <value>
+                <fullName>Internet Access Complimentary</fullName>
+                <default>false</default>
+                <label>Internet Access Complimentary</label>
+            </value>
+            <value>
+                <fullName>Internet Access (Paid)</fullName>
+                <default>false</default>
+                <label>Internet Access (Paid)</label>
+            </value>
+            <value>
+                <fullName>Kiddies Club</fullName>
+                <default>false</default>
+                <label>Kiddies Club</label>
+            </value>
+            <value>
+                <fullName>Laundry Service (Available)</fullName>
+                <default>false</default>
+                <label>Laundry Service (Available)</label>
+            </value>
+            <value>
+                <fullName>Laundry Service (Complimentary)</fullName>
+                <default>false</default>
+                <label>Laundry Service (Complimentary)</label>
+            </value>
+            <value>
+                <fullName>Library</fullName>
+                <default>false</default>
+                <label>Library</label>
+            </value>
+            <value>
+                <fullName>Meal on Request</fullName>
+                <default>false</default>
+                <label>Meal on Request</label>
+            </value>
+            <value>
+                <fullName>Mobile Connectivity</fullName>
+                <default>false</default>
+                <label>Mobile Connectivity</label>
+            </value>
+            <value>
+                <fullName>Pool</fullName>
+                <default>false</default>
+                <label>Pool</label>
+            </value>
+            <value>
+                <fullName>Private Vehicle Available</fullName>
+                <default>false</default>
+                <label>Private Vehicle Available</label>
+            </value>
+            <value>
+                <fullName>Restaurant</fullName>
+                <default>false</default>
+                <label>Restaurant</label>
+            </value>
+            <value>
+                <fullName>Secure Parking</fullName>
+                <default>false</default>
+                <label>Secure Parking</label>
+            </value>
+            <value>
+                <fullName>Skype Phones</fullName>
+                <default>false</default>
+                <label>Skype Phones</label>
+            </value>
+            <value>
+                <fullName>Spa</fullName>
+                <default>false</default>
+                <label>Spa</label>
+            </value>
+            <value>
+                <fullName>TV Room</fullName>
+                <default>false</default>
+                <label>TV Room</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

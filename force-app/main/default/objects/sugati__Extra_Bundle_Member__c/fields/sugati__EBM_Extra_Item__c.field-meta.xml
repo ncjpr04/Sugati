@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__EBM_Extra_Item__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Lookup to the (child) extra item</description>
+    <inlineHelpText>Lookup to the extra item that is a member of this bundle.</inlineHelpText>
+    <label>Extra Item</label>
+    <referenceTo>sugati__Linked_Services_Extra_Item__c</referenceTo>
+    <relationshipLabel>Extra Bundle Members (Child Extras)</relationshipLabel>
+    <relationshipName>EBM_Child_Extras</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_PAH_Apply_Agency_Comm_After_Adjust__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>The value of the Supplier Booking Apply Agency Commission to Price Adjustment field after this change was made</description>
+    <label>Apply Agency Comm After Adjustment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

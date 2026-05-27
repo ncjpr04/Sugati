@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour_Search_Days_either_side__c</fullName>
+    <defaultValue>5</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Determine the number of days either side of a date that is searched in tour search</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Determine the number of days either side of a date that is searched in tour search</inlineHelpText>
+    <label>Tour Search - Days either side</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

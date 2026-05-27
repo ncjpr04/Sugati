@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SOR_Excluded_Suppliers__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>These suppliers will not applicable for this special offer.</description>
+    <inlineHelpText>These suppliers will not applicable for this special offer.</inlineHelpText>
+    <label>Excluded Suppliers</label>
+    <referenceTo>sugati__Set_Suppliers__c</referenceTo>
+    <relationshipLabel>Special Offer Rules (Excluded Suppliers)</relationshipLabel>
+    <relationshipName>Special_Offer_Rules_Excluded</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

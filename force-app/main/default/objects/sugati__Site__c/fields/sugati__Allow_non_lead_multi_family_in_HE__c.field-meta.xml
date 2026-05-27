@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_non_lead_multi_family_in_HE__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>When checked, the system does not force a user to select one lead for each account/family selected in Holiday Enquiry.</description>
+    <inlineHelpText>When checked, the system does not force a user to select one lead for each account/family selected in Holiday Enquiry.</inlineHelpText>
+    <label>Allow non-lead multi-family in HE</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

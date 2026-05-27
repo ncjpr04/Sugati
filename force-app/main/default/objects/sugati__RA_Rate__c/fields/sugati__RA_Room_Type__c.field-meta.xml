@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__RA_Room_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Room Type</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>The room type supplier must be the same as the rate supplier.</errorMessage>
+        <filterItems>
+            <field>sugati__Room_Type__c.sugati__RT_Supplier__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.sugati__RA_Supplier__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>sugati__Room_Type__c</referenceTo>
+    <relationshipLabel>Rates</relationshipLabel>
+    <relationshipName>Room_Service_Rates</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

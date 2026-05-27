@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Hide_Post_Booking_Supplier_Payment__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>By enabling this, you will opt for hiding the &quot;Would you like to create/update the supplier payment for the adjusted price?&quot; checkbox on IB More popup.</inlineHelpText>
+    <label>Hide Post Booking Supplier Payment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

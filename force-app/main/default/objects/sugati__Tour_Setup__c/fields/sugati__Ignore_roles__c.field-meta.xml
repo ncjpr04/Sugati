@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Ignore_roles__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>A list of group member roles (comma-separated) that should be ignored when calculating the number of passengers on a tour.</inlineHelpText>
+    <label>Ignore roles</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

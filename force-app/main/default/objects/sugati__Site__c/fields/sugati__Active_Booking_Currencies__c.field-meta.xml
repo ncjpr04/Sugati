@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Active_Booking_Currencies__c</fullName>
+    <deprecated>false</deprecated>
+    <description>No longer required. Needs removing from the package.</description>
+    <inlineHelpText>No longer required. Needs removing from the package.</inlineHelpText>
+    <label>Active Booking Currencies</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

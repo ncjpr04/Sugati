@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_GM_Total_Individual_Cancellation_Amt__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of Cancellation Amount</description>
+    <label>Total Individual Cancellation Amount</label>
+    <summarizedField>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Cancellation_Amount_Booking__c</summarizedField>
+    <summaryFilterItems>
+        <field>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Selected__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Group_Member__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

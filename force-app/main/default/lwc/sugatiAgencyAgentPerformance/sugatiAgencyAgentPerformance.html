@@ -1,0 +1,76 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Agent Performance</div>
+      <div class="header-controls">
+        <span class="agent-count-label">{totalAgentCount} agents · sorted by revenue</span>
+        <div class="year-tabs">
+          <div class={previousYearTabClass} onclick={setYear} data-year={previousYear}>{previousYear}</div>
+          <div class={currentYearTabClass}  onclick={setYear} data-year={currentYear}>{currentYear}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class={tableWrapClass}>
+      <template lwc:if={hasAgents}>
+        <table class="agents-table">
+          <thead>
+            <tr>
+              <th class="col-rank">#</th>
+              <th>Agent</th>
+              <th>Bookings</th>
+              <th>Revenue (YTD)</th>
+              <th>Bed Nights</th>
+              <th>Avg Booking</th>
+              <th class="col-status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template for:each={displayedAgents} for:item="agent">
+              <tr key={agent.id}>
+                <td class="col-rank">
+                  <div class={agent.rankClass} style={agent.rankStyle}>{agent.rank}</div>
+                </td>
+                <td>
+                  <div class="agent-name-cell">
+                    <div class="agent-avatar" style={agent.avatarStyle}>{agent.initials}</div>
+                    <div>
+                      <div class="agent-name">{agent.name}</div>
+                      <div class="agent-role">{agent.role}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{agent.bookings}</td>
+                <td class="text-accent col-revenue">{agent.revenue}</td>
+                <td>{agent.nights}</td>
+                <td>{agent.avg}</td>
+                <td class="col-status">
+                  <span class={agent.statusBadge}>{agent.status}</span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </template>
+      <template lwc:else>
+        <div class="empty-state">
+          No agent data available for {activeYear}.
+        </div>
+      </template>
+    </div>
+
+    <div class="card-footer">
+      <template lwc:if={hasMore}>
+        <a class="view-all-link" onclick={handleViewAllAgents}>{viewAllButtonText}</a>
+      </template>
+      <template lwc:else>
+        <span></span>
+      </template>
+      <template lwc:if={hasAgents}>
+        <button class="btn-ghost btn-export" onclick={handleExportReport}>
+          Export Report
+        </button>
+      </template>
+    </div>
+  </div>
+</template>

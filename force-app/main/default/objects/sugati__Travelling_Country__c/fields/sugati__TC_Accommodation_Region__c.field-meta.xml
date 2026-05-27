@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__TC_Accommodation_Region__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Accommodation/Region</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Region</fullName>
+                <default>false</default>
+                <label>Region</label>
+            </value>
+            <value>
+                <fullName>Accommodation</fullName>
+                <default>true</default>
+                <label>Accommodation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

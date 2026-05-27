@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__C_Holiday_Types__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Holiday Types</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>History</fullName>
+                <default>false</default>
+                <label>History</label>
+            </value>
+            <value>
+                <fullName>Generic</fullName>
+                <default>false</default>
+                <label>Generic</label>
+            </value>
+            <value>
+                <fullName>Couples</fullName>
+                <default>false</default>
+                <label>Couples</label>
+            </value>
+            <value>
+                <fullName>Luxury Holidays</fullName>
+                <default>false</default>
+                <label>Luxury Holidays</label>
+            </value>
+            <value>
+                <fullName>Diving</fullName>
+                <default>false</default>
+                <label>Diving</label>
+            </value>
+            <value>
+                <fullName>Big Short Breaks</fullName>
+                <default>false</default>
+                <label>Big Short Breaks</label>
+            </value>
+            <value>
+                <fullName>Solo</fullName>
+                <default>false</default>
+                <label>Solo</label>
+            </value>
+            <value>
+                <fullName>Corporate</fullName>
+                <default>false</default>
+                <label>Corporate</label>
+            </value>
+            <value>
+                <fullName>Babymoon</fullName>
+                <default>false</default>
+                <label>Babymoon</label>
+            </value>
+            <value>
+                <fullName>Adventures</fullName>
+                <default>false</default>
+                <label>Adventures</label>
+            </value>
+            <value>
+                <fullName>Honeymoon</fullName>
+                <default>false</default>
+                <label>Honeymoon</label>
+            </value>
+            <value>
+                <fullName>Stag/Hen</fullName>
+                <default>false</default>
+                <label>Stag/Hen</label>
+            </value>
+            <value>
+                <fullName>Family Holiday</fullName>
+                <default>false</default>
+                <label>Family Holiday</label>
+            </value>
+            <value>
+                <fullName>Anniversary</fullName>
+                <default>false</default>
+                <label>Anniversary</label>
+            </value>
+            <value>
+                <fullName>Expert-Led Journeys</fullName>
+                <default>false</default>
+                <label>Expert-Led Journeys</label>
+            </value>
+            <value>
+                <fullName>Birthday</fullName>
+                <default>false</default>
+                <label>Birthday</label>
+            </value>
+            <value>
+                <fullName>Classics</fullName>
+                <default>false</default>
+                <label>Classics</label>
+            </value>
+            <value>
+                <fullName>Dive In Style</fullName>
+                <default>false</default>
+                <label>Dive In Style</label>
+            </value>
+            <value>
+                <fullName>OTUK</fullName>
+                <default>false</default>
+                <label>OTUK</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

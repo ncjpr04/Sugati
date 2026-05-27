@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SBD_Supply_type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Supply type:</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Acting as Agent (Y/N)</fullName>
+                <default>false</default>
+                <label>Acting as Agent (Y/N)</label>
+            </value>
+            <value>
+                <fullName>AAA Name</fullName>
+                <default>false</default>
+                <label>AAA Name</label>
+            </value>
+            <value>
+                <fullName>Output Serv Val on Rem</fullName>
+                <default>false</default>
+                <label>Output Serv Val on Rem</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

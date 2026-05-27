@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__HQ_Create_Task__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>sugati__HQ_Question__r.sugati__Q_Task__c</formula>
+    <label>Create Task</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,50 @@
+<template>
+  <div class="stat-strip">
+
+    <!-- Revenue this year -->
+    <div class="stat-card">
+      <div class="stat-label">Revenue ({currentYear})</div>
+      <div class="stat-value">{currencySymbol}{revenueThisYear}</div>
+      <template if:true={showRevenueDelta}>
+        <div class={revenueDeltaClass}>{revenueDelta}</div>
+      </template>
+    </div>
+
+    <!-- Bed Nights -->
+    <div class="stat-card">
+      <div class="stat-label">Bed Nights ({currentYear})</div>
+      <div class="stat-value">{bedNightsThisYear}</div>
+      <template if:true={showNightsDelta}>
+        <div class={nightsDeltaClass}>{nightsDelta}</div>
+      </template>
+    </div>
+
+    <!-- Stays -->
+    <div class="stat-card">
+      <div class="stat-label">Stays ({currentYear})</div>
+      <div class="stat-value">{staysThisYear}</div>
+      <template if:true={showStaysDelta}>
+        <div class={staysDeltaClass}>{staysDelta}</div>
+      </template>
+    </div>
+
+    <!-- Avg Booking Value -->
+    <div class="stat-card">
+      <div class="stat-label">Avg Booking Value</div>
+      <div class="stat-value">{currencySymbol}{avgBookingValue}</div>
+      <template if:true={showAvgDelta}>
+        <div class={avgDeltaClass}>{avgDelta}</div>
+      </template>
+    </div>
+
+    <!-- Lifetime Value — dark card -->
+    <div class="stat-card stat-card-dark">
+      <div class="stat-label stat-label-dark">Lifetime Revenue</div>
+      <div class="stat-value stat-value-gold">{currencySymbol}{lifetimeRevenue}</div>
+      <template if:true={lifetimeSince}>
+        <div class="stat-delta stat-delta-gold">Since {lifetimeSince} · {lifetimeYears} yrs</div>
+      </template>
+    </div>
+
+  </div>
+</template>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Accommodation</fullName>
+                <default>false</default>
+                <label>Accommodation</label>
+            </value>
+            <value>
+                <fullName>Activity</fullName>
+                <default>false</default>
+                <label>Activity</label>
+            </value>
+            <value>
+                <fullName>Agency</fullName>
+                <default>false</default>
+                <label>Agency</label>
+            </value>
+            <value>
+                <fullName>School</fullName>
+                <default>false</default>
+                <label>School</label>
+            </value>
+            <value>
+                <fullName>Boat</fullName>
+                <default>false</default>
+                <label>Boat</label>
+            </value>
+            <value>
+                <fullName>Car Hire</fullName>
+                <default>false</default>
+                <label>Car Hire</label>
+            </value>
+            <value>
+                <fullName>Cruise</fullName>
+                <default>false</default>
+                <label>Cruise</label>
+            </value>
+            <value>
+                <fullName>DMC</fullName>
+                <default>false</default>
+                <label>DMC</label>
+            </value>
+            <value>
+                <fullName>Driver</fullName>
+                <default>false</default>
+                <label>Driver</label>
+            </value>
+            <value>
+                <fullName>Driver Guide</fullName>
+                <default>false</default>
+                <label>Driver Guide</label>
+            </value>
+            <value>
+                <fullName>Flight</fullName>
+                <default>false</default>
+                <label>Flight</label>
+            </value>
+            <value>
+                <fullName>Guide</fullName>
+                <default>false</default>
+                <label>Guide</label>
+            </value>
+            <value>
+                <fullName>Hotel</fullName>
+                <default>false</default>
+                <label>Hotel</label>
+            </value>
+            <value>
+                <fullName>Taxi</fullName>
+                <default>false</default>
+                <label>Taxi</label>
+            </value>
+            <value>
+                <fullName>Tourist Board</fullName>
+                <default>false</default>
+                <label>Tourist Board</label>
+            </value>
+            <value>
+                <fullName>Transfer</fullName>
+                <default>false</default>
+                <label>Transfer</label>
+            </value>
+            <value>
+                <fullName>Transport</fullName>
+                <default>false</default>
+                <label>Transport</label>
+            </value>
+            <value>
+                <fullName>Rail</fullName>
+                <default>false</default>
+                <label>Rail</label>
+            </value>
+            <value>
+                <fullName>Ship/Cruise Number</fullName>
+                <default>false</default>
+                <label>Ship/Cruise Number</label>
+            </value>
+            <value>
+                <fullName>Tour Operator</fullName>
+                <default>false</default>
+                <label>Tour Operator</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,34 @@
+:host { display: block; }
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-header {
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-title { font-family: 'Crimson Pro', serif; font-size: 19px; font-weight: 300; color: var(--warm-black); }
+
+.card-body { padding: 20px 22px; }
+
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.info-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+.info-value           { font-size: 14px; color: var(--warm-black); }
+.info-value.highlight { color: var(--sunset-dark); font-weight: 500; }

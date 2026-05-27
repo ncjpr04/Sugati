@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Send_Extras_Payment_Reminder__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This makes a copy of the checkbox from the Tour Setup custom setting so that it can be used as part of the entry criteria in a flow</description>
+    <formula>$Setup.sugati__Tour_Setup__c.sugati__Send_Extras_Payment_Reminder__c</formula>
+    <label>Send Extras Payment Reminder</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

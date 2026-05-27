@@ -1,0 +1,55 @@
+<template>
+    <div class="tmpl-overlay" onclick={handleBackdropClick} role="dialog" aria-modal="true" aria-label="Choose a template">
+        <div class="tmpl-picker" onclick={stopPropagation} role="document">
+            <div class="tmpl-picker-hdr">
+                <div>
+                    <div class="tmpl-picker-title">Choose a Template</div>
+                    <div class="tmpl-picker-sub">
+                        Suggested for <strong>Stage: {stageLabel}</strong> · {tripName}
+                    </div>
+                </div>
+                <button type="button" class="tmpl-picker-close" onclick={handleClose} aria-label="Close">✕</button>
+            </div>
+            <div class="tmpl-stage-filters">
+                <template for:each={stageFilters} for:item="stage">
+                    <div
+                        key={stage.id}
+                        class={stage.className}
+                        data-stage={stage.id}
+                        onclick={handleStageClick}
+                    >
+                        {stage.label}
+                    </div>
+                </template>
+            </div>
+            <div class="tmpl-picker-list">
+                <template for:each={visibleTemplates} for:item="tmpl">
+                    <div
+                        key={tmpl.id}
+                        class={tmpl.itemClass}
+                        data-name={tmpl.name}
+                        data-meta={tmpl.meta}
+                        data-stage={tmpl.stage}
+                        onclick={handleSelect}
+                    >
+                        <div class="tmpl-pick-left">
+                            <div class="tmpl-pick-name">{tmpl.name}</div>
+                            <div class="tmpl-pick-meta">{tmpl.meta}</div>
+                            <div class="tmpl-pick-preview">{tmpl.preview}</div>
+                        </div>
+                        <div class="tmpl-pick-right">
+                            <template lwc:if={tmpl.suggested}>
+                                <span class="tmpl-pick-badge">✦ Suggested</span>
+                            </template>
+                            <div class="tmpl-pick-use">{tmpl.usage}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="tmpl-picker-footer">
+                <button type="button" class="btn-sec" onclick={handleBlank}>Start blank — no template</button>
+                <div class="tmpl-picker-footnote">Or pick a template above to pre-fill subject &amp; body</div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,55 @@
+<template>
+  <div class="profile-header">
+    <template if:true={supplier}>
+      <div class="profile-header-top">
+        <div class="profile-avatar-sq">{agencyInitials}</div>
+        <div class="profile-info">
+
+          <div class="profile-name">{agencyName}</div>
+
+          <div class="profile-sub">
+            <template if:true={website}>
+              <span>🌐 {website}</span>
+            </template>
+            <template if:true={address}>
+              <span>📍 {address}</span>
+            </template>
+            <template if:true={starRating}>
+              <span>{starDisplay} {starRating}-Star</span>
+            </template>
+          </div>
+
+          <!-- Tags row -->
+          <div class="profile-tags">
+            <template if:true={statusBadge}>
+              <span class="supplier-type-badge supplier-hotel">{statusBadge}</span>
+            </template>
+            <template if:true={partnerSince}>
+              <span class="badge badge-neutral">Partner since {partnerSince}</span>
+            </template>
+            <template if:true={emergencyPhone}>
+              <span class="badge badge-alert">🚨 {emergencyPhone}</span>
+            </template>
+            <template if:true={hasAgentCount}>
+              <span class="badge badge-neutral">{agentCountText}</span>
+            </template>
+          </div>
+
+          <!-- Profile Note -->
+          <template if:true={hasNote}>
+            <div class="profile-note-inline">
+              <span class="note-icon">📌</span>
+              <span>
+                <strong>Profile Note</strong>
+                <lightning-formatted-rich-text value={profileNote}>
+                </lightning-formatted-rich-text>
+              </span>
+            </div>
+          </template>
+
+        </div>
+
+      </div>
+    </template>
+  </div>
+</template>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RBD_Rate_Dates_Valid__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>AND(
+  sugati__S_RBD_Rate_Date_From__c &lt;= sugati__S_RBD_Date__c, 
+  sugati__S_RBD_Rate_Date_To__c &gt;= sugati__S_RBD_Date__c
+)</formula>
+    <label>Rate Dates Valid</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

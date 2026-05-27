@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RTS_Minimum_Duration__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Rate is only available if at least number of nights are booked. System will create a bulk booking record when this feature is enabled.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Rate is only available if at least number of nights are booked. System will create a bulk booking record when this feature is enabled.</inlineHelpText>
+    <label>Minimum Duration</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

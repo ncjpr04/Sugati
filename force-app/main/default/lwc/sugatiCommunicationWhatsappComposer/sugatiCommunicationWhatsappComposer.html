@@ -1,0 +1,129 @@
+<template>
+    <div class="composer">
+        <!-- Rail -->
+        <div class="rail">
+            <div class="rail-ey">Channel</div>
+            <div class="rail-ch-badge wa-badge">
+                <div class="rcb-pip wa-pip"></div>
+                <div>
+                    <div class="rcb-name">WhatsApp</div>
+                    <div class="rcb-sub">Cloud API · 24h window</div>
+                </div>
+            </div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Progress</div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Audience</span></div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Recipients</span></div>
+            <div class="rail-step rs-on"><div class="step-n">3</div><span class="step-label">Compose</span></div>
+            <div class="rail-step"><div class="step-n">4</div><span class="step-label">Preview</span></div>
+            <div class="rail-step"><div class="step-n">5</div><span class="step-label">Send</span></div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Sending to</div>
+            <div class="rail-recs">
+                <div class="rail-rec">
+                    <div class="rav wa-av">HY</div>
+                    <div class="rail-rec-body">
+                        <div class="rname">Hiroshi Yamamura</div>
+                        <div class="rrole">+44 7700 900123</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Centre compose -->
+        <div class="compose-c">
+            <div class="ch-accent-bar wa-bar"></div>
+            <div class="addr-block">
+                <div class="addr-row">
+                    <div class="addr-key">From</div>
+                    <div class="addr-val">Sugati Travel · +44 7700 900999</div>
+                </div>
+                <div class="addr-row addr-row-last">
+                    <div class="addr-key">To</div>
+                    <div class="addr-val">
+                        <div class="r-chip">
+                            <div class="r-chip-av wa">HY</div>+44 7700 900123<span class="r-chip-x">×</span>
+                        </div>
+                        <div class="r-add">＋ Add</div>
+                    </div>
+                </div>
+            </div>
+            <div class="wa-editor">
+                <div class="wa-editor-hdr">
+                    <div class="ey">Message</div>
+                    <div class="etb-ai" onclick={handleAiDraft}>✦ AI Draft</div>
+                </div>
+                <div class="wa-approval-notice">
+                    <div class="wan-title">⚡ Outbound requires templates</div>
+                    <div class="wan-body">WhatsApp requires pre-approved message templates for initial outbound contact. Once a recipient replies, conversational mode is unlocked for 24 hours.</div>
+                </div>
+                <textarea class="wa-textarea" value={messageBody} onchange={handleBodyChange}></textarea>
+                <div class="wa-char-limit">247 / 1024 characters</div>
+                <div class="wa-hint">
+                    <span class="wa-hint-pip">●</span>
+                    Merge tokens like <span class="mt">&#123;&#123;1&#125;&#125;</span> are resolved per-recipient at send time
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools panel -->
+        <div class="tools-panel">
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Approved Templates</span>
+                </div>
+                <div class="tp-body">
+                    <div class="wa-approval-notice-sm">
+                        <div class="wan-title">⚡ Outbound requires templates</div>
+                        <div class="wan-body">WhatsApp requires pre-approved message templates for initial outbound contact. Once a recipient replies, conversational mode is unlocked for 24 hours.</div>
+                    </div>
+                    <template for:each={templates} for:item="tmpl">
+                        <div key={tmpl.id} class={tmpl.className} data-id={tmpl.id} onclick={handleTemplateClick}>
+                            <div class="tmpl-name">{tmpl.label}</div>
+                            <div class="tmpl-meta">{tmpl.meta}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr"><span class="tp-title">Media Attachments</span></div>
+                <div class="tp-body">
+                    <div class="att-item">
+                        <div class="att-cb"></div>
+                        <div class="att-ic ic-pdf">PDF</div>
+                        <div class="att-t">
+                            <div class="att-name">Hotel Voucher.pdf</div>
+                            <div class="att-meta">Max 5 MB for WA</div>
+                        </div>
+                    </div>
+                    <div class="att-item">
+                        <div class="att-cb"></div>
+                        <div class="att-ic ic-img">IMG</div>
+                        <div class="att-t">
+                            <div class="att-name">Hotel arrival map.jpg</div>
+                            <div class="att-meta">1.2 MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr"><span class="tp-title">Merge Tokens</span></div>
+                <div class="tp-body">
+                    <div class="wa-token-row"><span class="mt-tok">&#123;&#123;1&#125;&#125;</span><span class="mt-lbl">First Name</span></div>
+                    <div class="wa-token-row"><span class="mt-tok">&#123;&#123;2&#125;&#125;</span><span class="mt-lbl">Days to Trip</span></div>
+                    <div class="wa-token-row"><span class="mt-tok">&#123;&#123;3&#125;&#125;</span><span class="mt-lbl">Check-in Date</span></div>
+                    <div class="wa-token-row"><span class="mt-tok">&#123;&#123;4&#125;&#125;</span><span class="mt-lbl">Specialist Name</span></div>
+                </div>
+            </div>
+            <div class="send-zone">
+                <button type="button" class="send-btn wa" onclick={handlePreview}>
+                    <span>Preview &amp; Send</span><span class="send-arr">→</span>
+                </button>
+                <div class="send-sec">
+                    <div class="send-sec-btn">Save Draft</div>
+                    <div class="send-sec-btn">Cancel</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

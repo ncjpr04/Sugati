@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Image</fullName>
+    <description>Displays fields on the Detail tab of trip planner</description>
+    <displayedFields>
+        <field>sugati__SB_Itinerary_Title__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <displayedFields>
+        <field>sugati__SB_Itinerary_Day_By_Day_Layout__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </displayedFields>
+    <label>Image</label>
+</FieldSet>

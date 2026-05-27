@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Extra_Cost_in_Booking_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The cost of all extras in Booking currency</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The cost of all extras in Booking currency</inlineHelpText>
+    <label>Extra Cost in Booking Currency</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

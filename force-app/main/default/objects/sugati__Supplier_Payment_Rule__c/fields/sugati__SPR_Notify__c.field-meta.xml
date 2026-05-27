@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SPR_Notify__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Can we have a &apos;notify accounts&apos; flag (see above) in the payment record. If this is set to yes the system would add this payment to the Accounts Team &apos;tasks&apos; 4 days before the due date i.e. if due 7 days before the service date then it would notify accounts 11 days before.</description>
+    <inlineHelpText>When ticked a task will be created for Account Team 4 days before the due date. (Only use if payment is due before the end of a month)</inlineHelpText>
+    <label>Notify for Deposit</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

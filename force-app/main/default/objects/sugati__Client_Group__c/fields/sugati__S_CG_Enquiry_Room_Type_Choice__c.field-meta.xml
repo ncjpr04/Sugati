@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_CG_Enquiry_Room_Type_Choice__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>The selected room type for this pax on an enquiry</description>
+    <inlineHelpText>The selected room type for this pax on an enquiry</inlineHelpText>
+    <label>Enquiry Room Type Choice</label>
+    <referenceTo>sugati__Room_Type__c</referenceTo>
+    <relationshipLabel>Enquiry Client Groups</relationshipLabel>
+    <relationshipName>Enquiry_Client_Groups</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

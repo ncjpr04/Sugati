@@ -1,0 +1,84 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Personal Details</div>
+            <button class="btn-ghost">Edit</button>
+        </div>
+        <div class="card-body">
+
+            <!-- PRIMARY CONTACT DETAILS -->
+            <template if:true={primaryContact}>
+                <div class="info-grid">
+
+                    <div>
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">{fullName}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">{dateOfBirth}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Nationality</div>
+                        <div class="info-value">{nationality}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Passport No.</div>
+                        <div class="info-value highlight">{passportNumber}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Passport Expiry</div>
+                        <div class="info-value">{passportExpiry}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Preferred Contact</div>
+                        <div class="info-value">—</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Referral Source</div>
+                        <div class="info-value">{referralSource}</div>
+                    </div>
+
+                    <div>
+                        <div class="info-label">Client Since</div>
+                        <div class="info-value highlight">{clientSince}</div>
+                    </div>
+
+                </div>
+            </template>
+
+            <div class="divider"></div>
+
+            <!-- TRAVEL COMPANIONS -->
+            <div class="info-label companions-label">Travel Companions</div>
+            <div class="chips">
+
+                <template for:each={adultCompanions} for:item="companion">
+                    <span key={companion.Id} class={companion.chipClass}>
+                        {companion.Name} ({companion.sugati__Occupancy_Type__c})
+                    </span>
+                </template>
+
+                <template for:each={childCompanions} for:item="companion">
+                    <span key={companion.Id} class="chip">
+                        {companion.Name} ({companion.sugati__Occupancy_Type__c}, {companion.sugati__C_Age__c})
+                    </span>
+                </template>
+
+                <template for:each={infantCompanions} for:item="companion">
+                    <span key={companion.Id} class="chip">
+                        {companion.Name} (Infant, {companion.sugati__C_Age__c})
+                    </span>
+                </template>
+
+            </div>
+
+        </div>
+    </div>
+</template>

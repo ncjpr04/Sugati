@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Sell_Price_for_GM_Rollup__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The sell price that is rolled up to Group Member: Recommended Sell Price - returns gross sell unless &quot;Add agent commission to sell price&quot; is turned on, in which case it returns the net sell.</description>
+    <externalId>false</externalId>
+    <label>Sell Price for GM Rollup</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

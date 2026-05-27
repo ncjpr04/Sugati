@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_AD_Default_Capacity__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Default maximum number of Pax that can be booked. Can be overridden at the Availability level.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Default maximum number of Pax that can be booked. Can be overridden at the Availability level.</inlineHelpText>
+    <label>Default Capacity</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,134 @@
+<template>
+    <div class="composer">
+        <!-- Rail -->
+        <div class="rail">
+            <div class="rail-ey">Channel</div>
+            <div class="rail-ch-badge">
+                <div class="ia-pip"></div>
+                <div>
+                    <div class="rcb-name">In-App</div>
+                    <div class="rcb-sub">Traveller portal · Push</div>
+                </div>
+            </div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Progress</div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Audience</span></div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Recipients</span></div>
+            <div class="rail-step rs-on"><div class="step-n">3</div><span class="step-label">Compose</span></div>
+            <div class="rail-step"><div class="step-n">4</div><span class="step-label">Preview</span></div>
+            <div class="rail-step"><div class="step-n">5</div><span class="step-label">Send</span></div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Sending to</div>
+            <div class="rail-recs">
+                <div class="rail-rec">
+                    <div class="rav ia-av">HY</div>
+                    <div class="rail-rec-body">
+                        <div class="rname">Hiroshi Yamamura</div>
+                        <div class="rrole">Portal active</div>
+                    </div>
+                </div>
+                <div class="rail-rec">
+                    <div class="rav ia-av">AY</div>
+                    <div class="rail-rec-body">
+                        <div class="rname">Akemi Yamamura</div>
+                        <div class="rrole">Portal active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Centre compose -->
+        <div class="compose-c">
+            <div class="ch-accent-bar ia-bar"></div>
+            <div class="ia-editor">
+                <div class="ia-field">
+                    <div class="ia-field-label">Notification Type</div>
+                    <div class="ia-notif-type">
+                        <template for:each={notifTypesDisplay} for:item="nt">
+                            <div key={nt.id} class={nt.className} data-id={nt.id} onclick={handleTypeClick}>
+                                <div class="ia-nt-icon">{nt.icon}</div>
+                                <div class="ia-nt-name">{nt.label}</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="ia-field">
+                    <div class="ia-field-label">Title</div>
+                    <input class="ia-input" type="text" value={title} onchange={handleTitleChange} />
+                </div>
+                <div class="ia-field">
+                    <div class="ia-field-label">Message</div>
+                    <textarea class="ia-textarea" value={body} onchange={handleBodyChange}></textarea>
+                </div>
+                <div class="ia-field">
+                    <div class="ia-field-label">Link to (optional)</div>
+                    <input class="ia-input ia-input-link" type="text" value={documentLink} onchange={handleLinkChange} />
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools panel -->
+        <div class="tools-panel">
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Notification Templates</span>
+                </div>
+                <div class="tp-body">
+                    <template for:each={notifTypesDisplay} for:item="nt">
+                        <div key={nt.id} class={nt.tmplClass} data-id={nt.id} onclick={handleTypeClick}>
+                            <div class="tmpl-name">{nt.tmplLabel}</div>
+                            <div class="tmpl-meta">{nt.tmplMeta}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Linked Document</span>
+                </div>
+                <div class="tp-body">
+                    <div class="att-item">
+                        <div class="att-cb on">✓</div>
+                        <div class="att-ic ic-pdf">PDF</div>
+                        <div class="att-t">
+                            <div class="att-name">Tokyo Itinerary Final.pdf</div>
+                            <div class="att-meta">2.4 MB</div>
+                        </div>
+                    </div>
+                    <div class="att-item">
+                        <div class="att-cb on">✓</div>
+                        <div class="att-ic ic-doc">DOC</div>
+                        <div class="att-t">
+                            <div class="att-name">Japan Entry Requirements</div>
+                            <div class="att-ai">✦ AI suggested</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Delivery Target</span>
+                </div>
+                <div class="tp-body">
+                    <div class="ia-delivery-target ia-active">
+                        <div class="iat-name">Traveller Portal</div>
+                        <div class="iat-sub">Salesforce Experience Cloud</div>
+                    </div>
+                    <div class="ia-delivery-target">
+                        <div class="iat-name">Mobile App Push</div>
+                        <div class="iat-sub">If app installed</div>
+                    </div>
+                </div>
+            </div>
+            <div class="send-zone">
+                <button type="button" class="send-btn ia" onclick={handlePreview}>
+                    <span>Preview &amp; Send</span><span class="send-arr">→</span>
+                </button>
+                <div class="send-sec">
+                    <div class="send-sec-btn">Save Draft</div>
+                    <div class="send-sec-btn">Cancel</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SC_Deposit_Required__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(sugati__SC_Client_Group__r.sugati__CG_Opportunity__r.sugati__O_Days_to_Departure__c &gt; $Setup.sugati__Financial_Charges__c.sugati__Days_Before_I__c ,  sugati__SC_Total_Net_CostSC__c* $Setup.sugati__Financial_Charges__c.sugati__Required_Deposit_I__c ,
+ IF(sugati__SC_Client_Group__r.sugati__CG_Opportunity__r.sugati__O_Days_to_Departure__c &gt; $Setup.sugati__Financial_Charges__c.sugati__Days_Before_II__c &amp;&amp; sugati__SC_Client_Group__r.sugati__CG_Opportunity__r.sugati__O_Days_to_Departure__c &lt; $Setup.sugati__Financial_Charges__c.sugati__Days_Before_I__c,  sugati__SC_Total_Net_CostSC__c* $Setup.sugati__Financial_Charges__c.sugati__Deposit_Required_II__c,sugati__SC_Total_Net_CostSC__c* $Setup.sugati__Financial_Charges__c.sugati__Deposit_Required_III__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Deposit Required</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

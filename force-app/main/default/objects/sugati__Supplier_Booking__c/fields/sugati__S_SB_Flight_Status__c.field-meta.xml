@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SB_Flight_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Flight Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Active</fullName>
+                <default>false</default>
+                <label>Active</label>
+            </value>
+            <value>
+                <fullName>Canceled</fullName>
+                <default>false</default>
+                <label>Canceled</label>
+            </value>
+            <value>
+                <fullName>Diverted</fullName>
+                <default>false</default>
+                <label>Diverted</label>
+            </value>
+            <value>
+                <fullName>Data Source Needed</fullName>
+                <default>false</default>
+                <label>Data Source Needed</label>
+            </value>
+            <value>
+                <fullName>Landed</fullName>
+                <default>false</default>
+                <label>Landed</label>
+            </value>
+            <value>
+                <fullName>Not Operational</fullName>
+                <default>false</default>
+                <label>Not Operational</label>
+            </value>
+            <value>
+                <fullName>Redirected</fullName>
+                <default>false</default>
+                <label>Redirected</label>
+            </value>
+            <value>
+                <fullName>Scheduled</fullName>
+                <default>false</default>
+                <label>Scheduled</label>
+            </value>
+            <value>
+                <fullName>Unknown</fullName>
+                <default>false</default>
+                <label>Unknown</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

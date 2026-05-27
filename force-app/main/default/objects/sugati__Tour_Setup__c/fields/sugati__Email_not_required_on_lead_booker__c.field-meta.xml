@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Email_not_required_on_lead_booker__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the email address is not required on the lead booker when making a tour booking.</description>
+    <inlineHelpText>If checked, the email address is not required on the lead booker when making a tour booking.</inlineHelpText>
+    <label>Email not required on lead booker</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

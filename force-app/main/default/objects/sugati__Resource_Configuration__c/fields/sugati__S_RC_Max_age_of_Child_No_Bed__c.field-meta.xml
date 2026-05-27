@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RC_Max_age_of_Child_No_Bed__c</fullName>
+    <defaultValue>0</defaultValue>
+    <deprecated>false</deprecated>
+    <description>The age at which a Child is no longer allowed to not have a bed. IE enter 4 if you want this to be for 3 year olds and younger.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The age at which a Child is no longer allowed to not have a bed. IE enter 4 if you want this to be for 3 year olds and younger.</inlineHelpText>
+    <label>Max age of Child No Bed</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

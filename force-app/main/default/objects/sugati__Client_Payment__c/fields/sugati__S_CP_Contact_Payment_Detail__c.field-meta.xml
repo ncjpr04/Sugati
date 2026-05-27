@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_CP_Contact_Payment_Detail__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Contact Payment Detail</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>The Contact Payment Detail record must belong to the same contact making the payment.</errorMessage>
+        <filterItems>
+            <field>$Source.sugati__CP_Contact__c</field>
+            <operation>equals</operation>
+            <valueField>sugati__Contact_Payment_Detail__c.sugati__S_CPD_Contact__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>sugati__Contact_Payment_Detail__c</referenceTo>
+    <relationshipLabel>Client Payments</relationshipLabel>
+    <relationshipName>Client_Payments</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

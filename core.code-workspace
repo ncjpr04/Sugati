@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "e:/sugati/Sugati"
+    }
+  ],
+  "settings": {
+    "eslint.workingDirectories": [
+      "e:/sugati/Sugati"
+    ],
+    "eslint.validate": [
+      "javascript",
+      "typescript"
+    ],
+    "eslint.options": {
+      "overrideConfigFile": "e:\\sugati\\Sugati\\.eslintrc.json"
+    }
+  }
+}

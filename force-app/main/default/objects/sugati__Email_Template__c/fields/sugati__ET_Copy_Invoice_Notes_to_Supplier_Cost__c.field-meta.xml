@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__ET_Copy_Invoice_Notes_to_Supplier_Cost__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Should be checked when you want to copy invoice notes to supplier cost notes (Description ) field</inlineHelpText>
+    <label>Copy Invoice Notes to Supplier Cost</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

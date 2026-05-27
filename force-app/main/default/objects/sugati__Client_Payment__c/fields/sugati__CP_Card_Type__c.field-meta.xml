@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CP_Card_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Card Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Amex</fullName>
+                <default>false</default>
+                <label>Amex</label>
+            </value>
+            <value>
+                <fullName>Maestro</fullName>
+                <default>false</default>
+                <label>Maestro</label>
+            </value>
+            <value>
+                <fullName>Master Credit</fullName>
+                <default>false</default>
+                <label>Master Credit</label>
+            </value>
+            <value>
+                <fullName>Master Debit</fullName>
+                <default>false</default>
+                <label>Master Debit</label>
+            </value>
+            <value>
+                <fullName>Visa Credit</fullName>
+                <default>false</default>
+                <label>Visa Credit</label>
+            </value>
+            <value>
+                <fullName>Visa Debit</fullName>
+                <default>false</default>
+                <label>Visa Debit</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

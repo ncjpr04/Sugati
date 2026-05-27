@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Q_Assign_to_Opportunity_Owner__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the &quot;Assign to user&quot; field will be ignored and the checklist item will be assigned to the opportunity owner.</description>
+    <inlineHelpText>If checked, the &quot;Assign to user&quot; field will be ignored and the checklist item will be assigned to the opportunity owner.</inlineHelpText>
+    <label>Assign to Opportunity Owner</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

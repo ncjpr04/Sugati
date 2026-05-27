@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Recommended_Selling_Price__c</fullName>
+    <deprecated>false</deprecated>
+    <description>(CG_Recommended_Selling_Price_Rp__c + (CG_FX_Transfer_Charges__c+ CG_Arrival_Presents__c+ CG_Charity__c + CG_Regulatory_Charges__c ))*(1+ CG_Opportunity__r.O_Target_Mark_Up_Value__c/100 )</description>
+    <externalId>false</externalId>
+    <formula>(sugati__CG_Recommended_Selling_Price_Rp__c)+(sugati__CG_FX_Transfer_Charges__c+ sugati__CG_Arrival_Presents__c+ sugati__CG_Charity__c + sugati__CG_Regulatory_Charges__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>(CG_Recommended_Selling_Price_Rp__c)*(1+ CG_Opportunity__r.O_Target_Mark_Up_Value__c/100 )*(CG_FX_Transfer_Charges__c+ CG_Arrival_Presents__c+ CG_Charity__c + CG_Regulatory_Charges__c )</inlineHelpText>
+    <label>Recommended Selling Price</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

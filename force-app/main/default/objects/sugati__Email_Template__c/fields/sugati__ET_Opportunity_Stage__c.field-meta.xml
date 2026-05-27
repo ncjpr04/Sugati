@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__ET_Opportunity_Stage__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Opportunity Stage</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Enquiry</fullName>
+                <default>false</default>
+                <label>Enquiry</label>
+            </value>
+            <value>
+                <fullName>Quote pending</fullName>
+                <default>false</default>
+                <label>Quote pending</label>
+            </value>
+            <value>
+                <fullName>Quoted to client</fullName>
+                <default>false</default>
+                <label>Quoted to client</label>
+            </value>
+            <value>
+                <fullName>Quote gone cold</fullName>
+                <default>false</default>
+                <label>Quote gone cold</label>
+            </value>
+            <value>
+                <fullName>Booking Optional</fullName>
+                <default>false</default>
+                <label>Booking Optional</label>
+            </value>
+            <value>
+                <fullName>Booked</fullName>
+                <default>false</default>
+                <label>Booked</label>
+            </value>
+            <value>
+                <fullName>Training enquiry</fullName>
+                <default>false</default>
+                <label>Training enquiry</label>
+            </value>
+            <value>
+                <fullName>Redundant</fullName>
+                <default>false</default>
+                <label>Redundant</label>
+            </value>
+            <value>
+                <fullName>Enquiry gone cold</fullName>
+                <default>false</default>
+                <label>Enquiry gone cold</label>
+            </value>
+            <value>
+                <fullName>Booking Cancelled</fullName>
+                <default>false</default>
+                <label>Booking Cancelled</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

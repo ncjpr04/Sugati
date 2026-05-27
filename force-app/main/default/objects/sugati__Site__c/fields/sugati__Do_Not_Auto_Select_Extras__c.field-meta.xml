@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Do_Not_Auto_Select_Extras__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If the user doesn&apos;t want to see extras which are matching the criteria auto-selected then this setting should be checked.</inlineHelpText>
+    <label>Do Not Auto-Select Extras</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Reporting_Currency_Exchange_Rate__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Exchange rate used in Total Revenue in Reporting Currency and Total Cost in Reporting Currency calculation.</inlineHelpText>
+    <label>Reporting Currency Exchange Rate</label>
+    <referenceTo>sugati__Exchange_Rate__c</referenceTo>
+    <relationshipLabel>Opportunities (Reporting Currency Exchange Rate)</relationshipLabel>
+    <relationshipName>Opportunities1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

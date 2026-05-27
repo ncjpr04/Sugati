@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Booking_Confirmation_Email_Trigger_T__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The time to send the confirmation email for this (tour) booking</description>
+    <label>Booking Confirmation Email Trigger Time</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

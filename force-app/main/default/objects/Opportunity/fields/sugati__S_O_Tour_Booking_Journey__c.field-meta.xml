@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Tour_Booking_Journey__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Use quick journey where there is just a single accommodation option per stay. Use the detailed journey when there is a choice of accommodation.</description>
+    <inlineHelpText>Use quick journey where there is just a single accommodation option per stay. Use the detailed journey when there is a choice of accommodation.</inlineHelpText>
+    <label>Tour Booking Journey</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Quick</fullName>
+                <default>true</default>
+                <label>Quick</label>
+            </value>
+            <value>
+                <fullName>Detailed</fullName>
+                <default>false</default>
+                <label>Detailed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

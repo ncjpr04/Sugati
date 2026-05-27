@@ -1,0 +1,223 @@
+/* â”€â”€ FONTS loaded via renderedCallback in parent (LWC restriction) â”€â”€ */
+
+:host {
+    display: block;
+}
+
+/* â”€â”€ PROFILE HEADER CARD â”€â”€ */
+.profile-header {
+    background: #FFFFFF;
+    border: 1px solid rgba(28, 28, 26, 0.1);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(28, 28, 26, 0.07), 0 1px 2px rgba(28, 28, 26, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Gold gradient top accent bar */
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFC543, #FFF49D);
+}
+
+/* Three-column grid: avatar | info | actions */
+.profile-header-top {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 22px;
+    align-items: flex-start;
+}
+
+/* â”€â”€ AVATAR â”€â”€ */
+.profile-avatar-lg {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFC543, #FFF49D);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: #1C1C1A;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(255, 197, 67, 0.35);
+}
+
+/* â”€â”€ PROFILE INFO â”€â”€ */
+.profile-info {
+    min-width: 0;
+}
+
+.profile-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 30px;
+    font-weight: 300;
+    color: #1C1C1A;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+
+/* Contact sub-line: email Â· phone Â· location */
+.profile-sub {
+    color: #5a5a56;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.profile-sub span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* â”€â”€ BADGES ROW â”€â”€ */
+.profile-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+/* Gold / sunset â€” Rating/tier badge */
+.badge-sunset {
+    background: rgba(255, 197, 67, 0.2);
+    color: #7a4f00;
+    border: 1px solid rgba(255, 197, 67, 0.5);
+}
+
+/* Green â€” Active badge */
+.badge-green {
+    background: rgba(46, 158, 107, 0.1);
+    color: #1a6040;
+    border: 1px solid rgba(46, 158, 107, 0.3);
+}
+
+/* Blue â€” Repeat Traveller badge */
+.badge-blue {
+    background: rgba(58, 127, 193, 0.1);
+    color: #1a4870;
+    border: 1px solid rgba(58, 127, 193, 0.25);
+}
+
+/* Neutral grey â€” Client Since badge */
+.badge-neutral {
+    background: #F0F0EE;
+    color: #5a5a56;
+    border: 1px solid rgba(28, 28, 26, 0.1);
+}
+
+/* â”€â”€ PROFILE NOTE â”€â”€ */
+.profile-note-inline {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: rgba(255, 197, 67, 0.08);
+    border-left: 3px solid #FFC543;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: #5a5a56;
+    font-style: italic;
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+.profile-note-inline .note-icon {
+    font-style: normal;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.profile-note-inline strong {
+    font-style: normal;
+    color: #1C1C1A;
+    font-weight: 700;
+    margin-right: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+/* â”€â”€ ACTION BUTTONS â”€â”€ */
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.btn-primary {
+    padding: 9px 20px;
+    background: #FFC543;
+    color: #1C1C1A;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 2px 8px rgba(255, 197, 67, 0.3);
+}
+.btn-primary:hover:not([disabled]) {
+    background: #c8930a;
+    color: #FFFFFF;
+}
+.btn-primary[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-ghost {
+    padding: 9px 20px;
+    background: transparent;
+    color: #5a5a56;
+    border: 1px solid rgba(28, 28, 26, 0.1);
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+}
+.btn-ghost:hover {
+    background: #F7F7F7;
+    color: #1C1C1A;
+}
+
+/* â”€â”€ RESPONSIVE â”€â”€ */
+@media (max-width: 768px) {
+    .profile-header-top {
+        grid-template-columns: auto 1fr;
+    }
+    .profile-actions {
+        display: none;
+    }
+    .profile-sub {
+        gap: 10px;
+    }
+}

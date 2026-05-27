@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_PO_Room_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Which room type is this price override based on?</description>
+    <inlineHelpText>Which room type is this price override based on?</inlineHelpText>
+    <label>Room Type</label>
+    <referenceTo>sugati__Room_Type__c</referenceTo>
+    <relationshipLabel>Price Overrides</relationshipLabel>
+    <relationshipName>Price_Overrides</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

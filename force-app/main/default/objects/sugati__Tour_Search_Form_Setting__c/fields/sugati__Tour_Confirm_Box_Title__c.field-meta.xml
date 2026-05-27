@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour_Confirm_Box_Title__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This text will display on Tour Confirm Box popup.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This text will display on Tour Confirm Box popup.</inlineHelpText>
+    <label>Tour Confirm Box Title</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

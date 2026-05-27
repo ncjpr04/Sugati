@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_CG_Tour_Balance_Due__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(TEXT(sugati__S_CG_Booking_Status__c) == &quot;Booking Cancelled&quot;, 
+sugati__CG_Total_Cancellation_Amount__c - sugati__CG_Total_Amount_Paid_in_Booking_Currency__c ,
+sugati__S_CG_Total_Group_Net_Sell_Price__c - sugati__CG_Total_Amount_Paid_in_Booking_Currency__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Tour Balance Due</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_0_day_Duration__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Allow 0-day duration on opportunities (for example, if this opportunity is just for a day trip)</description>
+    <inlineHelpText>Allow 0-day duration on opportunities (for example, if this opportunity is just for a day trip)</inlineHelpText>
+    <label>Allow 0 Day Duration</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

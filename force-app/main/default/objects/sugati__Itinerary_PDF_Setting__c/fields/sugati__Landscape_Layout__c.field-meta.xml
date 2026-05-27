@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Landscape_Layout__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Page layout will be in landscape if it&apos;s checked. Default will be in portrait mode.</description>
+    <label>Landscape Layout</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

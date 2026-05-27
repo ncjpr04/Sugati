@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Division__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Group ownership</description>
+    <inlineHelpText>Group ownership</inlineHelpText>
+    <label>Division</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Original Travel</fullName>
+                <default>false</default>
+                <label>Original Travel</label>
+            </value>
+            <value>
+                <fullName>Original Diving</fullName>
+                <default>false</default>
+                <label>Original Diving</label>
+            </value>
+            <value>
+                <fullName>Simoon</fullName>
+                <default>false</default>
+                <label>Simoon</label>
+            </value>
+            <value>
+                <fullName>OT UK</fullName>
+                <default>false</default>
+                <label>OT UK</label>
+            </value>
+            <value>
+                <fullName>Combination of above</fullName>
+                <default>false</default>
+                <label>Combination of above</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

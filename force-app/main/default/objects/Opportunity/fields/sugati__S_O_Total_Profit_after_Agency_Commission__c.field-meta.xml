@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Total_Profit_after_Agency_Commission__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of all Total Profit - Agency Commission in Booking Currency</description>
+    <externalId>false</externalId>
+    <label>Total Profit after Agency Commission</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

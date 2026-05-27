@@ -1,0 +1,59 @@
+:host { display: block; height: 100%; }
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-header {
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-title { font-family:'Crimson Pro',serif; font-size:19px; font-weight:300; color:var(--warm-black); }
+
+/* Card body — flex row to space rings evenly */
+.card-body {
+    padding: 20px 22px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* SCORE RINGS */
+.score-ring { display:flex; flex-direction:column; align-items:center; padding:8px; }
+.ring-wrap  { position:relative; width:80px; height:80px; }
+.ring-wrap svg { transform:rotate(-90deg); }
+
+.ring-val {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Crimson Pro', serif;
+    font-size: 22px;
+    font-weight: 300;
+}
+
+/* Per-ring value colours — replaces inline style attributes */
+.ring-val-overall  { color: var(--sunset-dark); }
+.ring-val-revenue  { color: var(--positive); }
+.ring-val-activity { color: var(--info); }
+
+.ring-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

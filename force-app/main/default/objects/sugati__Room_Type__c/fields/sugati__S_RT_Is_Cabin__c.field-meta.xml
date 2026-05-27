@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RT_Is_Cabin__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>sugati__RT_Supplier__r.RecordType.Name == &apos;Cruise&apos;</formula>
+    <label>Is Cabin?</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

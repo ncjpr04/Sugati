@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Invoice_PDF_Page_Break__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Invoice PDF Page Break</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bank Details</fullName>
+                <default>false</default>
+                <label>Bank Details</label>
+            </value>
+            <value>
+                <fullName>Terms and Conditions</fullName>
+                <default>false</default>
+                <label>Terms and Conditions</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

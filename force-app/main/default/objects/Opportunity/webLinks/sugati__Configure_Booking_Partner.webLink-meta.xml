@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Configure_Booking_Partner</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Configure Booking</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!IF(
+    LEN($Site.Name) == 0,
+        URLFOR(&quot;/apex/&quot; + $Setup.sugati__Site__c.sugati__Namespace__c + &quot;ConfigureBooking?Id=&quot; + Opportunity.Id),
+        URLFOR($Site.Prefix &amp; &apos;/apex/&quot; + $Setup.Site__c.Namespace__c + &quot;TourRedirect?isConfigureBooking=true&amp;id=&apos; + Opportunity.Id + &apos;&amp;isdtp=p1&apos;)
+    )
+}</url>
+</WebLink>

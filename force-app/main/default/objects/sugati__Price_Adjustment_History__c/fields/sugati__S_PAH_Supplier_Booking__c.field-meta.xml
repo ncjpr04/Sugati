@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_PAH_Supplier_Booking__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Supplier Booking</label>
+    <referenceTo>sugati__Supplier_Booking__c</referenceTo>
+    <relationshipLabel>Price Adjustment Histories</relationshipLabel>
+    <relationshipName>Price_Adjustment_Histories</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

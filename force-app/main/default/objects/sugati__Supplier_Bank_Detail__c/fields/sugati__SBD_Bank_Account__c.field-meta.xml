@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SBD_Bank_Account__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Bank Account</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Swift</fullName>
+                <default>false</default>
+                <label>Swift</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

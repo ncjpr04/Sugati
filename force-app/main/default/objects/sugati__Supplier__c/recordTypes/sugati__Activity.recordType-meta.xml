@@ -1,0 +1,2255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Activity</fullName>
+    <active>true</active>
+    <label>Activity</label>
+    <picklistValues>
+        <picklist>sugati__Cruise_Fare_Set__c</picklist>
+        <values>
+            <fullName>AA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>AB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>D</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>E</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__Margin_Type__c</picklist>
+        <values>
+            <fullName>Percentage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Value</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S2_Bank_Payee_Currency__c</picklist>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Activities_Off_Site__c</picklist>
+        <values>
+            <fullName>Access to Great Barrier Reef</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Adrenaline Activities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Amusement Park</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Animal Encounters</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Art Galleries</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Battlefield Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Beach</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 6</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 7</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 8</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 9</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bird Watching</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boat Cruises</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boating</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boules</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bowls</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canoeing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Catch-and-release Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Child Friendly Activities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cooking Courses</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cultural Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cycling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deep Sea Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Elephant-back Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fine Dining</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fly Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Drives</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Viewing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Walks</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Garden Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General Sightseeing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gorilla Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Health and Fitness Centre</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Helicopter Rides</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Helicopter Scenic Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hiking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Historical Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Horse Riding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Horse-back Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hot-air Ballooning</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jet Skis</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kayaking %2F Paddling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kite Surfing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marine Adventures</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marine Tidal Pool</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Massages</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mini Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mokoro Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mountain Biking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Museums</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Natural History Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Para Sailing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Paragliding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quad Biking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rhino Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>River Cruises</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rock Climbing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sailing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scenic Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scuba Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sea kayaking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shark Cage Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sky Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Snorkeling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Squash Court</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Surfing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tennis Court</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tree-top Canopy Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Turtle Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walks %28Guided%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walks %28Self Guided%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Water Skiing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Whale Watching</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wildlife Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Windsurfing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wine Tasting</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Activities_On_Site__c</picklist>
+        <values>
+            <fullName>Aboriginal Rock Art Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Beach Drop Off</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bird Watching</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boating</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boules</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bowls</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canoeing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Catch-and-release Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cooking Courses</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cycling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Elephant Interaction</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Elephant-back Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fine Dining</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Drives</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Viewing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Viewing Hide</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Game Walks</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Garden Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gorilla Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gourmet Picnic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Helicopter Scenic Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>High Tea</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Horse Riding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Horse-back Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jet Skis</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kayaking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kite Surfing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Massages</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mini Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mokoro Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Natural History Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Night Drives</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Para Sailing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Practice Green</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quad Biking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rhino Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Safaris</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sailing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scenic Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scuba Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sleep Outs</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Snorkeling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Squash Court</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Station Activities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Surfing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tennis Court</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Turtle Tracking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walks</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walks %28Guided%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walks %28Self Guided%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Water Skiing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Whale Watching</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wildlife Tours</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Windsurfing</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Arrivals__c</picklist>
+        <values>
+            <fullName>Both</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SMS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Available_Services__c</picklist>
+        <values>
+            <fullName>ATM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Airport Shuttle</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Airport Shuttle %28Available%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Airport Shuttle %28Complimentary%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Babysitting Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chauffeur Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Foreign Exchange</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Room Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Room Service %2824hrs%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Travel Desk</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Bank_Payee_Currency__c</picklist>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Booking_Confirmation__c</picklist>
+        <values>
+            <fullName>Both</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SMS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Default_Costing_Type__c</picklist>
+        <values>
+            <fullName>Both</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Markup</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Holiday_Types__c</picklist>
+        <values>
+            <fullName>Adventures</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Anniversary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Babymoon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big Short Breaks</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Birthday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Classics</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Corporate</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Couples</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dive In Style</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Expert-Led Journeys</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Family Holiday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Generic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>History</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Honeymoon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Luxury Holidays</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Solo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Stag%2FHen</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Languages__c</picklist>
+        <values>
+            <fullName>English</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flemish</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>French</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>German</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hindi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Italian</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Japanese</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Portuguese</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Russian</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spanish</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Swahili</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Xhosa</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zulu</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Operating_Countries__c</picklist>
+        <values>
+            <fullName>Abu Dhabi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Albania</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Algeria</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Anguilla</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Antarctica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Antigua %26 Barbuda</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Argentina</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Armenia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Australia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Austria</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Azerbaijan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Azores</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bahamas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bangladesh</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Barbados</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Belgium</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Belize</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bermuda</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bhutan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bolivia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bonaire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Borneo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Botswana</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brazil</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>British Virgin Islands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Brunei</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bulgaria</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Burkina Faso</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Burma</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cambodia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Canary Islands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cayman Islands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chile</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>China</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Colombia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Congo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Costa Rica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Croatia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cuba</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Curacao</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cyprus</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Czech Republic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Denmark</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Djibouti</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dominica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dominican Republic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dubai</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ecuador %26 Galapagos</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Egypt</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>El Salvador</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Estonia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ethiopia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fiji</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Finland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>France</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>French Polynesia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gambia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Georgia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Germany</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ghana</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gozo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Greece</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Greenland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grenada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guadeloupe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guatemala</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guyana</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hawaii</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Honduras</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hong Kong</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hungary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Iceland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>India</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Indonesia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Iran</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ireland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Israel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Italy</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jamaica</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Japan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jordan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kenya</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laos</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Latvia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lebanon</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Libya</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Luxembourg</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Madagascar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Madeira</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Malawi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Malaysia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Maldives</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mali</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Malta</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mauritius</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mexico</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Micronesia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mongolia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Montenegro</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Morocco</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mozambique</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mustique</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Myanmar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Namibia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nepal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Netherlands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Zealand</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nicaragua</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Norway</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Oman</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Palau</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Panama</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Papua New Guinea</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Peru</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Philippines</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Poland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Portugal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Qatar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reunion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Romania</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Russia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rwanda</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sao Tome %26 Principe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Senegal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Seychelles</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Singapore</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Slovenia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Solomon Islands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>South Africa</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>South Korea</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spain</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sri Lanka</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St Barths</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St Kitts %26 Nevis</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St Lucia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St Maarten</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>St Vincent and the Grenadines</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sudan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sweden</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Switzerland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Syria</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>São Tomé and Príncipe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tanzania</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Thailand</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tibet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tonga</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trinidad %26 Tobago</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tunisia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Turkey</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Turks %26 Caicos Islands</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UK_Scotland</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UK_Wales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uganda</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ukraine</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>United Arab Emirates</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>United Kingdom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uruguay</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Uzbekistan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Venezuela</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Vietnam</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zambia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Zimbabwe</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Payment_Method__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cheque</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Payments__c</picklist>
+        <values>
+            <fullName>Both</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SMS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Property_Facilities__c</picklist>
+        <values>
+            <fullName>24hr Security</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Activity Desk</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Barbeque Facilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Battery Charging Facilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Business Centre</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Chapel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Communal Dining</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Conference Centre</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disability Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Eco Friendly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gym</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gym %28nearby%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet Access</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet Access %28Paid%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet Access Complimentary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Kiddies Club</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Service %28Available%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Service %28Complimentary%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Library</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meal on Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mobile Connectivity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pool</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Vehicle Available</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Restaurant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secure Parking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Skype Phones</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spa</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TV Room</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Rating__c</picklist>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>4</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Requests__c</picklist>
+        <values>
+            <fullName>Both</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SMS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Room_Facilities__c</picklist>
+        <values>
+            <fullName>Air Conditioning</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Balcony %2F Deck</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bath</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Clothes Press</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Complimentary Wi-Fi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cooking Equipment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cooking Facilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Detached Private Bathroom</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disabled Rooms</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dressing Gowns</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Electrical Outlets</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>En-Suite</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fireplace</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fridge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hair Dryer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Heated Towel Rails</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Heater</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet Access %28Complimentary%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internet Access %28Paid%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Iron %2F Ironing Board</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Facilities</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Service %28Available%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laundry Service %28Complimentary%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lounge Area</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mini Bar</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mini Bar %28Complimentary%29</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mosquito Nets</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Outside Shower</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plunge Pool</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Pool %2F Jacuzzi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pure Cotton Linen</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Safe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sala</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Satellite %2F Cable Television</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Ablutions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shower</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Smoking Rooms</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tea %2F Coffee</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Television</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Underfloor Heating</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Verandah</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wheelchair Friendly</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_S_Agency_Commission_Based_On__c</picklist>
+        <values>
+            <fullName>Gross Sell Price</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Profit</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_S_Agency_is_End_Customer__c</picklist>
+        <values>
+            <fullName>False</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>True</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_S_Commission_Term__c</picklist>
+        <values>
+            <fullName>Deferred</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Immediate</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_S_Markup_Type__c</picklist>
+        <values>
+            <fullName>Percentage</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Value</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Special_Interests__c</picklist>
+        <values>
+            <fullName>Adventure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Baby Sitting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Battlefields</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Beach %2F Coastal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Big 5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Birding</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Children Friendly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cycling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Disabled Friendly</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Exhibition Area</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fishing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flora</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Golf</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gourmet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Great Barrier Reef</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hiking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>History %26 Culture</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Indigenous Culture %2F Art</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Leisure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nature</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Power Generator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Relaxation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Satellite TV</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Secure Parking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shopping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Special Equipment Entrance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sports</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Star Gazing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Watersports</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wildlife</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wine</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Supplier_Currency__c</picklist>
+        <values>
+            <fullName>AED</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>AUD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>BRL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CAD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>CHF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DKK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>FJD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HKD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HUF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ISK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>JOD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MAD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>MYR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NAD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NOK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>NZD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>OMR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>PLN</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>QAR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>RUB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SEK</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SGD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>THB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>ZAR</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_Type__c</picklist>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Activity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Agency</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Boat</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>DMC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Driver Guide</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guide</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hotel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Taxi</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tourist Board</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transport</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__X2_Bank_Payee_Currency__c</picklist>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,226 @@
+
+:host {
+    --warm-black: #1c1c1a;
+    --s0: #f7f7f7;
+    --s1: #ffffff;
+    --s2: #f2eee9;
+    --t3: #7a756e;
+    --t4: #a89f96;
+    --ac: #ffc543;
+    --ch-email: #ffc543;
+    --ch-email-b: rgba(255, 197, 67, 0.4);
+    --ch-email-s: rgba(255, 197, 67, 0.12);
+    --ch-wa: #25b665;
+    --ch-wa-b: rgba(37, 182, 101, 0.28);
+    --ch-wa-s: rgba(37, 182, 101, 0.09);
+    --ch-ia: #4a7de8;
+    --ch-ia-b: rgba(74, 125, 232, 0.28);
+    --ch-ia-s: rgba(74, 125, 232, 0.09);
+    --b0: rgba(28, 28, 26, 0.06);
+    --b1: rgba(28, 28, 26, 0.1);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+    display: block;
+    height: 100%;
+    font-family: var(--sans);
+    font-weight: 300;
+}
+
+.channel-select-page {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 40px 24px;
+    background: var(--s0);
+    min-height: 100%;
+    box-sizing: border-box;
+}
+
+.channel-select-inner {
+    max-width: 700px;
+    width: 100%;
+}
+
+.ey {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--t4);
+    margin-bottom: 10px;
+}
+
+.cs-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    color: var(--warm-black);
+    margin-bottom: 8px;
+    line-height: 1.06;
+}
+
+.cs-sub {
+    font-size: 13px;
+    color: var(--t3);
+    margin-bottom: 44px;
+    line-height: 1.65;
+}
+
+.channel-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.channel-card {
+    background: var(--s1);
+    border: 1.5px solid var(--b1);
+    border-radius: 14px;
+    padding: 28px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 4px var(--b0);
+}
+
+.channel-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.channel-card.email-card::after {
+    background: var(--ch-email);
+}
+
+.channel-card.wa-card::after {
+    background: var(--ch-wa);
+}
+
+.channel-card.ia-card::after {
+    background: var(--ch-ia);
+}
+
+.channel-card:hover {
+    background: var(--s2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--b1);
+}
+
+.channel-card:hover::after {
+    opacity: 1;
+}
+
+.channel-card.email-card:hover {
+    border-color: var(--ch-email-b);
+}
+
+.channel-card.wa-card:hover {
+    border-color: var(--ch-wa-b);
+}
+
+.channel-card.ia-card:hover {
+    border-color: var(--ch-ia-b);
+}
+
+.cc-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.cc-icon-wrap.email {
+    background: var(--ch-email-s);
+    border: 1px solid var(--ch-email-b);
+}
+
+.cc-icon-wrap.wa {
+    background: var(--ch-wa-s);
+    border: 1px solid var(--ch-wa-b);
+}
+
+.cc-icon-wrap.ia {
+    background: var(--ch-ia-s);
+    border: 1px solid var(--ch-ia-b);
+}
+
+.cc-name {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--warm-black);
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+.cc-desc {
+    font-size: 12px;
+    color: var(--t3);
+    line-height: 1.65;
+    margin-bottom: 16px;
+}
+
+.cc-uses {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cc-use {
+    font-size: 11px;
+    color: var(--t3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cc-use::before {
+    content: '→';
+    color: var(--t4);
+    font-size: 10px;
+}
+
+.cc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+    font-size: 12px;
+    padding: 9px 16px;
+    border-radius: 7px;
+    font-weight: 500;
+}
+
+.cc-cta.email {
+    background: var(--ac);
+    color: var(--warm-black);
+}
+
+.cc-cta.wa {
+    background: var(--ch-wa);
+    color: #fff;
+}
+
+.cc-cta.ia {
+    background: var(--ch-ia);
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+    .channel-cards {
+        grid-template-columns: 1fr;
+    }
+}

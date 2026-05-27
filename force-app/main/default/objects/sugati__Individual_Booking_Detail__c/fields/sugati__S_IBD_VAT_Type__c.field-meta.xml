@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_VAT_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>VAT Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Commission</fullName>
+                <default>false</default>
+                <label>Commission</label>
+            </value>
+            <value>
+                <fullName>Agent Commission</fullName>
+                <default>false</default>
+                <label>Agent Commission</label>
+            </value>
+            <value>
+                <fullName>Manual Overwrite</fullName>
+                <default>false</default>
+                <label>Manual Overwrite</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Maximum_suggestions_per_trigger__c</fullName>
+    <defaultValue>8</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Maximum number of suggestions to keep for each trigger.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>After scoring suggestions by confidence (and support), only the top K suggestions are kept per trigger to avoid noise. Example: If set to 8 and there are 15 candidates, only the best 8 (highest confidence, then support) are saved.</inlineHelpText>
+    <label>Maximum suggestions per trigger</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

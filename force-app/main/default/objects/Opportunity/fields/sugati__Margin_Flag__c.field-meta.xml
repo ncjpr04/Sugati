@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Margin_Flag__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(sugati__O_Suggested_Margin_Value__c &lt;  sugati__O_Margin_Value_With_Commission__c ,  IMAGE(&quot;https://c.eu5.content.force.com/servlet/servlet.FileDownload?file=01524000001UC4I&quot;, &quot;Margin Green&quot;, 20,140), 
+ IMAGE(&quot;https://c.eu5.content.force.com/servlet/servlet.FileDownload?file=01524000001UC51&quot;, &quot;Margin Red&quot;, 20,140))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Margin Flag</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

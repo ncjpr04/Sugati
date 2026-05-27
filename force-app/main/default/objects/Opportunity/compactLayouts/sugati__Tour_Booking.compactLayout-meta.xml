@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour_Booking</fullName>
+    <fields>Name</fields>
+    <fields>AccountId</fields>
+    <fields>Amount</fields>
+    <fields>sugati__O_Pax__c</fields>
+    <fields>sugati__O_Outstanding__c</fields>
+    <fields>sugati__O_Reference_Number__c</fields>
+    <label>Tour Booking</label>
+</CompactLayout>

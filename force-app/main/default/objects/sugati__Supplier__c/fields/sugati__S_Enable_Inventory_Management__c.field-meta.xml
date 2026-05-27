@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Enable_Inventory_Management__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>It will allow Sugati to do inventory management for the accommodations. It will block the rooms once they are booked.</inlineHelpText>
+    <label>Enable Inventory Management</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

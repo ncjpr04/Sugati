@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Type</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Supplier Cost</fullName>
+                <default>false</default>
+                <label>Supplier Cost</label>
+            </value>
+            <value>
+                <fullName>Selling Price</fullName>
+                <default>false</default>
+                <label>Selling Price</label>
+            </value>
+            <value>
+                <fullName>Margin</fullName>
+                <default>false</default>
+                <label>Margin</label>
+            </value>
+            <value>
+                <fullName>Notes</fullName>
+                <default>false</default>
+                <label>Notes</label>
+            </value>
+            <value>
+                <fullName>On Popup Load</fullName>
+                <default>false</default>
+                <label>On Popup Load</label>
+            </value>
+            <value>
+                <fullName>Compose</fullName>
+                <default>false</default>
+                <label>Compose</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

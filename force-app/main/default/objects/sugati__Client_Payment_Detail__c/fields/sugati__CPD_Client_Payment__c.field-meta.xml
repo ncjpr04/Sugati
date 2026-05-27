@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CPD_Client_Payment__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Client Payment</label>
+    <referenceTo>sugati__Client_Payment__c</referenceTo>
+    <relationshipLabel>Client Payment Details</relationshipLabel>
+    <relationshipName>Client_Payment_Details</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

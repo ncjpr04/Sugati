@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Itinerary_Day_By_Day_Layout__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Itinerary Day By Day Layout</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Full-Width Image</fullName>
+                <default>false</default>
+                <label>Full-Width Image</label>
+            </value>
+            <value>
+                <fullName>Side-by-Side Image and Text</fullName>
+                <default>false</default>
+                <label>Side-by-Side Image and Text</label>
+            </value>
+            <value>
+                <fullName>Stacked Image and Text</fullName>
+                <default>false</default>
+                <label>Stacked Image and Text</label>
+            </value>
+            <value>
+                <fullName>Text Only</fullName>
+                <default>false</default>
+                <label>Text Only</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Account_Info2__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Stores the Account billing address information at the time of invoice creation. Replaces the formula field S_O_Account_Info__c which is being deprecated. This field is populated by ClientInvoiceTriggers when invoices are created or committed.</description>
+    <inlineHelpText>Account name and billing address captured at invoice creation/commit time. This field is automatically populated - do not edit manually.</inlineHelpText>
+    <label>Account Info</label>
+    <length>512</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

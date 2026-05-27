@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Total_Outstanding_in_Tour_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(
+    OR(TEXT(StageName) ==  $Setup.sugati__Sugati_Stage_Name_Mapping__c.sugati__Waiting_List__c, TEXT(StageName) ==  $Setup.sugati__Sugati_Stage_Name_Mapping__c.sugati__On_Request__c),
+    0,
+    sugati__S_O_Total_Revenue_in_Tour_Currency__c - sugati__S_O_Total_Payment_in_Tour_Currency__c
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Outstanding in Tour Currency</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

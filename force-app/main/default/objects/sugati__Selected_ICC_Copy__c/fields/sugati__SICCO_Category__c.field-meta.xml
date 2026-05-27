@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SICCO_Category__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Selected Itinerary Content Category</label>
+    <referenceTo>sugati__Selected_Itinerary_Content_Category__c</referenceTo>
+    <relationshipLabel>Selected ICCs Copy</relationshipLabel>
+    <relationshipName>Selected_ICCs_Copy</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

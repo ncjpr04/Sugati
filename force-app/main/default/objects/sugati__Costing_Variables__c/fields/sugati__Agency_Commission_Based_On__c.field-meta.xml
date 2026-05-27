@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Agency_Commission_Based_On__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Is agency commission calculated on Net or Gross Sell? - This setting is only relevant if ”Add Agency Commission to Sell Price” = true.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Is agency commission calculated on Net or Gross Sell? - This setting is only relevant if ”Add Agency Commission to Sell Price” = true.</inlineHelpText>
+    <label>Agency Commission Calculated On</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

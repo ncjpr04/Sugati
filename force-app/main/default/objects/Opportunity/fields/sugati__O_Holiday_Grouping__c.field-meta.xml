@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Holiday_Grouping__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Holiday Type For Content Only</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Big Short Break</fullName>
+                <default>false</default>
+                <label>Big Short Break</label>
+            </value>
+            <value>
+                <fullName>Chalet</fullName>
+                <default>false</default>
+                <label>Chalet</label>
+            </value>
+            <value>
+                <fullName>City break</fullName>
+                <default>false</default>
+                <label>City break</label>
+            </value>
+            <value>
+                <fullName>Diving</fullName>
+                <default>false</default>
+                <label>Diving</label>
+            </value>
+            <value>
+                <fullName>European Beach Escape</fullName>
+                <default>false</default>
+                <label>European Beach Escape</label>
+            </value>
+            <value>
+                <fullName>Expert Led Journey</fullName>
+                <default>false</default>
+                <label>Expert Led Journey</label>
+            </value>
+            <value>
+                <fullName>Long haul</fullName>
+                <default>false</default>
+                <label>Long haul</label>
+            </value>
+            <value>
+                <fullName>Safari</fullName>
+                <default>false</default>
+                <label>Safari</label>
+            </value>
+            <value>
+                <fullName>Skiing</fullName>
+                <default>false</default>
+                <label>Skiing</label>
+            </value>
+            <value>
+                <fullName>Villa</fullName>
+                <default>false</default>
+                <label>Villa</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

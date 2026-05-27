@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Room_Allocation</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Room Allocation</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/36.0/connection.js&quot;)} 
+{!REQUIRESCRIPT(&quot;/soap/ajax/36.0/apex.js&quot;)} 
+
+var stageName = &apos;{!Opportunity.StageName}&apos;;
+
+if(stageName == &apos;Template&apos;){ 
+    alert(&apos;You are currently looking at a template. Room Allocation is unavailable - please select a Tour.&apos;);	
+} else if(stageName == &apos;Tour&apos;){ 
+    window.location = &apos;/apex/{!$Setup.sugati__Site__c.sugati__Namespace__c}RoomAllocation?id={!Opportunity.Id}&apos;; 
+} else {	
+    window.location = &apos;/apex/{!$Setup.sugati__Site__c.sugati__Namespace__c}RoomAllocation?id={!Opportunity.sugati__O_Tour_Id__c}&apos;;	
+}</url>
+</WebLink>

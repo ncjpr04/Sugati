@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Namespace__c</fullName>
+    <deprecated>false</deprecated>
+    <description>We can retire in this field. On Andy. 28th March.</description>
+    <externalId>false</externalId>
+    <label>Namespace</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

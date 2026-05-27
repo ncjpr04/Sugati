@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Available_Services__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Available Services</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Airport Shuttle</fullName>
+                <default>false</default>
+                <label>Airport Shuttle</label>
+            </value>
+            <value>
+                <fullName>Airport Shuttle (Available)</fullName>
+                <default>false</default>
+                <label>Airport Shuttle (Available)</label>
+            </value>
+            <value>
+                <fullName>Airport Shuttle (Complimentary)</fullName>
+                <default>false</default>
+                <label>Airport Shuttle (Complimentary)</label>
+            </value>
+            <value>
+                <fullName>ATM</fullName>
+                <default>false</default>
+                <label>ATM</label>
+            </value>
+            <value>
+                <fullName>Babysitting Service</fullName>
+                <default>false</default>
+                <label>Babysitting Service</label>
+            </value>
+            <value>
+                <fullName>Chauffeur Service</fullName>
+                <default>false</default>
+                <label>Chauffeur Service</label>
+            </value>
+            <value>
+                <fullName>Credit Card</fullName>
+                <default>false</default>
+                <label>Credit Card</label>
+            </value>
+            <value>
+                <fullName>Foreign Exchange</fullName>
+                <default>false</default>
+                <label>Foreign Exchange</label>
+            </value>
+            <value>
+                <fullName>Laundry Service</fullName>
+                <default>false</default>
+                <label>Laundry Service</label>
+            </value>
+            <value>
+                <fullName>Room Service</fullName>
+                <default>false</default>
+                <label>Room Service</label>
+            </value>
+            <value>
+                <fullName>Room Service (24hrs)</fullName>
+                <default>false</default>
+                <label>Room Service (24hrs)</label>
+            </value>
+            <value>
+                <fullName>Travel Desk</fullName>
+                <default>false</default>
+                <label>Travel Desk</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

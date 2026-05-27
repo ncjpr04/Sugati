@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Vamoos_Branding_Code__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>A integer value which is used to identify the Vamoos branding while pushing an itinerary in the Vamoos travel app.</inlineHelpText>
+    <label>Vamoos Branding Code</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>000000</fullName>
+                <default>false</default>
+                <label>000000</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,81 @@
+<template>
+    <div class={panelClass}>
+        <template lwc:if={embedded}>
+            <div class="mfp-embedded-hdr">
+                <span class="mfp-embedded-title">Merge Tokens</span>
+                <button type="button" class="mfp-close" onclick={handleBack} aria-label="Close">✕</button>
+            </div>
+            <div class="mfp mfp-embedded-body">
+                <div class="mfp-objs">
+                    <div class="mfp-objs-label">Object</div>
+                    <template for:each={objectGroups} for:item="obj">
+                        <div
+                            key={obj.id}
+                            class={obj.rowClass}
+                            data-id={obj.id}
+                            onclick={handleObjectClick}
+                        >
+                            {obj.label}
+                            <span class="mfp-obj-c">{obj.count}</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="mfp-fields">
+                    <template for:each={fields} for:item="field">
+                        <div
+                            key={field.api}
+                            class={field.rowClass}
+                            data-label={field.tokenLabel}
+                            onclick={handleFieldClick}
+                        >
+                            <div class="mfp-fname">{field.name}</div>
+                            <div class="mfp-fapi">{field.api}</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:else>
+            <div class="mfp-hub">
+                <aside class="mfp-sidebar">
+                    <div class="sb-ey">Object</div>
+                    <template for:each={objectGroups} for:item="obj">
+                        <div
+                            key={obj.id}
+                            class={obj.sidebarClass}
+                            data-id={obj.id}
+                            onclick={handleObjectClick}
+                        >
+                            {obj.label}
+                            <span class="mfp-obj-c">{obj.count}</span>
+                        </div>
+                    </template>
+                </aside>
+
+                <div class="mfp-main">
+                    <div class="mfp-page-hdr">
+                        <div>
+                            <div class="hub-title">Merge Token Picker</div>
+                            <div class="hub-sub">Click a token to insert at cursor. Gold tokens are currently in use.</div>
+                        </div>
+                        <button type="button" class="btn btn-sec" onclick={handleBack}>← Compose</button>
+                    </div>
+                    <div class="mfp-fields">
+                        <template for:each={fields} for:item="field">
+                            <div
+                                key={field.api}
+                                class={field.rowClass}
+                                data-label={field.tokenLabel}
+                                onclick={handleFieldClick}
+                            >
+                                <div class="mfp-fname">{field.name}</div>
+                                <div class="mfp-fapi">{field.api}</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

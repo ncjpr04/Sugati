@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Own_Property__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If this property is owned by the company itself.</inlineHelpText>
+    <label>Own Property</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

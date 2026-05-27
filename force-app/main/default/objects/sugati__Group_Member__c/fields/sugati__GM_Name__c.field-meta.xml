@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__GM_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>BLANKVALUE(TEXT(sugati__GM_Salutation__c), Text(sugati__GM_Contact__r.Salutation)) + &apos; &apos; + BLANKVALUE(sugati__GM_First_Name__c, sugati__GM_Contact__r.FirstName) + &apos; &apos; +  sugati__GM_Contact__r.sugati__C_Middle_Name__c  + &apos; &apos; + BLANKVALUE(sugati__GM_Last_Name__c, sugati__GM_Contact__r.LastName)</formula>
+    <label>Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

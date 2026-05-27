@@ -1,0 +1,47 @@
+<template>
+    <div class="channel-select-page">
+        <div class="channel-select-inner">
+            <p class="ey">New Message · Step 1 of 2</p>
+            <h2 class="cs-title">Choose a channel</h2>
+            <p class="cs-sub">Select how you want to reach your traveller or supplier.</p>
+            <div class="channel-cards">
+                <div class="channel-card email-card" onclick={handleEmail} role="button" tabindex="0">
+                    <div class="cc-icon-wrap email">✉</div>
+                    <div class="cc-name">Email</div>
+                    <p class="cc-desc">Rich-text with attachments, merge tokens, and delivery tracking via Postmark.</p>
+                    <div class="cc-uses">
+                        <div class="cc-use">Itinerary delivery</div>
+                        <div class="cc-use">Booking confirmations</div>
+                        <div class="cc-use">Supplier communication</div>
+                        <div class="cc-use">Document delivery</div>
+                    </div>
+                    <div class="cc-cta email">Compose Email →</div>
+                </div>
+                <div class="channel-card wa-card" onclick={handleWhatsApp} role="button" tabindex="0">
+                    <div class="cc-icon-wrap wa">💬</div>
+                    <div class="cc-name">WhatsApp</div>
+                    <p class="cc-desc">Conversational messaging via WhatsApp Cloud API. Approved templates. Read receipts.</p>
+                    <div class="cc-uses">
+                        <div class="cc-use">Arrival reminders</div>
+                        <div class="cc-use">Quick updates</div>
+                        <div class="cc-use">Last-minute changes</div>
+                        <div class="cc-use">Flight confirmations</div>
+                    </div>
+                    <div class="cc-cta wa">Send WhatsApp →</div>
+                </div>
+                <div class="channel-card ia-card" onclick={handleInApp} role="button" tabindex="0">
+                    <div class="cc-icon-wrap ia">🔔</div>
+                    <div class="cc-name">In-App</div>
+                    <p class="cc-desc">Push notifications inside the Sugati traveller portal and mobile app.</p>
+                    <div class="cc-uses">
+                        <div class="cc-use">Trip notifications</div>
+                        <div class="cc-use">Document availability</div>
+                        <div class="cc-use">Itinerary updates</div>
+                        <div class="cc-use">Concierge messages</div>
+                    </div>
+                    <div class="cc-cta ia">Send Notification →</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

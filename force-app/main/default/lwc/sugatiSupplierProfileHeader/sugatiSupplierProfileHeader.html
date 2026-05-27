@@ -1,0 +1,68 @@
+<template>
+  <div class="profile-header">
+    <div class="profile-header-top">
+
+      <!-- Square avatar with initials -->
+      <div class="profile-avatar-sq">{initials}</div>
+
+      <!-- Centre: name, sub-details, tags, links, note -->
+      <div class="profile-info">
+
+        <div class="profile-name">{supplierName}</div>
+
+        <!-- Sub-details: website, address, star rating -->
+        <div class="profile-sub">
+          <template if:true={website}>
+            <span>🌐 <a href={websiteUrl} target="_blank" rel="noopener">{website}</a></span>
+          </template>
+          <template if:true={address}>
+            <span>📍 {address}</span>
+          </template>
+          <template if:true={starRating}>
+            <span>{starDisplay} {starRating}-Star</span>
+          </template>
+        </div>
+
+        <!-- Tags row: type badge, partner since, emergency phone -->
+        <div class="profile-tags">
+          <template if:true={supplierType}>
+            <span class="supplier-type-badge supplier-hotel">{supplierType}</span>
+          </template>
+          <template if:true={partnerSince}>
+            <span class="badge badge-neutral">Partner since {partnerSince}</span>
+          </template>
+          <template if:true={emergencyPhone}>
+            <span class="badge badge-alert">🚨 {emergencyPhone}</span>
+          </template>
+        </div>
+
+        <!-- Links row: confirmation and booking links -->
+        <div class="profile-links">
+          <template if:true={confirmationLink}>
+            <a href={confirmationLink} target="_blank" rel="noopener" class="profile-link">
+              🔗 Supplier Confirmation Link
+            </a>
+          </template>
+          <template if:true={bookingLink}>
+            <a href={bookingLink} target="_blank" rel="noopener" class="profile-link">
+              📋 Booking Link
+            </a>
+          </template>
+        </div>
+
+        <!-- Rich text supplier note -->
+        <template if:true={hasNote}>
+          <div class="profile-note-inline">
+            <span class="note-icon">📌</span>
+            <span>
+              <strong>Supplier Note</strong>
+              <lightning-formatted-rich-text value={supplierNote}>
+              </lightning-formatted-rich-text>
+            </span>
+          </div>
+        </template>
+
+      </div>
+    </div>
+  </div>
+</template>

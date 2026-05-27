@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Dont_create_multiple_RAL_Records_for_DMC__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If a single DMC has multiple bulk cost rows on a tour, using them as an accommodation supplier will create room allocation records for each bulk cost SB. Check this to only create room allocation records for the first instance of that supplier bulk cost.</description>
+    <inlineHelpText>If a single DMC has multiple bulk cost rows on a tour, using them as an accommodation supplier will create room allocation records for each bulk cost SB. Check this to only create room allocation records for the first instance of that supplier bulk cost.</inlineHelpText>
+    <label>Dont create multiple RAL Records for DMC</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__B_OB_Check_Required_Fields_for_Payment__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <label>OnBoarding Check Required Fields for Pay</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

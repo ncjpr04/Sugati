@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Show_Roles__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the Role dropdown will be shown on the traveller detail step of the tour booking journey.</description>
+    <inlineHelpText>If checked, the Role dropdown will be shown on the traveller detail step of the tour booking journey.</inlineHelpText>
+    <label>Show Roles</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

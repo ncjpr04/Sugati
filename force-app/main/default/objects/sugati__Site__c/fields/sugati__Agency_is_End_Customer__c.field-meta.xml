@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Agency_is_End_Customer__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Check this box if, when dealing with an agent booking you are expecting the agency to make the payments for the booking. If you expect the travelling pax to pay for an agency booking and you will then pay the agency the commission earned then leave this setting unchecked.</description>
+    <inlineHelpText>Check this box if, when dealing with an agent booking you are expecting the agency to make the payments for the booking.</inlineHelpText>
+    <label>Agency is End Customer</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

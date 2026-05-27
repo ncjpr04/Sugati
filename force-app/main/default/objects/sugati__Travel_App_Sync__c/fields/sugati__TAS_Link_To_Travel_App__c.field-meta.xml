@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__TAS_Link_To_Travel_App__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(
+	ISPICKVAL(sugati__TAS_Travel_App__c, &apos;Vamoos&apos;),
+	HYPERLINK(sugati__TAS_Travel_App_Link__c, &apos;Review on Vamoos&apos;,&apos;_blank&apos;),
+	IF(
+		ISPICKVAL(sugati__TAS_Travel_App__c, &apos;Axus&apos;),
+		HYPERLINK(sugati__TAS_Travel_App_Link__c, &apos;Review on Axus&apos;,&apos;_blank&apos;),
+		&apos;&apos;
+	)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Link To Travel App</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

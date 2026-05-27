@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SCP_Total_Outstanding_in_Corp_Curr__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>sugati__SCP_Outstanding_Amount__c / sugati__S_SCP_Supp_to_Corp_Currency_FX_Rate__r.sugati__ER_Exchange_Rate__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Outstanding in Corporate Currency</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

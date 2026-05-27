@@ -1,0 +1,34 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Meeting Notes</div>
+      <button class="btn-primary" onclick={handleAddNote}>+ Add Note</button>
+    </div>
+    <div class="card-body">
+      <template if:true={hasNotes}>
+        <div class="meeting-list" style="max-height: 350px; overflow-y: auto; padding-right: 8px;">
+          <template for:each={notes} for:item="note">
+            <div key={note.id} class="meeting-item">
+              <div class="meeting-item-header">
+                <div class="meeting-date-badge">{note.dateBadge}</div>
+                <div class="meeting-title">{note.title}</div>
+              </div>
+              <div class="meeting-attendees">{note.attendees}</div>
+              <div class="meeting-body">{note.body}</div>
+              <template if:true={note.hasActions}>
+                <div class="meeting-actions">
+                  <template for:each={note.actionsArray} for:item="action">
+                    <span key={action.id} class="meeting-action-chip">{action.icon} {action.text}</span>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+      <template if:false={hasNotes}>
+        <div style="text-align:center; padding:30px 20px; color:var(--text-muted); font-size:13px;">No meeting notes recorded for this agency. Click 'Add Note' to start.</div>
+      </template>
+    </div>
+  </div>
+</template>

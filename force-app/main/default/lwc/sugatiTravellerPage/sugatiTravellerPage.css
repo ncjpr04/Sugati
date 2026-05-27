@@ -1,0 +1,247 @@
+/* ---- CSS CUSTOM PROPERTIES ---- */
+:host {
+    --sunset      : #FFC543;
+    --sunset-dark : #c8930a;
+    --sunrise     : #FFF49D;
+    --warm-black  : #1C1C1A;
+    --off-white   : #F7F7F7;
+    --white       : #FFFFFF;
+    --border      : rgba(28, 28, 26, 0.1);
+    --text-primary   : #1C1C1A;
+    --text-secondary : #5a5a56;
+}
+
+/* ---- PAGE SHELL ---- */
+.page-body {
+    padding        : 20px;
+    display        : flex;
+    flex-direction : column;
+    gap            : 18px;
+    background     : #F7F7F7;
+}
+
+/* ---- PROFILE HEADER ---- */
+.profile-header {
+    background    : #FFFFFF;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 14px;
+    padding       : 28px 32px;
+    margin-bottom : 22px;
+    box-shadow    : 0 1px 3px rgba(28, 28, 26, 0.07);
+    position      : relative;
+    overflow      : hidden;
+}
+
+.profile-header::before {
+    content    : '';
+    position   : absolute;
+    top        : 0;
+    left       : 0;
+    right      : 0;
+    height     : 4px;
+    background : linear-gradient(90deg, #FFC543, #FFF49D);
+}
+
+.profile-header-top {
+    display               : grid;
+    grid-template-columns : auto 1fr auto;
+    gap                   : 22px;
+    align-items           : flex-start;
+}
+
+.profile-avatar-lg {
+    width         : 72px;
+    height        : 72px;
+    border-radius : 50%;
+    background    : linear-gradient(135deg, #FFC543, #FFF49D);
+    display       : flex;
+    align-items   : center;
+    justify-content : center;
+    font-size     : 28px;
+    font-weight   : 300;
+    color         : #1C1C1A;
+    flex-shrink   : 0;
+    box-shadow    : 0 4px 14px rgba(255, 197, 67, 0.35);
+}
+
+.profile-name {
+    font-size     : 30px;
+    font-weight   : 300;
+    color         : #1C1C1A;
+    line-height   : 1.1;
+    margin-bottom : 6px;
+}
+
+.profile-sub {
+    color         : #5a5a56;
+    font-size     : 13px;
+    display       : flex;
+    align-items   : center;
+    gap           : 18px;
+    flex-wrap     : wrap;
+    margin-bottom : 12px;
+}
+
+.profile-sub span {
+    display     : flex;
+    align-items : center;
+    gap         : 5px;
+}
+
+.profile-tags {
+    display   : flex;
+    gap       : 8px;
+    flex-wrap : wrap;
+}
+
+/* ---- BADGES ---- */
+.badge {
+    display        : inline-flex;
+    align-items    : center;
+    padding        : 3px 10px;
+    border-radius  : 20px;
+    font-size      : 11px;
+    font-weight    : 600;
+    letter-spacing : 0.4px;
+    text-transform : uppercase;
+}
+
+.badge-sunset {
+    background : rgba(255, 197, 67, 0.2);
+    color      : #7a4f00;
+    border     : 1px solid rgba(255, 197, 67, 0.5);
+}
+
+.badge-green {
+    background : rgba(46, 158, 107, 0.1);
+    color      : #1a6040;
+    border     : 1px solid rgba(46, 158, 107, 0.3);
+}
+
+.badge-blue {
+    background : rgba(58, 127, 193, 0.1);
+    color      : #1a4870;
+    border     : 1px solid rgba(58, 127, 193, 0.25);
+}
+
+.badge-neutral {
+    background : #F0F0EE;
+    color      : #5a5a56;
+    border     : 1px solid rgba(28, 28, 26, 0.1);
+}
+
+/* ---- PROFILE NOTE ---- */
+.profile-note-inline {
+    margin-top    : 14px;
+    padding       : 10px 14px;
+    background    : rgba(255, 197, 67, 0.08);
+    border-left   : 3px solid #FFC543;
+    border-radius : 0 8px 8px 0;
+    font-size     : 13px;
+    color         : #5a5a56;
+    font-style    : italic;
+    line-height   : 1.55;
+    display       : flex;
+    align-items   : flex-start;
+    gap           : 8px;
+}
+
+.profile-note-inline .note-icon {
+    font-style  : normal;
+    font-size   : 14px;
+    flex-shrink : 0;
+    margin-top  : 1px;
+}
+
+.profile-note-inline strong {
+    font-style     : normal;
+    color          : #1C1C1A;
+    font-weight    : 700;
+    margin-right   : 4px;
+    font-size      : 11px;
+    text-transform : uppercase;
+    letter-spacing : 0.6px;
+}
+
+/* ---- PROFILE ACTIONS ---- */
+.profile-actions {
+    display         : flex;
+    flex-direction  : column;
+    gap             : 8px;
+    align-items     : flex-end;
+    flex-shrink     : 0;
+}
+
+/* ---- BUTTONS ---- */
+.btn-primary {
+    padding       : 9px 20px;
+    background    : #FFC543;
+    color         : #1C1C1A;
+    border        : none;
+    border-radius : 7px;
+    font-size     : 13px;
+    font-weight   : 600;
+    cursor        : pointer;
+    white-space   : nowrap;
+    box-shadow    : 0 2px 8px rgba(255, 197, 67, 0.3);
+}
+
+.btn-ghost {
+    padding       : 9px 20px;
+    background    : transparent;
+    color         : #5a5a56;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 7px;
+    font-size     : 13px;
+    font-weight   : 500;
+    cursor        : pointer;
+    white-space   : nowrap;
+}
+
+/* ---- TWO-COLUMN LAYOUT ---- */
+.two-col {
+    display               : grid;
+    grid-template-columns : 1fr 1fr;
+    gap                   : 18px;
+    margin-bottom         : 18px;
+}
+
+/* Fixed-height variant — both columns stretch to equal height */
+.two-col-fixed {
+    align-items : stretch;
+    min-height  : 500px;
+}
+
+/* Prevent grid children from overflowing their columns */
+.two-col > *,
+.right-col > * {
+    min-width : 0;
+}
+
+/* Left column — booking history fills full height */
+.two-col-fixed > c-sugati-traveller-booking-history {
+    display        : flex;
+    flex-direction : column;
+    min-height     : 0;
+}
+
+/* ---- RIGHT COLUMN ---- */
+.right-col {
+    display        : flex;
+    flex-direction : column;
+    gap            : 18px;
+    min-height     : 0;
+}
+
+/* Pipeline — shrinks to its natural content height */
+.right-col > c-sugati-traveller-enquiry-pipeline {
+    display     : block;
+    flex-shrink : 0;
+}
+
+/* Communications — fills all remaining space in the right column */
+.right-col > c-sugati-traveller-recent-communications {
+    display    : flex;
+    flex       : 1;
+    min-height : 0;
+}

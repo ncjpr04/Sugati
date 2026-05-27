@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__QQ_Old_Question__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Fill this in, if this question is linked to an Old Question.</inlineHelpText>
+    <label>Old H&amp;S Question</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>sugati__Questionnaire_Question__c.sugati__QQ_Questionnaire_Question_Category__r.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>H&amp;S</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>sugati__Questionnaire_Question__c</referenceTo>
+    <relationshipLabel>Questionnaire Questions</relationshipLabel>
+    <relationshipName>Questionnaire_Questions</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

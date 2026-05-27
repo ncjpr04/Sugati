@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Base_Currency_GBP</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__ER_Book_From__c</columns>
+    <columns>sugati__ER_Book_To__c</columns>
+    <columns>sugati__ER_Travel_From__c</columns>
+    <columns>sugati__ER_Travel_To__c</columns>
+    <columns>sugati__ER_Exchange_Rate__c</columns>
+    <columns>sugati__ER_Sales_Currency__c</columns>
+    <columns>sugati__ER_Base_Currency__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>sugati__ER_Sales_Currency__c</field>
+        <operation>equals</operation>
+        <value>GBP</value>
+    </filters>
+    <label>Base Currency = GBP</label>
+</ListView>

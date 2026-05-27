@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Ext_Booking_No_Payment_Expiry_Hours__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If an external booking is made with no payment, it will remain in progress for this number of hours, at which time it will go cold and inventory will be released unless a payment is made and the opportunity becomes booked.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If an external booking is made with no payment, it will remain in progress for this number of hours, at which time it will go cold and inventory will be released unless a payment is made and the opportunity becomes booked.</inlineHelpText>
+    <label>Ext Booking No Payment Expiry Hours</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Display_Cost_per_Client_Group__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, when setting up costs for a new component for the first time in IB, rows for all client groups will be created.</description>
+    <inlineHelpText>If checked, when setting up costs for a new component for the first time in IB, rows for all client groups will be created.</inlineHelpText>
+    <label>Display Cost per Client Group</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

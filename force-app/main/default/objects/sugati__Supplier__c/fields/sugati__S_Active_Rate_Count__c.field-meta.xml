@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Active_Rate_Count__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Count of the rate records which are available for the use.</inlineHelpText>
+    <label>Active Rate Count</label>
+    <summaryFilterItems>
+        <field>sugati__RA_Rate__c.sugati__Archived__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__RA_Rate__c.sugati__RA_Supplier__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

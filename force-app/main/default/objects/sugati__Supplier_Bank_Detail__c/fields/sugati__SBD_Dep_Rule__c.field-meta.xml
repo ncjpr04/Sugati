@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SBD_Dep_Rule__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Dep Rule:</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>0-None</fullName>
+                <default>false</default>
+                <label>0-None</label>
+            </value>
+            <value>
+                <fullName>1-At Conf</fullName>
+                <default>false</default>
+                <label>1-At Conf</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_non_travelling_lead_booker_on_tour__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <label>Allow non-travelling lead booker on tour</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

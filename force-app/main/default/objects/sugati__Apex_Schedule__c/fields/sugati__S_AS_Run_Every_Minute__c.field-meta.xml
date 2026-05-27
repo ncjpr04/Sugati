@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_AS_Run_Every_Minute__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Should this class run every minute?</description>
+    <inlineHelpText>Should this class run every minute?</inlineHelpText>
+    <label>Run Every Minute</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

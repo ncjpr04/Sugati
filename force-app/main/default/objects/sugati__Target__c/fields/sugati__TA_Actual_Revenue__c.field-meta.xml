@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__TA_Actual_Revenue__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Total Sales Revenue for bookings made within the Start and End Date of the Target.</description>
+    <inlineHelpText>Total Sales Revenue for bookings.</inlineHelpText>
+    <label>Actual Revenue</label>
+    <summarizedField>sugati__Target_Actual_Number__c.sugati__TAN_Actual_Revenue__c</summarizedField>
+    <summaryForeignKey>sugati__Target_Actual_Number__c.sugati__TAN_Target__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

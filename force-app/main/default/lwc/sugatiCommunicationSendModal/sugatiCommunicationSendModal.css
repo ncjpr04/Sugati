@@ -1,0 +1,112 @@
+
+:host {
+    --warm-black: #1c1c1a;
+    --s1: #ffffff;
+    --t3: #7a756e;
+    --ac: #ffc543;
+    --ac-h: #f0b630;
+    --ok: #1a9060;
+    --b1: rgba(28, 28, 26, 0.1);
+    --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--sans);
+    display: block;
+}
+
+.send-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 28, 26, 0.52);
+    z-index: 9200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s;
+}
+
+.send-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.send-modal {
+    background: var(--s1);
+    border-radius: 16px;
+    padding: 40px 48px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(28, 28, 26, 0.18);
+    transform: translateY(8px);
+    transition: transform 0.22s;
+}
+
+.send-overlay.show .send-modal {
+    transform: translateY(0);
+}
+
+.send-modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 18px;
+    background: rgba(255, 197, 67, 0.12);
+    border: 2px solid rgba(255, 197, 67, 0.4);
+    color: var(--warm-black);
+}
+
+.send-modal-icon.sending {
+    animation: spin 1s linear infinite;
+}
+
+.send-modal-icon.sent {
+    background: rgba(26, 144, 96, 0.09);
+    border-color: rgba(26, 144, 96, 0.28);
+    color: var(--ok);
+    animation: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.send-modal-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--warm-black);
+    margin-bottom: 8px;
+}
+
+.send-modal-sub {
+    font-size: 12.5px;
+    color: var(--t3);
+    line-height: 1.65;
+    margin-bottom: 22px;
+}
+
+.send-modal-ok {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--ac);
+    color: var(--warm-black);
+    padding: 10px 20px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    font-family: var(--sans);
+    box-shadow: 0 1px 4px rgba(255, 197, 67, 0.3);
+}
+
+.send-modal-ok:hover {
+    background: var(--ac-h);
+}

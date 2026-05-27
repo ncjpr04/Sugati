@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Reference_No_Zeros__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This is being used on CopyOpp and on a OppTrigger.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Puts a static value. Any value puts in here will put before Opp Ref No. For example, if we put 0000, and the ref is 123, the Opp Ref will be 0000123.</inlineHelpText>
+    <label>Reference No Zeros</label>
+    <precision>10</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

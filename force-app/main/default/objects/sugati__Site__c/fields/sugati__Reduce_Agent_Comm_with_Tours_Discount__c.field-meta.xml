@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Reduce_Agent_Comm_with_Tours_Discount__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, agents will take a cut in commission if discounts are added to a tour booking.</description>
+    <inlineHelpText>If checked, agents will take a cut in commission if discounts are added to a tour booking.</inlineHelpText>
+    <label>Reduce Agent Comm. with Tours Discount</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

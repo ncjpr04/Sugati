@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__C_Continent__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Which region is the country in?</inlineHelpText>
+    <label>Continent</label>
+    <referenceTo>sugati__Continent__c</referenceTo>
+    <relationshipLabel>Countries</relationshipLabel>
+    <relationshipName>Countries</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

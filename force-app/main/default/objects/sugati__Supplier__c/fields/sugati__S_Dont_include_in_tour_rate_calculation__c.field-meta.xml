@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Dont_include_in_tour_rate_calculation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this is checked, the supplier costs will not automatically get calculated in TourCalculationService - usually used for custom rate calculations (e.g. travel insurance)</description>
+    <inlineHelpText>If this is checked, the supplier costs will not automatically get calculated in TourCalculationService - usually used for custom rate calculations (e.g. travel insurance)</inlineHelpText>
+    <label>Don&apos;t include in tour rate calculation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

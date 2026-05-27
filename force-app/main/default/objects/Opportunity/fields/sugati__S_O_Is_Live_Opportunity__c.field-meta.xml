@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Is_Live_Opportunity__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If opportunity is part of a version group, this will be ticked on the live version only. If not part of version group, it will be ticked.</description>
+    <formula>IF(ISBLANK(sugati__S_O_Version_Group__c), 
+    true, 
+    IF(Id == sugati__S_O_Version_Group__r.sugati__S_OVG_Live_Opportunity__c, 
+        true, 
+        false
+    )
+)</formula>
+    <label>Is Live Opportunity</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

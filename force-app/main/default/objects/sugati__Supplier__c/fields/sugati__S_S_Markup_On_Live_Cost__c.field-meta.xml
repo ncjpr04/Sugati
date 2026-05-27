@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_S_Markup_On_Live_Cost__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If Live Sell is provided on rate record and this checkbox is ticked then the system will calculate the selling price (what you charge) price by marking it up by x% on the Live Cost. If a rate doesn&apos;t have the Live Selli then it will always be marked up.</inlineHelpText>
+    <label>Markup On Live Cost for Agency Booking</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

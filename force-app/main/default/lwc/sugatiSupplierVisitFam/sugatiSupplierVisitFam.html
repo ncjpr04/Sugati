@@ -1,0 +1,42 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Supplier Visits &amp; FAM Trips</div>
+        </div>
+        <div class="card-body">
+            <template if:true={hasVisits}>
+                <div class="fam-scroll">
+                    <template for:each={visitRows} for:item="visit">
+                        <div class="fam-card" key={visit.id}>
+                            <div class="fam-header-row">
+                                <template if:true={visit.consultant}>
+                                    <div class="fam-consultant">{visit.consultant}</div>
+                                </template>
+                                <template if:true={visit.type}>
+                                    <span class="fam-type-chip">{visit.type}</span>
+                                </template>
+                            </div>
+                            <div class="fam-date-range">{visit.dateRange}</div>
+                            <!-- Rich text description rendered safely via lightning-formatted-rich-text -->
+                            <template if:true={visit.description}>
+                                <div class="fam-card-desc">
+                                    <lightning-formatted-rich-text
+                                        value={visit.description}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+                <template if:true={hasMore}>
+                    <div class="see-more-wrap">
+                        <button class="btn-ghost-sm" onclick={toggleExpand}>{expandLabel}</button>
+                    </div>
+                </template>
+            </template>
+            <template if:false={hasVisits}>
+                <div class="empty-state">No FAM visits recorded for this supplier.</div>
+            </template>
+        </div>
+    </div>
+</template>

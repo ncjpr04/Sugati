@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Maximum_Image_Sync__c</fullName>
+    <defaultValue>4</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Maximum no. of images sync from widgety per object(Supplier, Where_To_Go or Room Type)
+[Zero or Empty is limitless to sync]</description>
+    <externalId>false</externalId>
+    <label>Maximum Image Sync</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

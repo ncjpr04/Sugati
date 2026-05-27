@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RBD_Date_From_Rate_Time_Slot__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The date from the linked Rate / Time Slot record</description>
+    <formula>sugati__S_RBD_Rate_Time_Slot__r.sugati__S_RTS_Date__c</formula>
+    <inlineHelpText>The date from the linked Rate / Time Slot record</inlineHelpText>
+    <label>Date (From Rate / Time Slot)</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_LSEI_Number_of_Extras_Remaining__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The quantity of the extra available</description>
+    <externalId>false</externalId>
+    <formula>IF (
+    NOT(ISNULL(sugati__S_LSEI_Total_number_available__c)), 
+    sugati__S_LSEI_Total_number_available__c -  sugati__S_LSEI_Number_of_Extras_Sold__c, 
+    sugati__S_LSEI_Total_number_available__c
+)</formula>
+    <inlineHelpText>The quantity of the extra available</inlineHelpText>
+    <label>Number of Extras Remaining</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

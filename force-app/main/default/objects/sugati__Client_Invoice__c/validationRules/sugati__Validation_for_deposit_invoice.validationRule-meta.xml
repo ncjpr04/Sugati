@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Validation_for_deposit_invoice</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(RecordType.DeveloperName = &apos;Deposit&apos;, !sugati__I_Opportunity__r.sugati__O_Payment_Rule__r.sugati__R_Deposit_Only__c)</errorConditionFormula>
+    <errorMessage>You can&apos;t create deposit invoice for this opportunity, please contact to your admin.</errorMessage>
+</ValidationRule>

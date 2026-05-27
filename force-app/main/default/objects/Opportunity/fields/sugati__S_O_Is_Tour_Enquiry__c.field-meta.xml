@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Is_Tour_Enquiry__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>This will be checked for tour enquiries until the booking is confirmed. Useful when picking up an In-Progress booking.</description>
+    <inlineHelpText>This will be checked for tour enquiries until the booking is confirmed. Useful when picking up an In-Progress booking.</inlineHelpText>
+    <label>Is Tour Enquiry</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

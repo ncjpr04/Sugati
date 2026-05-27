@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Client_Invoice_Locked</fullName>
+    <active>false</active>
+    <description>AND( 
+OR(NOT($Profile.Name = &quot;System Administrator&quot;),NOT($Profile.Name = &quot;LF Management Team&quot;)), PRIORVALUE( ATOF__CL_Opportunity_Locked__c) = true 
+)</description>
+    <errorConditionFormula>AND( 
+NOT($Profile.Name = &quot;System Administrator&quot;),NOT($Profile.Name = &quot;LF Management Team&quot;), PRIORVALUE( sugati__CL_Opportunity_Locked__c) = true 
+)</errorConditionFormula>
+    <errorMessage>Opportunity has been locked please contact to system admin</errorMessage>
+</ValidationRule>

@@ -1,0 +1,57 @@
+<!-- sugatiAccountPage.html -->
+<template>
+  <div class="page-body">
+
+    <!-- ══ STATIC REFERENCE — remove before go-live ══ -->
+    <div class="profile-header">
+      <div class="profile-header-top">
+        <div class="profile-avatar-lg">SH</div>
+        <div>
+          <div class="profile-name">Sarah Harrington</div>
+          <div class="profile-sub">
+            <span>✉ sarah.harrington@email.com</span>
+            <span>📞 +44 7700 900456</span>
+            <span>🌍 London, UK</span>
+          </div>
+          <div class="profile-tags">
+            <span class="badge badge-sunset">⭐ Platinum</span>
+            <span class="badge badge-green">Active</span>
+            <span class="badge badge-blue">Repeat Traveller</span>
+            <span class="badge badge-neutral">Client since 2016</span>
+          </div>
+          <div class="profile-note-inline">
+            <span class="note-icon">📌</span>
+            <span>
+              <strong>Profile Note</strong>
+              Prefers direct flights, always requests extra legroom. Husband James is gluten-free.
+              Sarah has a shellfish allergy — flag at all hotel check-ins and restaurant bookings.
+            </span>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-primary">+ New Enquiry</button>
+          <button class="btn-ghost">Send Email</button>
+          <button class="btn-ghost">Log Activity</button>
+        </div>
+      </div>
+    </div>
+    <!-- ══ END STATIC REFERENCE ══ -->
+
+    <!-- ── DYNAMIC COMPONENT — live data ── -->
+    <c-sugati-traveller-profile-header
+        account={account}
+        opportunities={opportunities}>
+    </c-sugati-traveller-profile-header>
+
+    <!-- B2B — placeholder, Phase 2 -->
+    <template if:true={isB2B}>
+      <div class="coming-soon">B2B Agency — Coming Soon</div>
+    </template>
+
+    <!-- Supplier — placeholder, Phase 3 -->
+    <template if:true={isSupplier}>
+      <div class="coming-soon">Suppliers — Coming Soon</div>
+    </template>
+
+  </div>
+</template>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Show_Price_Breakdown__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>This checkbox has to be checked if you want to see a button on Room Booking for the price breakdown.</inlineHelpText>
+    <label>Show Price Breakdown</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Bond_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Bond Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Licenced</fullName>
+                <default>false</default>
+                <label>Licenced</label>
+            </value>
+            <value>
+                <fullName>Unlicenced</fullName>
+                <default>false</default>
+                <label>Unlicenced</label>
+            </value>
+            <value>
+                <fullName>Accommodation only</fullName>
+                <default>false</default>
+                <label>Accommodation only</label>
+            </value>
+            <value>
+                <fullName>Not protected</fullName>
+                <default>false</default>
+                <label>Not protected</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

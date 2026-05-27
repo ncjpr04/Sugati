@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Tasks_Management__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Tasks Management</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Booking form completed by client</fullName>
+                <default>false</default>
+                <label>Booking form completed by client</label>
+            </value>
+            <value>
+                <fullName>Deposit received</fullName>
+                <default>false</default>
+                <label>Deposit received</label>
+            </value>
+            <value>
+                <fullName>Payment outstanding</fullName>
+                <default>false</default>
+                <label>Payment outstanding</label>
+            </value>
+            <value>
+                <fullName>Supplier reservations confirmed</fullName>
+                <default>false</default>
+                <label>Supplier reservations confirmed</label>
+            </value>
+            <value>
+                <fullName>Flight tickets issued</fullName>
+                <default>false</default>
+                <label>Flight tickets issued</label>
+            </value>
+            <value>
+                <fullName>Final documents sent</fullName>
+                <default>false</default>
+                <label>Final documents sent</label>
+            </value>
+            <value>
+                <fullName>Final call to client made pre departure</fullName>
+                <default>false</default>
+                <label>Final call to client made pre departure</label>
+            </value>
+            <value>
+                <fullName>Welcome back call made</fullName>
+                <default>false</default>
+                <label>Welcome back call made</label>
+            </value>
+            <value>
+                <fullName>Welcome back survey completed</fullName>
+                <default>false</default>
+                <label>Welcome back survey completed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>10</visibleLines>
+</CustomField>

@@ -1,0 +1,48 @@
+<template>
+    <div class="booking-card">
+
+        <div class="card-header">
+            <div class="card-title">Booking History</div>
+            <span class="text-muted">{tripSummary}</span>
+        </div>
+
+        <div class={tableWrapClass}>
+            <table class="trips-table">
+                <thead>
+                    <tr>
+                        <th>Destination</th>
+                        <th>Dates</th>
+                        <th>Nights</th>
+                        <th>Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={visibleTrips} for:item="trip">
+                        <tr key={trip.Id}>
+                            <td>
+                                <div class="trip-dest">
+                                    {trip.Name}
+                                    <small>{trip.sugati__O_Country__c}</small>
+                                </div>
+                            </td>
+                            <td>{trip.bookingDateFormatted}</td>
+                            <td>{trip.sugati__O_No_of_Nights__c}</td>
+                            <td class="text-accent">{trip.amountFormatted}</td>
+                            <td>
+                                <span class={trip.statusClass}>{trip.sugati__O_Status__c}</span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+
+        <template if:true={hasMore}>
+            <div class="card-footer">
+                <a class="view-all-link" onclick={toggle}>{toggleLabel}</a>
+            </div>
+        </template>
+
+    </div>
+</template>

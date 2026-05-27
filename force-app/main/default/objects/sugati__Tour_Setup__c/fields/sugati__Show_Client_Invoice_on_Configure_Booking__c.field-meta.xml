@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Show_Client_Invoice_on_Configure_Booking__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the Client Invoice field will be visible on the payment tab of Configure Booking.</description>
+    <inlineHelpText>If checked, the Client Invoice field will be visible on the payment tab of Configure Booking.</inlineHelpText>
+    <label>Show Client Invoice on Configure Booking</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

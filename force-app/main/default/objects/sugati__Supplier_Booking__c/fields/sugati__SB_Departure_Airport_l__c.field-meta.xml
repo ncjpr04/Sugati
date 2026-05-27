@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Departure_Airport_l__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Departure Airport</label>
+    <referenceTo>sugati__Airport__c</referenceTo>
+    <relationshipLabel>Supplier Booking (Departure Airport)</relationshipLabel>
+    <relationshipName>Supplier_Booking1</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

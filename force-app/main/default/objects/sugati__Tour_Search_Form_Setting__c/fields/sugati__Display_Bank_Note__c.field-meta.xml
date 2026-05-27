@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Display_Bank_Note__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>To hide and show Bank Note on Tour Detail page.</description>
+    <inlineHelpText>To hide and show Bank Note on Tour Detail page.</inlineHelpText>
+    <label>Display Bank Note</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

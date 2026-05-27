@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_external_book_with_no_payment__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, external users have the option to complete a booking without making a payment. The label for this option is set in the &quot;Tour Book No Payment Label (External)&quot; Custom Label.</description>
+    <inlineHelpText>If checked, external users have the option to complete a booking without making a payment. The label for this option is set in the &quot;Tour Book No Payment Label (External)&quot; Custom Label.</inlineHelpText>
+    <label>Allow external book with no payment</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

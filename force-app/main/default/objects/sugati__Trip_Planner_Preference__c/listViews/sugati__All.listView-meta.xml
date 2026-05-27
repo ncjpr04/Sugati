@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__All</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__TPP_Column_Widths__c</columns>
+    <columns>sugati__TPP_Default_Freeze__c</columns>
+    <columns>sugati__TPP_Default_Grouping__c</columns>
+    <columns>sugati__TPP_Default_Show_Filters__c</columns>
+    <columns>sugati__TPP_Default_Sorting__c</columns>
+    <columns>sugati__TPP_User__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

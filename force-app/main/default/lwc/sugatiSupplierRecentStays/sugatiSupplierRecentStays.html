@@ -1,0 +1,62 @@
+<template>
+    <div class="card">
+
+        <div class="card-header">
+            <div class="card-title">Recent Stays</div>
+            <span class="stay-summary">{uniqueOpptyCount} stays · {totalNights} nights</span>
+        </div>
+
+        <template if:true={hasStays}>
+            <!-- table-wrap toggles overflow-y via expanded class -->
+            <div class={tableWrapClass}>
+                <table class="stays-table">
+                    <thead>
+                        <tr>
+                            <th>Guest / Client</th>
+                            <th>Agency</th>
+                            <th>Room Type</th>
+                            <th>Dates</th>
+                            <th>Nights</th>
+                            <th>Value</th>
+                            <th>Feedback</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={displayedRows} for:item="row">
+                            <tr key={row.id}>
+                                <td>
+                                    <div class="guest-name">{row.guestName}</div>
+                                    <div class="guest-meta">{row.opptyName}</div>
+                                </td>
+                                <td>{row.agency}</td>
+                                <td>{row.roomType}</td>
+                                <td class="nowrap">{row.dateRange}</td>
+                                <td>{row.displayNights}</td>
+                                <td class="text-accent">{row.value}</td>
+                                <td><span class="feedback-na">N/A</span></td>
+                                <td><span class={row.statusClass}>{row.status}</span></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer always visible — view all + export -->
+            <div class="card-footer">
+                <template if:true={hasMore}>
+                    <a class="view-all-link" onclick={toggleViewAll}>{viewAllLabel}</a>
+                </template>
+                <template if:false={hasMore}>
+                    <span></span>
+                </template>
+                <button class="btn-ghost" onclick={handleExport}>Export Report</button>
+            </div>
+        </template>
+
+        <template if:false={hasStays}>
+            <div class="empty-state">No stays found for this supplier in the current year.</div>
+        </template>
+
+    </div>
+</template>

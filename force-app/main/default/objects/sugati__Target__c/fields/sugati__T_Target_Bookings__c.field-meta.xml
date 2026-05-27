@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__T_Target_Bookings__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Target number of bookings.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Target number of bookings.</inlineHelpText>
+    <label>Target Bookings</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

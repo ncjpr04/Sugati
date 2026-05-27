@@ -1,0 +1,30 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Agency Details</div>
+      <button class="btn-ghost" onclick={handleEditOptions}>Edit</button>
+    </div>
+    <div class="card-body">
+      <div class="info-grid">
+        <div><div class="info-label">Agency Type</div><div class="info-value">{agencyType}</div></div>
+        <div><div class="info-label">Head Office</div><div class="info-value">{headOffice}</div></div>
+        <div><div class="info-label">Commission Rate</div><div class="info-value highlight">{commissionRate}</div></div>
+        <div><div class="info-label">Partnership Since</div><div class="info-value">{partnershipSince}</div></div>
+        <div><div class="info-label">Contract Renewal</div><div class="info-value">N/A</div></div>
+      </div>
+
+      <template if:true={hasTravelAssociations}>
+        <div class="divider"></div>
+        <div class="section-label">Travel Associations</div>
+        <div class="assoc-grid">
+          <template for:each={travelAssociations} for:item="assoc">
+            <div key={assoc.key} class="assoc-badge">
+              <div class={assoc.cssClass}>{assoc.initials}</div>
+              <div class="assoc-name">{assoc.name}</div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>

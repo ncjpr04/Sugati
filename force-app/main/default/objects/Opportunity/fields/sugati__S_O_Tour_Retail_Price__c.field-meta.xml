@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Tour_Retail_Price__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If agency booking and agency is end customer, This will contain the total amount plus the agent commission.</description>
+    <externalId>false</externalId>
+    <formula>IF($Setup.sugati__Site__c.sugati__Agency_is_End_Customer__c, Amount + sugati__O_Agent_Commission__c, Amount)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>If agency booking and agency is end customer, This will contain the total amount plus the agent commission.</inlineHelpText>
+    <label>Tour Retail Price</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

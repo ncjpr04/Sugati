@@ -1,0 +1,25 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Bed Nights by Room Type</div>
+        </div>
+        <div class="card-body">
+            <template if:true={hasData}>
+                <div class="scroll-container">
+                    <template for:each={roomTypeRows} for:item="row">
+                        <div class="progress-row" key={row.roomType}>
+                            <div class="progress-label" title={row.roomType}>{row.roomType}</div>
+                            <div class="progress-bar-wrap">
+                                <div class="progress-bar-fill" style={row.barStyle}></div>
+                            </div>
+                            <div class="progress-val">{row.pct}%</div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template if:false={hasData}>
+                <div class="empty-state">No bed night data available.</div>
+            </template>
+        </div>
+    </div>
+</template>

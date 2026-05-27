@@ -1,0 +1,28 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Top Destinations ({currentYear})</div>
+    </div>
+    <div class="card-body">
+      <template if:true={hasDestinations}>
+        <ul class="dest-list">
+          <template for:each={topDestinations} for:item="dest">
+            <li key={dest.id} class="dest-item">
+              <div class="dest-left">
+                <div class="dest-flag">{dest.flag}</div>
+                <div>
+                  <div class="dest-name">{dest.name}</div>
+                  <div class="dest-count">{dest.bookingsString} · {dest.nightsString}</div>
+                </div>
+              </div>
+              <div class="dest-revenue">{dest.revString}</div>
+            </li>
+          </template>
+        </ul>
+      </template>
+      <template if:false={hasDestinations}>
+        <div class="empty-state">No destinations booked for {currentYear} yet.</div>
+      </template>
+    </div>
+  </div>
+</template>

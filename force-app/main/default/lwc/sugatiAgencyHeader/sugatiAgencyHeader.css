@@ -1,0 +1,58 @@
+.profile-header { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:28px 32px; margin-bottom:22px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; }
+.profile-header::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--sunset),var(--sunrise)); }
+.profile-header-top { display:grid; grid-template-columns:auto 1fr auto; gap:22px; align-items:flex-start; }
+
+.profile-avatar-sq { width:72px; height:72px; border-radius:12px; background:linear-gradient(135deg,var(--sunset),var(--sunrise)); display:flex; align-items:center; justify-content:center; font-family:'Crimson Pro',serif; font-size:20px; font-weight:300; color:var(--warm-black); flex-shrink:0; box-shadow:0 4px 14px rgba(255,197,67,0.35); letter-spacing:1px; }
+.profile-name { font-family:'Crimson Pro',serif; font-size:30px; font-weight:300; color:var(--warm-black); line-height:1.1; margin-bottom:6px; }
+
+.profile-sub { color:var(--text-secondary); font-size:13px; display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:12px; }
+.profile-sub span { display:flex; align-items:center; gap:5px; }
+.profile-tags { display:flex; gap:8px; flex-wrap:wrap; }
+
+/* INLINE PROFILE NOTE */
+.profile-note-inline { margin-top:14px; padding:10px 14px; background:rgba(255,197,67,0.08); border-left:3px solid var(--sunset); border-radius:0 8px 8px 0; font-size:13px; color:var(--text-secondary); font-style:italic; line-height:1.55; display:flex; align-items:flex-start; gap:8px; }
+.profile-note-inline .note-icon { font-style:normal; font-size:14px; flex-shrink:0; margin-top:1px; }
+.profile-note-inline strong { font-style:normal; color:var(--warm-black); font-weight:700; margin-right:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.6px; }
+
+.profile-actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; flex-shrink:0; }
+
+/* BUTTONS */
+.btn-primary { padding:9px 20px; background:var(--sunset); color:var(--warm-black); border:none; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.18s; white-space:nowrap; font-family:'DM Sans',sans-serif; box-shadow:0 2px 8px rgba(255,197,67,0.3); }
+.btn-primary:hover { background:var(--sunset-dark); color:var(--white); }
+.btn-ghost { padding:9px 20px; background:transparent; color:var(--text-secondary); border:1px solid var(--border); border-radius:7px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.18s; white-space:nowrap; font-family:'DM Sans',sans-serif; }
+.btn-ghost:hover { background:var(--off-white); color:var(--warm-black); }
+
+/* BADGES */
+.badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; letter-spacing:0.4px; text-transform:uppercase; }
+.badge-sunset  { background:rgba(255,197,67,0.2); color:#7a4f00; border:1px solid rgba(255,197,67,0.5); }
+.badge-green   { background:rgba(46,158,107,0.1); color:#1a6040; border:1px solid rgba(46,158,107,0.3); }
+.badge-blue    { background:rgba(58,127,193,0.1); color:#1a4870; border:1px solid rgba(58,127,193,0.25); }
+.badge-neutral { background:var(--surface-2); color:var(--text-secondary); border:1px solid var(--border); }
+
+.supplier-type-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.supplier-hotel {
+  background: rgba(255, 197, 67, 0.2);
+  color: #7a4f00;
+  border: 1px solid rgba(255, 197, 67, 0.5);
+}
+
+.badge-alert {
+    background: rgba(208,64,64,0.1);
+    color: #801a1a;
+    border: 1px solid rgba(208,64,64,0.25);
+}
+
+@media(max-width:768px){
+  .profile-header-top{grid-template-columns:auto 1fr}
+  .profile-actions{display:none}
+}

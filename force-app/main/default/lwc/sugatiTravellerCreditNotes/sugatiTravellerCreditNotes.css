@@ -1,0 +1,262 @@
+/* ---- HOST ---- */
+:host {
+    display: block;
+}
+
+/* ---- CARD SHELL ---- */
+.card {
+    background    : #FFFFFF;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 12px;
+    overflow      : hidden;
+    box-shadow    : 0 1px 3px rgba(28, 28, 26, 0.07);
+}
+
+.card-header {
+    padding         : 16px 22px 14px;
+    border-bottom   : 1px solid rgba(28, 28, 26, 0.1);
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.card-title {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 19px;
+    font-weight : 300;
+    color       : #1C1C1A;
+}
+
+.header-right {
+    display     : flex;
+    align-items : center;
+    gap         : 8px;
+}
+
+.card-body {
+    padding: 20px 22px;
+}
+
+/* ---- CREDIT HERO ---- */
+.credit-hero {
+    display       : flex;
+    align-items   : center;
+    gap           : 24px;
+    padding       : 20px;
+    background    : rgba(255, 197, 67, 0.06);
+    border        : 1px solid rgba(255, 197, 67, 0.25);
+    border-radius : 10px;
+    margin-bottom : 20px;
+}
+
+/* ---- CREDIT DIAL ---- */
+.credit-dial {
+    position    : relative;
+    width       : 96px;
+    height      : 96px;
+    flex-shrink : 0;
+}
+
+.credit-dial svg {
+    transform: rotate(-90deg);
+}
+
+.credit-dial-inner {
+    position  : absolute;
+    top       : 50%;
+    left      : 50%;
+    transform : translate(-50%, -50%);
+    text-align: center;
+}
+
+.credit-dial-val {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 18px;
+    font-weight : 300;
+    color       : #c8930a;
+    line-height : 1;
+}
+
+.credit-dial-sub {
+    font-size      : 9px;
+    color          : #9a9a94;
+    text-transform : uppercase;
+    letter-spacing : 0.5px;
+    margin-top     : 2px;
+}
+
+/* ---- CREDIT SUMMARY ---- */
+.credit-summary {
+    flex: 1;
+}
+
+.credit-big {
+    font-family   : 'Crimson Pro', serif;
+    font-size     : 36px;
+    font-weight   : 300;
+    color         : #1C1C1A;
+    line-height   : 1;
+    margin-bottom : 5px;
+}
+
+.credit-big-sub {
+    font-size   : 16px;
+    color       : #9a9a94;
+    font-weight : 300;
+}
+
+.credit-expiry {
+    font-size     : 12px;
+    display       : flex;
+    align-items   : center;
+    gap           : 6px;
+    margin-bottom : 10px;
+}
+
+.expiry-urgent {
+    color       : #e07820;
+    font-weight : 500;
+}
+
+.expiry-ok {
+    color       : #2e9e6b;
+    font-weight : 500;
+}
+
+.credit-meta-row {
+    display   : flex;
+    gap       : 24px;
+    flex-wrap : wrap;
+}
+
+.credit-meta-label {
+    font-size      : 10px;
+    text-transform : uppercase;
+    letter-spacing : 0.6px;
+    color          : #9a9a94;
+    font-weight    : 600;
+    margin-bottom  : 2px;
+}
+
+.credit-meta-val {
+    font-size   : 13px;
+    color       : #1C1C1A;
+    font-weight : 500;
+}
+
+/* ---- SECTION LABEL ---- */
+.section-label {
+    font-size      : 11px;
+    font-weight    : 600;
+    text-transform : uppercase;
+    letter-spacing : 1px;
+    color          : #c8930a;
+    margin-bottom  : 14px;
+    display        : flex;
+    align-items    : center;
+    gap            : 10px;
+}
+
+.section-label::after {
+    content    : '';
+    flex       : 1;
+    height     : 1px;
+    background : linear-gradient(90deg, rgba(255, 197, 67, 0.4), transparent);
+}
+
+/* ---- DIVIDER ---- */
+.divider {
+    height     : 1px;
+    background : rgba(28, 28, 26, 0.1);
+    margin     : 16px 0;
+}
+
+/* ---- CREDIT NOTE ROWS ---- */
+.credit-notes-list {
+    list-style: none;
+}
+
+.credit-note-row {
+    display               : grid;
+    grid-template-columns : 110px 1fr auto auto auto;
+    gap                   : 12px;
+    align-items           : center;
+    padding               : 11px 0;
+    border-bottom         : 1px solid rgba(28, 28, 26, 0.05);
+    font-size             : 13px;
+}
+
+.credit-note-row:last-child {
+    border-bottom: none;
+}
+
+.credit-note-row.faded {
+    opacity: 0.45;
+}
+
+.cn-ref {
+    font-size   : 11px;
+    color       : #c8930a;
+    font-weight : 700;
+    font-family : monospace;
+}
+
+.cn-desc {
+    color: #1C1C1A;
+}
+
+.cn-desc small {
+    display    : block;
+    font-size  : 11px;
+    color      : #9a9a94;
+    margin-top : 1px;
+}
+
+.cn-amount {
+    color       : #c8930a;
+    font-weight : 600;
+    text-align  : right;
+    white-space : nowrap;
+}
+
+.cn-status {
+    text-align: right;
+}
+
+/* ---- BADGES ---- */
+.badge {
+    display        : inline-flex;
+    align-items    : center;
+    padding        : 3px 10px;
+    border-radius  : 20px;
+    font-size      : 11px;
+    font-weight    : 600;
+    letter-spacing : 0.4px;
+    text-transform : uppercase;
+}
+
+.badge-sunset {
+    background : rgba(255, 197, 67, 0.2);
+    color      : #7a4f00;
+    border     : 1px solid rgba(255, 197, 67, 0.5);
+}
+
+.badge-green {
+    background : rgba(46, 158, 107, 0.1);
+    color      : #1a6040;
+    border     : 1px solid rgba(46, 158, 107, 0.3);
+}
+
+.badge-neutral {
+    background : #F0F0EE;
+    color      : #5a5a56;
+    border     : 1px solid rgba(28, 28, 26, 0.1);
+}
+
+/* ---- EMPTY STATE ---- */
+.empty-state {
+    font-size  : 13px;
+    color      : #9a9a94;
+    text-align : center;
+    padding    : 24px 0;
+}

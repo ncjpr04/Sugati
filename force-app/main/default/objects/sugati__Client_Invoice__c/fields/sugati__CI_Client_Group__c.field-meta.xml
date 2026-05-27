@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CI_Client_Group__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Client Group</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>sugati__Client_Group__c.sugati__CG_Opportunity__r.Id</field>
+            <operation>equals</operation>
+            <valueField>$Source.sugati__I_Opportunity__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>sugati__Client_Group__c</referenceTo>
+    <relationshipLabel>Client Invoices</relationshipLabel>
+    <relationshipName>Client_Invoices</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

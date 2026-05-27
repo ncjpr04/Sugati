@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__OE_Email_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Email Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Booking Form Email</fullName>
+                <default>false</default>
+                <label>Booking Form Email</label>
+            </value>
+            <value>
+                <fullName>Email Itinerary</fullName>
+                <default>false</default>
+                <label>Email Itinerary</label>
+            </value>
+            <value>
+                <fullName>HE Recap Email</fullName>
+                <default>false</default>
+                <label>HE Recap Email</label>
+            </value>
+            <value>
+                <fullName>Holiday Suggestion</fullName>
+                <default>false</default>
+                <label>Holiday Suggestion</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

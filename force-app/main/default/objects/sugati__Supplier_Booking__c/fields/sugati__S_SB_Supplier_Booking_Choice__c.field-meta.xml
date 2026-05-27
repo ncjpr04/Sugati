@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SB_Supplier_Booking_Choice__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Supplier Booking Choice</label>
+    <referenceTo>sugati__Supplier_Booking_Choice__c</referenceTo>
+    <relationshipLabel>Supplier Bookings</relationshipLabel>
+    <relationshipName>Supplier_Bookings</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

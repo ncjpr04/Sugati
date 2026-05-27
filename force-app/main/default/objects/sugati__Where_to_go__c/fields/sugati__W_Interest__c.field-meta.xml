@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__W_Interest__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Interest</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Diving</fullName>
+                <default>false</default>
+                <label>Diving</label>
+            </value>
+            <value>
+                <fullName>Fine Dining</fullName>
+                <default>false</default>
+                <label>Fine Dining</label>
+            </value>
+            <value>
+                <fullName>Culture</fullName>
+                <default>false</default>
+                <label>Culture</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>10</visibleLines>
+</CustomField>

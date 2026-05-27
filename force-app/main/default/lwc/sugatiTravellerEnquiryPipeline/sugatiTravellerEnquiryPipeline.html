@@ -1,0 +1,58 @@
+<template>
+    <div class="pipe-card">
+
+        <div class="card-header">
+            <div class="card-title">Enquiry Pipeline</div>
+            <div class="opp-count">{opportunities.length} opportunities</div>
+        </div>
+
+        <div class="card-body">
+
+            <template if:true={hasOpportunities}>
+
+                <!-- STAGE BAR -->
+                <div class="pipeline-scroll">
+                    <div class="pipeline-stages">
+                        <template for:each={stageSegments} for:item="stageSegment">
+                            <div
+                                key={stageSegment.stage}
+                                class="pipe-stage"
+                                style={stageSegment.barStyle}
+                                title={stageSegment.tooltip}>
+                                <span class="pipe-stage-label">{stageSegment.label}</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- LEGEND — always shows all stages regardless of bar width -->
+                <div class="pipe-legend-scroll">
+                    <div class="pipe-legend">
+                        <template for:each={stageSegments} for:item="stageSegment">
+                            <div key={stageSegment.stage} class="pipe-legend-item">
+                                <div class="pipe-dot" style={stageSegment.dotStyle}></div>
+                                <span>{stageSegment.stage}</span>
+                                <span class="legend-count">({stageSegment.count})</span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+            </template>
+
+            <template if:false={hasOpportunities}>
+                <div class="empty-pipeline">No opportunities found.</div>
+            </template>
+
+            <div class="divider"></div>
+
+            <!-- FOLLOW-UP ROW -->
+            <div class="flex-between">
+                <span class="text-muted text-sm">Next follow-up</span>
+                <span class="followup-text">{nextFollowUpText}</span>
+            </div>
+
+        </div>
+
+    </div>
+</template>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CLI_Assigned_to_me__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>sugati__CLI_User__c = $User.Id</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Assigned to me</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

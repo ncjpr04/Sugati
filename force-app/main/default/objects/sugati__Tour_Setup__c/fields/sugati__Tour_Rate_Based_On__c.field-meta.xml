@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour_Rate_Based_On__c</fullName>
+    <defaultValue>&quot;Room Type&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Tells the system to base tour rates on a specific room type or the number sharing in the room. Possible options are &quot;Room Type&quot; or &quot;How Many Sharing&quot;</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Tells the system to base tour rates on a specific room type or the number sharing in the room. Possible options are &quot;Room Type&quot; or &quot;How Many Sharing&quot;</inlineHelpText>
+    <label>Tour Rate Based On</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

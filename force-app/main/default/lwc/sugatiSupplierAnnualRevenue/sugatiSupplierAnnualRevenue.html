@@ -1,0 +1,63 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Annual Revenue</div>
+            <div class="year-tabs">
+                <template for:each={yearTabs} for:item="tab">
+                    <div
+                        key={tab.label}
+                        class={tab.cssClass}
+                        data-year={tab.value}
+                        onclick={handleYearSelect}
+                    >{tab.label}</div>
+                </template>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <!-- MONTHLY CHART (only when a specific year is selected) -->
+            <template if:true={showMonthly}>
+                <div class="section-label">Monthly Revenue — {selectedYear}</div>
+                <div class="mini-chart monthly-chart">
+                    <template for:each={monthlyBars} for:item="bar">
+                        <div class="bar-wrap" key={bar.month}>
+                            <span class="bar-tooltip">{bar.tooltip}</span>
+                            <div class="bar-spacer"></div>
+                            <div class={bar.barClass} style={bar.barStyle}></div>
+                            <div class="bar-label">{bar.monthLabel}</div>
+                        </div>
+                    </template>
+                </div>
+                <div class="divider"></div>
+            </template>
+
+            <!-- YOY CHART (always shown) -->
+            <div class="section-label">
+                <template if:true={showMonthly}>Year-over-Year</template>
+                <template if:false={showMonthly}>Lifetime Revenue by Year</template>
+            </div>
+            <div class="mini-chart yoy-chart">
+                <template for:each={yoyBars} for:item="bar">
+                    <div class="bar-wrap" key={bar.year}>
+                        <span class="bar-tooltip">{bar.tooltip}</span>
+                        <div class="bar-spacer"></div>
+                        <div class={bar.barClass} style={bar.barStyle}></div>
+                        <div class="bar-label">{bar.year}</div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Legend -->
+            <div class="chart-legend">
+                <div class="pipe-legend-item">
+                    <div class="pipe-dot active-dot"></div>
+                    <span>{selectedYear} Revenue</span>
+                </div>
+                <div class="pipe-legend-item">
+                    <div class="pipe-dot prior-dot"></div>
+                    <span>Prior Years</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

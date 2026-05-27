@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SC_Costing_Source__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>The information which is used to determine the source of cost. Whether it was manually created or created from the Load Rates button.</inlineHelpText>
+    <label>Costing Source</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Manual</fullName>
+                <default>true</default>
+                <label>Manual</label>
+            </value>
+            <value>
+                <fullName>Load Rates</fullName>
+                <default>false</default>
+                <label>Load Rates</label>
+            </value>
+            <value>
+                <fullName>Room Search</fullName>
+                <default>false</default>
+                <label>Room Search</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

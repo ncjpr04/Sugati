@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Final_Docs_Category</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Final Docs Category</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!
+   IF(
+      OR(LEN($Site.Name) == 0, ISBLANK($Setup.sugati__Site__c.sugati__Community_Base_URL__c)),
+      URLFOR(&quot;/apex/sugati__FinalDocsConfirmationCategory?Id=&quot; + Opportunity.Id),
+      URLFOR($Site.Prefix &amp; $Setup.sugati__Site__c.sugati__Community_Base_URL__c &amp; URLENCODE(&apos;/apex/sugati__FinalDocsConfirmationCategory?Id=&apos;) + Opportunity.Id)
+   )
+}</url>
+</WebLink>

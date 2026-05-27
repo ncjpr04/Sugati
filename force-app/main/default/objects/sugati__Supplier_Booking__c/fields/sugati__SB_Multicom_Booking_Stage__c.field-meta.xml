@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Multicom_Booking_Stage__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Multicom Booking Stage</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>passenger_details</fullName>
+                <default>false</default>
+                <label>passenger_details</label>
+            </value>
+            <value>
+                <fullName>optional_extras</fullName>
+                <default>false</default>
+                <label>optional_extras</label>
+            </value>
+            <value>
+                <fullName>confirmed_costing</fullName>
+                <default>false</default>
+                <label>confirmed_costing</label>
+            </value>
+            <value>
+                <fullName>booked</fullName>
+                <default>false</default>
+                <label>booked</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

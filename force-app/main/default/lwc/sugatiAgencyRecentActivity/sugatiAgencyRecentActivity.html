@@ -1,0 +1,28 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Recent Activity</div>
+      <span class="text-muted">{taskCount} activities</span>
+    </div>
+
+    <template if:true={hasActivities}>
+      <div class="list-wrap">
+        <ul class="comm-list">
+          <template for:each={activities} for:item="act">
+            <li key={act.key} class="comm-item">
+              <div class={act.iconClass}>{act.icon}</div>
+              <div class="comm-content">
+                <div class="comm-title">{act.title}</div>
+                <div class="comm-meta">{act.meta}</div>
+              </div>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </template>
+
+    <template if:false={hasActivities}>
+      <div class="empty-state">No recent activity found.</div>
+    </template>
+  </div>
+</template>

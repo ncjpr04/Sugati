@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__BA_Sent_to_secondary_approver__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Has this approval also been sent to the secondary approver?</description>
+    <inlineHelpText>Has this approval also been sent to the secondary approver?</inlineHelpText>
+    <label>Sent to secondary approver</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

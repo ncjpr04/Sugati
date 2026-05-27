@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Q_Question_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Question Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Multiple-choice</fullName>
+                <default>false</default>
+                <label>Multiple-choice</label>
+            </value>
+            <value>
+                <fullName>Multiple choice with other text box</fullName>
+                <default>false</default>
+                <label>Multiple choice with other text box</label>
+            </value>
+            <value>
+                <fullName>Multiple text box choice</fullName>
+                <default>false</default>
+                <label>Multiple text box choice</label>
+            </value>
+            <value>
+                <fullName>Single-choice</fullName>
+                <default>false</default>
+                <label>Single-choice</label>
+            </value>
+            <value>
+                <fullName>Single choice with other text box</fullName>
+                <default>false</default>
+                <label>Single choice with other text box</label>
+            </value>
+            <value>
+                <fullName>Single choice with text Box</fullName>
+                <default>false</default>
+                <label>Single choice with text Box</label>
+            </value>
+            <value>
+                <fullName>Text</fullName>
+                <default>false</default>
+                <label>Text</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

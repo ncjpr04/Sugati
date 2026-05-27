@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SO_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>percent off</fullName>
+                <default>false</default>
+                <label>percent off</label>
+            </value>
+            <value>
+                <fullName>value off</fullName>
+                <default>false</default>
+                <label>value off</label>
+            </value>
+            <value>
+                <fullName>qty free</fullName>
+                <default>false</default>
+                <label>qty free</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

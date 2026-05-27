@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SO_Filter_Logic__c</fullName>
+    <deprecated>false</deprecated>
+    <description>e.g., Filter 1 AND(Filter 2 OR Filter 3)</description>
+    <externalId>false</externalId>
+    <inlineHelpText>e.g., Filter 1 AND(Filter 2 OR Filter 3) by using the number of Order field in Special Offer Rules related list. Default will be AND for all rules.</inlineHelpText>
+    <label>Filter Logic</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

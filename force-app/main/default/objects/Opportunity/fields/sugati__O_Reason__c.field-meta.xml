@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Reason__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Reason for not-booking where enquiry or quote has gone cold OR
+Reason for booking cancellation where relevant.</description>
+    <inlineHelpText>Reason for not-booking where enquiry or quote has gone cold OR
+Reason for booking cancellation where relevant.</inlineHelpText>
+    <label>Reason for Colding</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>StageName</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>No response from the client after initial contact</fullName>
+                <default>false</default>
+                <label>No response from the client after initial contact</label>
+            </value>
+            <value>
+                <fullName>No response from the client after having been responsive initially</fullName>
+                <default>false</default>
+                <label>No response from the client after having been responsive initially</label>
+            </value>
+            <value>
+                <fullName>Client not travelling at all</fullName>
+                <default>false</default>
+                <label>Client not travelling at all</label>
+            </value>
+            <value>
+                <fullName>Client not travelling as too expensive</fullName>
+                <default>false</default>
+                <label>Client not travelling as too expensive</label>
+            </value>
+            <value>
+                <fullName>Client booked direct</fullName>
+                <default>false</default>
+                <label>Client booked direct</label>
+            </value>
+            <value>
+                <fullName>Client booked through a competitor based on price</fullName>
+                <default>false</default>
+                <label>Client booked through a competitor based on price</label>
+            </value>
+            <value>
+                <fullName>Client booked through a competitor based on knowledge</fullName>
+                <default>false</default>
+                <label>Client booked through a competitor based on knowledge</label>
+            </value>
+            <value>
+                <fullName>Client booked through a competitor based on turnaround speed</fullName>
+                <default>false</default>
+                <label>Client booked through a competitor based on turnaround speed</label>
+            </value>
+            <value>
+                <fullName>Client booked through a competitor based on product preference</fullName>
+                <default>false</default>
+                <label>Client booked through a competitor based on product preference</label>
+            </value>
+            <value>
+                <fullName>Enquiry politely declined by consultant due to unrealistic budget</fullName>
+                <default>false</default>
+                <label>Enquiry politely declined by consultant due to unrealistic budget</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

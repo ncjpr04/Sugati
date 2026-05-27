@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__RT_Field_Name__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Field Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Meal Basis</fullName>
+                <default>false</default>
+                <label>Meal Basis</label>
+            </value>
+            <value>
+                <fullName>Occupancy</fullName>
+                <default>false</default>
+                <label>Occupancy</label>
+            </value>
+            <value>
+                <fullName>Room Type</fullName>
+                <default>false</default>
+                <label>Room Type</label>
+            </value>
+            <value>
+                <fullName>Class</fullName>
+                <default>false</default>
+                <label>Class</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

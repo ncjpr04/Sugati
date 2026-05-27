@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SOI_Special_Offer__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Special Offer</label>
+    <referenceTo>sugati__Special_Offer__c</referenceTo>
+    <relationshipLabel>Set Special Offer Items</relationshipLabel>
+    <relationshipName>Set_Special_Offer_Items</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

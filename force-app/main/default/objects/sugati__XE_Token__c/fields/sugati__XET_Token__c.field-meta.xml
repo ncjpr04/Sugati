@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__XET_Token__c</fullName>
+    <businessStatus>Active</businessStatus>
+    <complianceGroup>PII</complianceGroup>
+    <deprecated>false</deprecated>
+    <description>XE Money API Access Token - Confidential authentication credential</description>
+    <label>Access Token</label>
+    <length>131072</length>
+    <securityClassification>Confidential</securityClassification>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

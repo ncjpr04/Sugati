@@ -1,0 +1,842 @@
+<template>
+  <lightning-card>
+    <div slot="title" class="lc-title">SUGATI <span>Travel CRM</span></div>
+    <div class="sugati-wrapper">
+
+    <!-- NAV -->
+    <nav class="topnav">
+      <div class="nav-tabs">
+        <div class={tabClassB2c} onclick={showB2c}>B2C Traveller</div>
+        <div class={tabClassB2b} onclick={showB2b}>B2B Agency</div>
+        <div class={tabClassSupplier} onclick={showSupplier}>Suppliers</div>
+      </div>
+      <div class="nav-right">
+        <input class="nav-search" type="text" placeholder="Search profiles, bookings…" />
+        <div class="nav-avatar">JM</div>
+      </div>
+    </nav>
+
+    <!-- ═══════════════ B2C ═══════════════ -->
+    <template if:true={isB2c}>
+      <div class="page">
+
+        <div class="profile-header">
+          <div class="profile-header-top">
+            <div class="profile-avatar-lg">SH</div>
+            <div>
+              <div class="profile-name">Sarah Harrington</div>
+              <div class="profile-sub">
+                <span>✉ sarah.harrington@email.com</span>
+                <span>📞 +44 7700 900456</span>
+                <span>🌍 London, UK</span>
+              </div>
+              <div class="profile-tags">
+                <span class="badge badge-sunset">⭐ Platinum</span>
+                <span class="badge badge-green">Active</span>
+                <span class="badge badge-blue">Repeat Traveller</span>
+                <span class="badge badge-neutral">Client since 2016</span>
+              </div>
+              <div class="profile-note-inline">
+                <span class="note-icon">📌</span>
+                <span><strong>Profile Note</strong> Prefers direct flights, always requests extra legroom. Husband James is gluten-free. Sarah has a shellfish allergy — flag at all hotel check-ins and restaurant bookings. Interested in Patagonia as follow-on to Bhutan 2026.</span>
+              </div>
+            </div>
+            <div class="profile-actions">
+              <button class="btn-primary">+ New Enquiry</button>
+              <button class="btn-ghost">Send Email</button>
+              <button class="btn-ghost">Log Activity</button>
+            </div>
+          </div>
+        </div>
+<!-- ADD THIS LINE RIGHT HERE -->
+      <template if:true={account}>
+      <c-sugati-traveller-profile-header
+          account={account}
+          opportunities={opportunities}>
+      </c-sugati-traveller-profile-header>
+    </template>
+
+        <!-- ── Stats Strip ── -->
+    
+        <div class="stat-strip">
+          <div class="stat-card"><div class="stat-label">Lifetime Value</div><div class="stat-value">£186,400</div><div class="stat-delta delta-up">▲ 14% vs prior year</div></div>
+          <div class="stat-card"><div class="stat-label">Total Trips Booked</div><div class="stat-value">12</div><div class="stat-delta delta-up">▲ 2 this year</div></div>
+          <div class="stat-card"><div class="stat-label">Avg Trip Value</div><div class="stat-value">£15,533</div><div class="stat-delta delta-up">▲ 8%</div></div>
+          <div class="stat-card"><div class="stat-label">Nights Travelled</div><div class="stat-value">284</div><div class="stat-delta delta-neutral">Across 18 destinations</div></div>
+        </div>
+        <c-sugati-traveller-stats-strip
+            account={account}
+            opportunities={opportunities}>
+        </c-sugati-traveller-stats-strip>
+        <!-- ENGAGEMENT STATS -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Travel Engagement Overview</div>
+              <span class="badge badge-red" style="font-size:12px;padding:5px 14px">⚠ Booked 2024 · No booking in 2025</span>
+            </div>
+            <div class="card-body" style="padding:16px 22px">
+              <div class="eng-grid">
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(46,158,107,0.1);color:var(--positive)">📅</div>
+                  <div class="eng-stat-label">Last Booking Date</div>
+                  <div class="eng-stat-val">14 Jul 2024</div>
+                  <div class="eng-stat-sub">Maldives · £28,400</div>
+                </div>
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(58,127,193,0.1);color:var(--info)">💬</div>
+                  <div class="eng-stat-label">Last Enquiry Date</div>
+                  <div class="eng-stat-val">3 Feb 2025</div>
+                  <div class="eng-stat-sub">Bhutan 2026 itinerary</div>
+                </div>
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(255,197,67,0.15);color:var(--sunset-dark)">✉</div>
+                  <div class="eng-stat-label">Last Engagement</div>
+                  <div class="eng-stat-val">3 days ago</div>
+                  <div class="eng-stat-sub">Email · Pre-departure pack</div>
+                </div>
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(224,120,32,0.12);color:var(--warning)">⏱</div>
+                  <div class="eng-stat-label">Days Since Booking</div>
+                  <div class="eng-stat-val" style="color:var(--warning)">220 days</div>
+                  <div class="eng-stat-sub">Last booked Jul 2024</div>
+                </div>
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(208,64,64,0.1);color:var(--negative)">📊</div>
+                  <div class="eng-stat-label">Bookings This Year</div>
+                  <div class="eng-stat-val" style="color:var(--negative)">0 in 2025</div>
+                  <div class="eng-stat-sub">3 in 2024 · 2 in 2023</div>
+                </div>
+                <div class="eng-stat">
+                  <div class="eng-stat-icon" style="background:rgba(46,158,107,0.1);color:var(--positive)">⏭</div>
+                  <div class="eng-stat-label">Next Confirmed Trip</div>
+                  <div class="eng-stat-val" style="color:var(--positive)">Jul 2025</div>
+                  <div class="eng-stat-sub">Maldives · Confirmed</div>
+                </div>
+              </div>
+              <div class="at-risk-bar">
+                <div class="at-risk-inner">
+                  <span style="font-size:18px">⚠</span>
+                  <div>
+                    <div class="at-risk-title">At-Risk Flag — No 2025 Booking Yet</div>
+                    <div class="at-risk-desc">Sarah placed bookings in 2022, 2023 and 2024 but has no confirmed booking for 2025. Active Bhutan enquiry in pipeline — prioritise follow-up this week.</div>
+                  </div>
+                </div>
+                <button class="btn-primary" style="padding:7px 16px;font-size:12px;flex-shrink:0">Log Follow-up</button>
+                <button class="btn-ghost" style="padding:7px 16px;font-size:12px;flex-shrink:0">View Full History</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <template if:true={tasks}>
+        <c-sugati-traveller-engagement-overview
+            account={account}
+            opportunities={opportunities}
+            tasks={tasks}>
+        </c-sugati-traveller-engagement-overview>
+        </template>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Personal Details</div><button class="btn-ghost" style="padding:5px 12px;font-size:12px">Edit</button></div>
+            <div class="card-body">
+              <div class="info-grid">
+                <div><div class="info-label">Full Name</div><div class="info-value">Sarah Elizabeth Harrington</div></div>
+                <div><div class="info-label">Date of Birth</div><div class="info-value">14 March 1979 (45)</div></div>
+                <div><div class="info-label">Nationality</div><div class="info-value">British</div></div>
+                <div><div class="info-label">Passport No.</div><div class="info-value highlight">GB8823401XS</div></div>
+                <div><div class="info-label">Passport Expiry</div><div class="info-value">12 Sep 2029</div></div>
+                <div><div class="info-label">Preferred Contact</div><div class="info-value">Email</div></div>
+                <div><div class="info-label">Referral Source</div><div class="info-value">Word of Mouth</div></div>
+                <div><div class="info-label">Client Since</div><div class="info-value highlight">January 2016</div></div>
+              </div>
+              <div class="divider"></div>
+              <div class="info-label" style="margin-bottom:10px">Travel Companions</div>
+              <div class="chips">
+                <span class="chip warm">James Harrington (Partner)</span>
+                <span class="chip">Olivia (Daughter, 14)</span>
+                <span class="chip">Ethan (Son, 11)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Travel Preferences</div></div>
+            <div class="card-body">
+              <div class="section-label">Favourite Regions</div>
+              <div class="progress-row"><div class="progress-label">East Africa</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:90%"></div></div><div class="progress-val">90%</div></div>
+              <div class="progress-row"><div class="progress-label">Indian Ocean</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:72%"></div></div><div class="progress-val">72%</div></div>
+              <div class="progress-row"><div class="progress-label">South Asia</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:48%"></div></div><div class="progress-val">48%</div></div>
+              <div class="progress-row"><div class="progress-label">Central America</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:30%"></div></div><div class="progress-val">30%</div></div>
+              <div class="divider"></div>
+              <div class="section-label">Accommodation</div>
+              <div class="chips" style="margin-bottom:14px">
+                <span class="chip warm">Private Safari Camps</span><span class="chip warm">Boutique Overwater</span>
+                <span class="chip">5-Star Resorts</span><span class="chip">Eco Lodges</span>
+              </div>
+              <div class="section-label">Interests &amp; Experiences</div>
+              <div class="chips">
+                <span class="chip warm">Wildlife &amp; Safari</span><span class="chip">Private Dining</span>
+                <span class="chip">Snorkelling</span><span class="chip">Cultural Immersion</span>
+                <span class="chip">Yoga Retreats</span><span class="chip">Helicopter Excursions</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="two-col">
+            <c-sugati-traveller-personal-details
+                record-id={recordId}
+                opportunities={opportunities}>
+            </c-sugati-traveller-personal-details>
+
+            <c-sugati-traveller-travel-preferences
+                record-id={recordId}
+                opportunities={opportunities}>
+            </c-sugati-traveller-travel-preferences>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Booking History</div><span class="text-muted text-sm">12 trips · £186,400 total</span></div>
+            <div class="card-body" style="padding:0">
+              <table class="trips-table">
+                <thead><tr><th>Destination</th><th>Dates</th><th>Nights</th><th>Value</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="trip-dest">Maldives – Soneva Jani<small>Indian Ocean · Family</small></div></td><td>Jul 2025</td><td>12</td><td class="text-accent">£28,400</td><td><span class="badge badge-blue">Confirmed</span></td></tr>
+                  <tr><td><div class="trip-dest">Kenya – Ol Pejeta<small>East Africa · Safari</small></div></td><td>Feb 2025</td><td>9</td><td class="text-accent">£22,100</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div class="trip-dest">Tanzania – Serengeti<small>East Africa · Safari</small></div></td><td>Aug 2024</td><td>14</td><td class="text-accent">£31,600</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div class="trip-dest">Sri Lanka – Private Tour<small>South Asia · Culture</small></div></td><td>Jan 2024</td><td>16</td><td class="text-accent">£18,750</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div class="trip-dest">Costa Rica – Eco Lodge<small>Central America</small></div></td><td>Aug 2023</td><td>11</td><td class="text-accent">£16,200</td><td><span class="badge badge-green">Completed</span></td></tr>
+                </tbody>
+              </table>
+              <div style="padding:12px 16px;border-top:1px solid var(--border)"><a style="font-size:12px;color:var(--sunset-dark);cursor:pointer;font-weight:500">View all 12 trips →</a></div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Enquiry Pipeline</div><button class="btn-primary" style="padding:6px 14px;font-size:12px">+ New</button></div>
+              <div class="card-body">
+                <div class="pipeline-stages">
+                  <div class="pipe-stage" style="background:#2e9e6b;width:20%">✔ 2 Booked</div>
+                  <div class="pipe-stage" style="background:#3a7fc1;width:25%">4 Quoting</div>
+                  <div class="pipe-stage" style="background:var(--sunset-dark);width:35%">1 Proposal</div>
+                  <div class="pipe-stage" style="background:var(--warning);width:20%">1 Enquiry</div>
+                </div>
+                <div class="pipe-legend">
+                  <div class="pipe-legend-item"><div class="pipe-dot" style="background:#2e9e6b"></div>Booked (2)</div>
+                  <div class="pipe-legend-item"><div class="pipe-dot" style="background:#3a7fc1"></div>Quoting (4)</div>
+                  <div class="pipe-legend-item"><div class="pipe-dot" style="background:var(--sunset-dark)"></div>Proposal (1)</div>
+                  <div class="pipe-legend-item"><div class="pipe-dot" style="background:var(--warning)"></div>Enquiry (1)</div>
+                </div>
+                <div class="divider"></div>
+                <div class="flex-between">
+                  <span class="text-muted text-sm">Next follow-up</span>
+                  <span style="font-size:13px;color:var(--sunset-dark);font-weight:500">Tomorrow · Bhutan itinerary call</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div class="card-title">Recent Communications</div></div>
+              <div class="card-body" style="padding:12px 20px">
+                <ul class="comm-list">
+                  <li class="comm-item"><div class="comm-icon comm-email">✉</div><div><div class="comm-title">Maldives pre-departure pack sent</div><div class="comm-meta">Email · 3 days ago · by James M.</div></div></li>
+                  <li class="comm-item"><div class="comm-icon comm-phone">📞</div><div><div class="comm-title">Called re: Bhutan 2026 options</div><div class="comm-meta">Phone · 1 week ago · 22 min · by James M.</div></div></li>
+                  <li class="comm-item"><div class="comm-icon comm-note">📝</div><div><div class="comm-title">Note: Interested in Patagonia post-Bhutan</div><div class="comm-meta">Internal Note · 2 weeks ago · by Priya S.</div></div></li>
+                  <li class="comm-item"><div class="comm-icon comm-email">✉</div><div><div class="comm-title">Kenya trip feedback — 5 stars ⭐</div><div class="comm-meta">Email · 3 weeks ago · Auto survey</div></div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="two-col two-col-fixed" style="align-items: stretch;">
+
+          <c-sugati-traveller-booking-history
+              opportunities={opportunities}
+              currency-symbol={currencySymbol}>
+          </c-sugati-traveller-booking-history>
+
+          <div class="right-col">
+
+              <c-sugati-traveller-enquiry-pipeline
+                  opportunities={opportunities}
+                  account-id={recordId}>
+              </c-sugati-traveller-enquiry-pipeline>
+
+              <c-sugati-traveller-recent-communications
+                  tasks={tasks}>
+              </c-sugati-traveller-recent-communications>
+
+          </div>
+
+        </div>
+        <!-- CREDIT NOTES -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Credit Notes &amp; Memos</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="badge badge-sunset" style="font-size:12px;padding:4px 14px">£3,250 Available</span>
+                <button class="btn-ghost" style="font-size:12px;padding:6px 14px">+ Issue Credit Note</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="credit-hero">
+                <div class="credit-dial">
+                  <svg width="96" height="96" viewBox="0 0 96 96">
+                    <circle cx="48" cy="48" r="40" fill="none" stroke="rgba(255,197,67,0.2)" stroke-width="7"/>
+                    <circle cx="48" cy="48" r="40" fill="none" stroke="var(--sunset)" stroke-width="7" stroke-dasharray="251" stroke-dashoffset="88" stroke-linecap="round"/>
+                  </svg>
+                  <div class="credit-dial-inner"><div class="credit-dial-val">65%</div><div class="credit-dial-sub">Remaining</div></div>
+                </div>
+                <div class="credit-summary">
+                  <div class="credit-big">£3,250 <span style="font-size:16px;color:var(--text-muted);font-weight:300">remaining</span></div>
+                  <div class="credit-expiry expiry-urgent">⚠  Expires 31 March 2026 — 40 days remaining</div>
+                  <div class="credit-meta-row">
+                    <div><div class="credit-meta-label">Original Total</div><div class="credit-meta-val">£5,000</div></div>
+                    <div><div class="credit-meta-label">Already Used</div><div class="credit-meta-val" style="color:var(--text-secondary)">£1,750</div></div>
+                    <div><div class="credit-meta-label">Active Notes</div><div class="credit-meta-val">2</div></div>
+                    <div><div class="credit-meta-label">Issued By</div><div class="credit-meta-val">James M.</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="section-label">Active Credit Notes</div>
+              <ul class="credit-notes-list">
+                <li class="credit-note-row">
+                  <div class="cn-ref">CN-2025-041</div>
+                  <div class="cn-desc">Flight disruption compensation — Kenya Feb 2025<small>Issued 18 Feb 2025 · Expires 31 Mar 2026</small></div>
+                  <div class="cn-amount">£2,500</div>
+                  <div class="cn-status"><span class="badge badge-sunset">Active</span></div>
+                </li>
+                <li class="credit-note-row">
+                  <div class="cn-ref">CN-2024-028</div>
+                  <div class="cn-desc">Goodwill — late villa key handover, Sri Lanka Jan 2024<small>Issued 04 Jan 2024 · Expires 31 Mar 2026</small></div>
+                  <div class="cn-amount">£750</div>
+                  <div class="cn-status"><span class="badge badge-sunset">Active</span></div>
+                </li>
+              </ul>
+              <div class="divider"></div>
+              <div class="section-label">Redemption History</div>
+              <ul class="credit-usage-list">
+                <li class="credit-usage-row">
+                  <div class="cu-trip">Costa Rica — Eco Lodge Room Upgrade<small>Applied from CN-2023-017 · Booking #BK-4821</small></div>
+                  <div class="cu-date">Aug 2023</div><div class="cu-amount">− £1,000</div>
+                </li>
+                <li class="credit-usage-row">
+                  <div class="cu-trip">Sri Lanka — Private Tour Upgrade &amp; Excursion<small>Applied from CN-2023-017 · Booking #BK-5102</small></div>
+                  <div class="cu-date">Jan 2024</div><div class="cu-amount">− £750</div>
+                </li>
+              </ul>
+              <div class="divider"></div>
+              <div class="section-label">Expired / Fully Redeemed</div>
+              <ul class="credit-notes-list">
+                <li class="credit-note-row" style="opacity:0.45">
+                  <div class="cn-ref">CN-2023-017</div>
+                  <div class="cn-desc">Overbooked suite — Maldives Aug 2022<small>Issued 12 Aug 2022 · Expired 31 Dec 2023</small></div>
+                  <div class="cn-amount">£1,750</div>
+                  <div class="cn-status"><span class="badge badge-green">Fully Used</span></div>
+                </li>
+                <li class="credit-note-row" style="opacity:0.45">
+                  <div class="cn-ref">CN-2022-009</div>
+                  <div class="cn-desc">Cancelled excursion — Tanzania Sep 2021<small>Issued 02 Sep 2021 · Expired 31 Dec 2022</small></div>
+                  <div class="cn-amount">£400</div>
+                  <div class="cn-status"><span class="badge badge-neutral">Expired</span></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- ═══════════════ B2B ═══════════════ -->
+    <template if:true={isB2b}>
+      <div class="page">
+
+        <div class="profile-header">
+          <div class="profile-header-top">
+            <div class="profile-avatar-sq">LTG</div>
+            <div>
+              <div class="profile-name">Luxe Travel Group</div>
+              <div class="profile-sub">
+                <span>🌐 luxetravelgroup.co.uk</span>
+                <span>📍 Mayfair, London</span>
+                <span>👤 Account Mgr: Priya Sharma</span>
+              </div>
+              <div class="profile-tags">
+                <span class="badge badge-sunset">⭐ Platinum Partner</span>
+                <span class="badge badge-green">Active</span>
+                <span class="badge badge-blue">Top 5 Agency</span>
+                <span class="badge badge-neutral">14 Agents</span>
+              </div>
+              <div class="profile-note-inline">
+                <span class="note-icon">📌</span>
+                <span><strong>Profile Note</strong> Preferred luxury &amp; safari specialist. Contract renewal due 31 Dec 2025 — schedule Q4 review with Priya. Commission uplift to 12% approved for Maldives and East Africa bookings above £25K. Key contact: Sophie Greenwood, MD.</span>
+              </div>
+            </div>
+            <div class="profile-actions">
+              <button class="btn-primary">+ New Booking</button>
+              <button class="btn-ghost">Commission Report</button>
+              <button class="btn-ghost">Contact Agency</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-strip" style="grid-template-columns:repeat(5,1fr)">
+          <div class="stat-card"><div class="stat-label">Revenue (2025)</div><div class="stat-value">£842K</div><div class="stat-delta delta-up">▲ 23% vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Bed Nights (2025)</div><div class="stat-value">3,284</div><div class="stat-delta delta-up">▲ 18% vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Bookings (2025)</div><div class="stat-value">96</div><div class="stat-delta delta-up">▲ 12 vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Commission Paid (2025)</div><div class="stat-value">£84.2K</div><div class="stat-delta delta-neutral">10% avg rate</div></div>
+          <div class="stat-card" style="border-color:rgba(28,28,26,0.18);background:var(--warm-black);">
+            <div class="stat-label" style="color:rgba(255,197,67,0.7)">Lifetime Revenue</div>
+            <div class="stat-value" style="color:var(--sunset)">£3.07M</div>
+            <div class="stat-delta" style="color:rgba(255,197,67,0.6)">Since Mar 2019 · 6 yrs</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Annual Performance</div>
+              <div class="year-tabs">
+                <div class={b2bYearClassLT}  data-year="LT"   onclick={setB2BYear}>LT</div>
+                <div class={b2bYearClass2022} data-year="2022" onclick={setB2BYear}>2022</div>
+                <div class={b2bYearClass2023} data-year="2023" onclick={setB2BYear}>2023</div>
+                <div class={b2bYearClass2024} data-year="2024" onclick={setB2BYear}>2024</div>
+                <div class={b2bYearClass2025} data-year="2025" onclick={setB2BYear}>2025</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="section-label">Monthly Revenue</div>
+              <div class="mini-chart monthly-chart">
+                <template for:each={b2bMonthlyBars} for:item="bar">
+                  <div key={bar.label} class="bar-wrap">
+                    <div class="bar-spacer"></div>
+                    <div class="bar"></div>
+                    <div class="bar-label">{bar.label}</div>
+                  </div>
+                </template>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label">Year-over-Year Revenue</div>
+              <div class="mini-chart yoy-chart">
+                <template for:each={b2bYoyBars} for:item="bar">
+                  <div key={bar.label} class="bar-wrap">
+                    <div class="bar-spacer"></div>
+                    <div class={bar.cls} ></div>
+                    <div class="bar-label">{bar.label}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Agency Details</div><button class="btn-ghost" style="padding:5px 12px;font-size:12px">Edit</button></div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div><div class="info-label">Agency Type</div><div class="info-value">Independent Travel Agency</div></div>
+                  <div><div class="info-label">ABTA / ATOL</div><div class="info-value highlight">ABTA P4421 · ATOL 6789</div></div>
+                  <div><div class="info-label">Head Office</div><div class="info-value">42 Curzon Street, London W1J 7UL</div></div>
+                  <div><div class="info-label">Commission Rate</div><div class="info-value highlight">10% standard · 12% preferred</div></div>
+                  <div><div class="info-label">Partnership Since</div><div class="info-value">March 2019</div></div>
+                  <div><div class="info-label">Contract Renewal</div><div class="info-value">31 Dec 2025</div></div>
+                </div>
+                <div class="divider"></div>
+                <div class="section-label">Travel Associations</div>
+                <div class="assoc-grid">
+                  <div class="assoc-badge"><div class="assoc-logo virtuoso">V</div><div class="assoc-meta"><div class="assoc-name">Virtuoso</div><div class="assoc-tier">Preferred Partner</div></div></div>
+                  <div class="assoc-badge"><div class="assoc-logo tmade">TM</div><div class="assoc-meta"><div class="assoc-name">Traveller Made</div><div class="assoc-tier">Full Member</div></div></div>
+                  <div class="assoc-badge"><div class="assoc-logo abta">AB</div><div class="assoc-meta"><div class="assoc-name">ABTA</div><div class="assoc-tier">P4421 · Active</div></div></div>
+                  <div class="assoc-badge"><div class="assoc-logo atta">AT</div><div class="assoc-meta"><div class="assoc-name">ATTA</div><div class="assoc-tier">Member Since 2021</div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div class="card-title">Top Destinations (2025)</div></div>
+              <div class="card-body" style="padding:12px 20px">
+                <ul class="dest-list">
+                  <li class="dest-item"><div class="dest-left"><div class="dest-flag">🇲🇻</div><div><div class="dest-name">Maldives</div><div class="dest-count">28 bookings · 410 nights</div></div></div><div class="dest-revenue">£218,000</div></li>
+                  <li class="dest-item"><div class="dest-left"><div class="dest-flag">🇰🇪</div><div><div class="dest-name">Kenya &amp; Tanzania</div><div class="dest-count">22 bookings · 340 nights</div></div></div><div class="dest-revenue">£194,400</div></li>
+                  <li class="dest-item"><div class="dest-left"><div class="dest-flag">🇮🇳</div><div><div class="dest-name">India &amp; Sri Lanka</div><div class="dest-count">18 bookings · 290 nights</div></div></div><div class="dest-revenue">£128,700</div></li>
+                  <li class="dest-item"><div class="dest-left"><div class="dest-flag">🇧🇹</div><div><div class="dest-name">Bhutan</div><div class="dest-count">9 bookings · 120 nights</div></div></div><div class="dest-revenue">£76,500</div></li>
+                  <li class="dest-item"><div class="dest-left"><div class="dest-flag">🇵🇪</div><div><div class="dest-name">Peru &amp; Patagonia</div><div class="dest-count">7 bookings · 98 nights</div></div></div><div class="dest-revenue">£61,200</div></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AGENT PERFORMANCE -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Agent Performance — Luxe Travel Group</div>
+              <span class="text-muted text-sm">14 agents · sorted by revenue</span>
+            </div>
+            <div class="card-body" style="padding:0">
+              <table class="agents-table">
+                <thead><tr><th style="width:40px">#</th><th>Agent</th><th>Bookings</th><th>Revenue (YTD)</th><th>Bed Nights</th><th>Avg Booking</th><th>Conv. Rate</th><th>Trend (12m)</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="rank-badge rank-1">1</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar">CH</div><div><div style="font-size:13px;font-weight:500">Charlotte Hayes</div><div style="font-size:11px;color:var(--text-muted)">Senior Consultant</div></div></div></td>
+                    <td>24</td><td class="text-accent" style="font-weight:600">£218,400</td><td>842</td><td>£9,100</td>
+                    <td><span style="color:var(--positive)">68%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:45%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:85%"></div><div class="spark-bar" style="height:100%"></div></div></td>
+                    <td><span class="badge badge-sunset">Top Performer</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="rank-badge rank-2">2</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar" style="background:linear-gradient(135deg,#7ab8e0,#4a8fb0);color:#fff">JF</div><div><div style="font-size:13px;font-weight:500">James Fletcher</div><div style="font-size:11px;color:var(--text-muted)">Senior Consultant</div></div></div></td>
+                    <td>21</td><td class="text-accent" style="font-weight:600">£196,200</td><td>774</td><td>£9,343</td>
+                    <td><span style="color:var(--positive)">62%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:75%"></div><div class="spark-bar" style="height:80%"></div><div class="spark-bar" style="height:90%"></div><div class="spark-bar" style="height:95%"></div></div></td>
+                    <td><span class="badge badge-green">Rising</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="rank-badge rank-3">3</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar" style="background:linear-gradient(135deg,#4caf82,#2a7a54);color:#fff">AM</div><div><div style="font-size:13px;font-weight:500">Amara Mensah</div><div style="font-size:11px;color:var(--text-muted)">Luxury Specialist</div></div></div></td>
+                    <td>18</td><td class="text-accent" style="font-weight:600">£154,800</td><td>620</td><td>£8,600</td>
+                    <td><span style="color:var(--positive)">59%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:65%"></div><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:75%"></div><div class="spark-bar" style="height:80%"></div><div class="spark-bar" style="height:88%"></div></div></td>
+                    <td><span class="badge badge-green">Strong</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="rank-badge rank-other">4</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar" style="background:linear-gradient(135deg,#8bc48a,#4a774a);color:#fff">RP</div><div><div style="font-size:13px;font-weight:500">Rachel Patel</div><div style="font-size:11px;color:var(--text-muted)">Consultant</div></div></div></td>
+                    <td>14</td><td class="text-accent" style="font-weight:600">£112,600</td><td>488</td><td>£8,043</td>
+                    <td><span style="color:var(--warning)">44%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:65%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:60%"></div></div></td>
+                    <td><span class="badge badge-blue">Stable</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="rank-badge rank-other">5</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar" style="background:linear-gradient(135deg,#c4a08a,#8a6050);color:#fff">TW</div><div><div style="font-size:13px;font-weight:500">Tom Wilkins</div><div style="font-size:11px;color:var(--text-muted)">Junior Consultant</div></div></div></td>
+                    <td>10</td><td class="text-accent" style="font-weight:600">£82,400</td><td>310</td><td>£8,240</td>
+                    <td><span style="color:var(--warning)">38%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:45%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:78%"></div></div></td>
+                    <td><span class="badge badge-green">Improving</span></td>
+                  </tr>
+                  <tr>
+                    <td><div class="rank-badge rank-other" style="color:var(--negative)">6</div></td>
+                    <td><div class="agent-name-cell"><div class="agent-avatar" style="background:linear-gradient(135deg,#aaa,#777)">KD</div><div><div style="font-size:13px;font-weight:500">Karen Doyle</div><div style="font-size:11px;color:var(--text-muted)">Consultant</div></div></div></td>
+                    <td>9</td><td class="text-accent" style="font-weight:600">£58,200</td><td>250</td><td>£6,467</td>
+                    <td><span style="color:var(--negative)">29%</span></td>
+                    <td><div class="sparkline"><div class="spark-bar" style="height:90%"></div><div class="spark-bar" style="height:75%"></div><div class="spark-bar" style="height:65%"></div><div class="spark-bar" style="height:55%"></div><div class="spark-bar" style="height:45%"></div><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:38%"></div></div></td>
+                    <td><span class="badge badge-red">Needs Review</span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                <a style="font-size:12px;color:var(--sunset-dark);cursor:pointer;font-weight:500">View all 14 agents →</a>
+                <button class="btn-ghost" style="font-size:12px;padding:6px 14px">Export Report</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="three-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Partner Health Score</div></div>
+            <div class="card-body" style="display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:8px">
+              <div class="score-ring"><div class="ring-wrap"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,197,67,0.2)" stroke-width="6"/><circle cx="40" cy="40" r="32" fill="none" stroke="var(--sunset)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="26" stroke-linecap="round"/></svg><div class="ring-val">87</div></div><div class="ring-label">Overall</div></div>
+              <div class="score-ring"><div class="ring-wrap"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(46,158,107,0.15)" stroke-width="6"/><circle cx="40" cy="40" r="32" fill="none" stroke="var(--positive)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="14" stroke-linecap="round"/></svg><div class="ring-val" style="color:var(--positive)">93</div></div><div class="ring-label">Revenue</div></div>
+              <div class="score-ring"><div class="ring-wrap"><svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(58,127,193,0.15)" stroke-width="6"/><circle cx="40" cy="40" r="32" fill="none" stroke="var(--info)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="52" stroke-linecap="round"/></svg><div class="ring-val" style="color:var(--info)">74</div></div><div class="ring-label">Activity</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Bed Nights by Type</div></div>
+            <div class="card-body">
+              <div class="progress-row"><div class="progress-label">Luxury Resort</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:52%"></div></div><div class="progress-val">52%</div></div>
+              <div class="progress-row"><div class="progress-label">Safari Camp</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:26%"></div></div><div class="progress-val">26%</div></div>
+              <div class="progress-row"><div class="progress-label">Boutique Hotel</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:14%"></div></div><div class="progress-val">14%</div></div>
+              <div class="progress-row"><div class="progress-label">Private Villa</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:8%"></div></div><div class="progress-val">8%</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Activity</div></div>
+            <div class="card-body" style="padding:12px 20px">
+              <ul class="timeline">
+                <li class="timeline-item"><div class="timeline-dot">✔</div><div class="timeline-content"><div class="timeline-title">Maldives booking confirmed — J. Fletcher</div><div class="timeline-meta">£28,400 · 12 nights · 2 days ago</div></div></li>
+                <li class="timeline-item"><div class="timeline-dot">📋</div><div class="timeline-content"><div class="timeline-title">Kenya proposal sent — C. Hayes</div><div class="timeline-meta">£32,100 · Awaiting response · 4 days ago</div></div></li>
+                <li class="timeline-item"><div class="timeline-dot">💬</div><div class="timeline-content"><div class="timeline-title">Quarterly review call with Priya</div><div class="timeline-meta">Q2 targets exceeded · 1 week ago</div></div></li>
+                <li class="timeline-item"><div class="timeline-dot">💳</div><div class="timeline-content"><div class="timeline-title">Commission payment processed</div><div class="timeline-meta">£8,420 · June 2025 · 2 weeks ago</div></div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">FARM Trips</div><button class="btn-primary" style="padding:5px 14px;font-size:12px">+ Log Visit</button></div>
+            <div class="card-body">
+              <div class="farm-grid">
+                <div class="farm-card"><div class="farm-card-name">Priya Sharma</div><div class="farm-card-role">Account Manager</div><div class="farm-card-meta"><span>📅 12 Sep 2024</span><span>📍 Mayfair HQ, London</span><span>🎯 Q3 review · Contract renewal discussion</span></div></div>
+                <div class="farm-card"><div class="farm-card-name">James Mitchell</div><div class="farm-card-role">Sales Director</div><div class="farm-card-meta"><span>📅 3 Jun 2024</span><span>📍 Agency Roadshow, London</span><span>🎯 New product showcase — Bhutan &amp; Patagonia</span></div></div>
+                <div class="farm-card"><div class="farm-card-name">Priya Sharma</div><div class="farm-card-role">Account Manager</div><div class="farm-card-meta"><span>📅 14 Feb 2024</span><span>📍 Mayfair HQ, London</span><span>🎯 Q1 targets · New agent onboarding</span></div></div>
+                <div class="farm-card"><div class="farm-card-name">Anita Patel</div><div class="farm-card-role">Regional Manager</div><div class="farm-card-meta"><span>📅 8 Nov 2023</span><span>📍 Virtuoso Conference, Vegas</span><span>🎯 Annual partnership review</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">Meeting Notes</div><button class="btn-primary" style="padding:5px 14px;font-size:12px">+ Add Note</button></div>
+            <div class="card-body">
+              <div class="meeting-list">
+                <div class="meeting-item">
+                  <div class="meeting-item-header"><div class="meeting-date-badge">12 Sep 2024</div><div class="meeting-title">Q3 Review &amp; Contract Renewal</div></div>
+                  <div class="meeting-attendees">👥 Priya Sharma (Sugati) · Sophie Greenwood, MD (LTG) · James Fletcher (LTG)</div>
+                  <div class="meeting-body">Reviewed Q3 performance — revenue tracking 23% ahead of 2023. Sophie confirmed intent to renew contract in Dec. Commission uplift to 12% for Maldives &amp; East Africa agreed in principle.</div>
+                  <div class="meeting-actions"><span class="meeting-action-chip">✅ Contract renewal agreed</span><span class="meeting-action-chip">📋 12% commission approved</span></div>
+                </div>
+                <div class="meeting-item">
+                  <div class="meeting-item-header"><div class="meeting-date-badge">3 Jun 2024</div><div class="meeting-title">Product Showcase — Bhutan &amp; Patagonia</div></div>
+                  <div class="meeting-attendees">👥 James Mitchell (Sugati) · Charlotte Hayes, Rachel Patel (LTG)</div>
+                  <div class="meeting-body">Presented new 2025 Bhutan itineraries and Patagonia extensions. Charlotte very enthusiastic — wants 3 client proposals by August.</div>
+                  <div class="meeting-actions"><span class="meeting-action-chip">📄 Rate sheet due 20 Jun</span><span class="meeting-action-chip">📋 3 Bhutan proposals — Charlotte</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- ═══════════════ SUPPLIER ═══════════════ -->
+    <template if:true={isSupplier}>
+      <div class="page">
+
+        <div class="profile-header">
+          <div class="profile-header-top">
+            <div class="profile-avatar-sq" style="font-size:16px;letter-spacing:0.5px">HTL</div>
+            <div>
+              <div class="profile-name">Hilton London Bankside</div>
+              <div class="profile-sub">
+                <span>🏨 hilton.com/bankside</span>
+                <span>📍 Southwark, London SE1</span>
+                <span>⭐ 5-Star · 292 Rooms</span>
+                <span>👤 Supplier Mgr: Priya Sharma</span>
+              </div>
+              <div class="profile-tags">
+                <span class="supplier-type-badge supplier-hotel">🏨 Hotel</span>
+                <span class="badge badge-sunset">Preferred Supplier</span>
+                <span class="badge badge-green">Active Contract</span>
+                <span class="badge badge-blue">Luxury Tier</span>
+                <span class="badge badge-neutral">Partner since 2018</span>
+              </div>
+              <div class="profile-note-inline">
+                <span class="note-icon">📌</span>
+                <span><strong>Supplier Note</strong> Strong relationship with GM Marcus Webb. Preferred rate of 18% off BAR negotiated for 2025. Always request rooms on floors 8–12 for river views. Upgraded breakfast included for Sugati clients.</span>
+              </div>
+            </div>
+            <div class="profile-actions">
+              <button class="btn-primary">+ New Stay</button>
+              <button class="btn-ghost">Rate Agreement</button>
+              <button class="btn-ghost">Contact Supplier</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-strip" style="grid-template-columns:repeat(5,1fr)">
+          <div class="stat-card"><div class="stat-label">Revenue (2025)</div><div class="stat-value">£284K</div><div class="stat-delta delta-up">▲ 18% vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Bed Nights (2025)</div><div class="stat-value">1,240</div><div class="stat-delta delta-up">▲ 12% vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Stays (2025)</div><div class="stat-value">88</div><div class="stat-delta delta-up">▲ 14 vs 2024</div></div>
+          <div class="stat-card"><div class="stat-label">Avg Booking Value</div><div class="stat-value">£3,227</div><div class="stat-delta delta-up">▲ 6%</div></div>
+          <div class="stat-card" style="background:var(--warm-black);border-color:rgba(28,28,26,0.18)">
+            <div class="stat-label" style="color:rgba(255,197,67,0.7)">Lifetime Revenue</div>
+            <div class="stat-value" style="color:var(--sunset)">£1.42M</div>
+            <div class="stat-delta" style="color:rgba(255,197,67,0.6)">Since 2018 · 7 years</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Annual Performance</div>
+              <div class="year-tabs">
+                <div class={supYearClassLT}   data-year="LT"   onclick={setSupYear}>LT</div>
+                <div class={supYearClass2022}  data-year="2022" onclick={setSupYear}>2022</div>
+                <div class={supYearClass2023}  data-year="2023" onclick={setSupYear}>2023</div>
+                <div class={supYearClass2024}  data-year="2024" onclick={setSupYear}>2024</div>
+                <div class={supYearClass2025}  data-year="2025" onclick={setSupYear}>2025</div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="section-label">Monthly Revenue &amp; Bed Nights</div>
+              <div class="mini-chart monthly-chart">
+                <template for:each={supMonthlyBars} for:item="bar">
+                  <div key={bar.label} class="bar-wrap">
+                    <div class="bar-spacer"></div>
+                    <div class="bar" ></div>
+                    <div class="bar-label">{bar.label}</div>
+                  </div>
+                </template>
+              </div>
+              <div class="divider"></div>
+              <div class="section-label">Year-over-Year</div>
+              <div class="mini-chart yoy-chart">
+                <template for:each={supYoyBars} for:item="bar">
+                  <div key={bar.label} class="bar-wrap">
+                    <div class="bar-spacer"></div>
+                    <div class={bar.cls} ></div>
+                    <div class="bar-label">{bar.label}</div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Supplier Details</div><button class="btn-ghost" style="padding:5px 12px;font-size:12px">Edit</button></div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div><div class="info-label">Supplier Type</div><div class="info-value">5-Star Hotel</div></div>
+                  <div><div class="info-label">Chain / Group</div><div class="info-value">Hilton Hotels &amp; Resorts</div></div>
+                  <div><div class="info-label">Address</div><div class="info-value">2-8 Great Suffolk Street, London SE1 0UG</div></div>
+                  <div><div class="info-label">Preferred Rate</div><div class="info-value highlight">18% off BAR</div></div>
+                  <div><div class="info-label">Partner Since</div><div class="info-value">March 2018</div></div>
+                  <div><div class="info-label">Contract Renewal</div><div class="info-value">31 Jan 2026</div></div>
+                  <div><div class="info-label">Commission Rate</div><div class="info-value highlight">10% on net rate</div></div>
+                  <div><div class="info-label">Blackout Dates</div><div class="info-value">Jan 10–20 · Jul 14–28</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Bed Nights by Room Type</div></div>
+              <div class="card-body">
+                <div class="progress-row"><div class="progress-label">Deluxe River View</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:45%"></div></div><div class="progress-val">45%</div></div>
+                <div class="progress-row"><div class="progress-label">Junior Suite</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:28%"></div></div><div class="progress-val">28%</div></div>
+                <div class="progress-row"><div class="progress-label">King Room</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:18%"></div></div><div class="progress-val">18%</div></div>
+                <div class="progress-row"><div class="progress-label">Executive Suite</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:9%"></div></div><div class="progress-val">9%</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KEY CONTACTS -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Key Contacts</div><button class="btn-ghost" style="padding:5px 12px;font-size:12px">+ Add Contact</button></div>
+            <div class="card-body">
+              <div class="contact-grid">
+                <div class="contact-card"><div class="contact-avatar">MW</div><div><div class="contact-name">Marcus Webb</div><div class="contact-role">General Manager</div><div class="contact-detail">📞 +44 20 7902 1400</div><div class="contact-detail">✉ m.webb@hilton.com</div></div></div>
+                <div class="contact-card"><div class="contact-avatar" style="background:linear-gradient(135deg,#7ab8e0,#4a8fb0);color:#fff">SL</div><div><div class="contact-name">Sarah Lim</div><div class="contact-role">Sales Manager — Trade</div><div class="contact-detail">📞 +44 20 7902 1422</div><div class="contact-detail">✉ s.lim@hilton.com</div></div></div>
+                <div class="contact-card"><div class="contact-avatar" style="background:linear-gradient(135deg,#4caf82,#2a7a54);color:#fff">RC</div><div><div class="contact-name">Roberto Conti</div><div class="contact-role">Front Office Manager</div><div class="contact-detail">📞 +44 20 7902 1410</div><div class="contact-detail">✉ r.conti@hilton.com</div></div></div>
+                <div class="contact-card"><div class="contact-avatar" style="background:linear-gradient(135deg,#e0a87a,#b07040);color:#fff">JP</div><div><div class="contact-name">Julia Park</div><div class="contact-role">Reservations Coordinator</div><div class="contact-detail">📞 +44 20 7902 1430</div><div class="contact-detail">✉ j.park@hilton.com</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT STAYS -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Stays</div><span style="font-size:12px;color:var(--text-muted)">88 stays in 2025 · 1,240 bed nights</span></div>
+            <div class="card-body" style="padding:0">
+              <table class="stays-table">
+                <thead><tr><th>Guest / Client</th><th>Agency</th><th>Room Type</th><th>Dates</th><th>Nights</th><th>Value</th><th>Feedback</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><div style="font-weight:500">Sarah Harrington</div><div style="font-size:11px;color:var(--text-muted)">Direct · Ref BK-2025-0441</div></td><td>Luxe Travel Group</td><td>Deluxe River View</td><td>14–18 Feb 2025</td><td>4</td><td class="text-accent">£2,840</td><td>⭐⭐⭐⭐⭐</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div style="font-weight:500">James &amp; Helen Forsythe</div><div style="font-size:11px;color:var(--text-muted)">Direct · Ref BK-2025-0389</div></td><td>Prestige Travel Co.</td><td>Junior Suite</td><td>8–12 Apr 2025</td><td>4</td><td class="text-accent">£4,200</td><td>⭐⭐⭐⭐</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div style="font-weight:500">Amelia Roberts</div><div style="font-size:11px;color:var(--text-muted)">Direct · Ref BK-2025-0502</div></td><td>Luxe Travel Group</td><td>King Room</td><td>2–5 May 2025</td><td>3</td><td class="text-accent">£1,680</td><td>⭐⭐⭐⭐⭐</td><td><span class="badge badge-green">Completed</span></td></tr>
+                  <tr><td><div style="font-weight:500">David &amp; Nora Chen</div><div style="font-size:11px;color:var(--text-muted)">Direct · Ref BK-2025-0614</div></td><td>Global Escapes Ltd</td><td>Executive Suite</td><td>18–22 Jun 2025</td><td>4</td><td class="text-accent">£6,400</td><td>⭐⭐⭐⭐⭐</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+                  <tr><td><div style="font-weight:500">Michael Thornton</div><div style="font-size:11px;color:var(--text-muted)">Direct · Ref BK-2025-0628</div></td><td>Luxe Travel Group</td><td>Deluxe River View</td><td>25–29 Jul 2025</td><td>4</td><td class="text-accent">£3,120</td><td style="font-size:11px;color:var(--text-muted)">Pending</td><td><span class="badge badge-blue">Upcoming</span></td></tr>
+                </tbody>
+              </table>
+              <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+                <a style="font-size:12px;color:var(--sunset-dark);cursor:pointer;font-weight:500">View all 88 stays →</a>
+                <button class="btn-ghost" style="font-size:12px;padding:6px 14px">Export Report</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIENT FEEDBACK -->
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Client Feedback</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span>⭐⭐⭐⭐</span>
+                <span style="font-size:14px;font-weight:600;color:var(--warm-black)">4.6</span>
+                <span style="font-size:11px;color:var(--text-muted)">/ 5 · 62 reviews</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+                <div style="padding:10px 14px;background:var(--off-white);border-radius:8px;border:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--text-muted);font-weight:600;margin-bottom:4px">Room Quality</div><div class="progress-bar-wrap" style="margin-bottom:3px"><div class="progress-bar-fill" style="width:92%"></div></div><div style="font-size:12px;color:var(--sunset-dark);font-weight:600">4.6 / 5</div></div>
+                <div style="padding:10px 14px;background:var(--off-white);border-radius:8px;border:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--text-muted);font-weight:600;margin-bottom:4px">Service</div><div class="progress-bar-wrap" style="margin-bottom:3px"><div class="progress-bar-fill" style="width:88%"></div></div><div style="font-size:12px;color:var(--sunset-dark);font-weight:600">4.4 / 5</div></div>
+                <div style="padding:10px 14px;background:var(--off-white);border-radius:8px;border:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--text-muted);font-weight:600;margin-bottom:4px">Location</div><div class="progress-bar-wrap" style="margin-bottom:3px"><div class="progress-bar-fill" style="width:98%"></div></div><div style="font-size:12px;color:var(--sunset-dark);font-weight:600">4.9 / 5</div></div>
+                <div style="padding:10px 14px;background:var(--off-white);border-radius:8px;border:1px solid var(--border)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--text-muted);font-weight:600;margin-bottom:4px">Value</div><div class="progress-bar-wrap" style="margin-bottom:3px"><div class="progress-bar-fill" style="width:74%"></div></div><div style="font-size:12px;color:var(--sunset-dark);font-weight:600">3.7 / 5</div></div>
+              </div>
+              <div class="feedback-list">
+                <div class="feedback-item"><div class="feedback-meta"><div class="feedback-client">Sarah Harrington</div><div class="feedback-trip">· Feb 2025 · Deluxe River View</div><span>⭐⭐⭐⭐⭐</span></div><div class="feedback-quote">"Faultless stay. The river views from our room were stunning and the team went above and beyond when we mentioned it was our anniversary."</div><div class="feedback-tags"><span class="feedback-tag">River View</span><span class="feedback-tag">Attentive Staff</span><span class="feedback-tag">Special Occasion</span></div></div>
+                <div class="feedback-item"><div class="feedback-meta"><div class="feedback-client">James Forsythe</div><div class="feedback-trip">· Apr 2025 · Junior Suite</div><span>⭐⭐⭐⭐</span></div><div class="feedback-quote">"Excellent location, immaculate room. Only minor gripe — in-room dining menu was a little limited for a hotel of this calibre."</div><div class="feedback-tags"><span class="feedback-tag">Great Location</span><span class="feedback-tag neg">Limited Dining Menu</span></div></div>
+                <div class="feedback-item"><div class="feedback-meta"><div class="feedback-client">Amelia Roberts</div><div class="feedback-trip">· May 2025 · King Room</div><span>⭐⭐⭐⭐⭐</span></div><div class="feedback-quote">"Perfect city base. Clean, quiet, friendly staff and great breakfast. The included breakfast upgrade Sugati arranged was a lovely touch."</div><div class="feedback-tags"><span class="feedback-tag">Breakfast Excellent</span><span class="feedback-tag">Friendly Staff</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div class="card">
+              <div class="card-header"><div class="card-title">Supplier Visits &amp; FAM Trips</div><button class="btn-primary" style="padding:5px 14px;font-size:12px">+ Log Visit</button></div>
+              <div class="card-body">
+                <div class="farm-grid" style="grid-template-columns:1fr">
+                  <div class="farm-card"><div class="farm-card-name">Priya Sharma</div><div class="farm-card-role">Account Manager · FAM Stay</div><div class="farm-card-meta"><span>📅 20 Jan 2025</span><span>🏨 2-night complimentary stay · Deluxe River View</span><span>🎯 Inspected new breakfast offering and room refurb.</span></div></div>
+                  <div class="farm-card"><div class="farm-card-name">James Mitchell</div><div class="farm-card-role">Sales Director · Site Inspection</div><div class="farm-card-meta"><span>📅 8 Sep 2023</span><span>🏨 Day visit · Met GM Marcus Webb</span><span>🎯 Negotiated preferred rate uplift to 18%.</span></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Meeting Notes</div><button class="btn-primary" style="padding:5px 14px;font-size:12px">+ Add Note</button></div>
+              <div class="card-body">
+                <div class="meeting-list">
+                  <div class="meeting-item">
+                    <div class="meeting-item-header"><div class="meeting-date-badge">20 Jan 2025</div><div class="meeting-title">FAM Stay Review — New Breakfast &amp; Refurb</div></div>
+                    <div class="meeting-attendees">👥 Priya Sharma (Sugati) · Sarah Lim, Sales Manager (Hilton)</div>
+                    <div class="meeting-body">New breakfast menu excellent — upgraded to 5-star buffet. Rooms 8–12 fully refurbished Nov 2024. Rate agreement valid through Jan 2026.</div>
+                    <div class="meeting-actions"><span class="meeting-action-chip">✅ Breakfast upgrade confirmed</span><span class="meeting-action-chip">📋 Group rates to follow</span></div>
+                  </div>
+                  <div class="meeting-item">
+                    <div class="meeting-item-header"><div class="meeting-date-badge">8 Sep 2023</div><div class="meeting-title">Annual Rate Negotiation</div></div>
+                    <div class="meeting-attendees">👥 James Mitchell (Sugati) · Marcus Webb, GM (Hilton)</div>
+                    <div class="meeting-body">Agreed new preferred rate of 18% off BAR for 2024–25. Exclusive concierge access for Sugati groups confirmed.</div>
+                    <div class="meeting-actions"><span class="meeting-action-chip">🎯 18% rate agreed</span><span class="meeting-action-chip">⚠ Blackout Jan &amp; Jul</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OTHER SUPPLIERS -->
+        <div class="full-col">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Other Preferred Suppliers</div><button class="btn-ghost" style="padding:5px 12px;font-size:12px">+ Add Supplier</button></div>
+            <div class="card-body" style="padding:0">
+              <table class="stays-table">
+                <thead><tr><th>Supplier Name</th><th>Type</th><th>Location</th><th>Stays / Uses (2025)</th><th>Revenue (2025)</th><th>Rating</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td><div style="font-weight:500">Hilton London Bankside</div><div style="font-size:11px;color:var(--text-muted)">Currently viewing</div></td><td><span class="supplier-type-badge supplier-hotel">🏨 Hotel</span></td><td>Southwark, London</td><td>88</td><td class="text-accent">£284K</td><td>⭐ 4.6</td><td><span class="badge badge-sunset">Preferred</span></td></tr>
+                  <tr><td><div style="font-weight:500">David Thompson Safaris</div><div style="font-size:11px;color:var(--text-muted)">Masai Mara specialist</div></td><td><span class="supplier-type-badge supplier-guide">🧭 Guide</span></td><td>Nairobi, Kenya</td><td>34</td><td class="text-accent">£122K</td><td>⭐ 4.9</td><td><span class="badge badge-sunset">Preferred</span></td></tr>
+                  <tr><td><div style="font-weight:500">Soneva Jani Resort</div><div style="font-size:11px;color:var(--text-muted)">Overwater villas</div></td><td><span class="supplier-type-badge supplier-hotel">🏨 Hotel</span></td><td>Noonu Atoll, Maldives</td><td>41</td><td class="text-accent">£318K</td><td>⭐ 4.9</td><td><span class="badge badge-sunset">Preferred</span></td></tr>
+                  <tr><td><div style="font-weight:500">Elite Transfers Colombo</div><div style="font-size:11px;color:var(--text-muted)">Chauffeur &amp; airport</div></td><td><span class="supplier-type-badge supplier-transfer">🚐 Transfer</span></td><td>Colombo, Sri Lanka</td><td>58</td><td class="text-accent">£24K</td><td>⭐ 4.7</td><td><span class="badge badge-green">Active</span></td></tr>
+                  <tr><td><div style="font-weight:500">Annapurna Trekking Co.</div><div style="font-size:11px;color:var(--text-muted)">Mountain guides &amp; logistics</div></td><td><span class="supplier-type-badge supplier-guide">🧭 Guide</span></td><td>Kathmandu, Nepal</td><td>12</td><td class="text-accent">£38K</td><td>⭐ 4.8</td><td><span class="badge badge-green">Active</span></td></tr>
+                </tbody>
+              </table>
+              <div style="padding:12px 16px;border-top:1px solid var(--border)"><a style="font-size:12px;color:var(--sunset-dark);cursor:pointer;font-weight:500">View all 48 suppliers →</a></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+  </div>
+  </lightning-card>
+</template>

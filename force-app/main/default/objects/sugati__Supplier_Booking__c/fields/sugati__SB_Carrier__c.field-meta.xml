@@ -1,0 +1,1995 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Carrier__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Carrier</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Adria Airways</fullName>
+                <default>false</default>
+                <label>Adria Airways</label>
+            </value>
+            <value>
+                <fullName>Aegean</fullName>
+                <default>false</default>
+                <label>Aegean</label>
+            </value>
+            <value>
+                <fullName>Aer Arann Express</fullName>
+                <default>false</default>
+                <label>Aer Arann Express</label>
+            </value>
+            <value>
+                <fullName>Aer Lingus</fullName>
+                <default>false</default>
+                <label>Aer Lingus</label>
+            </value>
+            <value>
+                <fullName>Aero California</fullName>
+                <default>false</default>
+                <label>Aero California</label>
+            </value>
+            <value>
+                <fullName>Aeroflot Airlines</fullName>
+                <default>false</default>
+                <label>Aeroflot Airlines</label>
+            </value>
+            <value>
+                <fullName>Aerogal</fullName>
+                <default>false</default>
+                <label>Aerogal</label>
+            </value>
+            <value>
+                <fullName>Aerolineas Argentinas</fullName>
+                <default>false</default>
+                <label>Aerolineas Argentinas</label>
+            </value>
+            <value>
+                <fullName>Aerolineas Del Sur</fullName>
+                <default>false</default>
+                <label>Aerolineas Del Sur</label>
+            </value>
+            <value>
+                <fullName>Aerolink</fullName>
+                <default>false</default>
+                <label>Aerolink</label>
+            </value>
+            <value>
+                <fullName>Aeromexico</fullName>
+                <default>false</default>
+                <label>Aeromexico</label>
+            </value>
+            <value>
+                <fullName>Aeropostal</fullName>
+                <default>false</default>
+                <label>Aeropostal</label>
+            </value>
+            <value>
+                <fullName>African Airways</fullName>
+                <default>false</default>
+                <label>African Airways</label>
+            </value>
+            <value>
+                <fullName>Air Algerie</fullName>
+                <default>false</default>
+                <label>Air Algerie</label>
+            </value>
+            <value>
+                <fullName>Air Asia</fullName>
+                <default>false</default>
+                <label>Air Asia</label>
+            </value>
+            <value>
+                <fullName>Air Bagan</fullName>
+                <default>false</default>
+                <label>Air Bagan</label>
+            </value>
+            <value>
+                <fullName>Air Berlin</fullName>
+                <default>false</default>
+                <label>Air Berlin</label>
+            </value>
+            <value>
+                <fullName>Air Blue</fullName>
+                <default>false</default>
+                <label>Air Blue</label>
+            </value>
+            <value>
+                <fullName>Air Botswana Pty.</fullName>
+                <default>false</default>
+                <label>Air Botswana Pty.</label>
+            </value>
+            <value>
+                <fullName>Air Burkina</fullName>
+                <default>false</default>
+                <label>Air Burkina</label>
+            </value>
+            <value>
+                <fullName>Air Caledonie</fullName>
+                <default>false</default>
+                <label>Air Caledonie</label>
+            </value>
+            <value>
+                <fullName>Air Caledonie International</fullName>
+                <default>false</default>
+                <label>Air Caledonie International</label>
+            </value>
+            <value>
+                <fullName>Air Canada</fullName>
+                <default>false</default>
+                <label>Air Canada</label>
+            </value>
+            <value>
+                <fullName>Air Caraibes</fullName>
+                <default>false</default>
+                <label>Air Caraibes</label>
+            </value>
+            <value>
+                <fullName>Air China</fullName>
+                <default>false</default>
+                <label>Air China</label>
+            </value>
+            <value>
+                <fullName>Air Dolomiti</fullName>
+                <default>false</default>
+                <label>Air Dolomiti</label>
+            </value>
+            <value>
+                <fullName>Air Engiadina</fullName>
+                <default>false</default>
+                <label>Air Engiadina</label>
+            </value>
+            <value>
+                <fullName>Air Europa</fullName>
+                <default>false</default>
+                <label>Air Europa</label>
+            </value>
+            <value>
+                <fullName>Air Excel</fullName>
+                <default>false</default>
+                <label>Air Excel</label>
+            </value>
+            <value>
+                <fullName>Air Fiji</fullName>
+                <default>false</default>
+                <label>Air Fiji</label>
+            </value>
+            <value>
+                <fullName>Air France</fullName>
+                <default>false</default>
+                <label>Air France</label>
+            </value>
+            <value>
+                <fullName>Air India</fullName>
+                <default>false</default>
+                <label>Air India</label>
+            </value>
+            <value>
+                <fullName>Air Italya</fullName>
+                <default>false</default>
+                <label>Air Italya</label>
+            </value>
+            <value>
+                <fullName>Air Ivoire</fullName>
+                <default>false</default>
+                <label>Air Ivoire</label>
+            </value>
+            <value>
+                <fullName>Air Jamaica</fullName>
+                <default>false</default>
+                <label>Air Jamaica</label>
+            </value>
+            <value>
+                <fullName>Air KBZ</fullName>
+                <default>false</default>
+                <label>Air KBZ</label>
+            </value>
+            <value>
+                <fullName>Airkenya Express</fullName>
+                <default>false</default>
+                <label>Airkenya Express</label>
+            </value>
+            <value>
+                <fullName>Air Lanka</fullName>
+                <default>false</default>
+                <label>Air Lanka</label>
+            </value>
+            <value>
+                <fullName>Airlines of Tasmania</fullName>
+                <default>false</default>
+                <label>Airlines of Tasmania</label>
+            </value>
+            <value>
+                <fullName>Airlines PNG</fullName>
+                <default>false</default>
+                <label>Airlines PNG</label>
+            </value>
+            <value>
+                <fullName>Airlink Pty.</fullName>
+                <default>false</default>
+                <label>Airlink Pty.</label>
+            </value>
+            <value>
+                <fullName>Air Madagascar</fullName>
+                <default>false</default>
+                <label>Air Madagascar</label>
+            </value>
+            <value>
+                <fullName>Air Malawi</fullName>
+                <default>false</default>
+                <label>Air Malawi</label>
+            </value>
+            <value>
+                <fullName>Air Malta</fullName>
+                <default>false</default>
+                <label>Air Malta</label>
+            </value>
+            <value>
+                <fullName>Air Mandalay</fullName>
+                <default>false</default>
+                <label>Air Mandalay</label>
+            </value>
+            <value>
+                <fullName>Air Mauritius</fullName>
+                <default>false</default>
+                <label>Air Mauritius</label>
+            </value>
+            <value>
+                <fullName>Air Midwest Inc.</fullName>
+                <default>false</default>
+                <label>Air Midwest Inc.</label>
+            </value>
+            <value>
+                <fullName>Air Moldova</fullName>
+                <default>false</default>
+                <label>Air Moldova</label>
+            </value>
+            <value>
+                <fullName>Air Namibia</fullName>
+                <default>false</default>
+                <label>Air Namibia</label>
+            </value>
+            <value>
+                <fullName>Air New Zealand</fullName>
+                <default>false</default>
+                <label>Air New Zealand</label>
+            </value>
+            <value>
+                <fullName>Air Nippon</fullName>
+                <default>false</default>
+                <label>Air Nippon</label>
+            </value>
+            <value>
+                <fullName>Air Niugini</fullName>
+                <default>false</default>
+                <label>Air Niugini</label>
+            </value>
+            <value>
+                <fullName>Air North Airlines</fullName>
+                <default>false</default>
+                <label>Air North Airlines</label>
+            </value>
+            <value>
+                <fullName>Air Pacific</fullName>
+                <default>false</default>
+                <label>Air Pacific</label>
+            </value>
+            <value>
+                <fullName>Air Panama</fullName>
+                <default>false</default>
+                <label>Air Panama</label>
+            </value>
+            <value>
+                <fullName>Airphil Express</fullName>
+                <default>false</default>
+                <label>Airphil Express</label>
+            </value>
+            <value>
+                <fullName>Air Plus Comet Airlines</fullName>
+                <default>false</default>
+                <label>Air Plus Comet Airlines</label>
+            </value>
+            <value>
+                <fullName>Air Rarotonga</fullName>
+                <default>false</default>
+                <label>Air Rarotonga</label>
+            </value>
+            <value>
+                <fullName>Air Rwanda</fullName>
+                <default>false</default>
+                <label>Air Rwanda</label>
+            </value>
+            <value>
+                <fullName>Air Satellite</fullName>
+                <default>false</default>
+                <label>Air Satellite</label>
+            </value>
+            <value>
+                <fullName>Air Senegal</fullName>
+                <default>false</default>
+                <label>Air Senegal</label>
+            </value>
+            <value>
+                <fullName>Air Seychelles</fullName>
+                <default>false</default>
+                <label>Air Seychelles</label>
+            </value>
+            <value>
+                <fullName>Air Sunshine Inc.</fullName>
+                <default>false</default>
+                <label>Air Sunshine Inc.</label>
+            </value>
+            <value>
+                <fullName>Air Tahiti</fullName>
+                <default>false</default>
+                <label>Air Tahiti</label>
+            </value>
+            <value>
+                <fullName>Air Tahiti Nui</fullName>
+                <default>false</default>
+                <label>Air Tahiti Nui</label>
+            </value>
+            <value>
+                <fullName>Air Tanzania</fullName>
+                <default>false</default>
+                <label>Air Tanzania</label>
+            </value>
+            <value>
+                <fullName>Air tendi</fullName>
+                <default>false</default>
+                <label>Air tendi</label>
+            </value>
+            <value>
+                <fullName>AirTran Airways</fullName>
+                <default>false</default>
+                <label>AirTran Airways</label>
+            </value>
+            <value>
+                <fullName>Air Transat</fullName>
+                <default>false</default>
+                <label>Air Transat</label>
+            </value>
+            <value>
+                <fullName>Air Vanuatu</fullName>
+                <default>false</default>
+                <label>Air Vanuatu</label>
+            </value>
+            <value>
+                <fullName>Air Vegas</fullName>
+                <default>false</default>
+                <label>Air Vegas</label>
+            </value>
+            <value>
+                <fullName>Air Wisconsin</fullName>
+                <default>false</default>
+                <label>Air Wisconsin</label>
+            </value>
+            <value>
+                <fullName>Air Zimbabwe</fullName>
+                <default>false</default>
+                <label>Air Zimbabwe</label>
+            </value>
+            <value>
+                <fullName>Alaska Airlines</fullName>
+                <default>false</default>
+                <label>Alaska Airlines</label>
+            </value>
+            <value>
+                <fullName>Albanian Airlines</fullName>
+                <default>false</default>
+                <label>Albanian Airlines</label>
+            </value>
+            <value>
+                <fullName>Alitalia</fullName>
+                <default>false</default>
+                <label>Alitalia</label>
+            </value>
+            <value>
+                <fullName>All Nippon Airways</fullName>
+                <default>false</default>
+                <label>All Nippon Airways</label>
+            </value>
+            <value>
+                <fullName>Aloha Air</fullName>
+                <default>false</default>
+                <label>Aloha Air</label>
+            </value>
+            <value>
+                <fullName>Amanpulo Charter</fullName>
+                <default>false</default>
+                <label>Amanpulo Charter</label>
+            </value>
+            <value>
+                <fullName>Amaszonas Linea Aerea</fullName>
+                <default>false</default>
+                <label>Amaszonas Linea Aerea</label>
+            </value>
+            <value>
+                <fullName>American Airlines</fullName>
+                <default>false</default>
+                <label>American Airlines</label>
+            </value>
+            <value>
+                <fullName>American Trans Air</fullName>
+                <default>false</default>
+                <label>American Trans Air</label>
+            </value>
+            <value>
+                <fullName>America West Airlines</fullName>
+                <default>false</default>
+                <label>America West Airlines</label>
+            </value>
+            <value>
+                <fullName>Amerijet International Inc.</fullName>
+                <default>false</default>
+                <label>Amerijet International Inc.</label>
+            </value>
+            <value>
+                <fullName>Anguilla Air Service</fullName>
+                <default>false</default>
+                <label>Anguilla Air Service</label>
+            </value>
+            <value>
+                <fullName>Arcus Air Logistic</fullName>
+                <default>false</default>
+                <label>Arcus Air Logistic</label>
+            </value>
+            <value>
+                <fullName>Ariana-Afghan-Airlines</fullName>
+                <default>false</default>
+                <label>Ariana-Afghan-Airlines</label>
+            </value>
+            <value>
+                <fullName>Arkia Israeli Airlines</fullName>
+                <default>false</default>
+                <label>Arkia Israeli Airlines</label>
+            </value>
+            <value>
+                <fullName>Aserca Airlines</fullName>
+                <default>false</default>
+                <label>Aserca Airlines</label>
+            </value>
+            <value>
+                <fullName>Asiana Airlines</fullName>
+                <default>false</default>
+                <label>Asiana Airlines</label>
+            </value>
+            <value>
+                <fullName>Atlantic Airlines</fullName>
+                <default>false</default>
+                <label>Atlantic Airlines</label>
+            </value>
+            <value>
+                <fullName>Atlantic Air Transport</fullName>
+                <default>false</default>
+                <label>Atlantic Air Transport</label>
+            </value>
+            <value>
+                <fullName>Atlantic Southeast Airlines Inc.</fullName>
+                <default>false</default>
+                <label>Atlantic Southeast Airlines Inc.</label>
+            </value>
+            <value>
+                <fullName>Atlas Air</fullName>
+                <default>false</default>
+                <label>Atlas Air</label>
+            </value>
+            <value>
+                <fullName>Atlasjet Airlines</fullName>
+                <default>false</default>
+                <label>Atlasjet Airlines</label>
+            </value>
+            <value>
+                <fullName>Austrian Airlines</fullName>
+                <default>false</default>
+                <label>Austrian Airlines</label>
+            </value>
+            <value>
+                <fullName>Avianca</fullName>
+                <default>false</default>
+                <label>Avianca</label>
+            </value>
+            <value>
+                <fullName>Azul</fullName>
+                <default>false</default>
+                <label>Azul</label>
+            </value>
+            <value>
+                <fullName>Azul Brazilian Airlines</fullName>
+                <default>false</default>
+                <label>Azul Brazilian Airlines</label>
+            </value>
+            <value>
+                <fullName>Bahamas Air</fullName>
+                <default>false</default>
+                <label>Bahamas Air</label>
+            </value>
+            <value>
+                <fullName>Bangkok Airways</fullName>
+                <default>false</default>
+                <label>Bangkok Airways</label>
+            </value>
+            <value>
+                <fullName>Batik Air</fullName>
+                <default>false</default>
+                <label>Batik Air</label>
+            </value>
+            <value>
+                <fullName>Bearskin Lake Air Service</fullName>
+                <default>false</default>
+                <label>Bearskin Lake Air Service</label>
+            </value>
+            <value>
+                <fullName>Bemidji Airlines</fullName>
+                <default>false</default>
+                <label>Bemidji Airlines</label>
+            </value>
+            <value>
+                <fullName>Bhutan Airlines</fullName>
+                <default>false</default>
+                <label>Bhutan Airlines</label>
+            </value>
+            <value>
+                <fullName>Biman Bangladesh Airlines</fullName>
+                <default>false</default>
+                <label>Biman Bangladesh Airlines</label>
+            </value>
+            <value>
+                <fullName>Binter Canarias</fullName>
+                <default>false</default>
+                <label>Binter Canarias</label>
+            </value>
+            <value>
+                <fullName>Britannia Airways</fullName>
+                <default>false</default>
+                <label>Britannia Airways</label>
+            </value>
+            <value>
+                <fullName>British Airways</fullName>
+                <default>false</default>
+                <label>British Airways</label>
+            </value>
+            <value>
+                <fullName>British International Helicopters</fullName>
+                <default>false</default>
+                <label>British International Helicopters</label>
+            </value>
+            <value>
+                <fullName>British Midland</fullName>
+                <default>false</default>
+                <label>British Midland</label>
+            </value>
+            <value>
+                <fullName>Brussels Airlines</fullName>
+                <default>false</default>
+                <label>Brussels Airlines</label>
+            </value>
+            <value>
+                <fullName>Bulgaria Air</fullName>
+                <default>false</default>
+                <label>Bulgaria Air</label>
+            </value>
+            <value>
+                <fullName>BVI Airlines</fullName>
+                <default>false</default>
+                <label>BVI Airlines</label>
+            </value>
+            <value>
+                <fullName>Calm Air International</fullName>
+                <default>false</default>
+                <label>Calm Air International</label>
+            </value>
+            <value>
+                <fullName>Cambodia Angkor Air</fullName>
+                <default>false</default>
+                <label>Cambodia Angkor Air</label>
+            </value>
+            <value>
+                <fullName>Canadian North</fullName>
+                <default>false</default>
+                <label>Canadian North</label>
+            </value>
+            <value>
+                <fullName>Canjet Airlines</fullName>
+                <default>false</default>
+                <label>Canjet Airlines</label>
+            </value>
+            <value>
+                <fullName>Cape Air</fullName>
+                <default>false</default>
+                <label>Cape Air</label>
+            </value>
+            <value>
+                <fullName>Caracas</fullName>
+                <default>false</default>
+                <label>Caracas</label>
+            </value>
+            <value>
+                <fullName>Caribbean Airlines</fullName>
+                <default>false</default>
+                <label>Caribbean Airlines</label>
+            </value>
+            <value>
+                <fullName>CarpatAir</fullName>
+                <default>false</default>
+                <label>CarpatAir</label>
+            </value>
+            <value>
+                <fullName>Cathay Pacific Airways</fullName>
+                <default>false</default>
+                <label>Cathay Pacific Airways</label>
+            </value>
+            <value>
+                <fullName>Cayman Airways</fullName>
+                <default>false</default>
+                <label>Cayman Airways</label>
+            </value>
+            <value>
+                <fullName>CCM Airlines</fullName>
+                <default>false</default>
+                <label>CCM Airlines</label>
+            </value>
+            <value>
+                <fullName>CEBU Pacific Air</fullName>
+                <default>false</default>
+                <label>CEBU Pacific Air</label>
+            </value>
+            <value>
+                <fullName>Central Mountain Air</fullName>
+                <default>false</default>
+                <label>Central Mountain Air</label>
+            </value>
+            <value>
+                <fullName>Chalk&apos;s International Airways</fullName>
+                <default>false</default>
+                <label>Chalk&apos;s International Airways</label>
+            </value>
+            <value>
+                <fullName>Charter</fullName>
+                <default>false</default>
+                <label>Charter</label>
+            </value>
+            <value>
+                <fullName>China Airlines</fullName>
+                <default>false</default>
+                <label>China Airlines</label>
+            </value>
+            <value>
+                <fullName>China Eastern Airlines</fullName>
+                <default>false</default>
+                <label>China Eastern Airlines</label>
+            </value>
+            <value>
+                <fullName>China Southern Airline</fullName>
+                <default>false</default>
+                <label>China Southern Airline</label>
+            </value>
+            <value>
+                <fullName>Cimber Air</fullName>
+                <default>false</default>
+                <label>Cimber Air</label>
+            </value>
+            <value>
+                <fullName>Cinnamon Air</fullName>
+                <default>false</default>
+                <label>Cinnamon Air</label>
+            </value>
+            <value>
+                <fullName>City Jet</fullName>
+                <default>false</default>
+                <label>City Jet</label>
+            </value>
+            <value>
+                <fullName>Coastal Aviation</fullName>
+                <default>false</default>
+                <label>Coastal Aviation</label>
+            </value>
+            <value>
+                <fullName>Coastal Schedule</fullName>
+                <default>false</default>
+                <label>Coastal Schedule</label>
+            </value>
+            <value>
+                <fullName>Colgan Air</fullName>
+                <default>false</default>
+                <label>Colgan Air</label>
+            </value>
+            <value>
+                <fullName>Comair Inc.</fullName>
+                <default>false</default>
+                <label>Comair Inc.</label>
+            </value>
+            <value>
+                <fullName>Condor Flugdienst</fullName>
+                <default>false</default>
+                <label>Condor Flugdienst</label>
+            </value>
+            <value>
+                <fullName>Continental Airlines</fullName>
+                <default>false</default>
+                <label>Continental Airlines</label>
+            </value>
+            <value>
+                <fullName>Copa Airlines</fullName>
+                <default>false</default>
+                <label>Copa Airlines</label>
+            </value>
+            <value>
+                <fullName>Corsair</fullName>
+                <default>false</default>
+                <label>Corsair</label>
+            </value>
+            <value>
+                <fullName>Croatia Airlines</fullName>
+                <default>false</default>
+                <label>Croatia Airlines</label>
+            </value>
+            <value>
+                <fullName>Cubana Airlines</fullName>
+                <default>false</default>
+                <label>Cubana Airlines</label>
+            </value>
+            <value>
+                <fullName>Cyprus Airways</fullName>
+                <default>false</default>
+                <label>Cyprus Airways</label>
+            </value>
+            <value>
+                <fullName>Cyprus Turkish Airlines</fullName>
+                <default>false</default>
+                <label>Cyprus Turkish Airlines</label>
+            </value>
+            <value>
+                <fullName>Czech Airlines</fullName>
+                <default>false</default>
+                <label>Czech Airlines</label>
+            </value>
+            <value>
+                <fullName>Delta Airlines</fullName>
+                <default>false</default>
+                <label>Delta Airlines</label>
+            </value>
+            <value>
+                <fullName>DonbassAero</fullName>
+                <default>false</default>
+                <label>DonbassAero</label>
+            </value>
+            <value>
+                <fullName>Dragonair (Hong Kong Dragon Airlines)</fullName>
+                <default>false</default>
+                <label>Dragonair (Hong Kong Dragon Airlines)</label>
+            </value>
+            <value>
+                <fullName>Druk Air</fullName>
+                <default>false</default>
+                <label>Druk Air</label>
+            </value>
+            <value>
+                <fullName>Dune Hopper</fullName>
+                <default>false</default>
+                <label>Dune Hopper</label>
+            </value>
+            <value>
+                <fullName>Dutch Antilles Express</fullName>
+                <default>false</default>
+                <label>Dutch Antilles Express</label>
+            </value>
+            <value>
+                <fullName>Eastern Airways</fullName>
+                <default>false</default>
+                <label>Eastern Airways</label>
+            </value>
+            <value>
+                <fullName>Easyjet</fullName>
+                <default>false</default>
+                <label>Easyjet</label>
+            </value>
+            <value>
+                <fullName>Egyptair</fullName>
+                <default>false</default>
+                <label>Egyptair</label>
+            </value>
+            <value>
+                <fullName>El Al Israel Airlines</fullName>
+                <default>false</default>
+                <label>El Al Israel Airlines</label>
+            </value>
+            <value>
+                <fullName>Emirates Airlines</fullName>
+                <default>false</default>
+                <label>Emirates Airlines</label>
+            </value>
+            <value>
+                <fullName>Empire Airlines</fullName>
+                <default>false</default>
+                <label>Empire Airlines</label>
+            </value>
+            <value>
+                <fullName>ERA Aviation</fullName>
+                <default>false</default>
+                <label>ERA Aviation</label>
+            </value>
+            <value>
+                <fullName>Estonian Air</fullName>
+                <default>false</default>
+                <label>Estonian Air</label>
+            </value>
+            <value>
+                <fullName>Ethiopian Airlines</fullName>
+                <default>false</default>
+                <label>Ethiopian Airlines</label>
+            </value>
+            <value>
+                <fullName>Etihad Airways</fullName>
+                <default>false</default>
+                <label>Etihad Airways</label>
+            </value>
+            <value>
+                <fullName>EVA Airways Corporation</fullName>
+                <default>false</default>
+                <label>EVA Airways Corporation</label>
+            </value>
+            <value>
+                <fullName>Express Air</fullName>
+                <default>false</default>
+                <label>Express Air</label>
+            </value>
+            <value>
+                <fullName>Far Eastern Air Transport Corporation</fullName>
+                <default>false</default>
+                <label>Far Eastern Air Transport Corporation</label>
+            </value>
+            <value>
+                <fullName>Fed Air</fullName>
+                <default>false</default>
+                <label>Fed Air</label>
+            </value>
+            <value>
+                <fullName>Fiji Airways</fullName>
+                <default>false</default>
+                <label>Fiji Airways</label>
+            </value>
+            <value>
+                <fullName>Finnair</fullName>
+                <default>false</default>
+                <label>Finnair</label>
+            </value>
+            <value>
+                <fullName>FirstAir</fullName>
+                <default>false</default>
+                <label>FirstAir</label>
+            </value>
+            <value>
+                <fullName>Flybe</fullName>
+                <default>false</default>
+                <label>Flybe</label>
+            </value>
+            <value>
+                <fullName>Fly Dubai</fullName>
+                <default>false</default>
+                <label>Fly Dubai</label>
+            </value>
+            <value>
+                <fullName>Fly SAX</fullName>
+                <default>false</default>
+                <label>Fly SAX</label>
+            </value>
+            <value>
+                <fullName>Frontier Airlines</fullName>
+                <default>false</default>
+                <label>Frontier Airlines</label>
+            </value>
+            <value>
+                <fullName>Frontier Flying Service</fullName>
+                <default>false</default>
+                <label>Frontier Flying Service</label>
+            </value>
+            <value>
+                <fullName>Gambia International Airlines</fullName>
+                <default>false</default>
+                <label>Gambia International Airlines</label>
+            </value>
+            <value>
+                <fullName>Garuda Indonesia</fullName>
+                <default>false</default>
+                <label>Garuda Indonesia</label>
+            </value>
+            <value>
+                <fullName>Glen Air</fullName>
+                <default>false</default>
+                <label>Glen Air</label>
+            </value>
+            <value>
+                <fullName>Go Air</fullName>
+                <default>false</default>
+                <label>Go Air</label>
+            </value>
+            <value>
+                <fullName>Gol Airlines</fullName>
+                <default>false</default>
+                <label>Gol Airlines</label>
+            </value>
+            <value>
+                <fullName>Great Barrier Airlines</fullName>
+                <default>false</default>
+                <label>Great Barrier Airlines</label>
+            </value>
+            <value>
+                <fullName>Great Lakes Airlines</fullName>
+                <default>false</default>
+                <label>Great Lakes Airlines</label>
+            </value>
+            <value>
+                <fullName>Grenadine Airways</fullName>
+                <default>false</default>
+                <label>Grenadine Airways</label>
+            </value>
+            <value>
+                <fullName>Gulf Air Company G.S.C.</fullName>
+                <default>false</default>
+                <label>Gulf Air Company G.S.C.</label>
+            </value>
+            <value>
+                <fullName>Gulfstream Intl Airlines</fullName>
+                <default>false</default>
+                <label>Gulfstream Intl Airlines</label>
+            </value>
+            <value>
+                <fullName>Hageland Aviation Services Inc.</fullName>
+                <default>false</default>
+                <label>Hageland Aviation Services Inc.</label>
+            </value>
+            <value>
+                <fullName>Hainan Airlines</fullName>
+                <default>false</default>
+                <label>Hainan Airlines</label>
+            </value>
+            <value>
+                <fullName>Hawaiian Airlines</fullName>
+                <default>false</default>
+                <label>Hawaiian Airlines</label>
+            </value>
+            <value>
+                <fullName>Heli Air Monaco</fullName>
+                <default>false</default>
+                <label>Heli Air Monaco</label>
+            </value>
+            <value>
+                <fullName>Hemus Air</fullName>
+                <default>false</default>
+                <label>Hemus Air</label>
+            </value>
+            <value>
+                <fullName>Hibiscus Air</fullName>
+                <default>false</default>
+                <label>Hibiscus Air</label>
+            </value>
+            <value>
+                <fullName>Hinterland Aviation</fullName>
+                <default>false</default>
+                <label>Hinterland Aviation</label>
+            </value>
+            <value>
+                <fullName>Hong Kong Airlines</fullName>
+                <default>false</default>
+                <label>Hong Kong Airlines</label>
+            </value>
+            <value>
+                <fullName>Horizon Air</fullName>
+                <default>false</default>
+                <label>Horizon Air</label>
+            </value>
+            <value>
+                <fullName>Iberia Airlines</fullName>
+                <default>false</default>
+                <label>Iberia Airlines</label>
+            </value>
+            <value>
+                <fullName>Icelandair</fullName>
+                <default>false</default>
+                <label>Icelandair</label>
+            </value>
+            <value>
+                <fullName>ICL Express</fullName>
+                <default>false</default>
+                <label>ICL Express</label>
+            </value>
+            <value>
+                <fullName>Indian Airlines</fullName>
+                <default>false</default>
+                <label>Indian Airlines</label>
+            </value>
+            <value>
+                <fullName>Indigo</fullName>
+                <default>false</default>
+                <label>Indigo</label>
+            </value>
+            <value>
+                <fullName>Inhambane</fullName>
+                <default>false</default>
+                <label>Inhambane</label>
+            </value>
+            <value>
+                <fullName>Insel Air</fullName>
+                <default>false</default>
+                <label>Insel Air</label>
+            </value>
+            <value>
+                <fullName>Iran Air</fullName>
+                <default>false</default>
+                <label>Iran Air</label>
+            </value>
+            <value>
+                <fullName>Island Air</fullName>
+                <default>false</default>
+                <label>Island Air</label>
+            </value>
+            <value>
+                <fullName>Island Transvoyager</fullName>
+                <default>false</default>
+                <label>Island Transvoyager</label>
+            </value>
+            <value>
+                <fullName>Japan Air Commuter</fullName>
+                <default>false</default>
+                <label>Japan Air Commuter</label>
+            </value>
+            <value>
+                <fullName>Japan Airlines</fullName>
+                <default>false</default>
+                <label>Japan Airlines</label>
+            </value>
+            <value>
+                <fullName>Japan Asia Airways</fullName>
+                <default>false</default>
+                <label>Japan Asia Airways</label>
+            </value>
+            <value>
+                <fullName>Japan Transocean Air</fullName>
+                <default>false</default>
+                <label>Japan Transocean Air</label>
+            </value>
+            <value>
+                <fullName>JAT Jugoslovenski Aerotransport</fullName>
+                <default>false</default>
+                <label>JAT Jugoslovenski Aerotransport</label>
+            </value>
+            <value>
+                <fullName>Jet2</fullName>
+                <default>false</default>
+                <label>Jet2</label>
+            </value>
+            <value>
+                <fullName>Jet Airways</fullName>
+                <default>false</default>
+                <label>Jet Airways</label>
+            </value>
+            <value>
+                <fullName>JetBlue Airways</fullName>
+                <default>false</default>
+                <label>JetBlue Airways</label>
+            </value>
+            <value>
+                <fullName>Jetkonnect</fullName>
+                <default>false</default>
+                <label>Jetkonnect</label>
+            </value>
+            <value>
+                <fullName>Jetstar Airways</fullName>
+                <default>false</default>
+                <label>Jetstar Airways</label>
+            </value>
+            <value>
+                <fullName>KD Avia</fullName>
+                <default>false</default>
+                <label>KD Avia</label>
+            </value>
+            <value>
+                <fullName>Kenya Airways</fullName>
+                <default>false</default>
+                <label>Kenya Airways</label>
+            </value>
+            <value>
+                <fullName>Kingfisher Airlines</fullName>
+                <default>false</default>
+                <label>Kingfisher Airlines</label>
+            </value>
+            <value>
+                <fullName>KLM Airlines</fullName>
+                <default>false</default>
+                <label>KLM Airlines</label>
+            </value>
+            <value>
+                <fullName>KLM City Hopper B.V.</fullName>
+                <default>false</default>
+                <label>KLM City Hopper B.V.</label>
+            </value>
+            <value>
+                <fullName>Korean Air</fullName>
+                <default>false</default>
+                <label>Korean Air</label>
+            </value>
+            <value>
+                <fullName>Kozhikode</fullName>
+                <default>false</default>
+                <label>Kozhikode</label>
+            </value>
+            <value>
+                <fullName>Kuwait Airways Corporation</fullName>
+                <default>false</default>
+                <label>Kuwait Airways Corporation</label>
+            </value>
+            <value>
+                <fullName>L.A.B. Flying Service Inc.</fullName>
+                <default>false</default>
+                <label>L.A.B. Flying Service Inc.</label>
+            </value>
+            <value>
+                <fullName>LAB - Lloyd Aereo Boliviano</fullName>
+                <default>false</default>
+                <label>LAB - Lloyd Aereo Boliviano</label>
+            </value>
+            <value>
+                <fullName>Labrador Airways</fullName>
+                <default>false</default>
+                <label>Labrador Airways</label>
+            </value>
+            <value>
+                <fullName>LAL</fullName>
+                <default>false</default>
+                <label>LAL</label>
+            </value>
+            <value>
+                <fullName>LAM - Linhas Aereas de Mocanbique</fullName>
+                <default>false</default>
+                <label>LAM - Linhas Aereas de Mocanbique</label>
+            </value>
+            <value>
+                <fullName>LAN Airlines</fullName>
+                <default>false</default>
+                <label>LAN Airlines</label>
+            </value>
+            <value>
+                <fullName>Lan Ecuador</fullName>
+                <default>false</default>
+                <label>Lan Ecuador</label>
+            </value>
+            <value>
+                <fullName>Lan Peru</fullName>
+                <default>false</default>
+                <label>Lan Peru</label>
+            </value>
+            <value>
+                <fullName>Lao Airlines</fullName>
+                <default>false</default>
+                <label>Lao Airlines</label>
+            </value>
+            <value>
+                <fullName>LC Peru</fullName>
+                <default>false</default>
+                <label>LC Peru</label>
+            </value>
+            <value>
+                <fullName>Le Air</fullName>
+                <default>false</default>
+                <label>Le Air</label>
+            </value>
+            <value>
+                <fullName>LIAT</fullName>
+                <default>false</default>
+                <label>LIAT</label>
+            </value>
+            <value>
+                <fullName>Libyan Arab Airlines</fullName>
+                <default>false</default>
+                <label>Libyan Arab Airlines</label>
+            </value>
+            <value>
+                <fullName>Lineas Aereas Costarricenses</fullName>
+                <default>false</default>
+                <label>Lineas Aereas Costarricenses</label>
+            </value>
+            <value>
+                <fullName>Linhas Aereas</fullName>
+                <default>false</default>
+                <label>Linhas Aereas</label>
+            </value>
+            <value>
+                <fullName>Lion Air</fullName>
+                <default>false</default>
+                <label>Lion Air</label>
+            </value>
+            <value>
+                <fullName>Lodge Hop</fullName>
+                <default>false</default>
+                <label>Lodge Hop</label>
+            </value>
+            <value>
+                <fullName>LTU International Airlines</fullName>
+                <default>false</default>
+                <label>LTU International Airlines</label>
+            </value>
+            <value>
+                <fullName>Luftfahrt Gesellschaft</fullName>
+                <default>false</default>
+                <label>Luftfahrt Gesellschaft</label>
+            </value>
+            <value>
+                <fullName>Lufthansa Airlines</fullName>
+                <default>false</default>
+                <label>Lufthansa Airlines</label>
+            </value>
+            <value>
+                <fullName>Lufthansa CityLine</fullName>
+                <default>false</default>
+                <label>Lufthansa CityLine</label>
+            </value>
+            <value>
+                <fullName>Luxair</fullName>
+                <default>false</default>
+                <label>Luxair</label>
+            </value>
+            <value>
+                <fullName>Mack Air</fullName>
+                <default>false</default>
+                <label>Mack Air</label>
+            </value>
+            <value>
+                <fullName>Malaysia Airlines</fullName>
+                <default>false</default>
+                <label>Malaysia Airlines</label>
+            </value>
+            <value>
+                <fullName>Maldivian Air</fullName>
+                <default>false</default>
+                <label>Maldivian Air</label>
+            </value>
+            <value>
+                <fullName>Malev Hungarian Airlines</fullName>
+                <default>false</default>
+                <label>Malev Hungarian Airlines</label>
+            </value>
+            <value>
+                <fullName>Mandala Airlines</fullName>
+                <default>false</default>
+                <label>Mandala Airlines</label>
+            </value>
+            <value>
+                <fullName>Mandarin Airlines</fullName>
+                <default>false</default>
+                <label>Mandarin Airlines</label>
+            </value>
+            <value>
+                <fullName>Mangalore</fullName>
+                <default>false</default>
+                <label>Mangalore</label>
+            </value>
+            <value>
+                <fullName>Martinair Holland</fullName>
+                <default>false</default>
+                <label>Martinair Holland</label>
+            </value>
+            <value>
+                <fullName>MAYAir</fullName>
+                <default>false</default>
+                <label>MAYAir</label>
+            </value>
+            <value>
+                <fullName>Meridiana</fullName>
+                <default>false</default>
+                <label>Meridiana</label>
+            </value>
+            <value>
+                <fullName>Mesa Airlines</fullName>
+                <default>false</default>
+                <label>Mesa Airlines</label>
+            </value>
+            <value>
+                <fullName>Mesaba Airlines</fullName>
+                <default>false</default>
+                <label>Mesaba Airlines</label>
+            </value>
+            <value>
+                <fullName>Mexicana</fullName>
+                <default>false</default>
+                <label>Mexicana</label>
+            </value>
+            <value>
+                <fullName>Middle East Airlines</fullName>
+                <default>false</default>
+                <label>Middle East Airlines</label>
+            </value>
+            <value>
+                <fullName>Midwest Airlines</fullName>
+                <default>false</default>
+                <label>Midwest Airlines</label>
+            </value>
+            <value>
+                <fullName>Mombasa Air</fullName>
+                <default>false</default>
+                <label>Mombasa Air</label>
+            </value>
+            <value>
+                <fullName>Monarch Airways</fullName>
+                <default>false</default>
+                <label>Monarch Airways</label>
+            </value>
+            <value>
+                <fullName>Montenegro Airlines</fullName>
+                <default>false</default>
+                <label>Montenegro Airlines</label>
+            </value>
+            <value>
+                <fullName>Moremi Air Services</fullName>
+                <default>false</default>
+                <label>Moremi Air Services</label>
+            </value>
+            <value>
+                <fullName>Mustique Airways</fullName>
+                <default>false</default>
+                <label>Mustique Airways</label>
+            </value>
+            <value>
+                <fullName>Natureair</fullName>
+                <default>false</default>
+                <label>Natureair</label>
+            </value>
+            <value>
+                <fullName>Nepal Airways</fullName>
+                <default>false</default>
+                <label>Nepal Airways</label>
+            </value>
+            <value>
+                <fullName>New England Airlines</fullName>
+                <default>false</default>
+                <label>New England Airlines</label>
+            </value>
+            <value>
+                <fullName>Niki</fullName>
+                <default>false</default>
+                <label>Niki</label>
+            </value>
+            <value>
+                <fullName>North American Airlines</fullName>
+                <default>false</default>
+                <label>North American Airlines</label>
+            </value>
+            <value>
+                <fullName>Northwest Airlines Inc.</fullName>
+                <default>false</default>
+                <label>Northwest Airlines Inc.</label>
+            </value>
+            <value>
+                <fullName>North Wright Air</fullName>
+                <default>false</default>
+                <label>North Wright Air</label>
+            </value>
+            <value>
+                <fullName>Norwegian</fullName>
+                <default>false</default>
+                <label>Norwegian</label>
+            </value>
+            <value>
+                <fullName>Odie Air</fullName>
+                <default>false</default>
+                <label>Odie Air</label>
+            </value>
+            <value>
+                <fullName>Olympic Airways</fullName>
+                <default>false</default>
+                <label>Olympic Airways</label>
+            </value>
+            <value>
+                <fullName>Oman Air</fullName>
+                <default>false</default>
+                <label>Oman Air</label>
+            </value>
+            <value>
+                <fullName>Our Airline</fullName>
+                <default>false</default>
+                <label>Our Airline</label>
+            </value>
+            <value>
+                <fullName>Pacific Airlines</fullName>
+                <default>false</default>
+                <label>Pacific Airlines</label>
+            </value>
+            <value>
+                <fullName>Pacific Coast Airlines</fullName>
+                <default>false</default>
+                <label>Pacific Coast Airlines</label>
+            </value>
+            <value>
+                <fullName>Pacific Wings</fullName>
+                <default>false</default>
+                <label>Pacific Wings</label>
+            </value>
+            <value>
+                <fullName>Pakistan International Airways</fullName>
+                <default>false</default>
+                <label>Pakistan International Airways</label>
+            </value>
+            <value>
+                <fullName>Pan America</fullName>
+                <default>false</default>
+                <label>Pan America</label>
+            </value>
+            <value>
+                <fullName>Papillon Airways</fullName>
+                <default>false</default>
+                <label>Papillon Airways</label>
+            </value>
+            <value>
+                <fullName>Penair</fullName>
+                <default>false</default>
+                <label>Penair</label>
+            </value>
+            <value>
+                <fullName>Perimeter Airlines</fullName>
+                <default>false</default>
+                <label>Perimeter Airlines</label>
+            </value>
+            <value>
+                <fullName>Philippine Airlines</fullName>
+                <default>false</default>
+                <label>Philippine Airlines</label>
+            </value>
+            <value>
+                <fullName>Pluna</fullName>
+                <default>false</default>
+                <label>Pluna</label>
+            </value>
+            <value>
+                <fullName>Polish Airlines</fullName>
+                <default>false</default>
+                <label>Polish Airlines</label>
+            </value>
+            <value>
+                <fullName>Polynesian Airlines</fullName>
+                <default>false</default>
+                <label>Polynesian Airlines</label>
+            </value>
+            <value>
+                <fullName>Port Columbus</fullName>
+                <default>false</default>
+                <label>Port Columbus</label>
+            </value>
+            <value>
+                <fullName>Portugalia</fullName>
+                <default>false</default>
+                <label>Portugalia</label>
+            </value>
+            <value>
+                <fullName>Precision Airlines</fullName>
+                <default>false</default>
+                <label>Precision Airlines</label>
+            </value>
+            <value>
+                <fullName>Private Charter</fullName>
+                <default>false</default>
+                <label>Private Charter</label>
+            </value>
+            <value>
+                <fullName>Proflight</fullName>
+                <default>false</default>
+                <label>Proflight</label>
+            </value>
+            <value>
+                <fullName>Qantas Airways</fullName>
+                <default>false</default>
+                <label>Qantas Airways</label>
+            </value>
+            <value>
+                <fullName>Qatar Airways</fullName>
+                <default>false</default>
+                <label>Qatar Airways</label>
+            </value>
+            <value>
+                <fullName>Regional Air</fullName>
+                <default>false</default>
+                <label>Regional Air</label>
+            </value>
+            <value>
+                <fullName>Rotana Jet</fullName>
+                <default>false</default>
+                <label>Rotana Jet</label>
+            </value>
+            <value>
+                <fullName>Royal Airlines</fullName>
+                <default>false</default>
+                <label>Royal Airlines</label>
+            </value>
+            <value>
+                <fullName>Royal Air Maroc</fullName>
+                <default>false</default>
+                <label>Royal Air Maroc</label>
+            </value>
+            <value>
+                <fullName>Royal Brunei Airlines</fullName>
+                <default>false</default>
+                <label>Royal Brunei Airlines</label>
+            </value>
+            <value>
+                <fullName>Royal Jordanian</fullName>
+                <default>false</default>
+                <label>Royal Jordanian</label>
+            </value>
+            <value>
+                <fullName>Ryanair</fullName>
+                <default>false</default>
+                <label>Ryanair</label>
+            </value>
+            <value>
+                <fullName>Ryan International Airways</fullName>
+                <default>false</default>
+                <label>Ryan International Airways</label>
+            </value>
+            <value>
+                <fullName>SA Express</fullName>
+                <default>false</default>
+                <label>SA Express</label>
+            </value>
+            <value>
+                <fullName>SafariLink</fullName>
+                <default>false</default>
+                <label>SafariLink</label>
+            </value>
+            <value>
+                <fullName>Sansa</fullName>
+                <default>false</default>
+                <label>Sansa</label>
+            </value>
+            <value>
+                <fullName>Sata</fullName>
+                <default>false</default>
+                <label>Sata</label>
+            </value>
+            <value>
+                <fullName>SATA Air Acores</fullName>
+                <default>false</default>
+                <label>SATA Air Acores</label>
+            </value>
+            <value>
+                <fullName>SATA International</fullName>
+                <default>false</default>
+                <label>SATA International</label>
+            </value>
+            <value>
+                <fullName>Satena</fullName>
+                <default>false</default>
+                <label>Satena</label>
+            </value>
+            <value>
+                <fullName>Saudi Arabian Airline</fullName>
+                <default>false</default>
+                <label>Saudi Arabian Airline</label>
+            </value>
+            <value>
+                <fullName>Scandinavian Airlines</fullName>
+                <default>false</default>
+                <label>Scandinavian Airlines</label>
+            </value>
+            <value>
+                <fullName>Scenic Airlines Inc.</fullName>
+                <default>false</default>
+                <label>Scenic Airlines Inc.</label>
+            </value>
+            <value>
+                <fullName>Scheduled Charter</fullName>
+                <default>false</default>
+                <label>Scheduled Charter</label>
+            </value>
+            <value>
+                <fullName>Shanghai Airlines</fullName>
+                <default>false</default>
+                <label>Shanghai Airlines</label>
+            </value>
+            <value>
+                <fullName>Shenzhen Airlines</fullName>
+                <default>false</default>
+                <label>Shenzhen Airlines</label>
+            </value>
+            <value>
+                <fullName>Shuttle America</fullName>
+                <default>false</default>
+                <label>Shuttle America</label>
+            </value>
+            <value>
+                <fullName>Siberia Airlines (S7)</fullName>
+                <default>false</default>
+                <label>Siberia Airlines (S7)</label>
+            </value>
+            <value>
+                <fullName>Sichuan Airlines</fullName>
+                <default>false</default>
+                <label>Sichuan Airlines</label>
+            </value>
+            <value>
+                <fullName>Siem Reap Airways</fullName>
+                <default>false</default>
+                <label>Siem Reap Airways</label>
+            </value>
+            <value>
+                <fullName>Silk Air</fullName>
+                <default>false</default>
+                <label>Silk Air</label>
+            </value>
+            <value>
+                <fullName>Singapore Airlines</fullName>
+                <default>false</default>
+                <label>Singapore Airlines</label>
+            </value>
+            <value>
+                <fullName>Sky Airlines</fullName>
+                <default>false</default>
+                <label>Sky Airlines</label>
+            </value>
+            <value>
+                <fullName>SkyKing Turks and Caicos Airways</fullName>
+                <default>false</default>
+                <label>SkyKing Turks and Caicos Airways</label>
+            </value>
+            <value>
+                <fullName>Smartwings Airlines</fullName>
+                <default>false</default>
+                <label>Smartwings Airlines</label>
+            </value>
+            <value>
+                <fullName>Solomon Airlines</fullName>
+                <default>false</default>
+                <label>Solomon Airlines</label>
+            </value>
+            <value>
+                <fullName>South African Airlink</fullName>
+                <default>false</default>
+                <label>South African Airlink</label>
+            </value>
+            <value>
+                <fullName>South African Airways</fullName>
+                <default>false</default>
+                <label>South African Airways</label>
+            </value>
+            <value>
+                <fullName>South Airlines</fullName>
+                <default>false</default>
+                <label>South Airlines</label>
+            </value>
+            <value>
+                <fullName>South East Asian Airlines (SEAIR)</fullName>
+                <default>false</default>
+                <label>South East Asian Airlines (SEAIR)</label>
+            </value>
+            <value>
+                <fullName>Southern Air</fullName>
+                <default>false</default>
+                <label>Southern Air</label>
+            </value>
+            <value>
+                <fullName>Southwest Airlines</fullName>
+                <default>false</default>
+                <label>Southwest Airlines</label>
+            </value>
+            <value>
+                <fullName>Spanair</fullName>
+                <default>false</default>
+                <label>Spanair</label>
+            </value>
+            <value>
+                <fullName>Spice Jet</fullName>
+                <default>false</default>
+                <label>Spice Jet</label>
+            </value>
+            <value>
+                <fullName>Spirit Airlines</fullName>
+                <default>false</default>
+                <label>Spirit Airlines</label>
+            </value>
+            <value>
+                <fullName>Sri Lankan Airways</fullName>
+                <default>false</default>
+                <label>Sri Lankan Airways</label>
+            </value>
+            <value>
+                <fullName>Sriwijaya Air</fullName>
+                <default>false</default>
+                <label>Sriwijaya Air</label>
+            </value>
+            <value>
+                <fullName>Sterling Airways A/S</fullName>
+                <default>false</default>
+                <label>Sterling Airways A/S</label>
+            </value>
+            <value>
+                <fullName>Sun - Air of Scandinavia</fullName>
+                <default>false</default>
+                <label>Sun - Air of Scandinavia</label>
+            </value>
+            <value>
+                <fullName>Sun Country Airlines</fullName>
+                <default>false</default>
+                <label>Sun Country Airlines</label>
+            </value>
+            <value>
+                <fullName>Sun Express</fullName>
+                <default>false</default>
+                <label>Sun Express</label>
+            </value>
+            <value>
+                <fullName>Surinam Airways</fullName>
+                <default>false</default>
+                <label>Surinam Airways</label>
+            </value>
+            <value>
+                <fullName>SVG Air</fullName>
+                <default>false</default>
+                <label>SVG Air</label>
+            </value>
+            <value>
+                <fullName>Swissair</fullName>
+                <default>false</default>
+                <label>Swissair</label>
+            </value>
+            <value>
+                <fullName>TACA Airlines</fullName>
+                <default>false</default>
+                <label>TACA Airlines</label>
+            </value>
+            <value>
+                <fullName>TACV Cabo Verde Airlines</fullName>
+                <default>false</default>
+                <label>TACV Cabo Verde Airlines</label>
+            </value>
+            <value>
+                <fullName>TAG</fullName>
+                <default>false</default>
+                <label>TAG</label>
+            </value>
+            <value>
+                <fullName>TAM Airlines</fullName>
+                <default>false</default>
+                <label>TAM Airlines</label>
+            </value>
+            <value>
+                <fullName>Tame Aerogal</fullName>
+                <default>false</default>
+                <label>Tame Aerogal</label>
+            </value>
+            <value>
+                <fullName>TAME Airline</fullName>
+                <default>false</default>
+                <label>TAME Airline</label>
+            </value>
+            <value>
+                <fullName>TAP - Air Portugal</fullName>
+                <default>false</default>
+                <label>TAP - Air Portugal</label>
+            </value>
+            <value>
+                <fullName>TAROM Airline</fullName>
+                <default>false</default>
+                <label>TAROM Airline</label>
+            </value>
+            <value>
+                <fullName>TBC</fullName>
+                <default>false</default>
+                <label>TBC</label>
+            </value>
+            <value>
+                <fullName>Thai Air</fullName>
+                <default>false</default>
+                <label>Thai Air</label>
+            </value>
+            <value>
+                <fullName>Thai Airways International</fullName>
+                <default>false</default>
+                <label>Thai Airways International</label>
+            </value>
+            <value>
+                <fullName>Thandwe</fullName>
+                <default>false</default>
+                <label>Thandwe</label>
+            </value>
+            <value>
+                <fullName>Thomas Cook Airlines</fullName>
+                <default>false</default>
+                <label>Thomas Cook Airlines</label>
+            </value>
+            <value>
+                <fullName>Thompson</fullName>
+                <default>false</default>
+                <label>Thompson</label>
+            </value>
+            <value>
+                <fullName>Thomson Airways</fullName>
+                <default>false</default>
+                <label>Thomson Airways</label>
+            </value>
+            <value>
+                <fullName>Tradewind Aviation</fullName>
+                <default>false</default>
+                <label>Tradewind Aviation</label>
+            </value>
+            <value>
+                <fullName>Trans Asian Airways</fullName>
+                <default>false</default>
+                <label>Trans Asian Airways</label>
+            </value>
+            <value>
+                <fullName>Transavia</fullName>
+                <default>false</default>
+                <label>Transavia</label>
+            </value>
+            <value>
+                <fullName>Travira Air</fullName>
+                <default>false</default>
+                <label>Travira Air</label>
+            </value>
+            <value>
+                <fullName>Tropic Air</fullName>
+                <default>false</default>
+                <label>Tropic Air</label>
+            </value>
+            <value>
+                <fullName>Tunis Air</fullName>
+                <default>false</default>
+                <label>Tunis Air</label>
+            </value>
+            <value>
+                <fullName>Turkish Airlines</fullName>
+                <default>false</default>
+                <label>Turkish Airlines</label>
+            </value>
+            <value>
+                <fullName>Ukraine Intl Airlines</fullName>
+                <default>false</default>
+                <label>Ukraine Intl Airlines</label>
+            </value>
+            <value>
+                <fullName>Ulendo</fullName>
+                <default>false</default>
+                <label>Ulendo</label>
+            </value>
+            <value>
+                <fullName>United Airlines</fullName>
+                <default>false</default>
+                <label>United Airlines</label>
+            </value>
+            <value>
+                <fullName>US Airways</fullName>
+                <default>false</default>
+                <label>US Airways</label>
+            </value>
+            <value>
+                <fullName>USA Jet Airlines</fullName>
+                <default>false</default>
+                <label>USA Jet Airlines</label>
+            </value>
+            <value>
+                <fullName>Uzbekistan Airways</fullName>
+                <default>false</default>
+                <label>Uzbekistan Airways</label>
+            </value>
+            <value>
+                <fullName>Vamizi</fullName>
+                <default>false</default>
+                <label>Vamizi</label>
+            </value>
+            <value>
+                <fullName>Varig Airline</fullName>
+                <default>false</default>
+                <label>Varig Airline</label>
+            </value>
+            <value>
+                <fullName>Vietnam Airlines</fullName>
+                <default>false</default>
+                <label>Vietnam Airlines</label>
+            </value>
+            <value>
+                <fullName>Virgin Air Inc.</fullName>
+                <default>false</default>
+                <label>Virgin Air Inc.</label>
+            </value>
+            <value>
+                <fullName>Virgin Atlantic Airways</fullName>
+                <default>false</default>
+                <label>Virgin Atlantic Airways</label>
+            </value>
+            <value>
+                <fullName>Virgin Australia International</fullName>
+                <default>false</default>
+                <label>Virgin Australia International</label>
+            </value>
+            <value>
+                <fullName>VLM Airlines</fullName>
+                <default>false</default>
+                <label>VLM Airlines</label>
+            </value>
+            <value>
+                <fullName>Vueling</fullName>
+                <default>false</default>
+                <label>Vueling</label>
+            </value>
+            <value>
+                <fullName>Wakaya Charter</fullName>
+                <default>false</default>
+                <label>Wakaya Charter</label>
+            </value>
+            <value>
+                <fullName>Watermakers Air</fullName>
+                <default>false</default>
+                <label>Watermakers Air</label>
+            </value>
+            <value>
+                <fullName>West Air Sweden</fullName>
+                <default>false</default>
+                <label>West Air Sweden</label>
+            </value>
+            <value>
+                <fullName>Western Air</fullName>
+                <default>false</default>
+                <label>Western Air</label>
+            </value>
+            <value>
+                <fullName>WestJet Airlines</fullName>
+                <default>false</default>
+                <label>WestJet Airlines</label>
+            </value>
+            <value>
+                <fullName>Wilderness Air</fullName>
+                <default>false</default>
+                <label>Wilderness Air</label>
+            </value>
+            <value>
+                <fullName>Wings Air</fullName>
+                <default>false</default>
+                <label>Wings Air</label>
+            </value>
+            <value>
+                <fullName>Wings of Alaska</fullName>
+                <default>false</default>
+                <label>Wings of Alaska</label>
+            </value>
+            <value>
+                <fullName>Wizz Air</fullName>
+                <default>false</default>
+                <label>Wizz Air</label>
+            </value>
+            <value>
+                <fullName>World Airways</fullName>
+                <default>false</default>
+                <label>World Airways</label>
+            </value>
+            <value>
+                <fullName>Wow Air</fullName>
+                <default>false</default>
+                <label>Wow Air</label>
+            </value>
+            <value>
+                <fullName>Xtra Airways</fullName>
+                <default>false</default>
+                <label>Xtra Airways</label>
+            </value>
+            <value>
+                <fullName>Yemenia</fullName>
+                <default>false</default>
+                <label>Yemenia</label>
+            </value>
+            <value>
+                <fullName>Zan Air</fullName>
+                <default>false</default>
+                <label>Zan Air</label>
+            </value>
+            <value>
+                <fullName>Zest Air</fullName>
+                <default>false</default>
+                <label>Zest Air</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

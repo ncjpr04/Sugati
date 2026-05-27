@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SSB_Opportunity_Refs__c</fullName>
+    <deprecated>false</deprecated>
+    <description>For debugging purposes</description>
+    <inlineHelpText>For debug purposes only</inlineHelpText>
+    <label>Opportunity Refs</label>
+    <length>131072</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Universally_Available_Supplier__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If this is checked then this supplier will be available in Itinerary Builder no matter which traveling country it is.</inlineHelpText>
+    <label>Universally Available Supplier</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

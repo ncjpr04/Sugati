@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_TL_Badges__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Semi-colon separated list of badges to appear on the tour booking page.</description>
+    <inlineHelpText>Semi-colon separated list of badges to appear on the tour booking page.</inlineHelpText>
+    <label>Badges</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

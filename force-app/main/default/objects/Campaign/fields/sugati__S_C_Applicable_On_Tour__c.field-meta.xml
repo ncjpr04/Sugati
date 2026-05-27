@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_C_Applicable_On_Tour__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>When it is checked this campaign will be visible for the Tour Bookings</inlineHelpText>
+    <label>Applicable On Tour</label>
+    <type>Checkbox</type>
+</CustomField>

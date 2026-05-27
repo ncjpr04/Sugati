@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Supplier_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Supplier Currency - ie the currency in which the payment to the supplier will be made in.</description>
+    <label>Supplier Currency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>GBP</fullName>
+                <default>false</default>
+                <label>GBP</label>
+            </value>
+            <value>
+                <fullName>USD</fullName>
+                <default>false</default>
+                <label>USD</label>
+            </value>
+            <value>
+                <fullName>SGD</fullName>
+                <default>false</default>
+                <label>SGD</label>
+            </value>
+            <value>
+                <fullName>EUR</fullName>
+                <default>false</default>
+                <label>EUR</label>
+            </value>
+            <value>
+                <fullName>AED</fullName>
+                <default>false</default>
+                <label>AED</label>
+            </value>
+            <value>
+                <fullName>AUD</fullName>
+                <default>false</default>
+                <label>AUD</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

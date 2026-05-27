@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Default_Room_Allocation_Columns__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Semi-colon separated list of room allocation columns for new tours</description>
+    <externalId>false</externalId>
+    <label>Default Room Allocation Columns</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

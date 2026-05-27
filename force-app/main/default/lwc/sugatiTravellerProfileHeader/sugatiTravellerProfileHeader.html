@@ -1,0 +1,65 @@
+<template>
+  <div class="profile-header">
+    <div class="profile-header-top">
+
+      <!-- Avatar -->
+      <div class="profile-avatar-lg">{initials}</div>
+
+      <!-- Centre: name, sub-details, badges, note -->
+      <div class="profile-info">
+
+        <div class="profile-name">{fullName}</div>
+
+        <div class="profile-sub">
+          <template if:true={email}>
+            <span>✉ {email}</span>
+          </template>
+          <template if:true={phone}>
+            <span>📞 {phone}</span>
+          </template>
+          <template if:true={address}>
+            <span>🌍 {address}</span>
+          </template>
+        </div>
+
+        <div class="profile-tags">
+          <!-- Rating badge — e.g. "⭐ Platinum" -->
+          <template if:true={hasTier}>
+            <span class="badge badge-sunset">⭐ {tierLabel}</span>
+          </template>
+
+          <!-- Active badge -->
+          <template if:true={isActive}>
+            <span class="badge badge-green">Active</span>
+          </template>
+
+          <!-- Repeat Traveller badge -->
+          <!-- <template if:true={isRepeatTraveller}>
+            <span class="badge badge-blue">Repeat Traveller</span>
+          </template> -->
+
+          <template if:true={hasStatus}>
+            <span class="badge badge-blue">{statusLabel}</span>
+        </template>
+          <!-- Client Since — only shown if MIN(Booking_Date__c) exists -->
+          <template if:true={clientSince}>
+            <span class="badge badge-neutral">Client since {clientSince}</span>
+          </template>
+        </div>
+
+        <!-- Profile Note — only rendered if Description is not empty -->
+        <template if:true={hasNote}>
+          <div class="profile-note-inline">
+            <span class="note-icon">📌</span>
+            <span>
+              <strong>Profile Note</strong>
+              {profileNote}
+            </span>
+          </div>
+        </template>
+
+      </div>
+
+    </div>
+  </div>
+</template>

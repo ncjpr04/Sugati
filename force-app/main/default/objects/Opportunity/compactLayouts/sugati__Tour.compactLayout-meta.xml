@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour</fullName>
+    <fields>Name</fields>
+    <fields>sugati__O_Reference_Number__c</fields>
+    <fields>sugati__O_Live_Occupancy__c</fields>
+    <fields>sugati__S_O_Tour_spaces_Remaining__c</fields>
+    <fields>sugati__O_Days_to_Departure__c</fields>
+    <label>Tour</label>
+</CompactLayout>

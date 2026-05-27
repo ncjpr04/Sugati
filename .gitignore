@@ -1,0 +1,52 @@
+# Salesforce DX local metadata and caches
+.sf/
+.sfdx/
+.localdevserver/
+deploy-options.json
+
+# LWC local autocomplete files
+**/lwc/jsconfig.json
+
+# Build, test, and coverage outputs
+coverage/
+dist/
+.nyc_output/
+
+# Node dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Lint and analysis caches
+.eslintcache
+.pmdCache
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python (Salesforce Functions / scripts)
+**/__pycache__/
+**/.venv/
+**/venv/
+*.pyc
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/

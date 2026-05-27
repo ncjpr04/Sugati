@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_A_Calendar_Label__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF (!ISBLANK(sugati__S_A_Activity_Name__c), sugati__S_A_Activity_Name__c + &quot; (&quot; + sugati__S_A_Supplier_Name__c + &quot;)&quot;, sugati__S_A_Supplier_Name__c) + &quot; : &quot; + sugati__S_A_Booked_Capacity__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Calendar Label</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

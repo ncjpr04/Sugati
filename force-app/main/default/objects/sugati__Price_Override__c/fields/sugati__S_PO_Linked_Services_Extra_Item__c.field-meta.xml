@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_PO_Linked_Services_Extra_Item__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Linked Services &amp; Extra Item</label>
+    <referenceTo>sugati__Linked_Services_Extra_Item__c</referenceTo>
+    <relationshipLabel>Price Overrides</relationshipLabel>
+    <relationshipName>Price_Overrides</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

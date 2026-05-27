@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Agent_Commission__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(NOT(ISBLANK(sugati__S_O_Total_Agent_Commission_Due_Booking__c)), 
+    sugati__S_O_Total_Agent_Commission_Due_Booking__c, 
+    IF(
+        $Setup.sugati__Site__c.sugati__Agency_is_End_Customer__c, 
+        sugati__S_O_Total_Agent_Commission_Rolled_up__c, 
+        IF(
+            (!ISBLANK(sugati__O_Agent_Commission_Amount__c) &amp;&amp; ISBLANK(sugati__O_Agent_Commission_percent__c)), 
+            sugati__O_Agent_Commission_Amount__c, 
+            IF(
+                (!ISBLANK(sugati__O_Agent_Commission_percent__c) &amp;&amp; ISBLANK(sugati__O_Agent_Commission_Amount__c)),
+                IF(
+                    ISPICKVAL(sugati__O_Agent_Commission_Type__c , &apos;Margin&apos;),
+                    ((sugati__O_Agent_Commission_percent__c/100)* sugati__O_Margin__c ), 
+                    ((sugati__O_Agent_Commission_percent__c/100)*Amount)),
+                IF(
+                    (ISBLANK(sugati__O_Agent_Commission_Amount__c) &amp;&amp; ISBLANK(sugati__O_Agent_Commission_percent__c)), 
+                    IF(
+                        !ISBLANK(sugati__O_Agent__r.sugati__S_Commission_Value__c),
+                        sugati__O_Agent__r.sugati__S_Commission_Value__c,
+                        IF(
+                            !ISBLANK(sugati__O_Agent__r.sugati__S_Commission_Value__c),
+                            sugati__O_Agent__r.sugati__S_Commission_Value__c,
+                            IF(
+                                ISPICKVAL(sugati__O_Agent_Commission_Type__c , &apos;Margin&apos;),
+                                ((sugati__O_Agent__r.sugati__S_Commission__c)* sugati__O_Margin__c ), 
+                                ((sugati__O_Agent__r.sugati__S_Commission__c)*Amount))
+                        )
+                    ),
+                    null
+                ) 
+            )
+        )
+    )
+)</formula>
+    <label>Agent Commission</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SC_Agent_Commission_Due__c</fullName>
+    <deprecated>false</deprecated>
+    <description>If Agent Commission Override on Individual Booking Detail has a value use that figure to sum up. If no value or 0 use Agent Commission Amount.</description>
+    <externalId>false</externalId>
+    <label>Agent Commission Due</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__I_Balance_Outstanding__c</fullName>
+    <deprecated>false</deprecated>
+    <description>IF(RecordType.DeveloperName &lt;&gt; &quot;Credit Note&quot;, IF(ISBLANK( ATOF__CI_Client_Group__r.Id ), ATOF__I_Opportunity__r.ATOF__O_Outstanding__c, ATOF__I_Total_Price__c -  ATOF__I_Payment_Received__c ), 0)</description>
+    <externalId>false</externalId>
+    <formula>IF(
+    RecordType.DeveloperName &lt;&gt; &quot;Credit Note&quot;, 
+    IF(
+        ISBLANK(sugati__CI_Client_Group__r.Id), 
+        IF(
+            NOT(ISBLANK(sugati__I_Opportunity__r.sugati__S_O_Total_Outstanding_Booking_Currency__c)), 
+            sugati__I_Opportunity__r.sugati__S_O_Total_Outstanding_Booking_Currency__c + sugati__CI_Additional_Value__c, 
+            sugati__I_Opportunity__r.sugati__O_Outstanding__c + sugati__CI_Additional_Value__c), 
+        sugati__I_Total_Price__c - sugati__I_Payment_Received__c - sugati__CI_Agent_Commission__c + sugati__CI_Additional_Value__c
+    ), 
+0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Balance Outstanding</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Deposit</fullName>
+    <active>true</active>
+    <description>Deposit</description>
+    <label>Deposit</label>
+    <picklistValues>
+        <picklist>sugati__Percent_Value__c</picklist>
+        <values>
+            <fullName>Percent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Value</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__SPR_Booking_Type__c</picklist>
+        <values>
+            <fullName>Agent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Individual</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__SPR_Related_Components__c</picklist>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bulk Cost</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Coach</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission In</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission Out</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Complimentary</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Memo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cruise</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Days at Leisure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Description</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dinner Reservation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dom Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extra Items</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Int Flight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Light Aircraft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Linked Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meet %26 Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Motorbike Ride</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Notes</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Own Arrangement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Jet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sea Plane</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tuck-Tuck</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>VIP Meet And Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa Fast Track</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__SPR_Supplier_Payment_Due_Type__c</picklist>
+        <values>
+            <fullName>At Confirmation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>End of Month after Serv Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Specific Date</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplier Service Date</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

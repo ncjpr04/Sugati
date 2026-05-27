@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__All</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__S_SR_Travelling_Country__c</columns>
+    <columns>sugati__S_SR_Trigger_Activity__c</columns>
+    <columns>sugati__S_SR_Trigger_Airport__c</columns>
+    <columns>sugati__S_SR_Trigger_Supplier__c</columns>
+    <columns>sugati__S_SR_Confidence_Score__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

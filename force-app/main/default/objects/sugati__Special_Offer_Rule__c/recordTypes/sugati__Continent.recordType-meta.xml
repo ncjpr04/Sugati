@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Continent</fullName>
+    <active>true</active>
+    <label>Continent</label>
+    <picklistValues>
+        <picklist>sugati__SOR_Minimum_Quantity_Based_On__c</picklist>
+        <values>
+            <fullName>Duration</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Number of items on IB</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__SOR_Supplier_Condition__c</picklist>
+        <values>
+            <fullName>Including this supplier</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Only apply for this supplier</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

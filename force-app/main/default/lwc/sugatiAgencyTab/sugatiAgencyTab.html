@@ -1,0 +1,65 @@
+<template>
+  <div class="page">
+
+    <!-- 1. Header -->
+    <template if:true={hasSupplier}>
+      <c-sugati-agency-header
+          supplier={supplier}
+          supplier-contacts={supplierContacts}>
+      </c-sugati-agency-header>
+    </template>
+
+    <!-- 2. Stat Strip -->
+    <c-sugati-agency-stat-strip
+        supplier={supplier}
+        supplier-bookings={supplierBookings}
+        lifetime-stats={lifetimeStats}
+        currency-symbol={currencySymbolSupplierBookings}>
+    </c-sugati-agency-stat-strip>
+
+    <!-- 3. Annual Performance + Details + Top Destinations -->
+    <div class="two-col">
+      <c-sugati-agency-annual-performance
+          supplier-bookings={supplierBookings}
+          lifetime-stats={lifetimeStats}>
+      </c-sugati-agency-annual-performance>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <c-sugati-agency-details
+            supplier={supplier}>
+        </c-sugati-agency-details>
+
+        <c-sugati-agency-top-destinations
+            destinations={destinations}
+            currency-symbol={currencySymbolSupplierBookings}>
+        </c-sugati-agency-top-destinations>
+      </div>
+    </div>
+
+    <!-- 4. Agent Performance — full width -->
+    <div class="full-col">
+      <c-sugati-agency-agent-performance
+          supplier-bookings={supplierBookings}
+          supplier-contacts={supplierContacts}
+          currency-symbol={currencySymbolSupplierBookings}>
+      </c-sugati-agency-agent-performance>
+    </div>
+
+    <!-- 5. Partner Health + Bed Nights + Recent Activity -->
+    <div class="three-col">
+
+      <c-sugati-agency-bed-nights
+          supplier-bookings={supplierBookings}>
+      </c-sugati-agency-bed-nights>
+
+      <c-sugati-agency-recent-activity
+          recent-activity={recentActivity}>
+      </c-sugati-agency-recent-activity>
+      
+      <c-sugati-agency-fam-trips
+          fam-visits={famVisits}
+          record-id={recordId}>
+      </c-sugati-agency-fam-trips>
+    </div>
+  </div>
+</template>

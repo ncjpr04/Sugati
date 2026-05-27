@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Price_Adjustment_Supplier_Id__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The Id of the supplier that will be used for price adjustment lines in trip planner.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Id of the supplier that will be used for price adjustment lines in trip planner.</inlineHelpText>
+    <label>Price Adjustment Supplier Id</label>
+    <length>18</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

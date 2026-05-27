@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Card_Payment_Methods__c</fullName>
+    <defaultValue>&quot;Credit Card - Visa,Credit Card - Amex,Credit Card - Mastercard&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>The payment methods (from the &apos;Payment Method&apos; field on the Client Payment object) that are card payments (comma separated). This affects whether the &apos;Card Type&apos; field is required or not when making tour payments.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The payment methods (from the &apos;Payment Method&apos; field on the Client Payment object) that are card payments (comma separated). This affects whether the &apos;Card Type&apos; field is required or not when making tour payments.</inlineHelpText>
+    <label>Card Payment Methods</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

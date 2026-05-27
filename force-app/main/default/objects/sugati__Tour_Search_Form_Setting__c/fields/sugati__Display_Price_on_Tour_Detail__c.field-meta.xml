@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Display_Price_on_Tour_Detail__c</fullName>
+    <defaultValue>true</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Display the price on the tour detail header? Used if a customer wishes to inject some custom pricing logic into the right-hand side of the header.</description>
+    <inlineHelpText>Display the price on the tour detail header? Used if a customer wishes to inject some custom pricing logic into the right-hand side of the header.</inlineHelpText>
+    <label>Display Price on Tour Detail</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

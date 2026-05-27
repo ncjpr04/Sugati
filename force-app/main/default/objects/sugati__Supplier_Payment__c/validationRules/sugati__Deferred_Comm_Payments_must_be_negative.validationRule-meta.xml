@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Deferred_Comm_Payments_must_be_negative</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+    TEXT(sugati__SB_Payment_Type__c) = &quot;Deferred Commission&quot;, 
+    sugati__P_Amount__c &gt; 0, 
+    sugati__SBP_Supplier_Cost_Currency_Value__r.sugati__SCP_Is_Agent__c = FALSE
+)</errorConditionFormula>
+    <errorDisplayField>sugati__P_Amount__c</errorDisplayField>
+    <errorMessage>Deferred Commission payments must be have a negative amount</errorMessage>
+</ValidationRule>

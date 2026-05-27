@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Margin_Before_Agency_Commission__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>IF(
+	AND(
+		NOT(ISBLANK(sugati__O_Agent__c)), 
+		ISPICKVAL(sugati__O_Agent__r.sugati__S_S_Commission_Term__c, &apos;Immediate&apos;)
+	),
+	sugati__S_O_Total_Profit__c /  sugati__S_O_Total_Gross_Sell_Price_Selling__c,
+	sugati__S_O_Total_Profit__c / Amount
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Margin (Before Agency Commission)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

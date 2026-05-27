@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__More_then_one_lookup</fullName>
+    <active>true</active>
+    <description>Itinerary text records can only have WTD, WTG or Supplier look up  only</description>
+    <errorConditionFormula>( !ISBLANK(sugati__IT_What_to_do__c) &amp;&amp;  !ISBLANK( sugati__IT_Where_to_go__c )) || ( !ISBLANK(sugati__IT_What_to_do__c) &amp;&amp;  !ISBLANK( sugati__IT_Supplier__c )) || ( !ISBLANK(sugati__IT_Where_to_go__c ) &amp;&amp;  !ISBLANK( sugati__IT_Supplier__c ))</errorConditionFormula>
+    <errorMessage>An Itinerary text record can only have Where to go, Activity or Supplier look up only. It cannot be saved under more than one category.</errorMessage>
+</ValidationRule>

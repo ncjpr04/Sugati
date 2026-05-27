@@ -1,0 +1,225 @@
+<template>
+    <div class={rootClass}>
+        <template lwc:if={isHubMode}>
+            <div class="hub-sb">
+                <div class="sb-ey">Workspace</div>
+                <div class="sb-item on" data-key="all" onclick={handleSidebarClick}>All Communications</div>
+                <div class="sb-item" data-key="drafts" onclick={handleSidebarClick}>
+                    Drafts <span class="sb-badge">1</span>
+                </div>
+                <div class="sb-div"></div>
+                <div class="sb-ey">By Channel</div>
+                <div class="sb-ch-pill" data-channel="email" onclick={handleChannelPill}>
+                    <div class="sb-ch-pip email-pip"></div>Email
+                </div>
+                <div class="sb-ch-pill" data-channel="wa" onclick={handleChannelPill}>
+                    <div class="sb-ch-pip wa-pip"></div>WhatsApp
+                </div>
+                <div class="sb-ch-pill" data-channel="ia" onclick={handleChannelPill}>
+                    <div class="sb-ch-pip ia-pip"></div>In-App
+                </div>
+                <div class="sb-div"></div>
+                <div class="sb-ey">By Audience</div>
+                <div class="sb-item">Travellers</div>
+                <div class="sb-item">Suppliers</div>
+                <div class="sb-div"></div>
+                <div class="sb-ey">Status</div>
+                <div class="sb-item"><span class="status-ok">●</span> Delivered · Opened</div>
+                <div class="sb-item"><span class="status-err">●</span> Failed · Bounced</div>
+            </div>
+        </template>
+
+        <div class="hub-main">
+            <div class="hub-hdr">
+                <div>
+                    <div class="hub-title">{hubTitle}</div>
+                    <div class="hub-sub">{tripTitle} — {tripSubtitle}</div>
+                </div>
+                <template lwc:if={isHistoryOnly}>
+                    <div class="history-actions">
+                        <button type="button" class="btn btn-sec">Filter</button>
+                        <button type="button" class="btn-ghost">Export</button>
+                    </div>
+                </template>
+            </div>
+
+            <template lwc:if={isHubMode}>
+                <div class="ch-summary">
+                    <div class="ch-card" data-channel="email" onclick={handleChannelCard}>
+                        <div class="ch-icon ch-icon-email">✉</div>
+                        <div class="ch-card-body">
+                            <div class="ch-card-name">Email</div>
+                            <div class="ch-card-meta">Postmark · Opens tracked</div>
+                        </div>
+                        <div class="ch-card-count email-count">{emailCount}</div>
+                    </div>
+                    <div class="ch-card" data-channel="wa" onclick={handleChannelCard}>
+                        <div class="ch-icon ch-icon-wa">💬</div>
+                        <div class="ch-card-body">
+                            <div class="ch-card-name">WhatsApp</div>
+                            <div class="ch-card-meta">Cloud API · Read receipts</div>
+                        </div>
+                        <div class="ch-card-count wa-count">{waCount}</div>
+                    </div>
+                    <div class="ch-card" data-channel="ia" onclick={handleChannelCard}>
+                        <div class="ch-icon ch-icon-ia">🔔</div>
+                        <div class="ch-card-body">
+                            <div class="ch-card-name">In-App</div>
+                            <div class="ch-card-meta">Traveller portal · Push</div>
+                        </div>
+                        <div class="ch-card-count ia-count">{iaCount}</div>
+                    </div>
+                </div>
+            </template>
+
+            <div class="hub-timeline">
+                <template for:each={timelineItems} for:item="item">
+                    <div key={item.id} class={item.rowClass} data-id={item.id} onclick={handleRowClick}>
+                        <div class="tl-left">
+                            <div class="tl-dot" style={item.dotStyle}></div>
+                            <div class="tl-line"></div>
+                        </div>
+                        <div class="tl-body">
+                            <div class="tl-subj">{item.subject}</div>
+                            <div class="tl-meta">
+                                <span class={item.tagClass}>{item.tagLabel}</span>
+                                <span class="tl-who">{item.who}</span>
+                                <span class={item.pillClass}>{item.pillLabel}</span>
+                                <span class="tl-when">{item.when}</span>
+                            </div>
+
+                            <!-- Expanded detail drawer — always in DOM, CSS controls visibility -->
+                            <div class="tl-detail">
+                                <div class="tl-detail-inner">
+                                    <div class="tl-detail-cols">
+
+                                        <!-- EMAIL render -->
+                                        <template lwc:if={item.isEmail}>
+                                            <div class="tl-email-render">
+                                                <div class="tl-er-header">
+                                                    <div class="tl-er-brand">
+                                                        <span class="tl-er-brand-dot"></span>S U G A T I
+                                                    </div>
+                                                    <div class="tl-er-meta">
+                                                        <template lwc:if={item.isDraft}>
+                                                            <div><b>To</b>&nbsp;&nbsp;&nbsp;&nbsp; {item.who}</div>
+                                                            <div><b>Subject</b>&nbsp; {item.subject}</div>
+                                                            <div class="draft-warn">⚠ Draft — not yet sent</div>
+                                                        </template>
+                                                        <template lwc:else>
+                                                            <div><b>From</b>&nbsp; Sarah Mitchell &lt;sarah@sugati.com&gt;</div>
+                                                            <div><b>To</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {item.who}</div>
+                                                            <div><b>Subject</b>&nbsp; {item.subject}</div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <template lwc:if={item.hasAttachments}>
+                                                    <div class="tl-att-strip">
+                                                        <span class="tl-att-lbl">Attachments</span>
+                                                        <template for:each={item.attachmentChips} for:item="chip">
+                                                            <div key={chip.name} class="tl-att-chip">
+                                                                <div class={chip.iconClass}>{chip.type}</div>{chip.name}
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </template>
+                                                <div class="tl-er-body">
+                                                    <div class="tl-er-h1">{item.emailHeading}</div>
+                                                    <p>{item.emailBody}</p>
+                                                    <template lwc:if={item.isDraft}>
+                                                        <p class="draft-note">[ Draft — continue editing… ]</p>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <a class="tl-er-cta" href="#" onclick={stopProp}>{item.emailCta}</a>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- WHATSAPP render -->
+                                        <template lwc:if={item.isWa}>
+                                            <div class="tl-wa-render">
+                                                <div class="tl-wa-bar">
+                                                    <div class="tl-wa-av">🌏</div>
+                                                    <div>
+                                                        <div class="tl-wa-name">Sugati Travel</div>
+                                                        <div class="tl-wa-sub">WhatsApp · {item.when}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="tl-wa-body">
+                                                    <div class="tl-wa-bubble">
+                                                        <template for:each={item.waLines} for:item="line">
+                                                            <p key={line}>{line}</p>
+                                                        </template>
+                                                        <div class="tl-wa-time">{item.when} &nbsp; ✓✓ Read</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- IN-APP render -->
+                                        <template lwc:if={item.isIa}>
+                                            <div class="tl-ia-render">
+                                                <div class="tl-ia-bar">
+                                                    <span>S U G A T I</span><span>🌏</span>
+                                                </div>
+                                                <div class="tl-ia-body">
+                                                    <div class="tl-ia-card">
+                                                        <div class="tl-ia-card-hdr">
+                                                            <div class="tl-ia-icon">{item.iaIcon}</div>
+                                                            <div class="tl-ia-title">{item.iaTitle}</div>
+                                                        </div>
+                                                        <div class="tl-ia-msg">{item.iaMsg}</div>
+                                                        <div class="tl-ia-cta">{item.iaCta}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <!-- RIGHT META PANEL -->
+                                        <div class="tl-detail-meta">
+                                            <div class="tl-dm-row">
+                                                <span class="tl-dm-label">Status</span>
+                                                <span class="tl-dm-val">
+                                                    <span class={item.statusClass} style={item.statusStyle}>{item.statusLabel}</span>
+                                                </span>
+                                            </div>
+                                            <template lwc:if={item.isDraft}>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Last edited</span><span class="tl-dm-val">{item.lastEdited}</span></div>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Created by</span><span class="tl-dm-val">{item.sentBy}</span></div>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Recipient</span><span class="tl-dm-val">{item.recipients}</span></div>
+                                                <div class="tl-dm-row tl-dm-row-btn">
+                                                    <button type="button" class="btn-primary full" onclick={handleContinueDraft}>Continue Editing →</button>
+                                                </div>
+                                            </template>
+                                            <template lwc:else>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Sent at</span><span class="tl-dm-val">{item.sentAt}</span></div>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Sent by</span><span class="tl-dm-val">{item.sentBy}</span></div>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">{item.recipientLabel}</span><span class="tl-dm-val">{item.recipients}</span></div>
+                                                <div class="tl-dm-row"><span class="tl-dm-label">Delivery</span><span class="tl-dm-val">{item.delivery}</span></div>
+                                                <template lwc:if={item.template}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">Template</span><span class="tl-dm-val">{item.template}</span></div>
+                                                </template>
+                                                <template lwc:if={item.attachmentsLabel}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">Attachments</span><span class="tl-dm-val">{item.attachmentsLabel}</span></div>
+                                                </template>
+                                                <template lwc:if={item.typeLabel}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">Type</span><span class="tl-dm-val">{item.typeLabel}</span></div>
+                                                </template>
+                                                <template lwc:if={item.extraLabel}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">{item.extraLabel}</span><span class="tl-dm-val">{item.extraValue}</span></div>
+                                                </template>
+                                            </template>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="tl-act" data-id={item.id} onclick={handleToggle}>{item.buttonLabel}</button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Tour_Search_Use_Capacity_for_remaining__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the tour search results will use the Capacity field for remaining spaces, otherwise it will use Live Room Capacity</description>
+    <inlineHelpText>If checked, the tour search results will use the Capacity field for remaining spaces, otherwise it will use Live Room Capacity</inlineHelpText>
+    <label>Tour Search - Use Capacity for remaining</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

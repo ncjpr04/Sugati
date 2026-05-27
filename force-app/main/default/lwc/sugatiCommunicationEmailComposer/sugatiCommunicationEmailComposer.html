@@ -1,0 +1,192 @@
+<template>
+    <div class="composer">
+        <div class="rail">
+            <div class="rail-ey">Channel</div>
+            <div class="rail-ch-badge email-badge">
+                <div class="rcb-pip"></div>
+                <div>
+                    <div class="rcb-name">Email</div>
+                    <div class="rcb-sub">Postmark · tracked</div>
+                </div>
+            </div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Progress</div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Audience</span></div>
+            <div class="rail-step rs-done"><div class="step-n">✓</div><span class="step-label">Recipients</span></div>
+            <div class="rail-step rs-on"><div class="step-n">3</div><span class="step-label">Compose</span></div>
+            <div class="rail-step"><div class="step-n">4</div><span class="step-label">Preview</span></div>
+            <div class="rail-step"><div class="step-n">5</div><span class="step-label">Send</span></div>
+            <div class="rail-div"></div>
+            <div class="rail-ey">Sending to</div>
+            <div class="rail-recs">
+                <template for:each={railRecipients} for:item="rec">
+                    <div key={rec.id} class="rail-rec">
+                        <div class="rav">{rec.initials}</div>
+                        <div class="rail-rec-body">
+                            <div class="rname">{rec.name}</div>
+                            <div class="rrole">{rec.role}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="rail-div"></div>
+            <div class="rail-ey rail-ey-spaced">Template</div>
+            <div class="rail-tmpl-box">
+                <div class="rail-tmpl-label">Active</div>
+                <div class="rail-tmpl-name">{activeTemplateName}</div>
+                <div class="rail-tmpl-meta">{activeTemplateMeta}</div>
+            </div>
+        </div>
+
+        <div class="compose-c">
+            <div class="ch-accent-bar"></div>
+            <div class="addr-block">
+                <div class="addr-row">
+                    <div class="addr-key">From</div>
+                    <div class="addr-val">Sarah Mitchell &lt;sarah@sugati.com&gt;</div>
+                </div>
+                <div class="addr-row">
+                    <div class="addr-key">To</div>
+                    <div class="addr-val">
+                        <template for:each={toChips} for:item="chip">
+                            <div key={chip.id} class="r-chip">
+                                <div class="r-chip-av">{chip.initials}</div>
+                                {chip.name}
+                                <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveChip}>×</span>
+                            </div>
+                        </template>
+                        <div class="r-add" onclick={handleRecipientsNav}>＋ Add</div>
+                    </div>
+                </div>
+                <div class="addr-row addr-row-last">
+                    <div class="addr-key">CC</div>
+                    <div class="addr-val"><div class="r-add">＋ CC</div></div>
+                </div>
+            </div>
+            <div class="subj-row">
+                <input class="subj-input" type="text" value={subject} onchange={handleSubjectChange} />
+            </div>
+            <div class="etbar">
+                <button type="button" class="etb on"><b>B</b></button>
+                <button type="button" class="etb"><i>I</i></button>
+                <button type="button" class="etb etb-u">U</button>
+                <div class="etb-sep"></div>
+                <button type="button" class="etb etb-sm">H1</button>
+                <button type="button" class="etb etb-sm">H2</button>
+                <div class="etb-sep"></div>
+                <button type="button" class="etb etb-token" onclick={handleOpenMerge}>⊕ Token</button>
+                <button type="button" class="etb etb-ai" onclick={handleOpenAi}>✦ AI Assist</button>
+            </div>
+            <div class="editor-body" contenteditable="true">
+                <p>Dear <span class="mt">Traveller First Name</span>,</p>
+                <p>We are delighted to share your final itinerary for your journey to <span class="mt">Destination Country</span>. Your trip begins on <span class="mt">Trip Start Date</span> — just <span class="mt">Days Until Departure</span> days away.</p>
+                <p>Your first night will be spent at <span class="mt">First Accommodation Name</span>, where our team has arranged a private welcome experience for you both.</p>
+                <p>Please find attached your complete itinerary, Japan entry requirements, and your final invoice.</p>
+                <p>Warm regards,<br /><span class="mt">Specialist Name</span></p>
+                <span class="editor-ph">Continue writing, or use ✦ AI Assist to generate from trip data…</span>
+            </div>
+        </div>
+
+        <div class="tools-panel">
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Template</span>
+                    <span class="tp-act" onclick={handleOpenTemplates}>Browse all →</span>
+                </div>
+                <div class="tmpl-search-wrap-outer">
+                    <div class="tmpl-search-wrap">
+                        <span class="tmpl-search-ic">⌕</span>
+                        <input
+                            class="tmpl-search-input"
+                            type="text"
+                            placeholder="Search templates…"
+                            value={templateSearch}
+                            oninput={handleTemplateSearch}
+                        />
+                    </div>
+                </div>
+                <div class="tmpl-folder-tabs">
+                    <template for:each={folderTabs} for:item="tab">
+                        <div key={tab.id} class={tab.className} data-folder={tab.id} onclick={handleFolderTab}>{tab.label}</div>
+                    </template>
+                </div>
+                <div class="tmpl-scroll-list">
+                    <template for:each={filteredTemplates} for:item="tmpl">
+                        <div
+                            key={tmpl.id}
+                            class={tmpl.itemClass}
+                            data-name={tmpl.name}
+                            onclick={handleTemplateActivate}
+                        >
+                            <div class="tmpl-item-left">
+                                <div class="tmpl-item-name">{tmpl.name}</div>
+                                <div class="tmpl-item-meta">{tmpl.meta}</div>
+                            </div>
+                            <div class="tmpl-item-badges">
+                                <span class={tmpl.stageClass}>{tmpl.stage}</span>
+                                <template lwc:if={tmpl.suggested}><span class="tmpl-suggested">✦</span></template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr">
+                    <span class="tp-title">Attachments</span>
+                    <span class="tp-act att-count">{attCountLabel}</span>
+                </div>
+                <div class="att-scroll-list">
+                    <div class="att-grp">Opportunity Files</div>
+                    <template for:each={attachments} for:item="att">
+                        <div key={att.id} class="att-item">
+                            <div class={att.cbClass} data-id={att.id} onclick={handleAttachmentToggle}>✓</div>
+                            <div class={att.icClass}>{att.type}</div>
+                            <div class="att-t">
+                                <div class="att-name">{att.name}</div>
+                                <div class="att-meta">{att.meta}</div>
+                            </div>
+                            <template lwc:if={att.ai}><span class="att-ai">✦ AI suggested</span></template>
+                        </div>
+                    </template>
+                </div>
+                <div class="att-upload-zone">
+                    <div class="att-upload-ic">↑</div>
+                    <div class="att-upload-txt">Upload a file from your device</div>
+                </div>
+            </div>
+            <div class="tp-section">
+                <div class="tp-hdr"><span class="tp-title">Delivery</span></div>
+                <div class="tp-body">
+                    <div class="del-row">
+                        <div class={deliveryPostmarkClass} onclick={handleDeliveryPostmark}>
+                            <div class="del-opt-n">✦ Postmark</div>
+                            <div class="del-opt-s">Opens tracked</div>
+                        </div>
+                        <div class={deliveryNativeClass} onclick={handleDeliveryNative}>
+                            <div class="del-opt-n">Native SF</div>
+                            <div class="del-opt-s">Sent · Failed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="send-zone">
+                <button type="button" class="send-btn email" onclick={handlePreview}>
+                    <span>Preview &amp; Send</span><span class="send-arr">→</span>
+                </button>
+                <div class="send-sec">
+                    <div class="send-sec-btn">Save Draft</div>
+                    <div class="send-sec-btn">Discard</div>
+                </div>
+            </div>
+        </div>
+
+        <c-sugati-communication-ai-assist
+            is-open={showAiAssist}
+            trip-name={tripName}
+            recipient-summary={recipientSummary}
+            template-name={activeTemplateName}
+            onclose={handleCloseAi}
+            onapply={handleAiApply}
+        ></c-sugati-communication-ai-assist>
+    </div>
+</template>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Enable_Client_Payment_Split__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>This setting allows users to split a client payment amount among available client groups under the opportunity.</inlineHelpText>
+    <label>Enable Client Payment Split</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

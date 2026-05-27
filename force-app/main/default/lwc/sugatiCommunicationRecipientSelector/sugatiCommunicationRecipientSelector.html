@@ -1,0 +1,96 @@
+<template>
+    <div class="rec-page">
+        <div class="rec-ey">Step 2 of 5 · Recipient Selection</div>
+        <h2 class="rec-title">Who are you writing to?</h2>
+        <p class="rec-sub">Filter by booking status, select by role, then pick individual recipients. Selected contacts are added to the To field in the composer.</p>
+
+        <div class="rec-aud-tabs">
+            <template for:each={tabs} for:item="tab">
+                <div key={tab.id} class={tab.className} data-tab={tab.id} onclick={handleTab}>
+                    {tab.label}
+                    <template lwc:if={tab.count}><span class="rec-aud-count">{tab.count}</span></template>
+                </div>
+            </template>
+        </div>
+
+        <template lwc:if={showTravellers}>
+            <div class="rec-panel">
+                <div class="rec-quick-row">
+                    <span class="rec-quick-label">Quick select:</span>
+                    <button type="button" class="rec-quick-btn" data-mode="all" onclick={handleQuickSelect}>All travellers</button>
+                    <button type="button" class="rec-quick-btn" data-mode="lead" onclick={handleQuickSelect}>Lead Bookers only</button>
+                    <button type="button" class="rec-quick-btn" data-mode="none" onclick={handleQuickSelect}>Clear all</button>
+                </div>
+                <div class="rec-status-tabs">
+                    <template for:each={statusTabs} for:item="st">
+                        <div key={st.id} class={st.className} data-status={st.id} onclick={handleStatusTab}>
+                            {st.label}<template lwc:if={st.count}><span class={st.countClass}>{st.count}</span></template>
+                        </div>
+                    </template>
+                </div>
+                <div class="rec-list" id="rec-list">
+                    <template for:each={visibleRecipients} for:item="rec">
+                        <div key={rec.id} class={rec.rowClass}>
+                            <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
+                            <div class={rec.avClass}>{rec.initials}</div>
+                            <div class="rec-info">
+                                <div class="rec-name">{rec.name}</div>
+                                <div class="rec-email">{rec.email}</div>
+                            </div>
+                            <div class="rec-role-col"><span class={rec.roleClass}>{rec.role}</span></div>
+                            <div class="rec-status-col"><span class={rec.statusClass}>{rec.status}</span></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:if={showSuppliers}>
+            <div class="rec-panel">
+                <div class="rec-quick-row">
+                    <span class="rec-quick-label">Quick select:</span>
+                    <button type="button" class="rec-quick-btn" data-mode="all" onclick={handleQuickSelect}>All suppliers</button>
+                    <button type="button" class="rec-quick-btn" data-mode="none" onclick={handleQuickSelect}>Clear all</button>
+                </div>
+                <div class="rec-list">
+                    <template for:each={visibleRecipients} for:item="rec">
+                        <div key={rec.id} class={rec.rowClass}>
+                            <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
+                            <div class={rec.avClass}>{rec.initials}</div>
+                            <div class="rec-info">
+                                <div class="rec-name">{rec.name}</div>
+                                <div class="rec-email">{rec.email}</div>
+                            </div>
+                            <div class="rec-role-col"><span class={rec.roleClass}>{rec.role}</span></div>
+                            <div class="rec-status-col"><span class={rec.statusClass}>{rec.status}</span></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template lwc:if={showAgentsEmpty}>
+            <div class="rec-empty-state">
+                <div class="rec-empty-icon">🏢</div>
+                <div class="rec-empty-title">No agent on this trip</div>
+                <p class="rec-empty-desc">This opportunity has no Agency record linked. B2B agent emails are sent via the Agency contact on the Opportunity.</p>
+            </div>
+        </template>
+
+        <template lwc:if={showContacts}>
+            <div class="rec-empty-state">
+                <div class="rec-empty-icon">📋</div>
+                <div class="rec-empty-title">Supplier contacts</div>
+                <p class="rec-empty-desc">Supplier contacts will appear here based on the linked suppliers on the Opportunity.</p>
+            </div>
+        </template>
+
+        <div class="rec-footer">
+            <div class="rec-count">{selectedCountLabel}</div>
+            <div class="rec-footer-actions">
+                <button type="button" class="btn-sec" onclick={handleBack}>← Back</button>
+                <button type="button" class="btn-primary" onclick={handleApply}>Apply to Composer →</button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Tour_Stage_Image__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>CASE( 
+UPPER(TEXT(StageName)), 
+UPPER($Setup.sugati__Sugati_Stage_Name_Mapping__c.sugati__Tour__c), IMAGE(&quot;/resource/&quot; + $Setup.sugati__Site__c.sugati__Namespace__c + &quot;sugatiAsset/opportunity/tour.png&quot;, &quot;Tour&quot;, 150, 800), 
+UPPER($Setup.sugati__Sugati_Stage_Name_Mapping__c.sugati__Template__c), IMAGE(&quot;/resource/&quot; + $Setup.sugati__Site__c.sugati__Namespace__c + &quot;sugatiAsset/opportunity/template.png&quot;, &quot;Template&quot;, 150, 800), 
+UPPER($Setup.sugati__Sugati_Stage_Name_Mapping__c.sugati__Enquiry__c), IMAGE(&quot;/resource/&quot; + $Setup.sugati__Site__c.sugati__Namespace__c + &quot;sugatiAsset/opportunity/enquiry.png&quot;, &quot;Enquiry&quot;, 150, 800), 
+IMAGE(&quot;/resource/sugati__sugatiAsset/opportunity/booking.png&quot;, &quot;Booking&quot;, 150, 800) 
+)</formula>
+    <label>Tour Stage</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

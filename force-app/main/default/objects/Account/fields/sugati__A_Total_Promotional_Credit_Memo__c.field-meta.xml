@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__A_Total_Promotional_Credit_Memo__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Total Promotional Credit Memo</label>
+    <summarizedField>sugati__Credit_Memo__c.sugati__CM_Amount__c</summarizedField>
+    <summaryForeignKey>sugati__Credit_Memo__c.sugati__CM_Account__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Email_Action__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Used for specifying an email action to be used in conjunction with workflow rules and financial calculations</description>
+    <externalId>false</externalId>
+    <label>Email Action</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

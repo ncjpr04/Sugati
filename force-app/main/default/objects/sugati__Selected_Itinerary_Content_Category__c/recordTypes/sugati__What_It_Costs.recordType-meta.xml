@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__What_It_Costs</fullName>
+    <active>true</active>
+    <label>What It Costs</label>
+    <picklistValues>
+        <picklist>sugati__SICC_Booking_Status__c</picklist>
+        <values>
+            <fullName>Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Default Enquiry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quoted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quoted to Client</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Reserved</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

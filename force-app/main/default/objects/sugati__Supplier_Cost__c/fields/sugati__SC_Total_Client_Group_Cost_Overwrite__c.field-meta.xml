@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SC_Total_Client_Group_Cost_Overwrite__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If there is a value in this field then it will supersede the Total Client Group Cost. It&apos;s is primarily used in the Supplier Cost &amp; Payment records.</inlineHelpText>
+    <label>Total Client Group Cost Overwrite</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

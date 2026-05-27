@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Unlock</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Unlock</masterLabel>
+    <openType>sidebar</openType>
+    <page>sugati__UnlockOpportunity</page>
+    <protected>false</protected>
+</WebLink>

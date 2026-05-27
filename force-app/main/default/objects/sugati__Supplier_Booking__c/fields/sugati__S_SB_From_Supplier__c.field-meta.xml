@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SB_From_Supplier__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>From Supplier</label>
+    <referenceTo>sugati__Supplier__c</referenceTo>
+    <relationshipLabel>Supplier Booking (From Supplier)</relationshipLabel>
+    <relationshipName>Supplier_Bookings_From</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

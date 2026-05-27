@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Transfer</fullName>
+    <active>true</active>
+    <label>Transfer</label>
+    <picklistValues>
+        <picklist>sugati__RA_Category__c</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Charging_Option__c</picklist>
+        <values>
+            <fullName>Per Booking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Per Person</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Commission_Type__c</picklist>
+        <values>
+            <fullName>Percentage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Value</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Contract_Status__c</picklist>
+        <values>
+            <fullName>Blocked Off</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Guaranteed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>On Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Released</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Specific Week Guaranteed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Cost_Analysis_Code__c</picklist>
+        <values>
+            <fullName>Accidental Damage Wavier</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card Charge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security Deposit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security Deposit Refunds</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tourist Tax</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfers</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Costing_Currency__c</picklist>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Leg__c</picklist>
+        <values>
+            <fullName>Return</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Single</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Local_Currency__c</picklist>
+        <values>
+            <fullName>EUR</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>GBP</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>KES</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>USD</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Margin_Type__c</picklist>
+        <values>
+            <fullName>Percentage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Value</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Occupancy_Type__c</picklist>
+        <values>
+            <fullName>Adult</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Child</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Double%2FTwin</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extra Adult</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Infant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Single</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Revenue_Analysis_Code__c</picklist>
+        <values>
+            <fullName>Accidental Damage Wavier</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card Charge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Insurance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security Deposit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Security Deposit Refunds</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tourist Tax</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfers</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Service_Type__c</picklist>
+        <values>
+            <fullName>Booking On A Tour</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion at City</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion at National Park</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion at Private Island</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer from Heathrow Airport to ABC Hotel</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__RA_Status__c</picklist>
+        <values>
+            <fullName>Available</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Provisionally Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Released</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_RA_Booking_Type__c</picklist>
+        <values>
+            <fullName>Agent</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Individual</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_RA_Charging_Frequency__c</picklist>
+        <values>
+            <fullName>Per Booking</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Per Day</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Per Week</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_RA_Component__c</picklist>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bulk Cost</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission In</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission Out</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cruise</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Days at Leisure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Description</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dom Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extra Items</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Int Flight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Light Aircraft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Linked Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meet %26 Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Notes</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Own Arrangement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Jet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sea Plane</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tuck-Tuck</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>VIP Meet And Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa Fast Track</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_RA_Days_of_week__c</picklist>
+        <values>
+            <fullName>Friday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Monday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saturday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sunday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Thursday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tuesday</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wednesday</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__S_RA_Rounding_For_Weekly_Rates__c</picklist>
+        <values>
+            <fullName>Round Down</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Round Up</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+</RecordType>

@@ -1,0 +1,228 @@
+/* ---- HOST ---- */
+:host {
+    display: block;
+}
+
+/* ---- CARD SHELL ---- */
+.card {
+    background    : #FFFFFF;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 12px;
+    overflow      : hidden;
+    box-shadow    : 0 1px 3px rgba(28, 28, 26, 0.07), 0 1px 2px rgba(28, 28, 26, 0.04);
+    margin-bottom : 18px;
+}
+
+.card-header {
+    padding         : 16px 22px 14px;
+    border-bottom   : 1px solid rgba(28, 28, 26, 0.1);
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.card-title {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 19px;
+    font-weight : 300;
+    color       : #1C1C1A;
+}
+
+.card-body {
+    padding: 16px 22px;
+}
+
+/* ---- ENGAGEMENT GRID ---- */
+.eng-grid {
+    display               : grid;
+    grid-template-columns : repeat(6, 1fr);
+    gap                   : 16px;
+}
+
+/* ---- STAT TILE ---- */
+.eng-stat {
+    display        : flex;
+    flex-direction : column;
+    align-items    : flex-start;
+    gap            : 5px;
+    padding        : 14px 16px;
+    background     : #F7F7F7;
+    border-radius  : 10px;
+    border         : 1px solid rgba(28, 28, 26, 0.1);
+    transition     : box-shadow 0.18s;
+}
+
+.eng-stat:hover {
+    box-shadow: 0 1px 3px rgba(28, 28, 26, 0.07);
+}
+
+/* ---- STAT ICON ---- */
+.eng-stat-icon {
+    font-size       : 20px;
+    margin-bottom   : 2px;
+    width           : 36px;
+    height          : 36px;
+    border-radius   : 8px;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+}
+
+/* Icon colour modifier classes — replaces inline styles */
+.eng-icon-green  { background: rgba(46, 158, 107, 0.1);  color: #2e9e6b; }
+.eng-icon-blue   { background: rgba(58, 127, 193, 0.1);  color: #3a7fc1; }
+.eng-icon-gold   { background: rgba(255, 197, 67, 0.15); color: #c8930a; }
+.eng-icon-orange { background: rgba(224, 120, 32, 0.12); color: #e07820; }
+.eng-icon-red    { background: rgba(208, 64, 64, 0.1);   color: #d04040; }
+
+/* ---- STAT TEXT ---- */
+.eng-stat-label {
+    font-size      : 10px;
+    font-weight    : 600;
+    text-transform : uppercase;
+    letter-spacing : 0.7px;
+    color          : #9a9a94;
+}
+
+.eng-stat-val {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 22px;
+    font-weight : 300;
+    color       : #1C1C1A;
+    line-height : 1;
+}
+
+.eng-stat-sub {
+    font-size : 11px;
+    color     : #9a9a94;
+}
+
+/* ---- VALUE COLOUR MODIFIERS ---- */
+.val-warning  { color: #e07820; }
+.val-negative { color: #d04040; }
+.val-positive { color: #2e9e6b; }
+
+/* ---- BADGES ---- */
+.badge {
+    display        : inline-flex;
+    align-items    : center;
+    padding        : 3px 10px;
+    border-radius  : 20px;
+    font-size      : 11px;
+    font-weight    : 600;
+    letter-spacing : 0.4px;
+    text-transform : uppercase;
+}
+
+.badge-green {
+    background : rgba(46, 158, 107, 0.1);
+    color      : #1a6040;
+    border     : 1px solid rgba(46, 158, 107, 0.3);
+}
+
+.badge-red {
+    background : rgba(208, 64, 64, 0.1);
+    color      : #801a1a;
+    border     : 1px solid rgba(208, 64, 64, 0.25);
+}
+
+/* Risk badge gets slightly larger padding for legibility */
+.badge-risk {
+    font-size : 12px;
+    padding   : 5px 14px;
+}
+
+/* ---- AT-RISK BAR ---- */
+.at-risk-bar {
+    margin-top  : 14px;
+    padding-top : 14px;
+    border-top  : 1px solid rgba(28, 28, 26, 0.1);
+    display     : flex;
+    align-items : center;
+    gap         : 12px;
+    flex-wrap   : wrap;
+}
+
+.at-risk-inner {
+    display       : flex;
+    align-items   : center;
+    gap           : 8px;
+    padding       : 8px 14px;
+    background    : rgba(208, 64, 64, 0.06);
+    border        : 1px solid rgba(208, 64, 64, 0.2);
+    border-radius : 8px;
+    flex          : 1;
+}
+
+.at-risk-warning-icon {
+    font-size : 18px;
+}
+
+.at-risk-title {
+    font-size     : 12px;
+    font-weight   : 600;
+    color         : #d04040;
+    margin-bottom : 2px;
+}
+
+.at-risk-desc {
+    font-size : 12px;
+    color     : #5a5a56;
+}
+
+/* ---- BUTTONS ---- */
+.btn-primary {
+    padding      : 7px 16px;
+    background   : #FFC543;
+    color        : #1C1C1A;
+    border       : none;
+    border-radius: 7px;
+    font-size    : 12px;
+    font-weight  : 600;
+    cursor       : pointer;
+    white-space  : nowrap;
+    flex-shrink  : 0;
+}
+
+.btn-ghost {
+    padding       : 7px 16px;
+    background    : transparent;
+    color         : #5a5a56;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 7px;
+    font-size     : 12px;
+    font-weight   : 500;
+    cursor        : pointer;
+    white-space   : nowrap;
+    flex-shrink   : 0;
+}
+
+/* ---- CALENDAR ICON ---- */
+.cal-icon {
+    flex-direction : column;
+    gap            : 0;
+    padding        : 2px;
+    border-radius  : 8px;
+    overflow       : hidden;
+}
+
+.cal-month {
+    width         : 100%;
+    background    : #d04040;
+    color         : #fff;
+    font-size     : 8px;
+    font-weight   : 700;
+    text-align    : center;
+    letter-spacing: 0.5px;
+    line-height   : 14px;
+    border-radius : 6px 6px 0 0;
+}
+
+.cal-day {
+    width       : 100%;
+    text-align  : center;
+    font-size   : 16px;
+    font-weight : 700;
+    color       : #1C1C1A;
+    line-height : 22px;
+}

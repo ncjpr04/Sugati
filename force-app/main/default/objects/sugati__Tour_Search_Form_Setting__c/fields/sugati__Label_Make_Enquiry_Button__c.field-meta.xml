@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Label_Make_Enquiry_Button__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Used on &apos;Tour Detail&apos; page.</description>
+    <externalId>false</externalId>
+    <label>Label Make Enquiry Button</label>
+    <length>50</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

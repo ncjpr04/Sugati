@@ -1,0 +1,109 @@
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #dcdcdc;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.custom-table thead th {
+    background-color: #f3f3f3;
+}
+
+/* The Green Section from your image */
+.green-column, .green-cell {
+    background-color: #e2efda !important; /* Light green like Excel */
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.passenger-header-row td {
+    border-top: 2px solid #a9a9a9;
+}
+
+.locked-row {
+    background-color: #f3f3f3;
+    opacity: 0.7;
+    pointer-events: none;
+}
+.notes-cell {
+    vertical-align: top; /* Starts text at the top of the 3-row block */
+    min-width: 200px;    /* Prevents the notes from becoming too skinny */
+    white-space: pre-wrap; /* Preserves line breaks from Salesforce */
+    word-wrap: break-word;
+    line-height: 1.5;    /* Improves readability */
+}
+
+/* Optional: Make the specific row height consistent */
+.excel-table tr {
+    height: 25px; 
+}
+
+.empty-spacer {
+    border: none !important; /* Makes the "merged" look on the left cleaner */
+    background-color: transparent;
+}
+.custom-table td {
+    vertical-align: top !important; /* Keeps text at the top of merged cells */
+    border: 1px solid #d8dde6;
+    padding: 8px;
+}
+
+.notes-cell {
+    white-space: pre-wrap; /* Keeps line breaks from Salesforce Notes field */
+    background-color: #e2efda;
+}
+
+.green-cell {
+    background-color: #e2efda;
+}
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.excel-table td {
+    border: 1px solid #d8dde6;
+    padding: 8px;
+    vertical-align: top !important; /* CRITICAL: Keeps text at the top */
+}
+
+.green-cell {
+    background-color: #e2efda !important; /* Matching your image */
+}
+
+.notes-cell {
+    white-space: pre-wrap; /* Respects line breaks in notes */
+    min-width: 250px;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Prevents columns from resizing based on content length */
+}
+
+.notes-cell {
+    width: 250px; /* Set a fixed width to prevent it from being too wide */
+    vertical-align: top !important;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.custom-table th, .custom-table td {
+    border: 1px solid #d8dde6;
+    padding: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

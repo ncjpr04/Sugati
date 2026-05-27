@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Image_Source__c</fullName>
+    <defaultValue>(&quot;Internal&quot;)</defaultValue>
+    <deprecated>false</deprecated>
+    <label>Image Source</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Internal</fullName>
+                <default>false</default>
+                <label>Internal</label>
+            </value>
+            <value>
+                <fullName>Pexels</fullName>
+                <default>false</default>
+                <label>Pexels</label>
+            </value>
+            <value>
+                <fullName>Pixabay</fullName>
+                <default>false</default>
+                <label>Pixabay</label>
+            </value>
+            <value>
+                <fullName>WeTu</fullName>
+                <default>false</default>
+                <label>WeTu</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

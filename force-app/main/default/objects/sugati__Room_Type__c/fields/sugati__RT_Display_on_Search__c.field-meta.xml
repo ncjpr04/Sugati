@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__RT_Display_on_Search__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Check it if you want to see this room type in the Room Search.</inlineHelpText>
+    <label>Display on Search</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

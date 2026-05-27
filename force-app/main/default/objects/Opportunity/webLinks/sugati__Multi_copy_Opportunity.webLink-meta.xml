@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Multi_copy_Opportunity</fullName>
+    <availability>online</availability>
+    <description>Generates a number of clones of this opportunity with new randomly created accounts and contacts and a random departure date.</description>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Multi-copy Opportunity</masterLabel>
+    <openType>sidebar</openType>
+    <page>sugati__MultiCopyOpportunity</page>
+    <protected>false</protected>
+</WebLink>

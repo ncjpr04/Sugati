@@ -1,0 +1,54 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">FAM Trips</div>
+    </div>
+    <div class="card-body">
+
+      <p class="section-description">
+        Familiarisation trips — records of Sugati staff visits to this agency
+      </p>
+
+      <template if:true={hasTrips}>
+        <div class="farm-grid-scroll">
+          <div class="farm-grid">
+            <template for:each={visitRows} for:item="trip">
+              <div key={trip.id} class="farm-card">
+
+                <div class="farm-card-header">
+                  <span class="farm-card-name">{trip.consultant}</span>
+                  <template if:true={trip.type}>
+                    <span class="farm-type-chip">{trip.type}</span>
+                  </template>
+                </div>
+
+                <div class="farm-card-role">{trip.role}</div>
+
+                <div class="farm-card-meta">
+                  <span title="Date">📅 {trip.dateRange}</span>
+                  <template if:true={trip.description}>
+                    <span class="truncate-line" title={trip.description}>
+                      🎯 {trip.description}
+                    </span>
+                  </template>
+                </div>
+
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <template if:true={hasMore}>
+          <div class="expand-toggle-wrap">
+            <button class="btn-expand" onclick={toggleExpand}>{expandLabel}</button>
+          </div>
+        </template>
+      </template>
+
+      <template if:false={hasTrips}>
+        <div class="empty-state">No recent FAM trips recorded for this agency.</div>
+      </template>
+
+    </div>
+  </div>
+</template>

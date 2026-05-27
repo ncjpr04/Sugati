@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__RA_Total_Waiting_List__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Total Waiting List</label>
+    <summaryFilterItems>
+        <field>sugati__Booking_Item__c.sugati__BI_Room_Booking_Status__c</field>
+        <operation>equals</operation>
+        <value>On Waiting List</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__Booking_Item__c.sugati__BI_Rate__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

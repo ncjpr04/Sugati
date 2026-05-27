@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RA_Component__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Component</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Accommodation</fullName>
+                <default>false</default>
+                <label>Accommodation</label>
+            </value>
+            <value>
+                <fullName>Bulk Cost</fullName>
+                <default>false</default>
+                <label>Bulk Cost</label>
+            </value>
+            <value>
+                <fullName>Car Hire</fullName>
+                <default>false</default>
+                <label>Car Hire</label>
+            </value>
+            <value>
+                <fullName>Commission In</fullName>
+                <default>false</default>
+                <label>Commission In</label>
+            </value>
+            <value>
+                <fullName>Commission Out</fullName>
+                <default>false</default>
+                <label>Commission Out</label>
+            </value>
+            <value>
+                <fullName>Credit Card</fullName>
+                <default>false</default>
+                <label>Credit Card</label>
+            </value>
+            <value>
+                <fullName>Cruise</fullName>
+                <default>false</default>
+                <label>Cruise</label>
+            </value>
+            <value>
+                <fullName>Days at Leisure</fullName>
+                <default>false</default>
+                <label>Days at Leisure</label>
+            </value>
+            <value>
+                <fullName>Description</fullName>
+                <default>false</default>
+                <label>Description</label>
+            </value>
+            <value>
+                <fullName>Dom Flights</fullName>
+                <default>false</default>
+                <label>Dom Flights</label>
+            </value>
+            <value>
+                <fullName>Excursion</fullName>
+                <default>false</default>
+                <label>Excursion</label>
+            </value>
+            <value>
+                <fullName>Extra Items</fullName>
+                <default>false</default>
+                <label>Extra Items</label>
+            </value>
+            <value>
+                <fullName>Ferry</fullName>
+                <default>false</default>
+                <label>Ferry</label>
+            </value>
+            <value>
+                <fullName>Int Flight</fullName>
+                <default>false</default>
+                <label>Int Flight</label>
+            </value>
+            <value>
+                <fullName>Light Aircraft</fullName>
+                <default>false</default>
+                <label>Light Aircraft</label>
+            </value>
+            <value>
+                <fullName>Linked Services</fullName>
+                <default>false</default>
+                <label>Linked Services</label>
+            </value>
+            <value>
+                <fullName>Meet &amp; Greet</fullName>
+                <default>false</default>
+                <label>Meet &amp; Greet</label>
+            </value>
+            <value>
+                <fullName>Notes</fullName>
+                <default>false</default>
+                <label>Notes</label>
+            </value>
+            <value>
+                <fullName>Own Arrangement</fullName>
+                <default>false</default>
+                <label>Own Arrangement</label>
+            </value>
+            <value>
+                <fullName>Private Jet</fullName>
+                <default>false</default>
+                <label>Private Jet</label>
+            </value>
+            <value>
+                <fullName>Private Road Transfer</fullName>
+                <default>false</default>
+                <label>Private Road Transfer</label>
+            </value>
+            <value>
+                <fullName>Private Speed Boat Transfer</fullName>
+                <default>false</default>
+                <label>Private Speed Boat Transfer</label>
+            </value>
+            <value>
+                <fullName>Private Transfer with Excursion</fullName>
+                <default>false</default>
+                <label>Private Transfer with Excursion</label>
+            </value>
+            <value>
+                <fullName>Rail</fullName>
+                <default>false</default>
+                <label>Rail</label>
+            </value>
+            <value>
+                <fullName>Sea Plane</fullName>
+                <default>false</default>
+                <label>Sea Plane</label>
+            </value>
+            <value>
+                <fullName>Shared Road Transfer</fullName>
+                <default>false</default>
+                <label>Shared Road Transfer</label>
+            </value>
+            <value>
+                <fullName>Shared Speed Boat Transfer</fullName>
+                <default>false</default>
+                <label>Shared Speed Boat Transfer</label>
+            </value>
+            <value>
+                <fullName>Shared Transfer with Excursion</fullName>
+                <default>false</default>
+                <label>Shared Transfer with Excursion</label>
+            </value>
+            <value>
+                <fullName>Transfer</fullName>
+                <default>false</default>
+                <label>Transfer</label>
+            </value>
+            <value>
+                <fullName>Tuck-Tuck</fullName>
+                <default>false</default>
+                <label>Tuck-Tuck</label>
+            </value>
+            <value>
+                <fullName>VIP Meet And Greet</fullName>
+                <default>false</default>
+                <label>VIP Meet And Greet</label>
+            </value>
+            <value>
+                <fullName>Visa Fast Track</fullName>
+                <default>false</default>
+                <label>Visa Fast Track</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Type_2__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Type 2 in old world</inlineHelpText>
+    <label>Holiday Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Anniversary</fullName>
+                <default>false</default>
+                <label>Anniversary</label>
+            </value>
+            <value>
+                <fullName>Babymoon</fullName>
+                <default>false</default>
+                <label>Babymoon</label>
+            </value>
+            <value>
+                <fullName>Birthday</fullName>
+                <default>false</default>
+                <label>Birthday</label>
+            </value>
+            <value>
+                <fullName>Corporate</fullName>
+                <default>false</default>
+                <label>Corporate</label>
+            </value>
+            <value>
+                <fullName>Couple (not on honeymoon)</fullName>
+                <default>false</default>
+                <label>Couple (not on honeymoon)</label>
+            </value>
+            <value>
+                <fullName>Family holiday (incl children 18 and over)</fullName>
+                <default>false</default>
+                <label>Family holiday (incl children 18 and over)</label>
+            </value>
+            <value>
+                <fullName>Family holiday (incl children 18 and under)</fullName>
+                <default>false</default>
+                <label>Family holiday (incl children 18 and under)</label>
+            </value>
+            <value>
+                <fullName>Group</fullName>
+                <default>false</default>
+                <label>Group</label>
+            </value>
+            <value>
+                <fullName>Honeymoon</fullName>
+                <default>false</default>
+                <label>Honeymoon</label>
+            </value>
+            <value>
+                <fullName>Sabbatical</fullName>
+                <default>false</default>
+                <label>Sabbatical</label>
+            </value>
+            <value>
+                <fullName>Solo Traveller</fullName>
+                <default>false</default>
+                <label>Solo Traveller</label>
+            </value>
+            <value>
+                <fullName>Stag/Hen</fullName>
+                <default>false</default>
+                <label>Stag/Hen</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

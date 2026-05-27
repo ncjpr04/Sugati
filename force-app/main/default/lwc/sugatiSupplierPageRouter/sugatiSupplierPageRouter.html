@@ -1,0 +1,25 @@
+<template>
+
+    <!-- Spinner while RecordType resolves -->
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+
+    <!-- Error state — shown if RecordType lookup fails -->
+    <template if:true={hasError}>
+        <div class="error-state">
+            Unable to load this record. Please refresh the page or contact your administrator.
+        </div>
+    </template>
+
+    <!-- Agency / Agent page -->
+    <template if:true={isAgency}>
+        <c-sugati-agency-tab record-id={recordId}></c-sugati-agency-tab>
+    </template>
+
+    <!-- Standard Supplier page -->
+    <template if:true={isSupplier}>
+        <c-sugati-supplier-page record-id={recordId}></c-sugati-supplier-page>
+    </template>
+
+</template>

@@ -1,0 +1,59 @@
+<template>
+    <div class="slds-box slds-theme_default slds-scrollable_x">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>TSC Reference Number</th>
+                    <th>Agency</th>
+                    <th>Opportunity Name</th>
+                    <th>Stage</th>
+                    <th class="green-column">Reservation Notes</th>
+                    <th class="green-column">Supplier Name</th>
+                    <th class="green-column">Room Type</th>
+                    <th class="green-column">Bed Configuration</th>
+                    <th class="green-column">Arrival Date</th>
+                    <th class="green-column">Departure Date</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={data} for:item="row">
+                    <tr key={row.Id}>
+                        <td rowspan={row.totalSpan}>{row.BookingName}</td>
+                        <td rowspan={row.totalSpan}>{row.AgencyName}</td>
+                        <td rowspan={row.totalSpan}>{row.OpportunityName}</td>
+                        <td rowspan={row.totalSpan}>{row.StageName}</td>
+                        <td class="green-cell notes-cell" rowspan={row.totalSpan}>{row.Notes}</td>
+                        
+                        <td class="green-cell">{row.SupplierName}</td>
+                        <td class="green-cell">{row.RoomType}</td>
+                        <td class="green-cell">Bed Configuration</td>
+                        <td class="green-cell">{row.ArrivalDate}</td>
+                        <td class="green-cell">{row.DepartureDate}</td>
+                        
+                    </tr>
+                    
+                    <tr key={row.Id} class="passenger-header">
+                        <td class="green-cell font-bold">Salutation</td>
+                        <td class="green-cell font-bold">First Name</td>
+                        <td class="green-cell font-bold">Last Name</td>
+                        <td class="green-cell font-bold">Occupancy</td>
+                        <td class="green-cell font-bold">DOB</td>
+                    </tr>
+
+                    <template for:each={row.passengers} for:item="psg">
+                        <tr key={psg.Id}>
+                            <td class="green-cell">{psg.sugati__GM_Salutation__c}</td>
+                            <td class="green-cell">{psg.sugati__GM_First_Name__c}</td>
+                            <td class="green-cell">{psg.sugati__GM_Last_Name__c}</td>
+                            <td class="green-cell">{psg.OccupancyType}</td>
+                            <td class="green-cell">{psg.sugati__GM_DOB__c}</td>
+                            
+                            
+                        </tr>
+                    </template>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</template>

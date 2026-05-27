@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SOR_Parent_Supplier__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Parent Supplier</label>
+    <referenceTo>sugati__Supplier__c</referenceTo>
+    <relationshipLabel>Special Offer Rules (Parent Supplier)</relationshipLabel>
+    <relationshipName>Special_Offer_Rules1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

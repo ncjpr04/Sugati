@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RU_Default_Resource_Configuration__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Default Resource Configuration</label>
+    <referenceTo>sugati__Resource_Configuration__c</referenceTo>
+    <relationshipLabel>Resource Units</relationshipLabel>
+    <relationshipName>Resource_Units</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

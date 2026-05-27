@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Ignore_tour_status_during_booking__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Ignores the tour status during the booking, so that a custom can have their own on request / waiting list logic built into a custom booking form. If this is ticked, then we will allow a booking to continue if room allocations are not found (whereas before we would stop the booking process with an error message). Custom on request / waiting list logic MUST be built into the customer&apos;s booking form for this to work.</description>
+    <inlineHelpText>Ignores the tour status during the booking, so that a custom can have their own on request / waiting list logic built into a custom booking form.</inlineHelpText>
+    <label>Ignore tour status during booking</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

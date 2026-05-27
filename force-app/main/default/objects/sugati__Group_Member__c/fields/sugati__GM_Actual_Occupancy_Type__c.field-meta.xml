@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__GM_Actual_Occupancy_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>BLANKVALUE(sugati__GM_Occupancy_Type_Overwritten__c, TEXT(sugati__GM_Occupancy_Type__c))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Actual Occupancy Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

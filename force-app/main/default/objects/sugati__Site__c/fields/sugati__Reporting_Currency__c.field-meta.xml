@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Reporting_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If you don&apos;t want to use any other currency for reporting other than corporate currency then provide the currency in the ISO format, like INR for Indian Rupee, and USE for United State Dollar.</inlineHelpText>
+    <label>Reporting Currency</label>
+    <length>10</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

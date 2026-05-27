@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Profit_Booking_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Difference between Net Cost and Sell Price</description>
+    <externalId>false</externalId>
+    <label>Profit (Booking Currency)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

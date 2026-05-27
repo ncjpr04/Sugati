@@ -1,0 +1,52 @@
+<template>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Partner Health Score</div>
+    </div>
+    <div class="card-body">
+
+      <!-- Overall score ring -->
+      <div class="score-ring">
+        <div class="ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,197,67,0.2)" stroke-width="6"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--sunset)"
+                    stroke-width="6" stroke-dasharray="201"
+                    style={overallRingStyle} stroke-linecap="round"/>
+          </svg>
+          <div class="ring-val ring-val-overall">{overallScore}</div>
+        </div>
+        <div class="ring-label">Overall</div>
+      </div>
+
+      <!-- Revenue score ring -->
+      <div class="score-ring">
+        <div class="ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(46,158,107,0.15)" stroke-width="6"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--positive)"
+                    stroke-width="6" stroke-dasharray="201"
+                    style={revenueRingStyle} stroke-linecap="round"/>
+          </svg>
+          <div class="ring-val ring-val-revenue">{revenueScore}</div>
+        </div>
+        <div class="ring-label">Revenue</div>
+      </div>
+
+      <!-- Activity score ring -->
+      <div class="score-ring">
+        <div class="ring-wrap">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(58,127,193,0.15)" stroke-width="6"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="var(--info)"
+                    stroke-width="6" stroke-dasharray="201"
+                    style={activityRingStyle} stroke-linecap="round"/>
+          </svg>
+          <div class="ring-val ring-val-activity">{activityScore}</div>
+        </div>
+        <div class="ring-label">Activity</div>
+      </div>
+
+    </div>
+  </div>
+</template>

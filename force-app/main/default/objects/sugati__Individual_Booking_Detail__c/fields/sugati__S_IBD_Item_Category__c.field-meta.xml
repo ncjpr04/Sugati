@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Item_Category__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Categorises the cost, ie is it a standard gross cost, cancellation cost, Special offer etc.</description>
+    <label>Item Category</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Gross Cost</fullName>
+                <default>true</default>
+                <label>Gross Cost</label>
+            </value>
+            <value>
+                <fullName>Cancellation</fullName>
+                <default>false</default>
+                <label>Cancellation</label>
+            </value>
+            <value>
+                <fullName>Promo Code</fullName>
+                <default>false</default>
+                <label>Promo Code</label>
+            </value>
+            <value>
+                <fullName>Manual Discount</fullName>
+                <default>false</default>
+                <label>Manual Discount</label>
+            </value>
+            <value>
+                <fullName>Earlybird Discount</fullName>
+                <default>false</default>
+                <label>Earlybird Discount</label>
+            </value>
+            <value>
+                <fullName>Bank Charges</fullName>
+                <default>false</default>
+                <label>Bank Charges</label>
+            </value>
+            <value>
+                <fullName>Special Favour</fullName>
+                <default>false</default>
+                <label>Special Favour</label>
+            </value>
+            <value>
+                <fullName>Special Offer</fullName>
+                <default>false</default>
+                <label>Special Offer</label>
+            </value>
+            <value>
+                <fullName>Tax</fullName>
+                <default>false</default>
+                <label>Tax</label>
+            </value>
+            <value>
+                <fullName>Administration Fees</fullName>
+                <default>false</default>
+                <label>Administration Fees</label>
+            </value>
+            <value>
+                <fullName>Credit Card Fees</fullName>
+                <default>false</default>
+                <label>Credit Card Fees</label>
+            </value>
+            <value>
+                <fullName>Fixed Cost</fullName>
+                <default>false</default>
+                <label>Fixed Cost</label>
+            </value>
+            <value>
+                <fullName>Variable Cost</fullName>
+                <default>false</default>
+                <label>Variable Cost</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

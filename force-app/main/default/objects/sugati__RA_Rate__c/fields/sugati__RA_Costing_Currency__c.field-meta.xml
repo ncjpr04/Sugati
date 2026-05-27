@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__RA_Costing_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Typically comes from Contract.</description>
+    <inlineHelpText>Costing Currency committed to the supplier</inlineHelpText>
+    <label>Costing Currency</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>USD</fullName>
+                <default>false</default>
+                <label>USD</label>
+            </value>
+            <value>
+                <fullName>GBP</fullName>
+                <default>false</default>
+                <label>GBP</label>
+            </value>
+            <value>
+                <fullName>EUR</fullName>
+                <default>false</default>
+                <label>EUR</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

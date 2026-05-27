@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Ensure_Supplier_Due_Date_Entered</fullName>
+    <active>true</active>
+    <errorConditionFormula>ISNULL(sugati__SPR_Deposit_Due_Date__c)
+&amp;&amp;
+RecordType.Name == &apos;Deposit&apos; 
+&amp;&amp;
+ISPICKVAL( sugati__SPR_Supplier_Payment_Due_Type__c ,&quot;Specific Date&quot;)</errorConditionFormula>
+    <errorDisplayField>sugati__SPR_Supplier_Payment_Due_Type__c</errorDisplayField>
+    <errorMessage>When choosing the Due Type of Specific Date, please ensure you enter the date for Due Date</errorMessage>
+</ValidationRule>

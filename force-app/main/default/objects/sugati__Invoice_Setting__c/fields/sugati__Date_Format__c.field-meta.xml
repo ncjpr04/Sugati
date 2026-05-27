@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Date_Format__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Change the Date Formate across the PDF</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ex. {0,date,MM/dd/yy}</inlineHelpText>
+    <label>Date Format</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

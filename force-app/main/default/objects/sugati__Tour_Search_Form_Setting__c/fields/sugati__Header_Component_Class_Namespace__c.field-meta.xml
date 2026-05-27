@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Header_Component_Class_Namespace__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The namespace prefix of the header component class to be injected. Leave blank for local.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The namespace prefix of the header component class to be injected. Leave blank for local.</inlineHelpText>
+    <label>Header Component Class Namespace</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

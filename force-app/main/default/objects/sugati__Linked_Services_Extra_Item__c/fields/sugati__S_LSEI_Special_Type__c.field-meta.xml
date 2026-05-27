@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_LSEI_Special_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Special Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Single Supplement</fullName>
+                <default>false</default>
+                <label>Single Supplement</label>
+            </value>
+            <value>
+                <fullName>Extra Night - Pre holiday</fullName>
+                <default>false</default>
+                <label>Extra Night - Pre holiday</label>
+            </value>
+            <value>
+                <fullName>Extra Night - Post holiday</fullName>
+                <default>false</default>
+                <label>Extra Night - Post holiday</label>
+            </value>
+            <value>
+                <fullName>Bolt On - Pre Holiday</fullName>
+                <default>false</default>
+                <label>Bolt On - Pre Holiday</label>
+            </value>
+            <value>
+                <fullName>Bolt On - Post Holiday</fullName>
+                <default>false</default>
+                <label>Bolt On - Post Holiday</label>
+            </value>
+            <value>
+                <fullName>Global</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Global</label>
+            </value>
+            <value>
+                <fullName>Travel Insurance</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Travel Insurance</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

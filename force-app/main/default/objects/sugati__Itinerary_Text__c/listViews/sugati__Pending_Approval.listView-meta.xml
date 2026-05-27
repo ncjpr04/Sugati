@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Pending_Approval</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__IT_Holiday_Type__c</columns>
+    <columns>sugati__IT_Status__c</columns>
+    <columns>sugati__IT_Supplier__c</columns>
+    <columns>sugati__IT_Country__c</columns>
+    <columns>sugati__IT_What_to_do__c</columns>
+    <columns>sugati__IT_Where_to_go__c</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>sugati__IT_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Approved</value>
+    </filters>
+    <label>Pending Approval</label>
+</ListView>

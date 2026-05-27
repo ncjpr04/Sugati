@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SB_Hide_From_PDF_Section__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Hide From PDF Section</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Itinerary At A Glance</fullName>
+                <default>false</default>
+                <label>Itinerary At A Glance</label>
+            </value>
+            <value>
+                <fullName>Day By Day</fullName>
+                <default>false</default>
+                <label>Day By Day</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Label_Search_Button__c</fullName>
+    <defaultValue>&quot;Search&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>To Change SEARCH Button Label.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>To Change SEARCH Button Label.</inlineHelpText>
+    <label>Label Search Button</label>
+    <length>50</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

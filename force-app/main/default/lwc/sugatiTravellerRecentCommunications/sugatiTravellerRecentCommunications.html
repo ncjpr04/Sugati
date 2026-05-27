@@ -1,0 +1,30 @@
+<template>
+    <div class="comm-card">
+
+        <div class="card-header">
+            <div class="card-title">Recent Communications</div>
+            <span class="text-muted">{taskCount} activities</span>
+        </div>
+
+        <div class={listWrapClass}>
+            <ul class="comm-list">
+                <template for:each={visibleTasks} for:item="task">
+                    <li key={task.Id} class="comm-item">
+                        <div class={task.iconClass}>{task.icon}</div>
+                        <div class="comm-content">
+                            <div class="comm-title">{task.Subject}</div>
+                            <div class="comm-meta">{task.typeLabel} · {task.dateLabel}</div>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <template if:true={hasMore}>
+            <div class="card-footer">
+                <a class="view-all-link" onclick={toggle}>{toggleLabel}</a>
+            </div>
+        </template>
+
+    </div>
+</template>

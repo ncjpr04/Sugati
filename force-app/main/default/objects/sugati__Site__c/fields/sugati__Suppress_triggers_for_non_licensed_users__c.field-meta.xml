@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Suppress_triggers_for_non_licensed_users__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Checking this box will suppress Sugati triggers for all internal users who do not have a Sugati license.</description>
+    <inlineHelpText>Checking this box will suppress Sugati triggers for all internal users who do not have a Sugati license.</inlineHelpText>
+    <label>Suppress triggers for non-licensed users</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

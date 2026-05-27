@@ -1,0 +1,112 @@
+<template>
+    <div class="full-col">
+        <div class="card">
+
+            <!-- HEADER -->
+            <div class="card-header">
+                <div class="card-title">Travel Engagement Overview</div>
+                <template if:true={hasBookingsThisYear}>
+                    <span class="badge badge-green">
+                        ✓ {thisYearCount} booking{bookingLabel} in {currentYear}
+                    </span>
+                </template>
+                <template if:false={hasBookingsThisYear}>
+                    <template if:true={showRiskBadge}>
+                        <span class="badge badge-red badge-risk">
+                            {riskBadgeText}
+                        </span>
+                    </template>
+                    <template if:false={showRiskBadge}>
+                        <span class="badge badge-red">
+                            ⚠ No booking history
+                        </span>
+                    </template>
+                </template>
+            </div>
+
+            <div class="card-body">
+
+                <!-- STAT TILES -->
+                <div class="eng-grid">
+
+                    <!-- Last Booking — calendar icon -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-green cal-icon">
+                            <div class="cal-month">{lastBookingMonth}</div>
+                            <div class="cal-day">{lastBookingDay}</div>
+                        </div>
+                        <div class="eng-stat-label">Last Booking Date</div>
+                        <div class="eng-stat-val">{lastBookingDate}</div>
+                        <div class="eng-stat-sub">{lastBookingCountry} · {lastBookingAmount}</div>
+                    </div>
+
+                    <!-- Last Enquiry -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-blue">💬</div>
+                        <div class="eng-stat-label">Last Enquiry Date</div>
+                        <div class="eng-stat-val">{lastEnquiryDate}</div>
+                        <div class="eng-stat-sub">{lastOpportunityName}</div>
+                    </div>
+
+                    <!-- Last Engagement -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-gold">✉</div>
+                        <div class="eng-stat-label">Last Engagement</div>
+                        <div class="eng-stat-val">{lastActivityDate}</div>
+                        <div class="eng-stat-sub">{lastActivityType} · {lastActivitySubject}</div>
+                    </div>
+
+                    <!-- Days Since Booking -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-orange">⏱</div>
+                        <div class="eng-stat-label">Days Since Booking</div>
+                        <div class="eng-stat-val val-warning">{daysSinceBooking} days</div>
+                        <div class="eng-stat-sub">Last booked {lastBookingMonthYear}</div>
+                    </div>
+
+                    <!-- Bookings This Year -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-red">📊</div>
+                        <div class="eng-stat-label">Bookings This Year</div>
+                        <template if:true={hasBookingsThisYear}>
+                            <div class="eng-stat-val val-positive">{thisYearCount} in {currentYear}</div>
+                        </template>
+                        <template if:false={hasBookingsThisYear}>
+                            <div class="eng-stat-val val-negative">0 in {currentYear}</div>
+                        </template>
+                        <div class="eng-stat-sub">{lastYearCount} in {lastYear} · {prevYearCount} in {prevYear}</div>
+                    </div>
+
+                    <!-- Next Confirmed Trip -->
+                    <div class="eng-stat">
+                        <div class="eng-stat-icon eng-icon-green">⏭</div>
+                        <div class="eng-stat-label">Next Confirmed Trip</div>
+                        <template if:true={hasNextTrip}>
+                            <div class="eng-stat-val val-positive">{nextTripDate}</div>
+                            <div class="eng-stat-sub">{nextTripCountry} · {nextTripStage}</div>
+                        </template>
+                        <template if:false={hasNextTrip}>
+                            <div class="eng-stat-val">0</div>
+                            <div class="eng-stat-sub">No upcoming trips</div>
+                        </template>
+                    </div>
+
+                </div>
+
+                <!-- AT-RISK BAR — only shown when no bookings this year -->
+                <template if:false={hasBookingsThisYear}>
+                    <div class="at-risk-bar">
+                        <div class="at-risk-inner">
+                            <span class="at-risk-warning-icon">⚠</span>
+                            <div>
+                                <div class="at-risk-title">At-Risk Flag — No {currentYear} Booking Yet</div>
+                                <div class="at-risk-desc">{dynamicMessage}</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+        </div>
+    </div>
+</template>

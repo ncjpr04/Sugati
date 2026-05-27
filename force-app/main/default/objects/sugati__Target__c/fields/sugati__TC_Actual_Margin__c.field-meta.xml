@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__TC_Actual_Margin__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Total Margin value for bookings made within the Start and End Date of the Target.</description>
+    <inlineHelpText>Total margin value for bookings</inlineHelpText>
+    <label>Actual Margin</label>
+    <summarizedField>sugati__Target_Actual_Number__c.sugati__TAN_Actual_Profit__c</summarizedField>
+    <summaryFilterItems>
+        <field>sugati__Target_Actual_Number__c.sugati__TAN_Archived__c</field>
+        <operation>notEqual</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__Target_Actual_Number__c.sugati__TAN_Target__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SICC_Itinerary_Content_Category__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Itinerary Content Category</label>
+    <referenceTo>sugati__Itinerary_Content_Category__c</referenceTo>
+    <relationshipName>Selected_Itinerary_Content_Categories</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_updating_Itinerary_Images__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If you allow users to update the Supplier Booking Images ( which appears on the itinerary) even after supplier booking creation. If checked, the Supplier Booking Images will be reallocated by the system.</inlineHelpText>
+    <label>Allow updating Itinerary Images</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

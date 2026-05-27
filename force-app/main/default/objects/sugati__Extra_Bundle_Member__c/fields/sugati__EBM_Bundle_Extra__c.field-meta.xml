@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__EBM_Bundle_Extra__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Lookup to the (parent) bundle extra</description>
+    <inlineHelpText>Lookup to the bundle extra</inlineHelpText>
+    <label>Bundle Extra</label>
+    <referenceTo>sugati__Linked_Services_Extra_Item__c</referenceTo>
+    <relationshipLabel>Bundle Members</relationshipLabel>
+    <relationshipName>Extra_Bundle_Members</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

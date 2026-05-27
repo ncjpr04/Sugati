@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Convert_bookings_from_Room_Allocation__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, then On Request and Waiting List bookings can be converted from the Room Allocation page.</description>
+    <inlineHelpText>If checked, then On Request and Waiting List bookings can be converted from the Room Allocation page.</inlineHelpText>
+    <label>Convert bookings from Room Allocation</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

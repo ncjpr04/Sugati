@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CG_Is_Dummy__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>$Label.sugati__GroupBooking == sugati__CG_Lead_Group_Member__r.sugati__GM_Contact__r.Account.Id</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Is Dummy</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

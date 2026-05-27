@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__LSEI_Holiday_Type__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Holiday Type</label>
+    <referenceTo>sugati__Holiday_Type__c</referenceTo>
+    <relationshipLabel>Linked Services &amp; Extra Items</relationshipLabel>
+    <relationshipName>Linked_Services_Extra_Items</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Activities_On_Site__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Activities On Site</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Aboriginal Rock Art Tours</fullName>
+                <default>false</default>
+                <label>Aboriginal Rock Art Tours</label>
+            </value>
+            <value>
+                <fullName>Beach Drop Off</fullName>
+                <default>false</default>
+                <label>Beach Drop Off</label>
+            </value>
+            <value>
+                <fullName>Big 5</fullName>
+                <default>false</default>
+                <label>Big 5</label>
+            </value>
+            <value>
+                <fullName>Bird Watching</fullName>
+                <default>false</default>
+                <label>Bird Watching</label>
+            </value>
+            <value>
+                <fullName>Boating</fullName>
+                <default>false</default>
+                <label>Boating</label>
+            </value>
+            <value>
+                <fullName>Boules</fullName>
+                <default>false</default>
+                <label>Boules</label>
+            </value>
+            <value>
+                <fullName>Bowls</fullName>
+                <default>false</default>
+                <label>Bowls</label>
+            </value>
+            <value>
+                <fullName>Canoeing</fullName>
+                <default>false</default>
+                <label>Canoeing</label>
+            </value>
+            <value>
+                <fullName>Catch-and-release Fishing</fullName>
+                <default>false</default>
+                <label>Catch-and-release Fishing</label>
+            </value>
+            <value>
+                <fullName>Cooking Courses</fullName>
+                <default>false</default>
+                <label>Cooking Courses</label>
+            </value>
+            <value>
+                <fullName>Cycling</fullName>
+                <default>false</default>
+                <label>Cycling</label>
+            </value>
+            <value>
+                <fullName>Elephant-back Safaris</fullName>
+                <default>false</default>
+                <label>Elephant-back Safaris</label>
+            </value>
+            <value>
+                <fullName>Elephant Interaction</fullName>
+                <default>false</default>
+                <label>Elephant Interaction</label>
+            </value>
+            <value>
+                <fullName>Fine Dining</fullName>
+                <default>false</default>
+                <label>Fine Dining</label>
+            </value>
+            <value>
+                <fullName>Fishing</fullName>
+                <default>false</default>
+                <label>Fishing</label>
+            </value>
+            <value>
+                <fullName>Game Drives</fullName>
+                <default>false</default>
+                <label>Game Drives</label>
+            </value>
+            <value>
+                <fullName>Game Viewing</fullName>
+                <default>false</default>
+                <label>Game Viewing</label>
+            </value>
+            <value>
+                <fullName>Game Viewing Hide</fullName>
+                <default>false</default>
+                <label>Game Viewing Hide</label>
+            </value>
+            <value>
+                <fullName>Game Walks</fullName>
+                <default>false</default>
+                <label>Game Walks</label>
+            </value>
+            <value>
+                <fullName>Garden Tours</fullName>
+                <default>false</default>
+                <label>Garden Tours</label>
+            </value>
+            <value>
+                <fullName>Golf</fullName>
+                <default>false</default>
+                <label>Golf</label>
+            </value>
+            <value>
+                <fullName>Gorilla Tracking</fullName>
+                <default>false</default>
+                <label>Gorilla Tracking</label>
+            </value>
+            <value>
+                <fullName>Gourmet Picnic</fullName>
+                <default>false</default>
+                <label>Gourmet Picnic</label>
+            </value>
+            <value>
+                <fullName>Helicopter Scenic Flights</fullName>
+                <default>false</default>
+                <label>Helicopter Scenic Flights</label>
+            </value>
+            <value>
+                <fullName>High Tea</fullName>
+                <default>false</default>
+                <label>High Tea</label>
+            </value>
+            <value>
+                <fullName>Horse-back Safaris</fullName>
+                <default>false</default>
+                <label>Horse-back Safaris</label>
+            </value>
+            <value>
+                <fullName>Horse Riding</fullName>
+                <default>false</default>
+                <label>Horse Riding</label>
+            </value>
+            <value>
+                <fullName>Jet Skis</fullName>
+                <default>false</default>
+                <label>Jet Skis</label>
+            </value>
+            <value>
+                <fullName>Kayaking</fullName>
+                <default>false</default>
+                <label>Kayaking</label>
+            </value>
+            <value>
+                <fullName>Kite Surfing</fullName>
+                <default>false</default>
+                <label>Kite Surfing</label>
+            </value>
+            <value>
+                <fullName>Massages</fullName>
+                <default>false</default>
+                <label>Massages</label>
+            </value>
+            <value>
+                <fullName>Mini Golf</fullName>
+                <default>false</default>
+                <label>Mini Golf</label>
+            </value>
+            <value>
+                <fullName>Mokoro Excursion</fullName>
+                <default>false</default>
+                <label>Mokoro Excursion</label>
+            </value>
+            <value>
+                <fullName>Natural History Tours</fullName>
+                <default>false</default>
+                <label>Natural History Tours</label>
+            </value>
+            <value>
+                <fullName>Night Drives</fullName>
+                <default>false</default>
+                <label>Night Drives</label>
+            </value>
+            <value>
+                <fullName>Para Sailing</fullName>
+                <default>false</default>
+                <label>Para Sailing</label>
+            </value>
+            <value>
+                <fullName>Practice Green</fullName>
+                <default>false</default>
+                <label>Practice Green</label>
+            </value>
+            <value>
+                <fullName>Quad Biking</fullName>
+                <default>false</default>
+                <label>Quad Biking</label>
+            </value>
+            <value>
+                <fullName>Rhino Tracking</fullName>
+                <default>false</default>
+                <label>Rhino Tracking</label>
+            </value>
+            <value>
+                <fullName>Safaris</fullName>
+                <default>false</default>
+                <label>Safaris</label>
+            </value>
+            <value>
+                <fullName>Sailing</fullName>
+                <default>false</default>
+                <label>Sailing</label>
+            </value>
+            <value>
+                <fullName>Scenic Flights</fullName>
+                <default>false</default>
+                <label>Scenic Flights</label>
+            </value>
+            <value>
+                <fullName>Scuba Diving</fullName>
+                <default>false</default>
+                <label>Scuba Diving</label>
+            </value>
+            <value>
+                <fullName>Sleep Outs</fullName>
+                <default>false</default>
+                <label>Sleep Outs</label>
+            </value>
+            <value>
+                <fullName>Snorkeling</fullName>
+                <default>false</default>
+                <label>Snorkeling</label>
+            </value>
+            <value>
+                <fullName>Squash Court</fullName>
+                <default>false</default>
+                <label>Squash Court</label>
+            </value>
+            <value>
+                <fullName>Station Activities</fullName>
+                <default>false</default>
+                <label>Station Activities</label>
+            </value>
+            <value>
+                <fullName>Surfing</fullName>
+                <default>false</default>
+                <label>Surfing</label>
+            </value>
+            <value>
+                <fullName>Tennis Court</fullName>
+                <default>false</default>
+                <label>Tennis Court</label>
+            </value>
+            <value>
+                <fullName>Turtle Tracking</fullName>
+                <default>false</default>
+                <label>Turtle Tracking</label>
+            </value>
+            <value>
+                <fullName>Walks</fullName>
+                <default>false</default>
+                <label>Walks</label>
+            </value>
+            <value>
+                <fullName>Walks (Guided)</fullName>
+                <default>false</default>
+                <label>Walks (Guided)</label>
+            </value>
+            <value>
+                <fullName>Walks (Self Guided)</fullName>
+                <default>false</default>
+                <label>Walks (Self Guided)</label>
+            </value>
+            <value>
+                <fullName>Water Skiing</fullName>
+                <default>false</default>
+                <label>Water Skiing</label>
+            </value>
+            <value>
+                <fullName>Whale Watching</fullName>
+                <default>false</default>
+                <label>Whale Watching</label>
+            </value>
+            <value>
+                <fullName>Wildlife Tours</fullName>
+                <default>false</default>
+                <label>Wildlife Tours</label>
+            </value>
+            <value>
+                <fullName>Windsurfing</fullName>
+                <default>false</default>
+                <label>Windsurfing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

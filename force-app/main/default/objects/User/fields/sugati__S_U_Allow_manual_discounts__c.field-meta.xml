@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_U_Allow_manual_discounts__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Allow user to be able to add a discount or discounts to each individual PAX as part of the booking process.</description>
+    <inlineHelpText>Allow user to be able to add a discount or discounts to each individual PAX as part of the booking process.</inlineHelpText>
+    <label>Allow manual discounts</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

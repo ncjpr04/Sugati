@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    height: 100%;
+}
+.card { background:var(--white); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm); height: 100%; }
+.card:hover { box-shadow:var(--shadow-md); }
+.card-header { padding:16px 22px 14px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.card-title { font-family:'Crimson Pro',serif; font-size:19px; font-weight:300; color:var(--warm-black); }
+.card-body { padding:20px 22px; }
+
+.btn-primary { padding:9px 20px; background:var(--sunset); color:var(--warm-black); border:none; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.18s; white-space:nowrap; font-family:'DM Sans',sans-serif; box-shadow:0 2px 8px rgba(255,197,67,0.3); }
+.btn-primary:hover { background:var(--sunset-dark); color:var(--white); }
+
+/* MEETING NOTES */
+.meeting-list { display:flex; flex-direction:column; gap:14px; }
+.meeting-item { background:var(--off-white); border:1px solid var(--border); border-radius:10px; padding:16px 18px; position:relative; }
+.meeting-item-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.meeting-date-badge { background:var(--sunset); color:var(--warm-black); font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+.meeting-title { font-size:14px; font-weight:600; color:var(--warm-black); flex:1; }
+.meeting-attendees { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.meeting-body { font-size:13px; color:var(--text-secondary); line-height:1.6; }
+.meeting-actions { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; }
+.meeting-action-chip { font-size:11px; padding:3px 10px; background:rgba(255,197,67,0.12); border:1px solid rgba(255,197,67,0.35); border-radius:20px; color:var(--sunset-dark); font-weight:500; }

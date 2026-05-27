@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Country__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK(sugati__S_What_to_do__c) ,  sugati__S_Where_to_go__r.sugati__W_Country__r.Name ,  sugati__S_What_to_do__r.sugati__WH_Country__r.Name )</formula>
+    <label>Country</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

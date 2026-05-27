@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Booking_Form_Page_Override__c</fullName>
+    <deprecated>false</deprecated>
+    <description>When adding to a tour, by default we go to /apex/AddToTour?id=[tour id]. You can override this behaviour here. For example, entering &quot;MyNewBookingForm?tourId=&quot; will redirect to /apex/MyNewBookingForm?tourId=[tour id]</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When adding to a tour, by default we go to /apex/AddToTour?id=[tour id]. You can override this behaviour here. For example, entering &quot;MyNewBookingForm?tourId=&quot; will redirect to /apex/MyNewBookingForm?tourId=[tour id]</inlineHelpText>
+    <label>Booking Form Page Override</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

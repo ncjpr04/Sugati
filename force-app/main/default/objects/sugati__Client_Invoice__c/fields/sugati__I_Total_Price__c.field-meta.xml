@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__I_Total_Price__c</fullName>
+    <deprecated>false</deprecated>
+    <description>IF(AND(RecordType.Name != &apos;Deposit&apos;,OR(TEXT(CI_Proforma_Type__c)=&apos;Committed&apos;,ISBLANK(TEXT(CI_Proforma_Type__c)))) ,IF(ISBLANK( CI_Client_Group__r.Id ), I_Opportunity__r.Amount, CI_Client_Group__r.CG_Selling_Price__c), IF(ISBLANK( CI_Client_Group__r.Id ), I_Opportunity__r.O_Deposit_Required1__c , I_Total_Price_CG__c ))</description>
+    <externalId>false</externalId>
+    <formula>IF(ISBLANK(sugati__CI_Client_Group__r.Id), 
+    sugati__I_Opportunity__r.Amount, 
+    IF(ISBLANK(sugati__I_Opportunity__r.sugati__O_Tour__c), 
+        IF(NOT(ISBLANK(sugati__CI_Client_Group__r.sugati__CG_Selling_Price__c)), 
+            sugati__CI_Client_Group__r.sugati__CG_Selling_Price__c,
+            sugati__CI_Client_Group__r.sugati__S_CG_Total_Group_Net_Sell_Price__c
+        ),
+        IF(NOT(ISBLANK(sugati__CI_Client_Group__r.sugati__CG_Selling_Price__c)), 
+            sugati__CI_Client_Group__r.sugati__CG_Selling_Price__c,
+            IF(NOT(ISBLANK(sugati__CI_Client_Group__r.sugati__S_CG_Total_Group_Net_Sell_Price__c)), 
+                sugati__CI_Client_Group__r.sugati__S_CG_Total_Group_Net_Sell_Price__c,
+                sugati__CI_Client_Group__r.sugati__CG_Total_Tour_Cost_in_Booking_Currency__c
+            )
+        )
+    )
+)</formula>
+    <label>Total Price</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

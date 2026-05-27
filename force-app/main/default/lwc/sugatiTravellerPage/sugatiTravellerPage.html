@@ -1,0 +1,58 @@
+<!-- sugatiAccountPage.html -->
+<template>
+    <div class="page-body">
+
+        <c-sugati-traveller-profile-header
+            account={account}
+            opportunities={opportunities}>
+        </c-sugati-traveller-profile-header>
+
+        <c-sugati-traveller-stats-strip
+            account={account}
+            opportunities={opportunities}
+            currency-symbol={currencySymbol}>
+        </c-sugati-traveller-stats-strip>
+
+        <c-sugati-traveller-engagement-overview
+            account={account}
+            opportunities={opportunities}
+            tasks={tasks}>
+        </c-sugati-traveller-engagement-overview>
+
+        <div class="two-col">
+            <c-sugati-traveller-personal-details
+                record-id={recordId}
+                opportunities={opportunities}>
+            </c-sugati-traveller-personal-details>
+
+            <c-sugati-traveller-travel-preferences
+                record-id={recordId}
+                opportunities={opportunities}>
+            </c-sugati-traveller-travel-preferences>
+        </div>
+
+        <div class="two-col two-col-fixed">
+            <c-sugati-traveller-booking-history
+                opportunities={opportunities}
+                currency-symbol={currencySymbol}>
+            </c-sugati-traveller-booking-history>
+
+            <div class="right-col">
+                <c-sugati-traveller-enquiry-pipeline
+                    account-id={recordId}
+                    opportunities={opportunities}>
+                </c-sugati-traveller-enquiry-pipeline>
+
+                <c-sugati-traveller-recent-communications
+                    tasks={tasks}>
+                </c-sugati-traveller-recent-communications>
+            </div>
+        </div>
+
+        <c-sugati-traveller-credit-notes
+            credit-memos={creditMemos}
+            currency-symbol={currencySymbol}>
+        </c-sugati-traveller-credit-notes>
+
+    </div>
+</template>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Prompt_for_no_comms_prefs_on_save_HE__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, saving a holiday enquiry for a contact that has unknown communication preferences will ask you if you want to create communication preferences.</description>
+    <inlineHelpText>If checked, saving a holiday enquiry for a contact that has unknown communication preferences will ask you if you want to create communication preferences.</inlineHelpText>
+    <label>Prompt for no comms prefs on save HE</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Company_Code__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Company Code</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>OTDV</fullName>
+                <default>false</default>
+                <label>OTDV</label>
+            </value>
+            <value>
+                <fullName>OTUK</fullName>
+                <default>false</default>
+                <label>OTUK</label>
+            </value>
+            <value>
+                <fullName>OT</fullName>
+                <default>false</default>
+                <label>OT</label>
+            </value>
+            <value>
+                <fullName>TBUK</fullName>
+                <default>false</default>
+                <label>TBUK</label>
+            </value>
+            <value>
+                <fullName>STUK</fullName>
+                <default>false</default>
+                <label>STUK</label>
+            </value>
+            <value>
+                <fullName>OTGB</fullName>
+                <default>false</default>
+                <label>OTGB</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

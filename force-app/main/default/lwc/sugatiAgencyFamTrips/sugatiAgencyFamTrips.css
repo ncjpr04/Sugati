@@ -1,0 +1,132 @@
+:host { display: block; height: 100%; }
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    height: 100%;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-header {
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-title { font-family:'Crimson Pro',serif; font-size:19px; font-weight:300; color:var(--warm-black); }
+.card-body { padding: 20px 22px; }
+
+/* Section description below card header */
+.section-description {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+}
+
+/* BUTTONS */
+.btn-primary {
+    padding: 9px 20px;
+    background: var(--sunset);
+    color: var(--warm-black);
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 2px 8px rgba(255,197,67,0.3);
+}
+.btn-primary:hover { background: var(--sunset-dark); color: var(--white); }
+
+/* Expand/collapse toggle */
+.expand-toggle-wrap {
+    margin-top: 12px;
+    text-align: center;
+}
+.btn-expand {
+    font-size: 11px;
+    padding: 4px 8px;
+    border: none;
+    background: transparent;
+    color: var(--sunset-dark);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
+.btn-expand:hover { text-decoration: underline; }
+
+/* FARM GRID */
+.farm-grid-scroll {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+.farm-grid-scroll::-webkit-scrollbar { width: 4px; }
+.farm-grid-scroll::-webkit-scrollbar-track { background: transparent; }
+.farm-grid-scroll::-webkit-scrollbar-thumb { background: rgba(255,197,67,0.5); border-radius: 2px; }
+
+.farm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+
+.farm-card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.18s;
+}
+.farm-card:hover { box-shadow: var(--shadow-sm); }
+.farm-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--sunset);
+    border-radius: 3px 0 0 3px;
+}
+
+/* Farm card header row — name + type chip */
+.farm-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3px;
+}
+.farm-card-name  { font-size: 13px; font-weight: 600; color: var(--warm-black); }
+.farm-card-role  { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.farm-card-meta  { font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 3px; }
+.farm-card-meta span { display: flex; align-items: center; gap: 5px; }
+
+/* Type chip badge */
+.farm-type-chip {
+    font-size: 10px;
+    font-weight: 600;
+    background: rgba(255,197,67,0.15);
+    color: var(--sunset-dark);
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* Truncated single-line text */
+.truncate-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+}

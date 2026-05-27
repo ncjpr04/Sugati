@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Vamoos_Last_Push__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Last time when Itinerary was pushed to the Vamoos</inlineHelpText>
+    <label>Vamoos Last Push</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

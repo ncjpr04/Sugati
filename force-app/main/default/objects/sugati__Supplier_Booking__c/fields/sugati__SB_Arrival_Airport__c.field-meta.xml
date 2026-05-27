@@ -1,0 +1,4610 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Arrival_Airport__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Arrival Airport</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Abu Dhabi International</fullName>
+                <default>false</default>
+                <label>Abu Dhabi International</label>
+            </value>
+            <value>
+                <fullName>Accra</fullName>
+                <default>false</default>
+                <label>Accra</label>
+            </value>
+            <value>
+                <fullName>Addis Ababa</fullName>
+                <default>false</default>
+                <label>Addis Ababa</label>
+            </value>
+            <value>
+                <fullName>Adelaide</fullName>
+                <default>false</default>
+                <label>Adelaide</label>
+            </value>
+            <value>
+                <fullName>Aerogare</fullName>
+                <default>false</default>
+                <label>Aerogare</label>
+            </value>
+            <value>
+                <fullName>Aero Parque Buenos Aires</fullName>
+                <default>false</default>
+                <label>Aero Parque Buenos Aires</label>
+            </value>
+            <value>
+                <fullName>Aeroporto Internacional Guarulhos</fullName>
+                <default>false</default>
+                <label>Aeroporto Internacional Guarulhos</label>
+            </value>
+            <value>
+                <fullName>Afonso Pena</fullName>
+                <default>false</default>
+                <label>Afonso Pena</label>
+            </value>
+            <value>
+                <fullName>Agadir</fullName>
+                <default>false</default>
+                <label>Agadir</label>
+            </value>
+            <value>
+                <fullName>Airstrip</fullName>
+                <default>false</default>
+                <label>Airstrip</label>
+            </value>
+            <value>
+                <fullName>Al Bateen</fullName>
+                <default>false</default>
+                <label>Al Bateen</label>
+            </value>
+            <value>
+                <fullName>Alberto Delgado</fullName>
+                <default>false</default>
+                <label>Alberto Delgado</label>
+            </value>
+            <value>
+                <fullName>Al Dhafra Military</fullName>
+                <default>false</default>
+                <label>Al Dhafra Military</label>
+            </value>
+            <value>
+                <fullName>Algiers</fullName>
+                <default>false</default>
+                <label>Algiers</label>
+            </value>
+            <value>
+                <fullName>Alicante</fullName>
+                <default>false</default>
+                <label>Alicante</label>
+            </value>
+            <value>
+                <fullName>Allen County</fullName>
+                <default>false</default>
+                <label>Allen County</label>
+            </value>
+            <value>
+                <fullName>Amanpulo</fullName>
+                <default>false</default>
+                <label>Amanpulo</label>
+            </value>
+            <value>
+                <fullName>Amanwana</fullName>
+                <default>false</default>
+                <label>Amanwana</label>
+            </value>
+            <value>
+                <fullName>Ambergris Caye</fullName>
+                <default>false</default>
+                <label>Ambergris Caye</label>
+            </value>
+            <value>
+                <fullName>Ambon</fullName>
+                <default>false</default>
+                <label>Ambon</label>
+            </value>
+            <value>
+                <fullName>Amman</fullName>
+                <default>false</default>
+                <label>Amman</label>
+            </value>
+            <value>
+                <fullName>Amritsar</fullName>
+                <default>false</default>
+                <label>Amritsar</label>
+            </value>
+            <value>
+                <fullName>Amsterdam (AMS)</fullName>
+                <default>false</default>
+                <label>Amsterdam (AMS)</label>
+            </value>
+            <value>
+                <fullName>Andamans</fullName>
+                <default>false</default>
+                <label>Andamans</label>
+            </value>
+            <value>
+                <fullName>Andros Town</fullName>
+                <default>false</default>
+                <label>Andros Town</label>
+            </value>
+            <value>
+                <fullName>Anguilla</fullName>
+                <default>false</default>
+                <label>Anguilla</label>
+            </value>
+            <value>
+                <fullName>Anjajvay</fullName>
+                <default>false</default>
+                <label>Anjajvay</label>
+            </value>
+            <value>
+                <fullName>Antananairvo</fullName>
+                <default>false</default>
+                <label>Antananairvo</label>
+            </value>
+            <value>
+                <fullName>Antigua</fullName>
+                <default>false</default>
+                <label>Antigua</label>
+            </value>
+            <value>
+                <fullName>Antonio Maceo</fullName>
+                <default>false</default>
+                <label>Antonio Maceo</label>
+            </value>
+            <value>
+                <fullName>Arba Minch</fullName>
+                <default>false</default>
+                <label>Arba Minch</label>
+            </value>
+            <value>
+                <fullName>Arpt. Jorge Newbery</fullName>
+                <default>false</default>
+                <label>Arpt. Jorge Newbery</label>
+            </value>
+            <value>
+                <fullName>Arturo Merino Benitez International</fullName>
+                <default>false</default>
+                <label>Arturo Merino Benitez International</label>
+            </value>
+            <value>
+                <fullName>Arusha</fullName>
+                <default>false</default>
+                <label>Arusha</label>
+            </value>
+            <value>
+                <fullName>Aspen</fullName>
+                <default>false</default>
+                <label>Aspen</label>
+            </value>
+            <value>
+                <fullName>Aswan</fullName>
+                <default>false</default>
+                <label>Aswan</label>
+            </value>
+            <value>
+                <fullName>Ataturk</fullName>
+                <default>false</default>
+                <label>Ataturk</label>
+            </value>
+            <value>
+                <fullName>Athens</fullName>
+                <default>false</default>
+                <label>Athens</label>
+            </value>
+            <value>
+                <fullName>Atlanta</fullName>
+                <default>false</default>
+                <label>Atlanta</label>
+            </value>
+            <value>
+                <fullName>Atlanta Hartsfield-Jackson</fullName>
+                <default>false</default>
+                <label>Atlanta Hartsfield-Jackson</label>
+            </value>
+            <value>
+                <fullName>Auckland</fullName>
+                <default>false</default>
+                <label>Auckland</label>
+            </value>
+            <value>
+                <fullName>Auckland (AKL)</fullName>
+                <default>false</default>
+                <label>Auckland (AKL)</label>
+            </value>
+            <value>
+                <fullName>Aurangabad</fullName>
+                <default>false</default>
+                <label>Aurangabad</label>
+            </value>
+            <value>
+                <fullName>Axum</fullName>
+                <default>false</default>
+                <label>Axum</label>
+            </value>
+            <value>
+                <fullName>Bagan</fullName>
+                <default>false</default>
+                <label>Bagan</label>
+            </value>
+            <value>
+                <fullName>Bagdogra</fullName>
+                <default>false</default>
+                <label>Bagdogra</label>
+            </value>
+            <value>
+                <fullName>Bahar Dar</fullName>
+                <default>false</default>
+                <label>Bahar Dar</label>
+            </value>
+            <value>
+                <fullName>Bahia Blanca</fullName>
+                <default>false</default>
+                <label>Bahia Blanca</label>
+            </value>
+            <value>
+                <fullName>Bahir Dar</fullName>
+                <default>false</default>
+                <label>Bahir Dar</label>
+            </value>
+            <value>
+                <fullName>Bali</fullName>
+                <default>false</default>
+                <label>Bali</label>
+            </value>
+            <value>
+                <fullName>Bali (Denpasar)</fullName>
+                <default>false</default>
+                <label>Bali (Denpasar)</label>
+            </value>
+            <value>
+                <fullName>Bali (DPS)</fullName>
+                <default>false</default>
+                <label>Bali (DPS)</label>
+            </value>
+            <value>
+                <fullName>Baltra</fullName>
+                <default>false</default>
+                <label>Baltra</label>
+            </value>
+            <value>
+                <fullName>Bandara Internasional Lombok</fullName>
+                <default>false</default>
+                <label>Bandara Internasional Lombok</label>
+            </value>
+            <value>
+                <fullName>Bandaranayake International</fullName>
+                <default>false</default>
+                <label>Bandaranayake International</label>
+            </value>
+            <value>
+                <fullName>Baneasa</fullName>
+                <default>false</default>
+                <label>Baneasa</label>
+            </value>
+            <value>
+                <fullName>Bangalore</fullName>
+                <default>false</default>
+                <label>Bangalore</label>
+            </value>
+            <value>
+                <fullName>Bangkok</fullName>
+                <default>false</default>
+                <label>Bangkok</label>
+            </value>
+            <value>
+                <fullName>Barajas</fullName>
+                <default>false</default>
+                <label>Barajas</label>
+            </value>
+            <value>
+                <fullName>Barbados</fullName>
+                <default>false</default>
+                <label>Barbados</label>
+            </value>
+            <value>
+                <fullName>Barcelona</fullName>
+                <default>false</default>
+                <label>Barcelona</label>
+            </value>
+            <value>
+                <fullName>Bari</fullName>
+                <default>false</default>
+                <label>Bari</label>
+            </value>
+            <value>
+                <fullName>Bariloche</fullName>
+                <default>false</default>
+                <label>Bariloche</label>
+            </value>
+            <value>
+                <fullName>Bateen</fullName>
+                <default>false</default>
+                <label>Bateen</label>
+            </value>
+            <value>
+                <fullName>Battery Pk City/N. Cov</fullName>
+                <default>false</default>
+                <label>Battery Pk City/N. Cov</label>
+            </value>
+            <value>
+                <fullName>Bay County</fullName>
+                <default>false</default>
+                <label>Bay County</label>
+            </value>
+            <value>
+                <fullName>Beauvais-Tille</fullName>
+                <default>false</default>
+                <label>Beauvais-Tille</label>
+            </value>
+            <value>
+                <fullName>Beef Island</fullName>
+                <default>false</default>
+                <label>Beef Island</label>
+            </value>
+            <value>
+                <fullName>Beijing</fullName>
+                <default>false</default>
+                <label>Beijing</label>
+            </value>
+            <value>
+                <fullName>Beirut</fullName>
+                <default>false</default>
+                <label>Beirut</label>
+            </value>
+            <value>
+                <fullName>Belize City</fullName>
+                <default>false</default>
+                <label>Belize City</label>
+            </value>
+            <value>
+                <fullName>Belize International</fullName>
+                <default>false</default>
+                <label>Belize International</label>
+            </value>
+            <value>
+                <fullName>Belize International Airport</fullName>
+                <default>false</default>
+                <label>Belize International Airport</label>
+            </value>
+            <value>
+                <fullName>Belize Municipal Airstrip</fullName>
+                <default>false</default>
+                <label>Belize Municipal Airstrip</label>
+            </value>
+            <value>
+                <fullName>Belo Horizonte</fullName>
+                <default>false</default>
+                <label>Belo Horizonte</label>
+            </value>
+            <value>
+                <fullName>Ben Gurion International</fullName>
+                <default>false</default>
+                <label>Ben Gurion International</label>
+            </value>
+            <value>
+                <fullName>Benuguerra</fullName>
+                <default>false</default>
+                <label>Benuguerra</label>
+            </value>
+            <value>
+                <fullName>Bequia</fullName>
+                <default>false</default>
+                <label>Bequia</label>
+            </value>
+            <value>
+                <fullName>Berlin Metropolitan Area</fullName>
+                <default>false</default>
+                <label>Berlin Metropolitan Area</label>
+            </value>
+            <value>
+                <fullName>Berlin Municipal Airport</fullName>
+                <default>false</default>
+                <label>Berlin Municipal Airport</label>
+            </value>
+            <value>
+                <fullName>Berlin-Schoenefeld</fullName>
+                <default>false</default>
+                <label>Berlin-Schoenefeld</label>
+            </value>
+            <value>
+                <fullName>Berlin-tegel / Otto Lilienthal</fullName>
+                <default>false</default>
+                <label>Berlin-tegel / Otto Lilienthal</label>
+            </value>
+            <value>
+                <fullName>Bermuda</fullName>
+                <default>false</default>
+                <label>Bermuda</label>
+            </value>
+            <value>
+                <fullName>Bhopal</fullName>
+                <default>false</default>
+                <label>Bhopal</label>
+            </value>
+            <value>
+                <fullName>Bilbao</fullName>
+                <default>false</default>
+                <label>Bilbao</label>
+            </value>
+            <value>
+                <fullName>Bimini</fullName>
+                <default>false</default>
+                <label>Bimini</label>
+            </value>
+            <value>
+                <fullName>Birmingham</fullName>
+                <default>false</default>
+                <label>Birmingham</label>
+            </value>
+            <value>
+                <fullName>Blancaneaux Airstrip</fullName>
+                <default>false</default>
+                <label>Blancaneaux Airstrip</label>
+            </value>
+            <value>
+                <fullName>Blantyre</fullName>
+                <default>false</default>
+                <label>Blantyre</label>
+            </value>
+            <value>
+                <fullName>Bocas Del Toro</fullName>
+                <default>false</default>
+                <label>Bocas Del Toro</label>
+            </value>
+            <value>
+                <fullName>Bodrum</fullName>
+                <default>false</default>
+                <label>Bodrum</label>
+            </value>
+            <value>
+                <fullName>Bogota</fullName>
+                <default>false</default>
+                <label>Bogota</label>
+            </value>
+            <value>
+                <fullName>Bombai</fullName>
+                <default>false</default>
+                <label>Bombai</label>
+            </value>
+            <value>
+                <fullName>Bora Bora</fullName>
+                <default>false</default>
+                <label>Bora Bora</label>
+            </value>
+            <value>
+                <fullName>Boston</fullName>
+                <default>false</default>
+                <label>Boston</label>
+            </value>
+            <value>
+                <fullName>Bournemouth</fullName>
+                <default>false</default>
+                <label>Bournemouth</label>
+            </value>
+            <value>
+                <fullName>Brasilia</fullName>
+                <default>false</default>
+                <label>Brasilia</label>
+            </value>
+            <value>
+                <fullName>Bridgetown</fullName>
+                <default>false</default>
+                <label>Bridgetown</label>
+            </value>
+            <value>
+                <fullName>Brindese</fullName>
+                <default>false</default>
+                <label>Brindese</label>
+            </value>
+            <value>
+                <fullName>Brisbane</fullName>
+                <default>false</default>
+                <label>Brisbane</label>
+            </value>
+            <value>
+                <fullName>Brisbane (BNE)</fullName>
+                <default>false</default>
+                <label>Brisbane (BNE)</label>
+            </value>
+            <value>
+                <fullName>Bristol</fullName>
+                <default>false</default>
+                <label>Bristol</label>
+            </value>
+            <value>
+                <fullName>Brussels</fullName>
+                <default>false</default>
+                <label>Brussels</label>
+            </value>
+            <value>
+                <fullName>Bucharest</fullName>
+                <default>false</default>
+                <label>Bucharest</label>
+            </value>
+            <value>
+                <fullName>Budapest</fullName>
+                <default>false</default>
+                <label>Budapest</label>
+            </value>
+            <value>
+                <fullName>Buenos Aires International Airport</fullName>
+                <default>false</default>
+                <label>Buenos Aires International Airport</label>
+            </value>
+            <value>
+                <fullName>Buffalo Niagara</fullName>
+                <default>false</default>
+                <label>Buffalo Niagara</label>
+            </value>
+            <value>
+                <fullName>Bulawayo</fullName>
+                <default>false</default>
+                <label>Bulawayo</label>
+            </value>
+            <value>
+                <fullName>Bumi Hills</fullName>
+                <default>false</default>
+                <label>Bumi Hills</label>
+            </value>
+            <value>
+                <fullName>Busuanga</fullName>
+                <default>false</default>
+                <label>Busuanga</label>
+            </value>
+            <value>
+                <fullName>Bwindi</fullName>
+                <default>false</default>
+                <label>Bwindi</label>
+            </value>
+            <value>
+                <fullName>Bykovo</fullName>
+                <default>false</default>
+                <label>Bykovo</label>
+            </value>
+            <value>
+                <fullName>C.de G. /TGV Rail Svc</fullName>
+                <default>false</default>
+                <label>C.de G. /TGV Rail Svc</label>
+            </value>
+            <value>
+                <fullName>Cairns (CNS)</fullName>
+                <default>false</default>
+                <label>Cairns (CNS)</label>
+            </value>
+            <value>
+                <fullName>Cairo International</fullName>
+                <default>false</default>
+                <label>Cairo International</label>
+            </value>
+            <value>
+                <fullName>Calama</fullName>
+                <default>false</default>
+                <label>Calama</label>
+            </value>
+            <value>
+                <fullName>Calcutta</fullName>
+                <default>false</default>
+                <label>Calcutta</label>
+            </value>
+            <value>
+                <fullName>Calicut</fullName>
+                <default>false</default>
+                <label>Calicut</label>
+            </value>
+            <value>
+                <fullName>Campo Grande</fullName>
+                <default>false</default>
+                <label>Campo Grande</label>
+            </value>
+            <value>
+                <fullName>Cam Ranh International Airport</fullName>
+                <default>false</default>
+                <label>Cam Ranh International Airport</label>
+            </value>
+            <value>
+                <fullName>Cancun</fullName>
+                <default>false</default>
+                <label>Cancun</label>
+            </value>
+            <value>
+                <fullName>Cape Town International</fullName>
+                <default>false</default>
+                <label>Cape Town International</label>
+            </value>
+            <value>
+                <fullName>Caracas</fullName>
+                <default>false</default>
+                <label>Caracas</label>
+            </value>
+            <value>
+                <fullName>Carrasco International</fullName>
+                <default>false</default>
+                <label>Carrasco International</label>
+            </value>
+            <value>
+                <fullName>Cartagena</fullName>
+                <default>false</default>
+                <label>Cartagena</label>
+            </value>
+            <value>
+                <fullName>Casablanca</fullName>
+                <default>false</default>
+                <label>Casablanca</label>
+            </value>
+            <value>
+                <fullName>Catania</fullName>
+                <default>false</default>
+                <label>Catania</label>
+            </value>
+            <value>
+                <fullName>Catania Fontanarossa</fullName>
+                <default>false</default>
+                <label>Catania Fontanarossa</label>
+            </value>
+            <value>
+                <fullName>Caye Caulker</fullName>
+                <default>false</default>
+                <label>Caye Caulker</label>
+            </value>
+            <value>
+                <fullName>Cayo Las Brujas</fullName>
+                <default>false</default>
+                <label>Cayo Las Brujas</label>
+            </value>
+            <value>
+                <fullName>Cebu</fullName>
+                <default>false</default>
+                <label>Cebu</label>
+            </value>
+            <value>
+                <fullName>Central Station</fullName>
+                <default>false</default>
+                <label>Central Station</label>
+            </value>
+            <value>
+                <fullName>Century City</fullName>
+                <default>false</default>
+                <label>Century City</label>
+            </value>
+            <value>
+                <fullName>Chaing Rai</fullName>
+                <default>false</default>
+                <label>Chaing Rai</label>
+            </value>
+            <value>
+                <fullName>Chan Chich Airsrip</fullName>
+                <default>false</default>
+                <label>Chan Chich Airsrip</label>
+            </value>
+            <value>
+                <fullName>Chandigarh</fullName>
+                <default>false</default>
+                <label>Chandigarh</label>
+            </value>
+            <value>
+                <fullName>Changi International</fullName>
+                <default>false</default>
+                <label>Changi International</label>
+            </value>
+            <value>
+                <fullName>Charles De Gaulle</fullName>
+                <default>false</default>
+                <label>Charles De Gaulle</label>
+            </value>
+            <value>
+                <fullName>Chengdu</fullName>
+                <default>false</default>
+                <label>Chengdu</label>
+            </value>
+            <value>
+                <fullName>Chennai</fullName>
+                <default>false</default>
+                <label>Chennai</label>
+            </value>
+            <value>
+                <fullName>Chhatrapati Shivaji Int. (Sahar Int.)</fullName>
+                <default>false</default>
+                <label>Chhatrapati Shivaji Int. (Sahar Int.)</label>
+            </value>
+            <value>
+                <fullName>Chhatrapati Shivaji International Airport</fullName>
+                <default>false</default>
+                <label>Chhatrapati Shivaji International Airport</label>
+            </value>
+            <value>
+                <fullName>Chiang Mai International</fullName>
+                <default>false</default>
+                <label>Chiang Mai International</label>
+            </value>
+            <value>
+                <fullName>Chiang Rai</fullName>
+                <default>false</default>
+                <label>Chiang Rai</label>
+            </value>
+            <value>
+                <fullName>Chicago O&apos;Hare</fullName>
+                <default>false</default>
+                <label>Chicago O&apos;Hare</label>
+            </value>
+            <value>
+                <fullName>China Basin Heliport</fullName>
+                <default>false</default>
+                <label>China Basin Heliport</label>
+            </value>
+            <value>
+                <fullName>Chipinda Pools</fullName>
+                <default>false</default>
+                <label>Chipinda Pools</label>
+            </value>
+            <value>
+                <fullName>Chitabe</fullName>
+                <default>false</default>
+                <label>Chitabe</label>
+            </value>
+            <value>
+                <fullName>Christchurch</fullName>
+                <default>false</default>
+                <label>Christchurch</label>
+            </value>
+            <value>
+                <fullName>Chuuk Lagoon</fullName>
+                <default>false</default>
+                <label>Chuuk Lagoon</label>
+            </value>
+            <value>
+                <fullName>Ciampino</fullName>
+                <default>false</default>
+                <label>Ciampino</label>
+            </value>
+            <value>
+                <fullName>Cibao International Airport</fullName>
+                <default>false</default>
+                <label>Cibao International Airport</label>
+            </value>
+            <value>
+                <fullName>Citicorp Plaza H/P</fullName>
+                <default>false</default>
+                <label>Citicorp Plaza H/P</label>
+            </value>
+            <value>
+                <fullName>City Heliport</fullName>
+                <default>false</default>
+                <label>City Heliport</label>
+            </value>
+            <value>
+                <fullName>City Of Industry H/P</fullName>
+                <default>false</default>
+                <label>City Of Industry H/P</label>
+            </value>
+            <value>
+                <fullName>Cochin</fullName>
+                <default>false</default>
+                <label>Cochin</label>
+            </value>
+            <value>
+                <fullName>Colombo (CMB)</fullName>
+                <default>false</default>
+                <label>Colombo (CMB)</label>
+            </value>
+            <value>
+                <fullName>Commerce Bus. Plaza</fullName>
+                <default>false</default>
+                <label>Commerce Bus. Plaza</label>
+            </value>
+            <value>
+                <fullName>Con Dao</fullName>
+                <default>false</default>
+                <label>Con Dao</label>
+            </value>
+            <value>
+                <fullName>Congonhas International</fullName>
+                <default>false</default>
+                <label>Congonhas International</label>
+            </value>
+            <value>
+                <fullName>Constantine</fullName>
+                <default>false</default>
+                <label>Constantine</label>
+            </value>
+            <value>
+                <fullName>Contrin International Airport</fullName>
+                <default>false</default>
+                <label>Contrin International Airport</label>
+            </value>
+            <value>
+                <fullName>Coong</fullName>
+                <default>false</default>
+                <label>Coong</label>
+            </value>
+            <value>
+                <fullName>Copan</fullName>
+                <default>false</default>
+                <label>Copan</label>
+            </value>
+            <value>
+                <fullName>Copenhagan</fullName>
+                <default>false</default>
+                <label>Copenhagan</label>
+            </value>
+            <value>
+                <fullName>Cordoba</fullName>
+                <default>false</default>
+                <label>Cordoba</label>
+            </value>
+            <value>
+                <fullName>Corfu</fullName>
+                <default>false</default>
+                <label>Corfu</label>
+            </value>
+            <value>
+                <fullName>Cottars airstrip</fullName>
+                <default>false</default>
+                <label>Cottars airstrip</label>
+            </value>
+            <value>
+                <fullName>Cox Field</fullName>
+                <default>false</default>
+                <label>Cox Field</label>
+            </value>
+            <value>
+                <fullName>Crete</fullName>
+                <default>false</default>
+                <label>Crete</label>
+            </value>
+            <value>
+                <fullName>Cubana</fullName>
+                <default>false</default>
+                <label>Cubana</label>
+            </value>
+            <value>
+                <fullName>Cuiaba</fullName>
+                <default>false</default>
+                <label>Cuiaba</label>
+            </value>
+            <value>
+                <fullName>Cusco</fullName>
+                <default>false</default>
+                <label>Cusco</label>
+            </value>
+            <value>
+                <fullName>Dade Collier</fullName>
+                <default>false</default>
+                <label>Dade Collier</label>
+            </value>
+            <value>
+                <fullName>Dakar</fullName>
+                <default>false</default>
+                <label>Dakar</label>
+            </value>
+            <value>
+                <fullName>Dalaman</fullName>
+                <default>false</default>
+                <label>Dalaman</label>
+            </value>
+            <value>
+                <fullName>Dallas Fort Worth</fullName>
+                <default>false</default>
+                <label>Dallas Fort Worth</label>
+            </value>
+            <value>
+                <fullName>Danang</fullName>
+                <default>false</default>
+                <label>Danang</label>
+            </value>
+            <value>
+                <fullName>Da Nang</fullName>
+                <default>false</default>
+                <label>Da Nang</label>
+            </value>
+            <value>
+                <fullName>Dar es Salam</fullName>
+                <default>false</default>
+                <label>Dar es Salam</label>
+            </value>
+            <value>
+                <fullName>Darwin</fullName>
+                <default>false</default>
+                <label>Darwin</label>
+            </value>
+            <value>
+                <fullName>David (DAV)</fullName>
+                <default>false</default>
+                <label>David (DAV)</label>
+            </value>
+            <value>
+                <fullName>Delhi (DEL)</fullName>
+                <default>false</default>
+                <label>Delhi (DEL)</label>
+            </value>
+            <value>
+                <fullName>Denis</fullName>
+                <default>false</default>
+                <label>Denis</label>
+            </value>
+            <value>
+                <fullName>Denpasar</fullName>
+                <default>false</default>
+                <label>Denpasar</label>
+            </value>
+            <value>
+                <fullName>Desroches</fullName>
+                <default>false</default>
+                <label>Desroches</label>
+            </value>
+            <value>
+                <fullName>Dibrugarh</fullName>
+                <default>false</default>
+                <label>Dibrugarh</label>
+            </value>
+            <value>
+                <fullName>Diego</fullName>
+                <default>false</default>
+                <label>Diego</label>
+            </value>
+            <value>
+                <fullName>Dire Dawa</fullName>
+                <default>false</default>
+                <label>Dire Dawa</label>
+            </value>
+            <value>
+                <fullName>Doha</fullName>
+                <default>false</default>
+                <label>Doha</label>
+            </value>
+            <value>
+                <fullName>Dominica</fullName>
+                <default>false</default>
+                <label>Dominica</label>
+            </value>
+            <value>
+                <fullName>Domodedovo</fullName>
+                <default>false</default>
+                <label>Domodedovo</label>
+            </value>
+            <value>
+                <fullName>Donmuang Airport</fullName>
+                <default>false</default>
+                <label>Donmuang Airport</label>
+            </value>
+            <value>
+                <fullName>Donostia - San Sebastian</fullName>
+                <default>false</default>
+                <label>Donostia - San Sebastian</label>
+            </value>
+            <value>
+                <fullName>Downtown Heliport</fullName>
+                <default>false</default>
+                <label>Downtown Heliport</label>
+            </value>
+            <value>
+                <fullName>Drake</fullName>
+                <default>false</default>
+                <label>Drake</label>
+            </value>
+            <value>
+                <fullName>Dubai</fullName>
+                <default>false</default>
+                <label>Dubai</label>
+            </value>
+            <value>
+                <fullName>Dubai World Central</fullName>
+                <default>false</default>
+                <label>Dubai World Central</label>
+            </value>
+            <value>
+                <fullName>Duba Plains Airstrip</fullName>
+                <default>false</default>
+                <label>Duba Plains Airstrip</label>
+            </value>
+            <value>
+                <fullName>Dublin (DUB)</fullName>
+                <default>false</default>
+                <label>Dublin (DUB)</label>
+            </value>
+            <value>
+                <fullName>Dubrovnik airport</fullName>
+                <default>false</default>
+                <label>Dubrovnik airport</label>
+            </value>
+            <value>
+                <fullName>Dulles International</fullName>
+                <default>false</default>
+                <label>Dulles International</label>
+            </value>
+            <value>
+                <fullName>Durban</fullName>
+                <default>false</default>
+                <label>Durban</label>
+            </value>
+            <value>
+                <fullName>Durban King Shaka Airport</fullName>
+                <default>false</default>
+                <label>Durban King Shaka Airport</label>
+            </value>
+            <value>
+                <fullName>East 34th St Heliport</fullName>
+                <default>false</default>
+                <label>East 34th St Heliport</label>
+            </value>
+            <value>
+                <fullName>East 60th Street H/P</fullName>
+                <default>false</default>
+                <label>East 60th Street H/P</label>
+            </value>
+            <value>
+                <fullName>Easter Island</fullName>
+                <default>false</default>
+                <label>Easter Island</label>
+            </value>
+            <value>
+                <fullName>East Midlands</fullName>
+                <default>false</default>
+                <label>East Midlands</label>
+            </value>
+            <value>
+                <fullName>Edinburgh</fullName>
+                <default>false</default>
+                <label>Edinburgh</label>
+            </value>
+            <value>
+                <fullName>Eilat</fullName>
+                <default>false</default>
+                <label>Eilat</label>
+            </value>
+            <value>
+                <fullName>El Calafate</fullName>
+                <default>false</default>
+                <label>El Calafate</label>
+            </value>
+            <value>
+                <fullName>Eleftherios Venizelos</fullName>
+                <default>false</default>
+                <label>Eleftherios Venizelos</label>
+            </value>
+            <value>
+                <fullName>El Nido</fullName>
+                <default>false</default>
+                <label>El Nido</label>
+            </value>
+            <value>
+                <fullName>El Nuevo Dorado International</fullName>
+                <default>false</default>
+                <label>El Nuevo Dorado International</label>
+            </value>
+            <value>
+                <fullName>El Plumerillo</fullName>
+                <default>false</default>
+                <label>El Plumerillo</label>
+            </value>
+            <value>
+                <fullName>El Porvenir</fullName>
+                <default>false</default>
+                <label>El Porvenir</label>
+            </value>
+            <value>
+                <fullName>El Prat De Llobregat</fullName>
+                <default>false</default>
+                <label>El Prat De Llobregat</label>
+            </value>
+            <value>
+                <fullName>Embarkadero</fullName>
+                <default>false</default>
+                <label>Embarkadero</label>
+            </value>
+            <value>
+                <fullName>Entebbe</fullName>
+                <default>false</default>
+                <label>Entebbe</label>
+            </value>
+            <value>
+                <fullName>Eros</fullName>
+                <default>false</default>
+                <label>Eros</label>
+            </value>
+            <value>
+                <fullName>Essendon</fullName>
+                <default>false</default>
+                <label>Essendon</label>
+            </value>
+            <value>
+                <fullName>Etendeka</fullName>
+                <default>false</default>
+                <label>Etendeka</label>
+            </value>
+            <value>
+                <fullName>Etoile</fullName>
+                <default>false</default>
+                <label>Etoile</label>
+            </value>
+            <value>
+                <fullName>Etosha</fullName>
+                <default>false</default>
+                <label>Etosha</label>
+            </value>
+            <value>
+                <fullName>Fakarava (FAV)</fullName>
+                <default>false</default>
+                <label>Fakarava (FAV)</label>
+            </value>
+            <value>
+                <fullName>Faro</fullName>
+                <default>false</default>
+                <label>Faro</label>
+            </value>
+            <value>
+                <fullName>Fernando de Noronha</fullName>
+                <default>false</default>
+                <label>Fernando de Noronha</label>
+            </value>
+            <value>
+                <fullName>Fez</fullName>
+                <default>false</default>
+                <label>Fez</label>
+            </value>
+            <value>
+                <fullName>Fiumicino</fullName>
+                <default>false</default>
+                <label>Fiumicino</label>
+            </value>
+            <value>
+                <fullName>Florence Peretola airport</fullName>
+                <default>false</default>
+                <label>Florence Peretola airport</label>
+            </value>
+            <value>
+                <fullName>Flores</fullName>
+                <default>false</default>
+                <label>Flores</label>
+            </value>
+            <value>
+                <fullName>Florianopolis</fullName>
+                <default>false</default>
+                <label>Florianopolis</label>
+            </value>
+            <value>
+                <fullName>Flushing</fullName>
+                <default>false</default>
+                <label>Flushing</label>
+            </value>
+            <value>
+                <fullName>Fortaleza</fullName>
+                <default>false</default>
+                <label>Fortaleza</label>
+            </value>
+            <value>
+                <fullName>Fort Dauphin</fullName>
+                <default>false</default>
+                <label>Fort Dauphin</label>
+            </value>
+            <value>
+                <fullName>Fort Lauderdale</fullName>
+                <default>false</default>
+                <label>Fort Lauderdale</label>
+            </value>
+            <value>
+                <fullName>Fort Worth Intl. Airport</fullName>
+                <default>false</default>
+                <label>Fort Worth Intl. Airport</label>
+            </value>
+            <value>
+                <fullName>Foz Dolguacu</fullName>
+                <default>false</default>
+                <label>Foz Dolguacu</label>
+            </value>
+            <value>
+                <fullName>Francisco S_ Carneiro</fullName>
+                <default>false</default>
+                <label>Francisco S_ Carneiro</label>
+            </value>
+            <value>
+                <fullName>Frankfurt</fullName>
+                <default>false</default>
+                <label>Frankfurt</label>
+            </value>
+            <value>
+                <fullName>Franschhoek</fullName>
+                <default>false</default>
+                <label>Franschhoek</label>
+            </value>
+            <value>
+                <fullName>Fuerteventura</fullName>
+                <default>false</default>
+                <label>Fuerteventura</label>
+            </value>
+            <value>
+                <fullName>Fukuoka</fullName>
+                <default>false</default>
+                <label>Fukuoka</label>
+            </value>
+            <value>
+                <fullName>Funchal</fullName>
+                <default>false</default>
+                <label>Funchal</label>
+            </value>
+            <value>
+                <fullName>Gaberone</fullName>
+                <default>false</default>
+                <label>Gaberone</label>
+            </value>
+            <value>
+                <fullName>Galapagos</fullName>
+                <default>false</default>
+                <label>Galapagos</label>
+            </value>
+            <value>
+                <fullName>Gallon Jug Airsrip</fullName>
+                <default>false</default>
+                <label>Gallon Jug Airsrip</label>
+            </value>
+            <value>
+                <fullName>Gare de Bordeaux</fullName>
+                <default>false</default>
+                <label>Gare de Bordeaux</label>
+            </value>
+            <value>
+                <fullName>Gare du Nord Rail Stn</fullName>
+                <default>false</default>
+                <label>Gare du Nord Rail Stn</label>
+            </value>
+            <value>
+                <fullName>Gare Montparnasse</fullName>
+                <default>false</default>
+                <label>Gare Montparnasse</label>
+            </value>
+            <value>
+                <fullName>Garonga</fullName>
+                <default>false</default>
+                <label>Garonga</label>
+            </value>
+            <value>
+                <fullName>Geneva</fullName>
+                <default>false</default>
+                <label>Geneva</label>
+            </value>
+            <value>
+                <fullName>Gen J A Anzoategui</fullName>
+                <default>false</default>
+                <label>Gen J A Anzoategui</label>
+            </value>
+            <value>
+                <fullName>George</fullName>
+                <default>false</default>
+                <label>George</label>
+            </value>
+            <value>
+                <fullName>Gladstone</fullName>
+                <default>false</default>
+                <label>Gladstone</label>
+            </value>
+            <value>
+                <fullName>Glasgow International</fullName>
+                <default>false</default>
+                <label>Glasgow International</label>
+            </value>
+            <value>
+                <fullName>Goa</fullName>
+                <default>false</default>
+                <label>Goa</label>
+            </value>
+            <value>
+                <fullName>Gondar</fullName>
+                <default>false</default>
+                <label>Gondar</label>
+            </value>
+            <value>
+                <fullName>Gozo</fullName>
+                <default>false</default>
+                <label>Gozo</label>
+            </value>
+            <value>
+                <fullName>Granada</fullName>
+                <default>false</default>
+                <label>Granada</label>
+            </value>
+            <value>
+                <fullName>Grand Cayman International</fullName>
+                <default>false</default>
+                <label>Grand Cayman International</label>
+            </value>
+            <value>
+                <fullName>Grand Central</fullName>
+                <default>false</default>
+                <label>Grand Central</label>
+            </value>
+            <value>
+                <fullName>Grenoble</fullName>
+                <default>false</default>
+                <label>Grenoble</label>
+            </value>
+            <value>
+                <fullName>Grumeti</fullName>
+                <default>false</default>
+                <label>Grumeti</label>
+            </value>
+            <value>
+                <fullName>Guam</fullName>
+                <default>false</default>
+                <label>Guam</label>
+            </value>
+            <value>
+                <fullName>Guardalavaca</fullName>
+                <default>false</default>
+                <label>Guardalavaca</label>
+            </value>
+            <value>
+                <fullName>Guatemala City</fullName>
+                <default>false</default>
+                <label>Guatemala City</label>
+            </value>
+            <value>
+                <fullName>Guayaquil</fullName>
+                <default>false</default>
+                <label>Guayaquil</label>
+            </value>
+            <value>
+                <fullName>Guayquil</fullName>
+                <default>false</default>
+                <label>Guayquil</label>
+            </value>
+            <value>
+                <fullName>Guilin</fullName>
+                <default>false</default>
+                <label>Guilin</label>
+            </value>
+            <value>
+                <fullName>Gunns Airstrip</fullName>
+                <default>false</default>
+                <label>Gunns Airstrip</label>
+            </value>
+            <value>
+                <fullName>Gusahati</fullName>
+                <default>false</default>
+                <label>Gusahati</label>
+            </value>
+            <value>
+                <fullName>Guwahati</fullName>
+                <default>false</default>
+                <label>Guwahati</label>
+            </value>
+            <value>
+                <fullName>Hamilton Island</fullName>
+                <default>false</default>
+                <label>Hamilton Island</label>
+            </value>
+            <value>
+                <fullName>Hangzhou</fullName>
+                <default>false</default>
+                <label>Hangzhou</label>
+            </value>
+            <value>
+                <fullName>Hanoi</fullName>
+                <default>false</default>
+                <label>Hanoi</label>
+            </value>
+            <value>
+                <fullName>Harare</fullName>
+                <default>false</default>
+                <label>Harare</label>
+            </value>
+            <value>
+                <fullName>Havana Jose Marti International</fullName>
+                <default>false</default>
+                <label>Havana Jose Marti International</label>
+            </value>
+            <value>
+                <fullName>Heliport</fullName>
+                <default>false</default>
+                <label>Heliport</label>
+            </value>
+            <value>
+                <fullName>Heliport De Paris</fullName>
+                <default>false</default>
+                <label>Heliport De Paris</label>
+            </value>
+            <value>
+                <fullName>Hellinikon (Closed)</fullName>
+                <default>false</default>
+                <label>Hellinikon (Closed)</label>
+            </value>
+            <value>
+                <fullName>Helsinki</fullName>
+                <default>false</default>
+                <label>Helsinki</label>
+            </value>
+            <value>
+                <fullName>Henri Coanda</fullName>
+                <default>false</default>
+                <label>Henri Coanda</label>
+            </value>
+            <value>
+                <fullName>Henry County</fullName>
+                <default>false</default>
+                <label>Henry County</label>
+            </value>
+            <value>
+                <fullName>Heraklion</fullName>
+                <default>false</default>
+                <label>Heraklion</label>
+            </value>
+            <value>
+                <fullName>Hewanorra International Airport</fullName>
+                <default>false</default>
+                <label>Hewanorra International Airport</label>
+            </value>
+            <value>
+                <fullName>Hilo</fullName>
+                <default>false</default>
+                <label>Hilo</label>
+            </value>
+            <value>
+                <fullName>H K Heliport</fullName>
+                <default>false</default>
+                <label>H K Heliport</label>
+            </value>
+            <value>
+                <fullName>Ho Chi Minh</fullName>
+                <default>false</default>
+                <label>Ho Chi Minh</label>
+            </value>
+            <value>
+                <fullName>Hoedspruit</fullName>
+                <default>false</default>
+                <label>Hoedspruit</label>
+            </value>
+            <value>
+                <fullName>Hoi An</fullName>
+                <default>false</default>
+                <label>Hoi An</label>
+            </value>
+            <value>
+                <fullName>Hong Kong</fullName>
+                <default>false</default>
+                <label>Hong Kong</label>
+            </value>
+            <value>
+                <fullName>Hong Kong International</fullName>
+                <default>false</default>
+                <label>Hong Kong International</label>
+            </value>
+            <value>
+                <fullName>Hongqiao</fullName>
+                <default>false</default>
+                <label>Hongqiao</label>
+            </value>
+            <value>
+                <fullName>Honolulu</fullName>
+                <default>false</default>
+                <label>Honolulu</label>
+            </value>
+            <value>
+                <fullName>Horta</fullName>
+                <default>false</default>
+                <label>Horta</label>
+            </value>
+            <value>
+                <fullName>Horta (HOR)</fullName>
+                <default>false</default>
+                <label>Horta (HOR)</label>
+            </value>
+            <value>
+                <fullName>Hosea Kutako Airport</fullName>
+                <default>false</default>
+                <label>Hosea Kutako Airport</label>
+            </value>
+            <value>
+                <fullName>Hosea Kutako International (J. G. Strijdom)</fullName>
+                <default>false</default>
+                <label>Hosea Kutako International (J. G. Strijdom)</label>
+            </value>
+            <value>
+                <fullName>Hoskins</fullName>
+                <default>false</default>
+                <label>Hoskins</label>
+            </value>
+            <value>
+                <fullName>Houston</fullName>
+                <default>false</default>
+                <label>Houston</label>
+            </value>
+            <value>
+                <fullName>Hua Hin Airport</fullName>
+                <default>false</default>
+                <label>Hua Hin Airport</label>
+            </value>
+            <value>
+                <fullName>Hue</fullName>
+                <default>false</default>
+                <label>Hue</label>
+            </value>
+            <value>
+                <fullName>Humberside</fullName>
+                <default>false</default>
+                <label>Humberside</label>
+            </value>
+            <value>
+                <fullName>Hurghada</fullName>
+                <default>false</default>
+                <label>Hurghada</label>
+            </value>
+            <value>
+                <fullName>Hwange</fullName>
+                <default>false</default>
+                <label>Hwange</label>
+            </value>
+            <value>
+                <fullName>Hyderabad</fullName>
+                <default>false</default>
+                <label>Hyderabad</label>
+            </value>
+            <value>
+                <fullName>Ibiza</fullName>
+                <default>false</default>
+                <label>Ibiza</label>
+            </value>
+            <value>
+                <fullName>Ibo Island Lodge</fullName>
+                <default>false</default>
+                <label>Ibo Island Lodge</label>
+            </value>
+            <value>
+                <fullName>Ibrahim Nasir International Airport</fullName>
+                <default>false</default>
+                <label>Ibrahim Nasir International Airport</label>
+            </value>
+            <value>
+                <fullName>Iguacu Falls</fullName>
+                <default>false</default>
+                <label>Iguacu Falls</label>
+            </value>
+            <value>
+                <fullName>Iguassu Falls</fullName>
+                <default>false</default>
+                <label>Iguassu Falls</label>
+            </value>
+            <value>
+                <fullName>Iguazu</fullName>
+                <default>false</default>
+                <label>Iguazu</label>
+            </value>
+            <value>
+                <fullName>Iguazu Falls</fullName>
+                <default>false</default>
+                <label>Iguazu Falls</label>
+            </value>
+            <value>
+                <fullName>Ile Sainte Marie</fullName>
+                <default>false</default>
+                <label>Ile Sainte Marie</label>
+            </value>
+            <value>
+                <fullName>Ilheus</fullName>
+                <default>false</default>
+                <label>Ilheus</label>
+            </value>
+            <value>
+                <fullName>Indore</fullName>
+                <default>false</default>
+                <label>Indore</label>
+            </value>
+            <value>
+                <fullName>Inhambane</fullName>
+                <default>false</default>
+                <label>Inhambane</label>
+            </value>
+            <value>
+                <fullName>Innsbruck</fullName>
+                <default>false</default>
+                <label>Innsbruck</label>
+            </value>
+            <value>
+                <fullName>Internacional Benito Juarez</fullName>
+                <default>false</default>
+                <label>Internacional Benito Juarez</label>
+            </value>
+            <value>
+                <fullName>Iquitos</fullName>
+                <default>false</default>
+                <label>Iquitos</label>
+            </value>
+            <value>
+                <fullName>Ishigaki</fullName>
+                <default>false</default>
+                <label>Ishigaki</label>
+            </value>
+            <value>
+                <fullName>Isle of Man</fullName>
+                <default>false</default>
+                <label>Isle of Man</label>
+            </value>
+            <value>
+                <fullName>Isle of Man (IOM)</fullName>
+                <default>false</default>
+                <label>Isle of Man (IOM)</label>
+            </value>
+            <value>
+                <fullName>Istanbul</fullName>
+                <default>false</default>
+                <label>Istanbul</label>
+            </value>
+            <value>
+                <fullName>Istanbul Airport</fullName>
+                <default>false</default>
+                <label>Istanbul Airport</label>
+            </value>
+            <value>
+                <fullName>Istanbul Ataturk</fullName>
+                <default>false</default>
+                <label>Istanbul Ataturk</label>
+            </value>
+            <value>
+                <fullName>Ivato International Airport</fullName>
+                <default>false</default>
+                <label>Ivato International Airport</label>
+            </value>
+            <value>
+                <fullName>Jack&apos;s</fullName>
+                <default>false</default>
+                <label>Jack&apos;s</label>
+            </value>
+            <value>
+                <fullName>Jaipur</fullName>
+                <default>false</default>
+                <label>Jaipur</label>
+            </value>
+            <value>
+                <fullName>Jakarta</fullName>
+                <default>false</default>
+                <label>Jakarta</label>
+            </value>
+            <value>
+                <fullName>Jayapura</fullName>
+                <default>false</default>
+                <label>Jayapura</label>
+            </value>
+            <value>
+                <fullName>J Chavez International</fullName>
+                <default>false</default>
+                <label>J Chavez International</label>
+            </value>
+            <value>
+                <fullName>Jeki</fullName>
+                <default>false</default>
+                <label>Jeki</label>
+            </value>
+            <value>
+                <fullName>JFK Airport</fullName>
+                <default>false</default>
+                <label>JFK Airport</label>
+            </value>
+            <value>
+                <fullName>Jodhpur</fullName>
+                <default>false</default>
+                <label>Jodhpur</label>
+            </value>
+            <value>
+                <fullName>Jogyakarta</fullName>
+                <default>false</default>
+                <label>Jogyakarta</label>
+            </value>
+            <value>
+                <fullName>Johannesbur</fullName>
+                <default>false</default>
+                <label>Johannesbur</label>
+            </value>
+            <value>
+                <fullName>Johannesburg OR Tambo International</fullName>
+                <default>false</default>
+                <label>Johannesburg OR Tambo International</label>
+            </value>
+            <value>
+                <fullName>Jomo Kenyatta International</fullName>
+                <default>false</default>
+                <label>Jomo Kenyatta International</label>
+            </value>
+            <value>
+                <fullName>Jorge Chavez International</fullName>
+                <default>false</default>
+                <label>Jorge Chavez International</label>
+            </value>
+            <value>
+                <fullName>Juan Santamar_a International</fullName>
+                <default>false</default>
+                <label>Juan Santamar_a International</label>
+            </value>
+            <value>
+                <fullName>Juan Santamaria International Airport (SJO)</fullName>
+                <default>false</default>
+                <label>Juan Santamaria International Airport (SJO)</label>
+            </value>
+            <value>
+                <fullName>Juliaca</fullName>
+                <default>false</default>
+                <label>Juliaca</label>
+            </value>
+            <value>
+                <fullName>Kaadedhdhoo</fullName>
+                <default>false</default>
+                <label>Kaadedhdhoo</label>
+            </value>
+            <value>
+                <fullName>Kadhuhoo</fullName>
+                <default>false</default>
+                <label>Kadhuhoo</label>
+            </value>
+            <value>
+                <fullName>Kahului</fullName>
+                <default>false</default>
+                <label>Kahului</label>
+            </value>
+            <value>
+                <fullName>Kaikoura</fullName>
+                <default>false</default>
+                <label>Kaikoura</label>
+            </value>
+            <value>
+                <fullName>Kaimana</fullName>
+                <default>false</default>
+                <label>Kaimana</label>
+            </value>
+            <value>
+                <fullName>Kalabo airstrip</fullName>
+                <default>false</default>
+                <label>Kalabo airstrip</label>
+            </value>
+            <value>
+                <fullName>Kalahari</fullName>
+                <default>false</default>
+                <label>Kalahari</label>
+            </value>
+            <value>
+                <fullName>Kalamata</fullName>
+                <default>false</default>
+                <label>Kalamata</label>
+            </value>
+            <value>
+                <fullName>Kanana</fullName>
+                <default>false</default>
+                <label>Kanana</label>
+            </value>
+            <value>
+                <fullName>Kansai</fullName>
+                <default>false</default>
+                <label>Kansai</label>
+            </value>
+            <value>
+                <fullName>Kaokoveld</fullName>
+                <default>false</default>
+                <label>Kaokoveld</label>
+            </value>
+            <value>
+                <fullName>Kasane</fullName>
+                <default>false</default>
+                <label>Kasane</label>
+            </value>
+            <value>
+                <fullName>Kastrup</fullName>
+                <default>false</default>
+                <label>Kastrup</label>
+            </value>
+            <value>
+                <fullName>Katavi</fullName>
+                <default>false</default>
+                <label>Katavi</label>
+            </value>
+            <value>
+                <fullName>Kathmandu Airport</fullName>
+                <default>false</default>
+                <label>Kathmandu Airport</label>
+            </value>
+            <value>
+                <fullName>Kauai</fullName>
+                <default>false</default>
+                <label>Kauai</label>
+            </value>
+            <value>
+                <fullName>Kavieng</fullName>
+                <default>false</default>
+                <label>Kavieng</label>
+            </value>
+            <value>
+                <fullName>Kayseri</fullName>
+                <default>false</default>
+                <label>Kayseri</label>
+            </value>
+            <value>
+                <fullName>Keekorok</fullName>
+                <default>false</default>
+                <label>Keekorok</label>
+            </value>
+            <value>
+                <fullName>Keflavik</fullName>
+                <default>false</default>
+                <label>Keflavik</label>
+            </value>
+            <value>
+                <fullName>Kerikeri</fullName>
+                <default>false</default>
+                <label>Kerikeri</label>
+            </value>
+            <value>
+                <fullName>Khartoum</fullName>
+                <default>false</default>
+                <label>Khartoum</label>
+            </value>
+            <value>
+                <fullName>Khiva</fullName>
+                <default>false</default>
+                <label>Khiva</label>
+            </value>
+            <value>
+                <fullName>Khwai</fullName>
+                <default>false</default>
+                <label>Khwai</label>
+            </value>
+            <value>
+                <fullName>Kiba</fullName>
+                <default>false</default>
+                <label>Kiba</label>
+            </value>
+            <value>
+                <fullName>Kigali</fullName>
+                <default>false</default>
+                <label>Kigali</label>
+            </value>
+            <value>
+                <fullName>Kihihi</fullName>
+                <default>false</default>
+                <label>Kihihi</label>
+            </value>
+            <value>
+                <fullName>Kilimanjaro</fullName>
+                <default>false</default>
+                <label>Kilimanjaro</label>
+            </value>
+            <value>
+                <fullName>King George Island</fullName>
+                <default>false</default>
+                <label>King George Island</label>
+            </value>
+            <value>
+                <fullName>Kingscote</fullName>
+                <default>false</default>
+                <label>Kingscote</label>
+            </value>
+            <value>
+                <fullName>Kingsford Smith</fullName>
+                <default>false</default>
+                <label>Kingsford Smith</label>
+            </value>
+            <value>
+                <fullName>King Shaka International Airport</fullName>
+                <default>false</default>
+                <label>King Shaka International Airport</label>
+            </value>
+            <value>
+                <fullName>Kingston</fullName>
+                <default>false</default>
+                <label>Kingston</label>
+            </value>
+            <value>
+                <fullName>Kiruna</fullName>
+                <default>false</default>
+                <label>Kiruna</label>
+            </value>
+            <value>
+                <fullName>Kisauni Airport</fullName>
+                <default>false</default>
+                <label>Kisauni Airport</label>
+            </value>
+            <value>
+                <fullName>Kitich</fullName>
+                <default>false</default>
+                <label>Kitich</label>
+            </value>
+            <value>
+                <fullName>Kogatende</fullName>
+                <default>false</default>
+                <label>Kogatende</label>
+            </value>
+            <value>
+                <fullName>Koh Khood</fullName>
+                <default>false</default>
+                <label>Koh Khood</label>
+            </value>
+            <value>
+                <fullName>Koh Samui</fullName>
+                <default>false</default>
+                <label>Koh Samui</label>
+            </value>
+            <value>
+                <fullName>Komandoo</fullName>
+                <default>false</default>
+                <label>Komandoo</label>
+            </value>
+            <value>
+                <fullName>Komodo</fullName>
+                <default>false</default>
+                <label>Komodo</label>
+            </value>
+            <value>
+                <fullName>Kona</fullName>
+                <default>false</default>
+                <label>Kona</label>
+            </value>
+            <value>
+                <fullName>Koror</fullName>
+                <default>false</default>
+                <label>Koror</label>
+            </value>
+            <value>
+                <fullName>Kota Kinabalu</fullName>
+                <default>false</default>
+                <label>Kota Kinabalu</label>
+            </value>
+            <value>
+                <fullName>Kozhikode Airport</fullName>
+                <default>false</default>
+                <label>Kozhikode Airport</label>
+            </value>
+            <value>
+                <fullName>Krabi</fullName>
+                <default>false</default>
+                <label>Krabi</label>
+            </value>
+            <value>
+                <fullName>Kruger</fullName>
+                <default>false</default>
+                <label>Kruger</label>
+            </value>
+            <value>
+                <fullName>Kruger airport</fullName>
+                <default>false</default>
+                <label>Kruger airport</label>
+            </value>
+            <value>
+                <fullName>Kruger Mpumalanga Airport</fullName>
+                <default>false</default>
+                <label>Kruger Mpumalanga Airport</label>
+            </value>
+            <value>
+                <fullName>Kuala Lumpur (KUL)</fullName>
+                <default>false</default>
+                <label>Kuala Lumpur (KUL)</label>
+            </value>
+            <value>
+                <fullName>Kuala Lumpur International Airport (klia)</fullName>
+                <default>false</default>
+                <label>Kuala Lumpur International Airport (klia)</label>
+            </value>
+            <value>
+                <fullName>Kuantan</fullName>
+                <default>false</default>
+                <label>Kuantan</label>
+            </value>
+            <value>
+                <fullName>Kuching</fullName>
+                <default>false</default>
+                <label>Kuching</label>
+            </value>
+            <value>
+                <fullName>Kuene</fullName>
+                <default>false</default>
+                <label>Kuene</label>
+            </value>
+            <value>
+                <fullName>Kumuzu International Airport</fullName>
+                <default>false</default>
+                <label>Kumuzu International Airport</label>
+            </value>
+            <value>
+                <fullName>Kunming</fullName>
+                <default>false</default>
+                <label>Kunming</label>
+            </value>
+            <value>
+                <fullName>Kuro Tarangire</fullName>
+                <default>false</default>
+                <label>Kuro Tarangire</label>
+            </value>
+            <value>
+                <fullName>Kwando Airstrip</fullName>
+                <default>false</default>
+                <label>Kwando Airstrip</label>
+            </value>
+            <value>
+                <fullName>Kwandwe</fullName>
+                <default>false</default>
+                <label>Kwandwe</label>
+            </value>
+            <value>
+                <fullName>Kwara</fullName>
+                <default>false</default>
+                <label>Kwara</label>
+            </value>
+            <value>
+                <fullName>Kwara Airstrip</fullName>
+                <default>false</default>
+                <label>Kwara Airstrip</label>
+            </value>
+            <value>
+                <fullName>Labuan Bajo</fullName>
+                <default>false</default>
+                <label>Labuan Bajo</label>
+            </value>
+            <value>
+                <fullName>La Defense Heliport</fullName>
+                <default>false</default>
+                <label>La Defense Heliport</label>
+            </value>
+            <value>
+                <fullName>Lae</fullName>
+                <default>false</default>
+                <label>Lae</label>
+            </value>
+            <value>
+                <fullName>Lagos</fullName>
+                <default>false</default>
+                <label>Lagos</label>
+            </value>
+            <value>
+                <fullName>La Guardia</fullName>
+                <default>false</default>
+                <label>La Guardia</label>
+            </value>
+            <value>
+                <fullName>Laguna De Los Patos</fullName>
+                <default>false</default>
+                <label>Laguna De Los Patos</label>
+            </value>
+            <value>
+                <fullName>Lahad Datu</fullName>
+                <default>false</default>
+                <label>Lahad Datu</label>
+            </value>
+            <value>
+                <fullName>Lajes</fullName>
+                <default>false</default>
+                <label>Lajes</label>
+            </value>
+            <value>
+                <fullName>Lakefront</fullName>
+                <default>false</default>
+                <label>Lakefront</label>
+            </value>
+            <value>
+                <fullName>Lalibela</fullName>
+                <default>false</default>
+                <label>Lalibela</label>
+            </value>
+            <value>
+                <fullName>Lamai</fullName>
+                <default>false</default>
+                <label>Lamai</label>
+            </value>
+            <value>
+                <fullName>Lamu</fullName>
+                <default>false</default>
+                <label>Lamu</label>
+            </value>
+            <value>
+                <fullName>Lanai City</fullName>
+                <default>false</default>
+                <label>Lanai City</label>
+            </value>
+            <value>
+                <fullName>Langakawi Intl</fullName>
+                <default>false</default>
+                <label>Langakawi Intl</label>
+            </value>
+            <value>
+                <fullName>Langkawi</fullName>
+                <default>false</default>
+                <label>Langkawi</label>
+            </value>
+            <value>
+                <fullName>Lanzarote</fullName>
+                <default>false</default>
+                <label>Lanzarote</label>
+            </value>
+            <value>
+                <fullName>La Paz</fullName>
+                <default>false</default>
+                <label>La Paz</label>
+            </value>
+            <value>
+                <fullName>Larnaca</fullName>
+                <default>false</default>
+                <label>Larnaca</label>
+            </value>
+            <value>
+                <fullName>Las Animas</fullName>
+                <default>false</default>
+                <label>Las Animas</label>
+            </value>
+            <value>
+                <fullName>Las Brujas</fullName>
+                <default>false</default>
+                <label>Las Brujas</label>
+            </value>
+            <value>
+                <fullName>Las Vegas</fullName>
+                <default>false</default>
+                <label>Las Vegas</label>
+            </value>
+            <value>
+                <fullName>Le Bourget</fullName>
+                <default>false</default>
+                <label>Le Bourget</label>
+            </value>
+            <value>
+                <fullName>Legazpi</fullName>
+                <default>false</default>
+                <label>Legazpi</label>
+            </value>
+            <value>
+                <fullName>Leh</fullName>
+                <default>false</default>
+                <label>Leh</label>
+            </value>
+            <value>
+                <fullName>Leningradskiy Rail Stn</fullName>
+                <default>false</default>
+                <label>Leningradskiy Rail Stn</label>
+            </value>
+            <value>
+                <fullName>Leon</fullName>
+                <default>false</default>
+                <label>Leon</label>
+            </value>
+            <value>
+                <fullName>Lewa</fullName>
+                <default>false</default>
+                <label>Lewa</label>
+            </value>
+            <value>
+                <fullName>Liberia</fullName>
+                <default>false</default>
+                <label>Liberia</label>
+            </value>
+            <value>
+                <fullName>Liberia Canton</fullName>
+                <default>false</default>
+                <label>Liberia Canton</label>
+            </value>
+            <value>
+                <fullName>Lihue</fullName>
+                <default>false</default>
+                <label>Lihue</label>
+            </value>
+            <value>
+                <fullName>Lijiang</fullName>
+                <default>false</default>
+                <label>Lijiang</label>
+            </value>
+            <value>
+                <fullName>Likoma Island</fullName>
+                <default>false</default>
+                <label>Likoma Island</label>
+            </value>
+            <value>
+                <fullName>Lilongwe</fullName>
+                <default>false</default>
+                <label>Lilongwe</label>
+            </value>
+            <value>
+                <fullName>Lima</fullName>
+                <default>false</default>
+                <label>Lima</label>
+            </value>
+            <value>
+                <fullName>Linate</fullName>
+                <default>false</default>
+                <label>Linate</label>
+            </value>
+            <value>
+                <fullName>Linyanti</fullName>
+                <default>false</default>
+                <label>Linyanti</label>
+            </value>
+            <value>
+                <fullName>Lisbon (LIS)</fullName>
+                <default>false</default>
+                <label>Lisbon (LIS)</label>
+            </value>
+            <value>
+                <fullName>Lisbon TP</fullName>
+                <default>false</default>
+                <label>Lisbon TP</label>
+            </value>
+            <value>
+                <fullName>Liszt Ferenc International</fullName>
+                <default>false</default>
+                <label>Liszt Ferenc International</label>
+            </value>
+            <value>
+                <fullName>Little Vumbura</fullName>
+                <default>false</default>
+                <label>Little Vumbura</label>
+            </value>
+            <value>
+                <fullName>Liverpool</fullName>
+                <default>false</default>
+                <label>Liverpool</label>
+            </value>
+            <value>
+                <fullName>Livingstone</fullName>
+                <default>false</default>
+                <label>Livingstone</label>
+            </value>
+            <value>
+                <fullName>Lizard Island</fullName>
+                <default>false</default>
+                <label>Lizard Island</label>
+            </value>
+            <value>
+                <fullName>Loisaba</fullName>
+                <default>false</default>
+                <label>Loisaba</label>
+            </value>
+            <value>
+                <fullName>Loldia</fullName>
+                <default>false</default>
+                <label>Loldia</label>
+            </value>
+            <value>
+                <fullName>Lombok</fullName>
+                <default>false</default>
+                <label>Lombok</label>
+            </value>
+            <value>
+                <fullName>Londolozi</fullName>
+                <default>false</default>
+                <label>Londolozi</label>
+            </value>
+            <value>
+                <fullName>London City</fullName>
+                <default>false</default>
+                <label>London City</label>
+            </value>
+            <value>
+                <fullName>London Gatwick</fullName>
+                <default>false</default>
+                <label>London Gatwick</label>
+            </value>
+            <value>
+                <fullName>London Heathrow</fullName>
+                <default>false</default>
+                <label>London Heathrow</label>
+            </value>
+            <value>
+                <fullName>London Luton</fullName>
+                <default>false</default>
+                <label>London Luton</label>
+            </value>
+            <value>
+                <fullName>London Stansted</fullName>
+                <default>false</default>
+                <label>London Stansted</label>
+            </value>
+            <value>
+                <fullName>Lord Howe Island</fullName>
+                <default>false</default>
+                <label>Lord Howe Island</label>
+            </value>
+            <value>
+                <fullName>Los Angeles (LAX)</fullName>
+                <default>false</default>
+                <label>Los Angeles (LAX)</label>
+            </value>
+            <value>
+                <fullName>Los Angeles International Airport</fullName>
+                <default>false</default>
+                <label>Los Angeles International Airport</label>
+            </value>
+            <value>
+                <fullName>Los Cerrillos</fullName>
+                <default>false</default>
+                <label>Los Cerrillos</label>
+            </value>
+            <value>
+                <fullName>Los Roques</fullName>
+                <default>false</default>
+                <label>Los Roques</label>
+            </value>
+            <value>
+                <fullName>Luang Prabang</fullName>
+                <default>false</default>
+                <label>Luang Prabang</label>
+            </value>
+            <value>
+                <fullName>Lulea</fullName>
+                <default>false</default>
+                <label>Lulea</label>
+            </value>
+            <value>
+                <fullName>Lusaka</fullName>
+                <default>false</default>
+                <label>Lusaka</label>
+            </value>
+            <value>
+                <fullName>Luton</fullName>
+                <default>false</default>
+                <label>Luton</label>
+            </value>
+            <value>
+                <fullName>Luxembourg</fullName>
+                <default>false</default>
+                <label>Luxembourg</label>
+            </value>
+            <value>
+                <fullName>Luxor International</fullName>
+                <default>false</default>
+                <label>Luxor International</label>
+            </value>
+            <value>
+                <fullName>Ma</fullName>
+                <default>false</default>
+                <label>Ma</label>
+            </value>
+            <value>
+                <fullName>Maceio</fullName>
+                <default>false</default>
+                <label>Maceio</label>
+            </value>
+            <value>
+                <fullName>Machu Picchu</fullName>
+                <default>false</default>
+                <label>Machu Picchu</label>
+            </value>
+            <value>
+                <fullName>Madeira</fullName>
+                <default>false</default>
+                <label>Madeira</label>
+            </value>
+            <value>
+                <fullName>Madikwe</fullName>
+                <default>false</default>
+                <label>Madikwe</label>
+            </value>
+            <value>
+                <fullName>Madikwe Game Reserve</fullName>
+                <default>false</default>
+                <label>Madikwe Game Reserve</label>
+            </value>
+            <value>
+                <fullName>Madrid</fullName>
+                <default>false</default>
+                <label>Madrid</label>
+            </value>
+            <value>
+                <fullName>Madurai</fullName>
+                <default>false</default>
+                <label>Madurai</label>
+            </value>
+            <value>
+                <fullName>Mafia Island</fullName>
+                <default>false</default>
+                <label>Mafia Island</label>
+            </value>
+            <value>
+                <fullName>Mahale</fullName>
+                <default>false</default>
+                <label>Mahale</label>
+            </value>
+            <value>
+                <fullName>Maharana Pratap Airport</fullName>
+                <default>false</default>
+                <label>Maharana Pratap Airport</label>
+            </value>
+            <value>
+                <fullName>Mahe</fullName>
+                <default>false</default>
+                <label>Mahe</label>
+            </value>
+            <value>
+                <fullName>Makassar</fullName>
+                <default>false</default>
+                <label>Makassar</label>
+            </value>
+            <value>
+                <fullName>Malaga</fullName>
+                <default>false</default>
+                <label>Malaga</label>
+            </value>
+            <value>
+                <fullName>Male</fullName>
+                <default>false</default>
+                <label>Male</label>
+            </value>
+            <value>
+                <fullName>Malpensa</fullName>
+                <default>false</default>
+                <label>Malpensa</label>
+            </value>
+            <value>
+                <fullName>Malta</fullName>
+                <default>false</default>
+                <label>Malta</label>
+            </value>
+            <value>
+                <fullName>Manado</fullName>
+                <default>false</default>
+                <label>Manado</label>
+            </value>
+            <value>
+                <fullName>Manafiafy</fullName>
+                <default>false</default>
+                <label>Manafiafy</label>
+            </value>
+            <value>
+                <fullName>Mana Main</fullName>
+                <default>false</default>
+                <label>Mana Main</label>
+            </value>
+            <value>
+                <fullName>Manaus</fullName>
+                <default>false</default>
+                <label>Manaus</label>
+            </value>
+            <value>
+                <fullName>Mana West</fullName>
+                <default>false</default>
+                <label>Mana West</label>
+            </value>
+            <value>
+                <fullName>Manchester</fullName>
+                <default>false</default>
+                <label>Manchester</label>
+            </value>
+            <value>
+                <fullName>Mandalay International</fullName>
+                <default>false</default>
+                <label>Mandalay International</label>
+            </value>
+            <value>
+                <fullName>Mandrare</fullName>
+                <default>false</default>
+                <label>Mandrare</label>
+            </value>
+            <value>
+                <fullName>Manga</fullName>
+                <default>false</default>
+                <label>Manga</label>
+            </value>
+            <value>
+                <fullName>Mangalore</fullName>
+                <default>false</default>
+                <label>Mangalore</label>
+            </value>
+            <value>
+                <fullName>Manila</fullName>
+                <default>false</default>
+                <label>Manila</label>
+            </value>
+            <value>
+                <fullName>Manila (MNL)</fullName>
+                <default>false</default>
+                <label>Manila (MNL)</label>
+            </value>
+            <value>
+                <fullName>Manyara</fullName>
+                <default>false</default>
+                <label>Manyara</label>
+            </value>
+            <value>
+                <fullName>Mapula</fullName>
+                <default>false</default>
+                <label>Mapula</label>
+            </value>
+            <value>
+                <fullName>Maputo Airport</fullName>
+                <default>false</default>
+                <label>Maputo Airport</label>
+            </value>
+            <value>
+                <fullName>Mara North</fullName>
+                <default>false</default>
+                <label>Mara North</label>
+            </value>
+            <value>
+                <fullName>Marienfluss</fullName>
+                <default>false</default>
+                <label>Marienfluss</label>
+            </value>
+            <value>
+                <fullName>Marine Air Terminal</fullName>
+                <default>false</default>
+                <label>Marine Air Terminal</label>
+            </value>
+            <value>
+                <fullName>Mariscal Sucre International</fullName>
+                <default>false</default>
+                <label>Mariscal Sucre International</label>
+            </value>
+            <value>
+                <fullName>Marka International Airport</fullName>
+                <default>false</default>
+                <label>Marka International Airport</label>
+            </value>
+            <value>
+                <fullName>Maroantsetra</fullName>
+                <default>false</default>
+                <label>Maroantsetra</label>
+            </value>
+            <value>
+                <fullName>Marrakech</fullName>
+                <default>false</default>
+                <label>Marrakech</label>
+            </value>
+            <value>
+                <fullName>Marseille</fullName>
+                <default>false</default>
+                <label>Marseille</label>
+            </value>
+            <value>
+                <fullName>Masai Mara</fullName>
+                <default>false</default>
+                <label>Masai Mara</label>
+            </value>
+            <value>
+                <fullName>Mataveri Intl</fullName>
+                <default>false</default>
+                <label>Mataveri Intl</label>
+            </value>
+            <value>
+                <fullName>Matecana</fullName>
+                <default>false</default>
+                <label>Matecana</label>
+            </value>
+            <value>
+                <fullName>Maui</fullName>
+                <default>false</default>
+                <label>Maui</label>
+            </value>
+            <value>
+                <fullName>Maumere</fullName>
+                <default>false</default>
+                <label>Maumere</label>
+            </value>
+            <value>
+                <fullName>Maun</fullName>
+                <default>false</default>
+                <label>Maun</label>
+            </value>
+            <value>
+                <fullName>Mauritius</fullName>
+                <default>false</default>
+                <label>Mauritius</label>
+            </value>
+            <value>
+                <fullName>Maya Flats Airstrip</fullName>
+                <default>false</default>
+                <label>Maya Flats Airstrip</label>
+            </value>
+            <value>
+                <fullName>Mcguire Fld</fullName>
+                <default>false</default>
+                <label>Mcguire Fld</label>
+            </value>
+            <value>
+                <fullName>McMinn County</fullName>
+                <default>false</default>
+                <label>McMinn County</label>
+            </value>
+            <value>
+                <fullName>Medellin</fullName>
+                <default>false</default>
+                <label>Medellin</label>
+            </value>
+            <value>
+                <fullName>Melbourne</fullName>
+                <default>false</default>
+                <label>Melbourne</label>
+            </value>
+            <value>
+                <fullName>Melbourne International Airport</fullName>
+                <default>false</default>
+                <label>Melbourne International Airport</label>
+            </value>
+            <value>
+                <fullName>Memphis International</fullName>
+                <default>false</default>
+                <label>Memphis International</label>
+            </value>
+            <value>
+                <fullName>Mendoza</fullName>
+                <default>false</default>
+                <label>Mendoza</label>
+            </value>
+            <value>
+                <fullName>Merida</fullName>
+                <default>false</default>
+                <label>Merida</label>
+            </value>
+            <value>
+                <fullName>Meru</fullName>
+                <default>false</default>
+                <label>Meru</label>
+            </value>
+            <value>
+                <fullName>Mestre Rail Stn.</fullName>
+                <default>false</default>
+                <label>Mestre Rail Stn.</label>
+            </value>
+            <value>
+                <fullName>Metropolitan Area</fullName>
+                <default>false</default>
+                <label>Metropolitan Area</label>
+            </value>
+            <value>
+                <fullName>Mexico City</fullName>
+                <default>false</default>
+                <label>Mexico City</label>
+            </value>
+            <value>
+                <fullName>Mfuwe</fullName>
+                <default>false</default>
+                <label>Mfuwe</label>
+            </value>
+            <value>
+                <fullName>Miami</fullName>
+                <default>false</default>
+                <label>Miami</label>
+            </value>
+            <value>
+                <fullName>Migori</fullName>
+                <default>false</default>
+                <label>Migori</label>
+            </value>
+            <value>
+                <fullName>Milan</fullName>
+                <default>false</default>
+                <label>Milan</label>
+            </value>
+            <value>
+                <fullName>Milan Linate</fullName>
+                <default>false</default>
+                <label>Milan Linate</label>
+            </value>
+            <value>
+                <fullName>Milan Malpensa</fullName>
+                <default>false</default>
+                <label>Milan Malpensa</label>
+            </value>
+            <value>
+                <fullName>Mineta San Jose International Airport</fullName>
+                <default>false</default>
+                <label>Mineta San Jose International Airport</label>
+            </value>
+            <value>
+                <fullName>Mingaladon</fullName>
+                <default>false</default>
+                <label>Mingaladon</label>
+            </value>
+            <value>
+                <fullName>Mocimboa da Praia</fullName>
+                <default>false</default>
+                <label>Mocimboa da Praia</label>
+            </value>
+            <value>
+                <fullName>Mokuti</fullName>
+                <default>false</default>
+                <label>Mokuti</label>
+            </value>
+            <value>
+                <fullName>Mombasa</fullName>
+                <default>false</default>
+                <label>Mombasa</label>
+            </value>
+            <value>
+                <fullName>Mombo</fullName>
+                <default>false</default>
+                <label>Mombo</label>
+            </value>
+            <value>
+                <fullName>Montego Bay</fullName>
+                <default>false</default>
+                <label>Montego Bay</label>
+            </value>
+            <value>
+                <fullName>Montevideo</fullName>
+                <default>false</default>
+                <label>Montevideo</label>
+            </value>
+            <value>
+                <fullName>Moorea</fullName>
+                <default>false</default>
+                <label>Moorea</label>
+            </value>
+            <value>
+                <fullName>Moscovskiy Railway Stn</fullName>
+                <default>false</default>
+                <label>Moscovskiy Railway Stn</label>
+            </value>
+            <value>
+                <fullName>Moscow Domodedovo</fullName>
+                <default>false</default>
+                <label>Moscow Domodedovo</label>
+            </value>
+            <value>
+                <fullName>Moscow Metropolitan Area</fullName>
+                <default>false</default>
+                <label>Moscow Metropolitan Area</label>
+            </value>
+            <value>
+                <fullName>Motswiri</fullName>
+                <default>false</default>
+                <label>Motswiri</label>
+            </value>
+            <value>
+                <fullName>Mount Hagen</fullName>
+                <default>false</default>
+                <label>Mount Hagen</label>
+            </value>
+            <value>
+                <fullName>Mowani</fullName>
+                <default>false</default>
+                <label>Mowani</label>
+            </value>
+            <value>
+                <fullName>Msembe</fullName>
+                <default>false</default>
+                <label>Msembe</label>
+            </value>
+            <value>
+                <fullName>Mulu Natinal Park</fullName>
+                <default>false</default>
+                <label>Mulu Natinal Park</label>
+            </value>
+            <value>
+                <fullName>Mumbai</fullName>
+                <default>false</default>
+                <label>Mumbai</label>
+            </value>
+            <value>
+                <fullName>Muscat</fullName>
+                <default>false</default>
+                <label>Muscat</label>
+            </value>
+            <value>
+                <fullName>Musiara</fullName>
+                <default>false</default>
+                <label>Musiara</label>
+            </value>
+            <value>
+                <fullName>Mustique</fullName>
+                <default>false</default>
+                <label>Mustique</label>
+            </value>
+            <value>
+                <fullName>Mykonos</fullName>
+                <default>false</default>
+                <label>Mykonos</label>
+            </value>
+            <value>
+                <fullName>Naboisho</fullName>
+                <default>false</default>
+                <label>Naboisho</label>
+            </value>
+            <value>
+                <fullName>Nadi</fullName>
+                <default>false</default>
+                <label>Nadi</label>
+            </value>
+            <value>
+                <fullName>Nairobi</fullName>
+                <default>false</default>
+                <label>Nairobi</label>
+            </value>
+            <value>
+                <fullName>Nairobi Kenyatta</fullName>
+                <default>false</default>
+                <label>Nairobi Kenyatta</label>
+            </value>
+            <value>
+                <fullName>Nairobi Wilson</fullName>
+                <default>false</default>
+                <label>Nairobi Wilson</label>
+            </value>
+            <value>
+                <fullName>Namib Desert</fullName>
+                <default>false</default>
+                <label>Namib Desert</label>
+            </value>
+            <value>
+                <fullName>Namib Rand Nature Reserve</fullName>
+                <default>false</default>
+                <label>Namib Rand Nature Reserve</label>
+            </value>
+            <value>
+                <fullName>Nampula</fullName>
+                <default>false</default>
+                <label>Nampula</label>
+            </value>
+            <value>
+                <fullName>Nanyuki</fullName>
+                <default>false</default>
+                <label>Nanyuki</label>
+            </value>
+            <value>
+                <fullName>Napier</fullName>
+                <default>false</default>
+                <label>Napier</label>
+            </value>
+            <value>
+                <fullName>Naples</fullName>
+                <default>false</default>
+                <label>Naples</label>
+            </value>
+            <value>
+                <fullName>NAS/Alvin Callendar</fullName>
+                <default>false</default>
+                <label>NAS/Alvin Callendar</label>
+            </value>
+            <value>
+                <fullName>Nashville</fullName>
+                <default>false</default>
+                <label>Nashville</label>
+            </value>
+            <value>
+                <fullName>Nashville (BNA)</fullName>
+                <default>false</default>
+                <label>Nashville (BNA)</label>
+            </value>
+            <value>
+                <fullName>Nassau</fullName>
+                <default>false</default>
+                <label>Nassau</label>
+            </value>
+            <value>
+                <fullName>Natal</fullName>
+                <default>false</default>
+                <label>Natal</label>
+            </value>
+            <value>
+                <fullName>National Park</fullName>
+                <default>false</default>
+                <label>National Park</label>
+            </value>
+            <value>
+                <fullName>Ndutu</fullName>
+                <default>false</default>
+                <label>Ndutu</label>
+            </value>
+            <value>
+                <fullName>Ndutu Airstrip</fullName>
+                <default>false</default>
+                <label>Ndutu Airstrip</label>
+            </value>
+            <value>
+                <fullName>Nelson</fullName>
+                <default>false</default>
+                <label>Nelson</label>
+            </value>
+            <value>
+                <fullName>Nelspruit</fullName>
+                <default>false</default>
+                <label>Nelspruit</label>
+            </value>
+            <value>
+                <fullName>Nevsehir</fullName>
+                <default>false</default>
+                <label>Nevsehir</label>
+            </value>
+            <value>
+                <fullName>Newark</fullName>
+                <default>false</default>
+                <label>Newark</label>
+            </value>
+            <value>
+                <fullName>Newcastle</fullName>
+                <default>false</default>
+                <label>Newcastle</label>
+            </value>
+            <value>
+                <fullName>New Orleans</fullName>
+                <default>false</default>
+                <label>New Orleans</label>
+            </value>
+            <value>
+                <fullName>New York</fullName>
+                <default>false</default>
+                <label>New York</label>
+            </value>
+            <value>
+                <fullName>New York (JFK)</fullName>
+                <default>false</default>
+                <label>New York (JFK)</label>
+            </value>
+            <value>
+                <fullName>Ngala</fullName>
+                <default>false</default>
+                <label>Ngala</label>
+            </value>
+            <value>
+                <fullName>Ngerende</fullName>
+                <default>false</default>
+                <label>Ngerende</label>
+            </value>
+            <value>
+                <fullName>Nha Trang</fullName>
+                <default>false</default>
+                <label>Nha Trang</label>
+            </value>
+            <value>
+                <fullName>Nice</fullName>
+                <default>false</default>
+                <label>Nice</label>
+            </value>
+            <value>
+                <fullName>Ninoy Aquino International</fullName>
+                <default>false</default>
+                <label>Ninoy Aquino International</label>
+            </value>
+            <value>
+                <fullName>Noibai International</fullName>
+                <default>false</default>
+                <label>Noibai International</label>
+            </value>
+            <value>
+                <fullName>North Air Terminal</fullName>
+                <default>false</default>
+                <label>North Air Terminal</label>
+            </value>
+            <value>
+                <fullName>North Eleuthera</fullName>
+                <default>false</default>
+                <label>North Eleuthera</label>
+            </value>
+            <value>
+                <fullName>North Rim</fullName>
+                <default>false</default>
+                <label>North Rim</label>
+            </value>
+            <value>
+                <fullName>North Terminal</fullName>
+                <default>false</default>
+                <label>North Terminal</label>
+            </value>
+            <value>
+                <fullName>Nosara</fullName>
+                <default>false</default>
+                <label>Nosara</label>
+            </value>
+            <value>
+                <fullName>Nosy Be</fullName>
+                <default>false</default>
+                <label>Nosy Be</label>
+            </value>
+            <value>
+                <fullName>Nuarro</fullName>
+                <default>false</default>
+                <label>Nuarro</label>
+            </value>
+            <value>
+                <fullName>Nxai Pan Airstrip</fullName>
+                <default>false</default>
+                <label>Nxai Pan Airstrip</label>
+            </value>
+            <value>
+                <fullName>O.R Tambo International Airport</fullName>
+                <default>false</default>
+                <label>O.R Tambo International Airport</label>
+            </value>
+            <value>
+                <fullName>Oahu- Honolulu</fullName>
+                <default>false</default>
+                <label>Oahu- Honolulu</label>
+            </value>
+            <value>
+                <fullName>Oaxaca</fullName>
+                <default>false</default>
+                <label>Oaxaca</label>
+            </value>
+            <value>
+                <fullName>Ohio University</fullName>
+                <default>false</default>
+                <label>Ohio University</label>
+            </value>
+            <value>
+                <fullName>Okahirongo Elephant Lodge</fullName>
+                <default>false</default>
+                <label>Okahirongo Elephant Lodge</label>
+            </value>
+            <value>
+                <fullName>Okavango Delta</fullName>
+                <default>false</default>
+                <label>Okavango Delta</label>
+            </value>
+            <value>
+                <fullName>OLBIA</fullName>
+                <default>false</default>
+                <label>OLBIA</label>
+            </value>
+            <value>
+                <fullName>Ol Kiombo</fullName>
+                <default>false</default>
+                <label>Ol Kiombo</label>
+            </value>
+            <value>
+                <fullName>Ol Seki</fullName>
+                <default>false</default>
+                <label>Ol Seki</label>
+            </value>
+            <value>
+                <fullName>Orlando</fullName>
+                <default>false</default>
+                <label>Orlando</label>
+            </value>
+            <value>
+                <fullName>Orly</fullName>
+                <default>false</default>
+                <label>Orly</label>
+            </value>
+            <value>
+                <fullName>OR Tambo International</fullName>
+                <default>false</default>
+                <label>OR Tambo International</label>
+            </value>
+            <value>
+                <fullName>Osaka</fullName>
+                <default>false</default>
+                <label>Osaka</label>
+            </value>
+            <value>
+                <fullName>Oslo</fullName>
+                <default>false</default>
+                <label>Oslo</label>
+            </value>
+            <value>
+                <fullName>Paitilla-Marcos A. Gelabert</fullName>
+                <default>false</default>
+                <label>Paitilla-Marcos A. Gelabert</label>
+            </value>
+            <value>
+                <fullName>Pakse</fullName>
+                <default>false</default>
+                <label>Pakse</label>
+            </value>
+            <value>
+                <fullName>Palermo</fullName>
+                <default>false</default>
+                <label>Palermo</label>
+            </value>
+            <value>
+                <fullName>Palma</fullName>
+                <default>false</default>
+                <label>Palma</label>
+            </value>
+            <value>
+                <fullName>Palma de Mallorca</fullName>
+                <default>false</default>
+                <label>Palma de Mallorca</label>
+            </value>
+            <value>
+                <fullName>Palm Beach SPB</fullName>
+                <default>false</default>
+                <label>Palm Beach SPB</label>
+            </value>
+            <value>
+                <fullName>Palmwag</fullName>
+                <default>false</default>
+                <label>Palmwag</label>
+            </value>
+            <value>
+                <fullName>Pamalican</fullName>
+                <default>false</default>
+                <label>Pamalican</label>
+            </value>
+            <value>
+                <fullName>Panama City</fullName>
+                <default>false</default>
+                <label>Panama City</label>
+            </value>
+            <value>
+                <fullName>Pangkor Laut Island</fullName>
+                <default>false</default>
+                <label>Pangkor Laut Island</label>
+            </value>
+            <value>
+                <fullName>Papeete</fullName>
+                <default>false</default>
+                <label>Papeete</label>
+            </value>
+            <value>
+                <fullName>Paphos</fullName>
+                <default>false</default>
+                <label>Paphos</label>
+            </value>
+            <value>
+                <fullName>Paris Cergy Pontoise</fullName>
+                <default>false</default>
+                <label>Paris Cergy Pontoise</label>
+            </value>
+            <value>
+                <fullName>Paris Charles De Gaulle</fullName>
+                <default>false</default>
+                <label>Paris Charles De Gaulle</label>
+            </value>
+            <value>
+                <fullName>Paro</fullName>
+                <default>false</default>
+                <label>Paro</label>
+            </value>
+            <value>
+                <fullName>Paros</fullName>
+                <default>false</default>
+                <label>Paros</label>
+            </value>
+            <value>
+                <fullName>Paveletskiy Rail Stn.</fullName>
+                <default>false</default>
+                <label>Paveletskiy Rail Stn.</label>
+            </value>
+            <value>
+                <fullName>Paya Lebar</fullName>
+                <default>false</default>
+                <label>Paya Lebar</label>
+            </value>
+            <value>
+                <fullName>Peloponnese</fullName>
+                <default>false</default>
+                <label>Peloponnese</label>
+            </value>
+            <value>
+                <fullName>Pemba</fullName>
+                <default>false</default>
+                <label>Pemba</label>
+            </value>
+            <value>
+                <fullName>Penang</fullName>
+                <default>false</default>
+                <label>Penang</label>
+            </value>
+            <value>
+                <fullName>Pereira</fullName>
+                <default>false</default>
+                <label>Pereira</label>
+            </value>
+            <value>
+                <fullName>Perth (PER)</fullName>
+                <default>false</default>
+                <label>Perth (PER)</label>
+            </value>
+            <value>
+                <fullName>Peruvian Amazon</fullName>
+                <default>false</default>
+                <label>Peruvian Amazon</label>
+            </value>
+            <value>
+                <fullName>Phnom Penh</fullName>
+                <default>false</default>
+                <label>Phnom Penh</label>
+            </value>
+            <value>
+                <fullName>Phu Bai</fullName>
+                <default>false</default>
+                <label>Phu Bai</label>
+            </value>
+            <value>
+                <fullName>Phuket International</fullName>
+                <default>false</default>
+                <label>Phuket International</label>
+            </value>
+            <value>
+                <fullName>Phu Quoc</fullName>
+                <default>false</default>
+                <label>Phu Quoc</label>
+            </value>
+            <value>
+                <fullName>Piajio</fullName>
+                <default>false</default>
+                <label>Piajio</label>
+            </value>
+            <value>
+                <fullName>Pier 11/Wall St. SPB</fullName>
+                <default>false</default>
+                <label>Pier 11/Wall St. SPB</label>
+            </value>
+            <value>
+                <fullName>Pingyao</fullName>
+                <default>false</default>
+                <label>Pingyao</label>
+            </value>
+            <value>
+                <fullName>Pirita Harbour</fullName>
+                <default>false</default>
+                <label>Pirita Harbour</label>
+            </value>
+            <value>
+                <fullName>Pisa</fullName>
+                <default>false</default>
+                <label>Pisa</label>
+            </value>
+            <value>
+                <fullName>Placencia</fullName>
+                <default>false</default>
+                <label>Placencia</label>
+            </value>
+            <value>
+                <fullName>Playa Baracoa</fullName>
+                <default>false</default>
+                <label>Playa Baracoa</label>
+            </value>
+            <value>
+                <fullName>Playon Chico</fullName>
+                <default>false</default>
+                <label>Playon Chico</label>
+            </value>
+            <value>
+                <fullName>Pointe-a-Pitre</fullName>
+                <default>false</default>
+                <label>Pointe-a-Pitre</label>
+            </value>
+            <value>
+                <fullName>Polokwane</fullName>
+                <default>false</default>
+                <label>Polokwane</label>
+            </value>
+            <value>
+                <fullName>Pom Pom</fullName>
+                <default>false</default>
+                <label>Pom Pom</label>
+            </value>
+            <value>
+                <fullName>Pom Pom Airstrip</fullName>
+                <default>false</default>
+                <label>Pom Pom Airstrip</label>
+            </value>
+            <value>
+                <fullName>Pondicherry</fullName>
+                <default>false</default>
+                <label>Pondicherry</label>
+            </value>
+            <value>
+                <fullName>Ponta Delgada (PDL)</fullName>
+                <default>false</default>
+                <label>Ponta Delgada (PDL)</label>
+            </value>
+            <value>
+                <fullName>Porta Nuova Rail</fullName>
+                <default>false</default>
+                <label>Porta Nuova Rail</label>
+            </value>
+            <value>
+                <fullName>Port Blair</fullName>
+                <default>false</default>
+                <label>Port Blair</label>
+            </value>
+            <value>
+                <fullName>Portela</fullName>
+                <default>false</default>
+                <label>Portela</label>
+            </value>
+            <value>
+                <fullName>Port Elizabeth</fullName>
+                <default>false</default>
+                <label>Port Elizabeth</label>
+            </value>
+            <value>
+                <fullName>Port Moresby</fullName>
+                <default>false</default>
+                <label>Port Moresby</label>
+            </value>
+            <value>
+                <fullName>Porto</fullName>
+                <default>false</default>
+                <label>Porto</label>
+            </value>
+            <value>
+                <fullName>Port of Spain</fullName>
+                <default>false</default>
+                <label>Port of Spain</label>
+            </value>
+            <value>
+                <fullName>Porto Seguro</fullName>
+                <default>false</default>
+                <label>Porto Seguro</label>
+            </value>
+            <value>
+                <fullName>Prague - Ruzyne International</fullName>
+                <default>false</default>
+                <label>Prague - Ruzyne International</label>
+            </value>
+            <value>
+                <fullName>Praslin</fullName>
+                <default>false</default>
+                <label>Praslin</label>
+            </value>
+            <value>
+                <fullName>Principe</fullName>
+                <default>false</default>
+                <label>Principe</label>
+            </value>
+            <value>
+                <fullName>Progresso</fullName>
+                <default>false</default>
+                <label>Progresso</label>
+            </value>
+            <value>
+                <fullName>Providencia</fullName>
+                <default>false</default>
+                <label>Providencia</label>
+            </value>
+            <value>
+                <fullName>Providenciales</fullName>
+                <default>false</default>
+                <label>Providenciales</label>
+            </value>
+            <value>
+                <fullName>Pucon</fullName>
+                <default>false</default>
+                <label>Pucon</label>
+            </value>
+            <value>
+                <fullName>Pu Dong</fullName>
+                <default>false</default>
+                <label>Pu Dong</label>
+            </value>
+            <value>
+                <fullName>Puerto Jimenez</fullName>
+                <default>false</default>
+                <label>Puerto Jimenez</label>
+            </value>
+            <value>
+                <fullName>Puerto Maldonado</fullName>
+                <default>false</default>
+                <label>Puerto Maldonado</label>
+            </value>
+            <value>
+                <fullName>Puerto Montt</fullName>
+                <default>false</default>
+                <label>Puerto Montt</label>
+            </value>
+            <value>
+                <fullName>Puerto Princesa</fullName>
+                <default>false</default>
+                <label>Puerto Princesa</label>
+            </value>
+            <value>
+                <fullName>Puerto Vallarta</fullName>
+                <default>false</default>
+                <label>Puerto Vallarta</label>
+            </value>
+            <value>
+                <fullName>Pula</fullName>
+                <default>false</default>
+                <label>Pula</label>
+            </value>
+            <value>
+                <fullName>Pulkovo</fullName>
+                <default>false</default>
+                <label>Pulkovo</label>
+            </value>
+            <value>
+                <fullName>Pulliam Field</fullName>
+                <default>false</default>
+                <label>Pulliam Field</label>
+            </value>
+            <value>
+                <fullName>Punta Arenas</fullName>
+                <default>false</default>
+                <label>Punta Arenas</label>
+            </value>
+            <value>
+                <fullName>Punta Delgada</fullName>
+                <default>false</default>
+                <label>Punta Delgada</label>
+            </value>
+            <value>
+                <fullName>Punta Gorda</fullName>
+                <default>false</default>
+                <label>Punta Gorda</label>
+            </value>
+            <value>
+                <fullName>Punta Islita Air Strip</fullName>
+                <default>false</default>
+                <label>Punta Islita Air Strip</label>
+            </value>
+            <value>
+                <fullName>Queen Alia International</fullName>
+                <default>false</default>
+                <label>Queen Alia International</label>
+            </value>
+            <value>
+                <fullName>Queenstown</fullName>
+                <default>false</default>
+                <label>Queenstown</label>
+            </value>
+            <value>
+                <fullName>Quepos</fullName>
+                <default>false</default>
+                <label>Quepos</label>
+            </value>
+            <value>
+                <fullName>Quilalea</fullName>
+                <default>false</default>
+                <label>Quilalea</label>
+            </value>
+            <value>
+                <fullName>Quito</fullName>
+                <default>false</default>
+                <label>Quito</label>
+            </value>
+            <value>
+                <fullName>Rabaul</fullName>
+                <default>false</default>
+                <label>Rabaul</label>
+            </value>
+            <value>
+                <fullName>Rafael Nunez</fullName>
+                <default>false</default>
+                <label>Rafael Nunez</label>
+            </value>
+            <value>
+                <fullName>Raf Gatow (no longer in operation)</fullName>
+                <default>false</default>
+                <label>Raf Gatow (no longer in operation)</label>
+            </value>
+            <value>
+                <fullName>Raiatea</fullName>
+                <default>false</default>
+                <label>Raiatea</label>
+            </value>
+            <value>
+                <fullName>Ral Al Khaimah</fullName>
+                <default>false</default>
+                <label>Ral Al Khaimah</label>
+            </value>
+            <value>
+                <fullName>Rand/Germiston</fullName>
+                <default>false</default>
+                <label>Rand/Germiston</label>
+            </value>
+            <value>
+                <fullName>Randburg Heliport</fullName>
+                <default>false</default>
+                <label>Randburg Heliport</label>
+            </value>
+            <value>
+                <fullName>Rangiroa (RGI)</fullName>
+                <default>false</default>
+                <label>Rangiroa (RGI)</label>
+            </value>
+            <value>
+                <fullName>Ras al Khaimah</fullName>
+                <default>false</default>
+                <label>Ras al Khaimah</label>
+            </value>
+            <value>
+                <fullName>Ras Kutani</fullName>
+                <default>false</default>
+                <label>Ras Kutani</label>
+            </value>
+            <value>
+                <fullName>Recife</fullName>
+                <default>false</default>
+                <label>Recife</label>
+            </value>
+            <value>
+                <fullName>Reid-Hillview</fullName>
+                <default>false</default>
+                <label>Reid-Hillview</label>
+            </value>
+            <value>
+                <fullName>Reykjavik</fullName>
+                <default>false</default>
+                <label>Reykjavik</label>
+            </value>
+            <value>
+                <fullName>Richard B Russell</fullName>
+                <default>false</default>
+                <label>Richard B Russell</label>
+            </value>
+            <value>
+                <fullName>Richards Bay</fullName>
+                <default>false</default>
+                <label>Richards Bay</label>
+            </value>
+            <value>
+                <fullName>Rijeka</fullName>
+                <default>false</default>
+                <label>Rijeka</label>
+            </value>
+            <value>
+                <fullName>Rio de Janeiro</fullName>
+                <default>false</default>
+                <label>Rio de Janeiro</label>
+            </value>
+            <value>
+                <fullName>Riyadh</fullName>
+                <default>false</default>
+                <label>Riyadh</label>
+            </value>
+            <value>
+                <fullName>Rodriguez Ballon</fullName>
+                <default>false</default>
+                <label>Rodriguez Ballon</label>
+            </value>
+            <value>
+                <fullName>Rollang Field</fullName>
+                <default>false</default>
+                <label>Rollang Field</label>
+            </value>
+            <value>
+                <fullName>Rome Fiumicino airport</fullName>
+                <default>false</default>
+                <label>Rome Fiumicino airport</label>
+            </value>
+            <value>
+                <fullName>Rose Bay</fullName>
+                <default>false</default>
+                <label>Rose Bay</label>
+            </value>
+            <value>
+                <fullName>Roskilde Airport</fullName>
+                <default>false</default>
+                <label>Roskilde Airport</label>
+            </value>
+            <value>
+                <fullName>Rovaniemi</fullName>
+                <default>false</default>
+                <label>Rovaniemi</label>
+            </value>
+            <value>
+                <fullName>Royal Malewane</fullName>
+                <default>false</default>
+                <label>Royal Malewane</label>
+            </value>
+            <value>
+                <fullName>Ruaha</fullName>
+                <default>false</default>
+                <label>Ruaha</label>
+            </value>
+            <value>
+                <fullName>Ruben Cantu</fullName>
+                <default>false</default>
+                <label>Ruben Cantu</label>
+            </value>
+            <value>
+                <fullName>Rzhevka</fullName>
+                <default>false</default>
+                <label>Rzhevka</label>
+            </value>
+            <value>
+                <fullName>S.M. Novella Rail.Svc</fullName>
+                <default>false</default>
+                <label>S.M. Novella Rail.Svc</label>
+            </value>
+            <value>
+                <fullName>Sabiha Gokcen</fullName>
+                <default>false</default>
+                <label>Sabiha Gokcen</label>
+            </value>
+            <value>
+                <fullName>Sabi Sabi</fullName>
+                <default>false</default>
+                <label>Sabi Sabi</label>
+            </value>
+            <value>
+                <fullName>Sabi Sands</fullName>
+                <default>false</default>
+                <label>Sabi Sands</label>
+            </value>
+            <value>
+                <fullName>Saigon</fullName>
+                <default>false</default>
+                <label>Saigon</label>
+            </value>
+            <value>
+                <fullName>Saile</fullName>
+                <default>false</default>
+                <label>Saile</label>
+            </value>
+            <value>
+                <fullName>Sainte Marie</fullName>
+                <default>false</default>
+                <label>Sainte Marie</label>
+            </value>
+            <value>
+                <fullName>Salah</fullName>
+                <default>false</default>
+                <label>Salah</label>
+            </value>
+            <value>
+                <fullName>Salalah</fullName>
+                <default>false</default>
+                <label>Salalah</label>
+            </value>
+            <value>
+                <fullName>Salta</fullName>
+                <default>false</default>
+                <label>Salta</label>
+            </value>
+            <value>
+                <fullName>Salvador</fullName>
+                <default>false</default>
+                <label>Salvador</label>
+            </value>
+            <value>
+                <fullName>Samara</fullName>
+                <default>false</default>
+                <label>Samara</label>
+            </value>
+            <value>
+                <fullName>Samburu</fullName>
+                <default>false</default>
+                <label>Samburu</label>
+            </value>
+            <value>
+                <fullName>Samedan airport</fullName>
+                <default>false</default>
+                <label>Samedan airport</label>
+            </value>
+            <value>
+                <fullName>San Andres</fullName>
+                <default>false</default>
+                <label>San Andres</label>
+            </value>
+            <value>
+                <fullName>San Cristobal</fullName>
+                <default>false</default>
+                <label>San Cristobal</label>
+            </value>
+            <value>
+                <fullName>Sandakan</fullName>
+                <default>false</default>
+                <label>Sandakan</label>
+            </value>
+            <value>
+                <fullName>San Diego</fullName>
+                <default>false</default>
+                <label>San Diego</label>
+            </value>
+            <value>
+                <fullName>San Francisco</fullName>
+                <default>false</default>
+                <label>San Francisco</label>
+            </value>
+            <value>
+                <fullName>Sanganeer</fullName>
+                <default>false</default>
+                <label>Sanganeer</label>
+            </value>
+            <value>
+                <fullName>San Ignacio</fullName>
+                <default>false</default>
+                <label>San Ignacio</label>
+            </value>
+            <value>
+                <fullName>San Jose</fullName>
+                <default>false</default>
+                <label>San Jose</label>
+            </value>
+            <value>
+                <fullName>San Jose Cabo</fullName>
+                <default>false</default>
+                <label>San Jose Cabo</label>
+            </value>
+            <value>
+                <fullName>San Juan</fullName>
+                <default>false</default>
+                <label>San Juan</label>
+            </value>
+            <value>
+                <fullName>San Pedro</fullName>
+                <default>false</default>
+                <label>San Pedro</label>
+            </value>
+            <value>
+                <fullName>San Pedro Airstrip</fullName>
+                <default>false</default>
+                <label>San Pedro Airstrip</label>
+            </value>
+            <value>
+                <fullName>San Pedro Ambergris</fullName>
+                <default>false</default>
+                <label>San Pedro Ambergris</label>
+            </value>
+            <value>
+                <fullName>San Salvador</fullName>
+                <default>false</default>
+                <label>San Salvador</label>
+            </value>
+            <value>
+                <fullName>Santa Cruz</fullName>
+                <default>false</default>
+                <label>Santa Cruz</label>
+            </value>
+            <value>
+                <fullName>Santa Cruz Island</fullName>
+                <default>false</default>
+                <label>Santa Cruz Island</label>
+            </value>
+            <value>
+                <fullName>Santa Lucia Rail</fullName>
+                <default>false</default>
+                <label>Santa Lucia Rail</label>
+            </value>
+            <value>
+                <fullName>Santa Maria Airport</fullName>
+                <default>false</default>
+                <label>Santa Maria Airport</label>
+            </value>
+            <value>
+                <fullName>Santa Marta</fullName>
+                <default>false</default>
+                <label>Santa Marta</label>
+            </value>
+            <value>
+                <fullName>Santarem</fullName>
+                <default>false</default>
+                <label>Santarem</label>
+            </value>
+            <value>
+                <fullName>Santiago</fullName>
+                <default>false</default>
+                <label>Santiago</label>
+            </value>
+            <value>
+                <fullName>Santorini</fullName>
+                <default>false</default>
+                <label>Santorini</label>
+            </value>
+            <value>
+                <fullName>Sao Miguel</fullName>
+                <default>false</default>
+                <label>Sao Miguel</label>
+            </value>
+            <value>
+                <fullName>Sao Paulo</fullName>
+                <default>false</default>
+                <label>Sao Paulo</label>
+            </value>
+            <value>
+                <fullName>Sao Tome</fullName>
+                <default>false</default>
+                <label>Sao Tome</label>
+            </value>
+            <value>
+                <fullName>Sarara</fullName>
+                <default>false</default>
+                <label>Sarara</label>
+            </value>
+            <value>
+                <fullName>Sasaab</fullName>
+                <default>false</default>
+                <label>Sasaab</label>
+            </value>
+            <value>
+                <fullName>Savute</fullName>
+                <default>false</default>
+                <label>Savute</label>
+            </value>
+            <value>
+                <fullName>Savuti</fullName>
+                <default>false</default>
+                <label>Savuti</label>
+            </value>
+            <value>
+                <fullName>Schiphol</fullName>
+                <default>false</default>
+                <label>Schiphol</label>
+            </value>
+            <value>
+                <fullName>Schwechat International</fullName>
+                <default>false</default>
+                <label>Schwechat International</label>
+            </value>
+            <value>
+                <fullName>Seattle</fullName>
+                <default>false</default>
+                <label>Seattle</label>
+            </value>
+            <value>
+                <fullName>Seeb</fullName>
+                <default>false</default>
+                <label>Seeb</label>
+            </value>
+            <value>
+                <fullName>Segrate</fullName>
+                <default>false</default>
+                <label>Segrate</label>
+            </value>
+            <value>
+                <fullName>Seletar</fullName>
+                <default>false</default>
+                <label>Seletar</label>
+            </value>
+            <value>
+                <fullName>Selinda</fullName>
+                <default>false</default>
+                <label>Selinda</label>
+            </value>
+            <value>
+                <fullName>Selous</fullName>
+                <default>false</default>
+                <label>Selous</label>
+            </value>
+            <value>
+                <fullName>Selous Lower</fullName>
+                <default>false</default>
+                <label>Selous Lower</label>
+            </value>
+            <value>
+                <fullName>Semporna</fullName>
+                <default>false</default>
+                <label>Semporna</label>
+            </value>
+            <value>
+                <fullName>Serengeti South</fullName>
+                <default>false</default>
+                <label>Serengeti South</label>
+            </value>
+            <value>
+                <fullName>Seronera</fullName>
+                <default>false</default>
+                <label>Seronera</label>
+            </value>
+            <value>
+                <fullName>Serra Cafema</fullName>
+                <default>false</default>
+                <label>Serra Cafema</label>
+            </value>
+            <value>
+                <fullName>Seville</fullName>
+                <default>false</default>
+                <label>Seville</label>
+            </value>
+            <value>
+                <fullName>Seychelles</fullName>
+                <default>false</default>
+                <label>Seychelles</label>
+            </value>
+            <value>
+                <fullName>Shanghai Pu Dong</fullName>
+                <default>false</default>
+                <label>Shanghai Pu Dong</label>
+            </value>
+            <value>
+                <fullName>Sharm</fullName>
+                <default>false</default>
+                <label>Sharm</label>
+            </value>
+            <value>
+                <fullName>Sharm El Sheikh</fullName>
+                <default>false</default>
+                <label>Sharm El Sheikh</label>
+            </value>
+            <value>
+                <fullName>Sharm El Sheikh International</fullName>
+                <default>false</default>
+                <label>Sharm El Sheikh International</label>
+            </value>
+            <value>
+                <fullName>Sherman Oaks H/P</fullName>
+                <default>false</default>
+                <label>Sherman Oaks H/P</label>
+            </value>
+            <value>
+                <fullName>Shinde</fullName>
+                <default>false</default>
+                <label>Shinde</label>
+            </value>
+            <value>
+                <fullName>Siem Reap</fullName>
+                <default>false</default>
+                <label>Siem Reap</label>
+            </value>
+            <value>
+                <fullName>Sihanoukville</fullName>
+                <default>false</default>
+                <label>Sihanoukville</label>
+            </value>
+            <value>
+                <fullName>Singapore</fullName>
+                <default>false</default>
+                <label>Singapore</label>
+            </value>
+            <value>
+                <fullName>Singita</fullName>
+                <default>false</default>
+                <label>Singita</label>
+            </value>
+            <value>
+                <fullName>Singita Kruger NP</fullName>
+                <default>false</default>
+                <label>Singita Kruger NP</label>
+            </value>
+            <value>
+                <fullName>Sir Bani Yas</fullName>
+                <default>false</default>
+                <label>Sir Bani Yas</label>
+            </value>
+            <value>
+                <fullName>Siwandu</fullName>
+                <default>false</default>
+                <label>Siwandu</label>
+            </value>
+            <value>
+                <fullName>SkukuZa</fullName>
+                <default>false</default>
+                <label>SkukuZa</label>
+            </value>
+            <value>
+                <fullName>Soekarno-Hatta</fullName>
+                <default>false</default>
+                <label>Soekarno-Hatta</label>
+            </value>
+            <value>
+                <fullName>Sondica</fullName>
+                <default>false</default>
+                <label>Sondica</label>
+            </value>
+            <value>
+                <fullName>Sorong</fullName>
+                <default>false</default>
+                <label>Sorong</label>
+            </value>
+            <value>
+                <fullName>Sossusvlei</fullName>
+                <default>false</default>
+                <label>Sossusvlei</label>
+            </value>
+            <value>
+                <fullName>South Andros</fullName>
+                <default>false</default>
+                <label>South Andros</label>
+            </value>
+            <value>
+                <fullName>Southern Patagonia</fullName>
+                <default>false</default>
+                <label>Southern Patagonia</label>
+            </value>
+            <value>
+                <fullName>SPB</fullName>
+                <default>false</default>
+                <label>SPB</label>
+            </value>
+            <value>
+                <fullName>Split</fullName>
+                <default>false</default>
+                <label>Split</label>
+            </value>
+            <value>
+                <fullName>Staniel Cay</fullName>
+                <default>false</default>
+                <label>Staniel Cay</label>
+            </value>
+            <value>
+                <fullName>St Barts</fullName>
+                <default>false</default>
+                <label>St Barts</label>
+            </value>
+            <value>
+                <fullName>St Kitts</fullName>
+                <default>false</default>
+                <label>St Kitts</label>
+            </value>
+            <value>
+                <fullName>St Lucia</fullName>
+                <default>false</default>
+                <label>St Lucia</label>
+            </value>
+            <value>
+                <fullName>St Maarten</fullName>
+                <default>false</default>
+                <label>St Maarten</label>
+            </value>
+            <value>
+                <fullName>Stockholm</fullName>
+                <default>false</default>
+                <label>Stockholm</label>
+            </value>
+            <value>
+                <fullName>Stockholm, Arlanda</fullName>
+                <default>false</default>
+                <label>Stockholm, Arlanda</label>
+            </value>
+            <value>
+                <fullName>St Petersburg</fullName>
+                <default>false</default>
+                <label>St Petersburg</label>
+            </value>
+            <value>
+                <fullName>St Vincent</fullName>
+                <default>false</default>
+                <label>St Vincent</label>
+            </value>
+            <value>
+                <fullName>Suedbahnhof Rail</fullName>
+                <default>false</default>
+                <label>Suedbahnhof Rail</label>
+            </value>
+            <value>
+                <fullName>Sulawesi</fullName>
+                <default>false</default>
+                <label>Sulawesi</label>
+            </value>
+            <value>
+                <fullName>Sulawesi (UPG)</fullName>
+                <default>false</default>
+                <label>Sulawesi (UPG)</label>
+            </value>
+            <value>
+                <fullName>Sultan Abdul Aziz Shah</fullName>
+                <default>false</default>
+                <label>Sultan Abdul Aziz Shah</label>
+            </value>
+            <value>
+                <fullName>Sur Reina Sofia</fullName>
+                <default>false</default>
+                <label>Sur Reina Sofia</label>
+            </value>
+            <value>
+                <fullName>Suvarnabhumi International</fullName>
+                <default>false</default>
+                <label>Suvarnabhumi International</label>
+            </value>
+            <value>
+                <fullName>Swakopmund</fullName>
+                <default>false</default>
+                <label>Swakopmund</label>
+            </value>
+            <value>
+                <fullName>Sydney (SYD)</fullName>
+                <default>false</default>
+                <label>Sydney (SYD)</label>
+            </value>
+            <value>
+                <fullName>Sydney Bankstown</fullName>
+                <default>false</default>
+                <label>Sydney Bankstown</label>
+            </value>
+            <value>
+                <fullName>Sydney West</fullName>
+                <default>false</default>
+                <label>Sydney West</label>
+            </value>
+            <value>
+                <fullName>Tallinn</fullName>
+                <default>false</default>
+                <label>Tallinn</label>
+            </value>
+            <value>
+                <fullName>Tamatave</fullName>
+                <default>false</default>
+                <label>Tamatave</label>
+            </value>
+            <value>
+                <fullName>Tambolaka</fullName>
+                <default>false</default>
+                <label>Tambolaka</label>
+            </value>
+            <value>
+                <fullName>Tambor</fullName>
+                <default>false</default>
+                <label>Tambor</label>
+            </value>
+            <value>
+                <fullName>Tamiami</fullName>
+                <default>false</default>
+                <label>Tamiami</label>
+            </value>
+            <value>
+                <fullName>Taolagnaro</fullName>
+                <default>false</default>
+                <label>Taolagnaro</label>
+            </value>
+            <value>
+                <fullName>Tarangire</fullName>
+                <default>false</default>
+                <label>Tarangire</label>
+            </value>
+            <value>
+                <fullName>Targu Mures</fullName>
+                <default>false</default>
+                <label>Targu Mures</label>
+            </value>
+            <value>
+                <fullName>Tarime</fullName>
+                <default>false</default>
+                <label>Tarime</label>
+            </value>
+            <value>
+                <fullName>Tashkent</fullName>
+                <default>false</default>
+                <label>Tashkent</label>
+            </value>
+            <value>
+                <fullName>Tau Pan Airstrip</fullName>
+                <default>false</default>
+                <label>Tau Pan Airstrip</label>
+            </value>
+            <value>
+                <fullName>Taupo</fullName>
+                <default>false</default>
+                <label>Taupo</label>
+            </value>
+            <value>
+                <fullName>Taveuni</fullName>
+                <default>false</default>
+                <label>Taveuni</label>
+            </value>
+            <value>
+                <fullName>Tbilisi</fullName>
+                <default>false</default>
+                <label>Tbilisi</label>
+            </value>
+            <value>
+                <fullName>Tel Aviv</fullName>
+                <default>false</default>
+                <label>Tel Aviv</label>
+            </value>
+            <value>
+                <fullName>Tempelhof</fullName>
+                <default>false</default>
+                <label>Tempelhof</label>
+            </value>
+            <value>
+                <fullName>Tenerife Norte (Los Rodeos)</fullName>
+                <default>false</default>
+                <label>Tenerife Norte (Los Rodeos)</label>
+            </value>
+            <value>
+                <fullName>Tenerife South</fullName>
+                <default>false</default>
+                <label>Tenerife South</label>
+            </value>
+            <value>
+                <fullName>Termini Rail Stn.</fullName>
+                <default>false</default>
+                <label>Termini Rail Stn.</label>
+            </value>
+            <value>
+                <fullName>the Okavango Delta</fullName>
+                <default>false</default>
+                <label>the Okavango Delta</label>
+            </value>
+            <value>
+                <fullName>The Serengeti</fullName>
+                <default>false</default>
+                <label>The Serengeti</label>
+            </value>
+            <value>
+                <fullName>Thessaloniki</fullName>
+                <default>false</default>
+                <label>Thessaloniki</label>
+            </value>
+            <value>
+                <fullName>Thira</fullName>
+                <default>false</default>
+                <label>Thira</label>
+            </value>
+            <value>
+                <fullName>Thonga Beach Lodge</fullName>
+                <default>false</default>
+                <label>Thonga Beach Lodge</label>
+            </value>
+            <value>
+                <fullName>Thornybush</fullName>
+                <default>false</default>
+                <label>Thornybush</label>
+            </value>
+            <value>
+                <fullName>Timbavati</fullName>
+                <default>false</default>
+                <label>Timbavati</label>
+            </value>
+            <value>
+                <fullName>Tingo Maria</fullName>
+                <default>false</default>
+                <label>Tingo Maria</label>
+            </value>
+            <value>
+                <fullName>Tivat</fullName>
+                <default>false</default>
+                <label>Tivat</label>
+            </value>
+            <value>
+                <fullName>Tocumen International</fullName>
+                <default>false</default>
+                <label>Tocumen International</label>
+            </value>
+            <value>
+                <fullName>Tokyo</fullName>
+                <default>false</default>
+                <label>Tokyo</label>
+            </value>
+            <value>
+                <fullName>Tokyo Haneda International</fullName>
+                <default>false</default>
+                <label>Tokyo Haneda International</label>
+            </value>
+            <value>
+                <fullName>Toliara</fullName>
+                <default>false</default>
+                <label>Toliara</label>
+            </value>
+            <value>
+                <fullName>Toronto</fullName>
+                <default>false</default>
+                <label>Toronto</label>
+            </value>
+            <value>
+                <fullName>Torrejon Afb</fullName>
+                <default>false</default>
+                <label>Torrejon Afb</label>
+            </value>
+            <value>
+                <fullName>Tortola</fullName>
+                <default>false</default>
+                <label>Tortola</label>
+            </value>
+            <value>
+                <fullName>Tortuguero</fullName>
+                <default>false</default>
+                <label>Tortuguero</label>
+            </value>
+            <value>
+                <fullName>Tortuguero Airport</fullName>
+                <default>false</default>
+                <label>Tortuguero Airport</label>
+            </value>
+            <value>
+                <fullName>Trelew</fullName>
+                <default>false</default>
+                <label>Trelew</label>
+            </value>
+            <value>
+                <fullName>Trieste</fullName>
+                <default>false</default>
+                <label>Trieste</label>
+            </value>
+            <value>
+                <fullName>Trinidad</fullName>
+                <default>false</default>
+                <label>Trinidad</label>
+            </value>
+            <value>
+                <fullName>Tromso</fullName>
+                <default>false</default>
+                <label>Tromso</label>
+            </value>
+            <value>
+                <fullName>Truk</fullName>
+                <default>false</default>
+                <label>Truk</label>
+            </value>
+            <value>
+                <fullName>Tsigaro</fullName>
+                <default>false</default>
+                <label>Tsigaro</label>
+            </value>
+            <value>
+                <fullName>Tsigaro (Jack&apos;s)</fullName>
+                <default>false</default>
+                <label>Tsigaro (Jack&apos;s)</label>
+            </value>
+            <value>
+                <fullName>Tswalu</fullName>
+                <default>false</default>
+                <label>Tswalu</label>
+            </value>
+            <value>
+                <fullName>Tubu Tree Airstrip</fullName>
+                <default>false</default>
+                <label>Tubu Tree Airstrip</label>
+            </value>
+            <value>
+                <fullName>Tufi</fullName>
+                <default>false</default>
+                <label>Tufi</label>
+            </value>
+            <value>
+                <fullName>Tulear</fullName>
+                <default>false</default>
+                <label>Tulear</label>
+            </value>
+            <value>
+                <fullName>Tullamarine</fullName>
+                <default>false</default>
+                <label>Tullamarine</label>
+            </value>
+            <value>
+                <fullName>Tumbes</fullName>
+                <default>false</default>
+                <label>Tumbes</label>
+            </value>
+            <value>
+                <fullName>Tunis</fullName>
+                <default>false</default>
+                <label>Tunis</label>
+            </value>
+            <value>
+                <fullName>Tuxtla</fullName>
+                <default>false</default>
+                <label>Tuxtla</label>
+            </value>
+            <value>
+                <fullName>Tuxtla Gutierrez</fullName>
+                <default>false</default>
+                <label>Tuxtla Gutierrez</label>
+            </value>
+            <value>
+                <fullName>Twyfelfontein</fullName>
+                <default>false</default>
+                <label>Twyfelfontein</label>
+            </value>
+            <value>
+                <fullName>Ukunda</fullName>
+                <default>false</default>
+                <label>Ukunda</label>
+            </value>
+            <value>
+                <fullName>Ulemiste</fullName>
+                <default>false</default>
+                <label>Ulemiste</label>
+            </value>
+            <value>
+                <fullName>Union Island</fullName>
+                <default>false</default>
+                <label>Union Island</label>
+            </value>
+            <value>
+                <fullName>Union Island Airport</fullName>
+                <default>false</default>
+                <label>Union Island Airport</label>
+            </value>
+            <value>
+                <fullName>Union Station H/P</fullName>
+                <default>false</default>
+                <label>Union Station H/P</label>
+            </value>
+            <value>
+                <fullName>Universal City H/P</fullName>
+                <default>false</default>
+                <label>Universal City H/P</label>
+            </value>
+            <value>
+                <fullName>Urgup</fullName>
+                <default>false</default>
+                <label>Urgup</label>
+            </value>
+            <value>
+                <fullName>Ushuaia</fullName>
+                <default>false</default>
+                <label>Ushuaia</label>
+            </value>
+            <value>
+                <fullName>Uyuni</fullName>
+                <default>false</default>
+                <label>Uyuni</label>
+            </value>
+            <value>
+                <fullName>Valencia</fullName>
+                <default>false</default>
+                <label>Valencia</label>
+            </value>
+            <value>
+                <fullName>Valerio Catullo</fullName>
+                <default>false</default>
+                <label>Valerio Catullo</label>
+            </value>
+            <value>
+                <fullName>Vamizi</fullName>
+                <default>false</default>
+                <label>Vamizi</label>
+            </value>
+            <value>
+                <fullName>Vamizi Island</fullName>
+                <default>false</default>
+                <label>Vamizi Island</label>
+            </value>
+            <value>
+                <fullName>Vancouver</fullName>
+                <default>false</default>
+                <label>Vancouver</label>
+            </value>
+            <value>
+                <fullName>Venice Marco Polo</fullName>
+                <default>false</default>
+                <label>Venice Marco Polo</label>
+            </value>
+            <value>
+                <fullName>Venice Marco Polo airport</fullName>
+                <default>false</default>
+                <label>Venice Marco Polo airport</label>
+            </value>
+            <value>
+                <fullName>Victoria Falls</fullName>
+                <default>false</default>
+                <label>Victoria Falls</label>
+            </value>
+            <value>
+                <fullName>Vienna Danubepier Hov</fullName>
+                <default>false</default>
+                <label>Vienna Danubepier Hov</label>
+            </value>
+            <value>
+                <fullName>Vientiane</fullName>
+                <default>false</default>
+                <label>Vientiane</label>
+            </value>
+            <value>
+                <fullName>Vilanculos</fullName>
+                <default>false</default>
+                <label>Vilanculos</label>
+            </value>
+            <value>
+                <fullName>Villa Coublay</fullName>
+                <default>false</default>
+                <label>Villa Coublay</label>
+            </value>
+            <value>
+                <fullName>Villahermosa</fullName>
+                <default>false</default>
+                <label>Villahermosa</label>
+            </value>
+            <value>
+                <fullName>Vnukovo</fullName>
+                <default>false</default>
+                <label>Vnukovo</label>
+            </value>
+            <value>
+                <fullName>Vumbura</fullName>
+                <default>false</default>
+                <label>Vumbura</label>
+            </value>
+            <value>
+                <fullName>Wakatobi</fullName>
+                <default>false</default>
+                <label>Wakatobi</label>
+            </value>
+            <value>
+                <fullName>Wallblake</fullName>
+                <default>false</default>
+                <label>Wallblake</label>
+            </value>
+            <value>
+                <fullName>Wamena</fullName>
+                <default>false</default>
+                <label>Wamena</label>
+            </value>
+            <value>
+                <fullName>Warner Cntr Bus. Plaza</fullName>
+                <default>false</default>
+                <label>Warner Cntr Bus. Plaza</label>
+            </value>
+            <value>
+                <fullName>Washington DC</fullName>
+                <default>false</default>
+                <label>Washington DC</label>
+            </value>
+            <value>
+                <fullName>Washington Ronald Reagan</fullName>
+                <default>false</default>
+                <label>Washington Ronald Reagan</label>
+            </value>
+            <value>
+                <fullName>Waterberg</fullName>
+                <default>false</default>
+                <label>Waterberg</label>
+            </value>
+            <value>
+                <fullName>Wellington</fullName>
+                <default>false</default>
+                <label>Wellington</label>
+            </value>
+            <value>
+                <fullName>West 30th St Heliport</fullName>
+                <default>false</default>
+                <label>West 30th St Heliport</label>
+            </value>
+            <value>
+                <fullName>Westbahnhof Rail</fullName>
+                <default>false</default>
+                <label>Westbahnhof Rail</label>
+            </value>
+            <value>
+                <fullName>Wewak Airport</fullName>
+                <default>false</default>
+                <label>Wewak Airport</label>
+            </value>
+            <value>
+                <fullName>Whistler</fullName>
+                <default>false</default>
+                <label>Whistler</label>
+            </value>
+            <value>
+                <fullName>Whiteman</fullName>
+                <default>false</default>
+                <label>Whiteman</label>
+            </value>
+            <value>
+                <fullName>Whitted</fullName>
+                <default>false</default>
+                <label>Whitted</label>
+            </value>
+            <value>
+                <fullName>Wilson</fullName>
+                <default>false</default>
+                <label>Wilson</label>
+            </value>
+            <value>
+                <fullName>Windhoek</fullName>
+                <default>false</default>
+                <label>Windhoek</label>
+            </value>
+            <value>
+                <fullName>Windhoek Eros</fullName>
+                <default>false</default>
+                <label>Windhoek Eros</label>
+            </value>
+            <value>
+                <fullName>Wolwedans</fullName>
+                <default>false</default>
+                <label>Wolwedans</label>
+            </value>
+            <value>
+                <fullName>Xai Xai</fullName>
+                <default>false</default>
+                <label>Xai Xai</label>
+            </value>
+            <value>
+                <fullName>Xakanaxa</fullName>
+                <default>false</default>
+                <label>Xakanaxa</label>
+            </value>
+            <value>
+                <fullName>Xian</fullName>
+                <default>false</default>
+                <label>Xian</label>
+            </value>
+            <value>
+                <fullName>Xigera</fullName>
+                <default>false</default>
+                <label>Xigera</label>
+            </value>
+            <value>
+                <fullName>Yangon</fullName>
+                <default>false</default>
+                <label>Yangon</label>
+            </value>
+            <value>
+                <fullName>Yerevan</fullName>
+                <default>false</default>
+                <label>Yerevan</label>
+            </value>
+            <value>
+                <fullName>Yogyakarta</fullName>
+                <default>false</default>
+                <label>Yogyakarta</label>
+            </value>
+            <value>
+                <fullName>Yokota Afb</fullName>
+                <default>false</default>
+                <label>Yokota Afb</label>
+            </value>
+            <value>
+                <fullName>Zanzibar</fullName>
+                <default>false</default>
+                <label>Zanzibar</label>
+            </value>
+            <value>
+                <fullName>Zurich</fullName>
+                <default>false</default>
+                <label>Zurich</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

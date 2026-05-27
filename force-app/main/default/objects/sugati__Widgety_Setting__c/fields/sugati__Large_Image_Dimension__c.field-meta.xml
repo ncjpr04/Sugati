@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Large_Image_Dimension__c</fullName>
+    <defaultValue>&apos;900x600#&apos;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>&apos;400x300&apos;         # resize, maintain aspect ratio
+&apos;400x300!&apos;        # force resize, don&apos;t maintain aspect ratio
+&apos;400x&apos;            # resize width, maintain aspect ratio
+&apos;x300&apos;            # resize height, maintain aspect ratio
+&apos;400x300&lt;&apos;        # resize only if the image is smaller than this
+&apos;400x300&gt;&apos;        # resize only if the image is larger than this
+&apos;50x50%&apos;          # resize width and height to 50%
+&apos;400x300^&apos;        # resize width, height to minimum 400,300, maintain aspect ratio
+&apos;2000@&apos;           # resize so max area in pixels is 2000
+&apos;400x300#&apos;        # resize, crop if necessary to maintain aspect ratio (centre gravity)
+&apos;400x300#ne&apos;      # as above, north-east gravity
+&apos;400x300se&apos;       # crop, with south-east gravity
+&apos;400x300+50+100&apos;  # crop from the point 50,100 with width, height 400,300</description>
+    <externalId>false</externalId>
+    <label>Large Image Dimension</label>
+    <length>50</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

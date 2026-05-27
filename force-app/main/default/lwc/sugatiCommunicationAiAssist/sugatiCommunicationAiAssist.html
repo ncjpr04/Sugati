@@ -1,0 +1,135 @@
+<template>
+    <div class={overlayClass} onclick={handleBackdropClick} role="presentation">
+        <div class="ai-panel" onclick={stopPropagation}>
+            <div class="ai-panel-hdr">
+                <div class="ai-panel-title"><span class="ai-star-glyph">✦</span> AI Assist</div>
+                <button type="button" class="ai-panel-close" onclick={handleClose}>✕</button>
+            </div>
+
+            <div class="ai-mode-tabs">
+                <template for:each={modeTabs} for:item="tab">
+                    <div
+                        key={tab.id}
+                        class={tab.className}
+                        data-mode={tab.id}
+                        onclick={handleModeClick}
+                    >
+                        {tab.label}
+                    </div>
+                </template>
+            </div>
+
+            <template lwc:if={showCompose}>
+                <div class="ai-mode-body">
+                    <p class="ai-mode-desc">Generate a full email draft from your trip data, selected template, and recipients.</p>
+                    <div class="ai-context-pills">
+                        <span class="ai-ctx-pill">🧳 {tripName}</span>
+                        <span class="ai-ctx-pill">👤 {recipientSummary}</span>
+                        <span class="ai-ctx-pill">📄 {templateName}</span>
+                        <span class="ai-ctx-pill">📅 {departureDate}</span>
+                    </div>
+                    <div class="ai-tone-row">
+                        <span class="ai-tone-label">Tone:</span>
+                        <div class="ai-tone-opts">
+                            <template for:each={toneOptions} for:item="tone">
+                                <div
+                                    key={tone.label}
+                                    class={tone.className}
+                                    data-tone={tone.label}
+                                    onclick={handleToneClick}
+                                >
+                                    {tone.label}
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <button type="button" class="ai-run-btn" onclick={handleCompose}>
+                        <span class="ai-btn-star">✦</span> Generate Draft
+                    </button>
+                </div>
+            </template>
+
+            <template lwc:if={showRewrite}>
+                <div class="ai-mode-body">
+                    <p class="ai-mode-desc">Rewrite the current email body in a different style.</p>
+                    <div class="ai-rw-opts">
+                        <div class="ai-rw-opt" data-rewrite="simplify" onclick={handleRewrite}>
+                            <div class="ai-rw-icon">↓</div>
+                            <div>
+                                <div class="ai-rw-name">Simplify</div>
+                                <div class="ai-rw-sub">Shorter, plainer, easier to read</div>
+                            </div>
+                        </div>
+                        <div class="ai-rw-opt" data-rewrite="expand" onclick={handleRewrite}>
+                            <div class="ai-rw-icon">↑</div>
+                            <div>
+                                <div class="ai-rw-name">Expand</div>
+                                <div class="ai-rw-sub">More warmth, detail &amp; personality</div>
+                            </div>
+                        </div>
+                        <div class="ai-rw-opt" data-rewrite="formalise" onclick={handleRewrite}>
+                            <div class="ai-rw-icon">◈</div>
+                            <div>
+                                <div class="ai-rw-name">Formalise</div>
+                                <div class="ai-rw-sub">Professional, structured tone</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={showSubject}>
+                <div class="ai-mode-body">
+                    <p class="ai-mode-desc">Generate a compelling subject line based on your email content and recipient.</p>
+                    <button type="button" class="ai-run-btn" onclick={handleSubject}>
+                        <span class="ai-btn-star">✦</span> Suggest Subject Lines
+                    </button>
+                    <template lwc:if={subjectResults.length}>
+                        <div class="ai-results">
+                            <template for:each={subjectResults} for:item="subj">
+                                <div key={subj} class="ai-result-line">{subj}</div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:if={showAttachments}>
+                <div class="ai-mode-body">
+                    <p class="ai-mode-desc">Get smart attachment suggestions based on the template, stage, and destination.</p>
+                    <button type="button" class="ai-run-btn" onclick={handleAttachments}>
+                        <span class="ai-btn-star">✦</span> Suggest Attachments
+                    </button>
+                    <template lwc:if={attachmentResults.length}>
+                        <div class="ai-results">
+                            <template for:each={attachmentResults} for:item="att">
+                                <div key={att} class="ai-result-line">{att}</div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template lwc:if={isLoading}>
+                <div class="ai-loading">
+                    <div class="ai-loading-dots"><span></span><span></span><span></span></div>
+                    <div class="ai-loading-text">Claude is writing…</div>
+                </div>
+            </template>
+
+            <template lwc:if={showOutput}>
+                <div class="ai-output">
+                    <div class="ai-output-hdr">
+                        <span class="ai-output-label">{outputLabel}</span>
+                        <button type="button" class="ai-output-apply" onclick={handleApply}>Apply →</button>
+                    </div>
+                    <div class="ai-output-body">{outputBody}</div>
+                    <div class="ai-output-foot">
+                        <button type="button" class="ai-regenerate" onclick={handleRegenerate}>↺ Regenerate</button>
+                        <span class="ai-output-note">Powered by Claude · Review before sending</span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

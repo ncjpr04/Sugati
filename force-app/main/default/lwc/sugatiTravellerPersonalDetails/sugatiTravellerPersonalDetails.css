@@ -1,0 +1,104 @@
+/* ---- HOST ---- */
+:host {
+    display: block;
+}
+
+/* ---- CARD SHELL ---- */
+.card {
+    background    : #FFFFFF;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 12px;
+    overflow      : hidden;
+    box-shadow    : 0 1px 3px rgba(28, 28, 26, 0.07), 0 1px 2px rgba(28, 28, 26, 0.04);
+    height        : 100%;
+}
+
+.card-header {
+    padding         : 16px 22px 14px;
+    border-bottom   : 1px solid rgba(28, 28, 26, 0.1);
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.card-title {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 19px;
+    font-weight : 300;
+    color       : #1C1C1A;
+}
+
+.card-body {
+    padding: 20px 22px;
+}
+
+/* ---- INFO GRID ---- */
+.info-grid {
+    display               : grid;
+    grid-template-columns : 1fr 1fr;
+    gap                   : 16px;
+}
+
+.info-label {
+    font-size      : 11px;
+    text-transform : uppercase;
+    letter-spacing : 0.7px;
+    color          : #9a9a94;
+    font-weight    : 600;
+    margin-bottom  : 3px;
+}
+
+.info-value {
+    font-size : 14px;
+    color     : #1C1C1A;
+}
+
+.info-value.highlight {
+    color       : #c8930a;
+    font-weight : 500;
+}
+
+/* ---- DIVIDER ---- */
+.divider {
+    height     : 1px;
+    background : rgba(28, 28, 26, 0.1);
+    margin     : 16px 0;
+}
+
+/* ---- COMPANIONS ---- */
+.companions-label {
+    margin-bottom: 10px;
+}
+
+.chips {
+    display   : flex;
+    flex-wrap : wrap;
+    gap       : 7px;
+}
+
+.chip {
+    padding       : 5px 12px;
+    border-radius : 20px;
+    font-size     : 12px;
+    background    : #F7F7F7;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    color         : #5a5a56;
+}
+
+.chip.warm {
+    background   : rgba(255, 197, 67, 0.1);
+    border-color : rgba(255, 197, 67, 0.4);
+    color        : #7a4f00;
+}
+
+/* ---- BUTTONS ---- */
+.btn-ghost {
+    padding       : 5px 12px;
+    background    : transparent;
+    color         : #5a5a56;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 7px;
+    font-size     : 12px;
+    font-weight   : 500;
+    cursor        : pointer;
+}

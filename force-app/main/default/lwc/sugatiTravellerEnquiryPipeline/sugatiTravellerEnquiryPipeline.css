@@ -1,0 +1,169 @@
+/* ---- HOST ---- */
+:host {
+    display    : block;
+    width      : 100%;
+    min-width  : 0;
+    box-sizing : border-box;
+}
+
+/* ---- CARD SHELL ---- */
+.pipe-card {
+    background    : #FFFFFF;
+    border        : 1px solid rgba(28, 28, 26, 0.1);
+    border-radius : 12px;
+    overflow      : hidden;
+    box-shadow    : 0 1px 3px rgba(28, 28, 26, 0.07);
+    box-sizing    : border-box;
+}
+
+.card-header {
+    padding         : 16px 22px 14px;
+    border-bottom   : 1px solid rgba(28, 28, 26, 0.1);
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+}
+
+.card-title {
+    font-family : 'Crimson Pro', serif;
+    font-size   : 19px;
+    font-weight : 300;
+    color       : #1C1C1A;
+}
+
+.opp-count {
+    font-size   : 11px;
+    color       : #9a9a94;
+    font-weight : 500;
+}
+
+.card-body {
+    padding: 16px 22px;
+}
+
+/* ---- PIPELINE SCROLL ---- */
+.pipeline-scroll {
+    width      : 100%;
+    overflow-x : auto;
+}
+
+.pipeline-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.pipeline-scroll::-webkit-scrollbar-thumb {
+    background    : rgba(28, 28, 26, 0.2);
+    border-radius : 4px;
+}
+
+/* ---- PIPELINE STAGES ---- */
+.pipeline-stages {
+    display       : flex;
+    height        : 34px;
+    border-radius : 8px;
+    overflow      : hidden;
+    min-width     : 100%;
+    width         : max-content;
+}
+
+.pipe-stage {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    overflow        : hidden;
+    min-width       : 0;
+    flex-shrink     : 0;
+}
+
+.pipe-stage:hover {
+    opacity: 0.82;
+}
+
+.pipe-stage-label {
+    font-size      : 11px;
+    font-weight    : 600;
+    color          : #fff;
+    white-space    : nowrap;
+    overflow       : hidden;
+    text-overflow  : ellipsis;
+    pointer-events : none;
+    padding        : 0 6px;
+}
+
+/* ---- LEGEND ---- */
+.pipe-legend-scroll {
+    overflow-x : auto;
+}
+
+.pipe-legend {
+    display    : flex;
+    flex-wrap  : wrap;
+    gap        : 14px;
+    min-width  : min-content;
+    margin-top : 4px;
+}
+
+.pipe-legend-item {
+    display     : flex;
+    align-items : center;
+    gap         : 5px;
+    font-size   : 12px;
+    color       : #5a5a56;
+    white-space : nowrap;
+}
+
+.legend-count {
+    color     : #9a9a94;
+    font-size : 11px;
+}
+
+.pipe-dot {
+    width         : 8px;
+    height        : 8px;
+    border-radius : 2px;
+    flex-shrink   : 0;
+}
+
+/* ---- DIVIDER ---- */
+.divider {
+    height     : 1px;
+    background : rgba(28, 28, 26, 0.1);
+    margin     : 14px 0;
+}
+
+/* ---- FOLLOW-UP ROW ---- */
+.flex-between {
+    display         : flex;
+    justify-content : space-between;
+    align-items     : center;
+    width           : 100%;
+    gap             : 12px;
+}
+
+.followup-text {
+    font-size     : 13px;
+    color         : #c8930a;
+    font-weight   : 500;
+    text-align    : right;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+    max-width     : 70%;
+}
+
+.text-muted {
+    color: #9a9a94;
+}
+
+.text-sm {
+    font-size   : 12px;
+    white-space : nowrap;
+}
+
+/* ---- EMPTY STATE ---- */
+.empty-pipeline {
+    font-size  : 13px;
+    color      : #9a9a94;
+    text-align : center;
+    padding    : 16px 0 4px;
+}

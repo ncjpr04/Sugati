@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_CG_Price_Override__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Tells the system which price override (for different room sharing options) this client group is using.</description>
+    <label>Price Override</label>
+    <referenceTo>sugati__Price_Override__c</referenceTo>
+    <relationshipLabel>Client Groups</relationshipLabel>
+    <relationshipName>Client_Groups</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

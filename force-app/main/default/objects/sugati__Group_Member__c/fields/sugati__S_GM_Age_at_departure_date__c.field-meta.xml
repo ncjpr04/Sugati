@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_GM_Age_at_departure_date__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(NOT(ISBLANK(sugati__GM_Contact__r.Birthdate)), 
+    IF(DATE(2000, MONTH(sugati__GM_Contact__r.Birthdate), DAY(sugati__GM_Contact__r.Birthdate)) &lt;= DATE(2000, MONTH(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c), DAY(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c)), 
+YEAR(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c) - YEAR(sugati__GM_Contact__r.Birthdate), 
+YEAR(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c) - YEAR(sugati__GM_Contact__r.Birthdate) - 1), 
+null)</formula>
+    <label>Age at Departure Date</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

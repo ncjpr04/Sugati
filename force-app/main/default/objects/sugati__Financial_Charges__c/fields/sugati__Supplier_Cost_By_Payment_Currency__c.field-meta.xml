@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Supplier_Cost_By_Payment_Currency__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <label>Supplier Cost By Payment Currency</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

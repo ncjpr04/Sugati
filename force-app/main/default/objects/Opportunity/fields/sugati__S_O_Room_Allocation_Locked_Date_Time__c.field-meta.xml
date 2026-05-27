@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Room_Allocation_Locked_Date_Time__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The date/time the room allocation was locked on this tour.</description>
+    <inlineHelpText>The date/time the room allocation was locked on this tour.</inlineHelpText>
+    <label>Room Allocation Locked Date/Time</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

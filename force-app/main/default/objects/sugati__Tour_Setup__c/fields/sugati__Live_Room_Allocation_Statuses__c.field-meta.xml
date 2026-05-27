@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Live_Room_Allocation_Statuses__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The room allocation statuses that should be considered &apos;live&apos; and add to the live room occupancy on the opportunity. Comma Separated.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The room allocation statuses that should be considered &apos;live&apos; and add to the live room occupancy on the opportunity. Comma Separated.</inlineHelpText>
+    <label>Live Room Allocation Statuses</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

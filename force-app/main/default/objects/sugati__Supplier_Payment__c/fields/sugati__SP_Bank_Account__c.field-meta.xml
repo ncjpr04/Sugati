@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SP_Bank_Account__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Bank Account</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Handels Current AC- OTUK</fullName>
+                <default>false</default>
+                <label>Handels Current AC- OTUK</label>
+            </value>
+            <value>
+                <fullName>Handles Bank Account EUR - 71697839</fullName>
+                <default>false</default>
+                <label>Handles Bank Account EUR - 71697839</label>
+            </value>
+            <value>
+                <fullName>Handles Bank Account USD-58408652</fullName>
+                <default>false</default>
+                <label>Handles Bank Account USD-58408652</label>
+            </value>
+            <value>
+                <fullName>Handles Current Account GBP</fullName>
+                <default>false</default>
+                <label>Handles Current Account GBP</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

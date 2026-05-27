@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__All</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__B_Sort_Code__c</columns>
+    <columns>sugati__B_Account_No__c</columns>
+    <columns>CURRENCY_ISO_CODE</columns>
+    <columns>sugati__B_IBAN__c</columns>
+    <columns>sugati__B_SWIFT__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All</label>
+</ListView>

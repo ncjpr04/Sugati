@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Status_Visible_in_Client_Payment__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>List of all client invoice status which will be used to show client invoice records in the client payment page. Each status should start with a new line. If a value is not provided in this field then the system will be using &apos;Committed&apos; status by default.</inlineHelpText>
+    <label>Status Visible in Client Payment</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

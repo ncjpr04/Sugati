@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Users_Without_Upsert_Access__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If this setting is enabled then users won&apos;t be able to create/update Account, Contact records in HE and Tour Pages.</description>
+    <label>Users Without Upsert Access</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

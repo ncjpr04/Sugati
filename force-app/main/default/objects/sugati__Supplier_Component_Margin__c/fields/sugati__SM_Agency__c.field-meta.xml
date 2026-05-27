@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SM_Agency__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>Agency that agrees the commission with.</description>
+    <inlineHelpText>This agency is getting x% of commission from the supplier.</inlineHelpText>
+    <label>Agency</label>
+    <referenceTo>sugati__Supplier__c</referenceTo>
+    <relationshipLabel>Supplier Component Margins (Agency)</relationshipLabel>
+    <relationshipName>Supplier_Component_Margins1</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

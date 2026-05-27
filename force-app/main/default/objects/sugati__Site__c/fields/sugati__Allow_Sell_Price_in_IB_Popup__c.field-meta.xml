@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Allow_Sell_Price_in_IB_Popup__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>No longer required. Needs removing from the package. Naval to action. (28th March 2019)</description>
+    <inlineHelpText>Display the Client PP Sell and Markup columns in the supplier cost row in IB Popup</inlineHelpText>
+    <label>Allow Sell Price in IB Popup</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

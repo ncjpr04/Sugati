@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__A_Type_of_Travel__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Type of Travel</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Family Travel</fullName>
+                <default>false</default>
+                <label>Family Travel</label>
+            </value>
+            <value>
+                <fullName>Wildlife/Safari</fullName>
+                <default>false</default>
+                <label>Wildlife/Safari</label>
+            </value>
+            <value>
+                <fullName>History</fullName>
+                <default>false</default>
+                <label>History</label>
+            </value>
+            <value>
+                <fullName>Expedition</fullName>
+                <default>false</default>
+                <label>Expedition</label>
+            </value>
+            <value>
+                <fullName>Trekking</fullName>
+                <default>false</default>
+                <label>Trekking</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

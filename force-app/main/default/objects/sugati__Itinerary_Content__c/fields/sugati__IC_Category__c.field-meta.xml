@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__IC_Category__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>sugati__IC_Itinerary_Content_Category__r.Name</formula>
+    <label>Category</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

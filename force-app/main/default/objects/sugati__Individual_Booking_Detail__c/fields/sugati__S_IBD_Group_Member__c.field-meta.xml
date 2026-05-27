@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Group_Member__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The traveller who has generated this cost</description>
+    <label>Group Member</label>
+    <referenceTo>sugati__Group_Member__c</referenceTo>
+    <relationshipLabel>Individual Booking Details</relationshipLabel>
+    <relationshipName>Individual_Booking_Details</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

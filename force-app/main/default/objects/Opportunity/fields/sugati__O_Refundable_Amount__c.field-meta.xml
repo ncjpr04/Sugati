@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Refundable_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>IF(
+    AND(
+        TEXT(StageName) == &quot;Booking Cancelled&quot;,
+        $Setup.sugati__Site__c.sugati__Agent_Commission_on_Cancellation_Charges__c == TRUE,
+        $Setup.sugati__Site__c.sugati__Agency_is_End_Customer__c == TRUE
+    ), 
+    IF(ISBLANK(sugati__O_Total_Payment_Without_CC__c), 0, sugati__O_Total_Payment_Without_CC__c) + 
+        IF(ISBLANK(sugati__S_O_Total_Agent_Commission_Rolled_up__c), 0, sugati__S_O_Total_Agent_Commission_Rolled_up__c) - 
+        IF(ISBLANK(sugati__S_O_Cancellation_Amount__c), IF(ISBLANK(sugati__O_Cancellation_Charge__c), 0, sugati__O_Cancellation_Charge__c), sugati__S_O_Cancellation_Amount__c),
+    IF(
+        TEXT(StageName) == &quot;Booking Cancelled&quot;, 
+        IF(ISBLANK(sugati__O_Total_Payment_Without_CC__c), 0, sugati__O_Total_Payment_Without_CC__c) - 
+        IF(ISBLANK(sugati__S_O_Cancellation_Amount__c), IF(ISBLANK(sugati__O_Cancellation_Charge__c), 0, sugati__O_Cancellation_Charge__c), sugati__S_O_Cancellation_Amount__c), 
+        0
+    )
+)</formula>
+    <label>Refundable Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

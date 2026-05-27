@@ -1,0 +1,29 @@
+<template>
+    <div class="stat-strip">
+
+        <!-- Lifetime Value -->
+        <div class="stat-card">
+            <div class="stat-label">Lifetime Value</div>
+            <div class="stat-value">{currencySymbol}{lifetimeValue}</div>
+        </div>
+
+        <!-- Total Trips Booked -->
+        <div class="stat-card">
+            <div class="stat-label">Total Trips Booked</div>
+            <div class="stat-value">{totalTrips}</div>
+        </div>
+
+        <!-- Avg Trip Value -->
+        <div class="stat-card">
+            <div class="stat-label">Avg Trip Value</div>
+            <div class="stat-value">{currencySymbol}{avgTripValue}</div>
+        </div>
+
+        <!-- Nights Travelled -->
+        <div class="stat-card">
+            <div class="stat-label">Nights Travelled</div>
+            <div class="stat-value">{nightsTravelled}</div>
+        </div>
+
+    </div>
+</template>

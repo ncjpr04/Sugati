@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_PO_Based_On_How_Many_Sharing__c</fullName>
+    <deprecated>false</deprecated>
+    <description>How many sharing is this price override based on?</description>
+    <externalId>false</externalId>
+    <inlineHelpText>How many sharing is this price override based on?</inlineHelpText>
+    <label>Based On How Many Sharing?</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

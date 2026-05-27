@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Don_t_Include_Agent_Comm_in_Net_Cost__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Don&apos;t Include Agent Commission in Net Cost Calculation</description>
+    <inlineHelpText>Set to true if you do not want Agent Commission to be included in your Net Cost Calculation.</inlineHelpText>
+    <label>Don&apos;t Include Agent Comm in Net Cost</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

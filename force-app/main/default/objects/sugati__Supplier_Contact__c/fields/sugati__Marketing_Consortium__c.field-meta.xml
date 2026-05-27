@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Marketing_Consortium__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Marketing Consortia for OTUK reports</description>
+    <label>Marketing Consortium</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Virtuoso</fullName>
+                <default>false</default>
+                <label>Virtuoso</label>
+            </value>
+            <value>
+                <fullName>Signature</fullName>
+                <default>false</default>
+                <label>Signature</label>
+            </value>
+            <value>
+                <fullName>Ensemble</fullName>
+                <default>false</default>
+                <label>Ensemble</label>
+            </value>
+            <value>
+                <fullName>TravellerMade</fullName>
+                <default>false</default>
+                <label>TravellerMade</label>
+            </value>
+            <value>
+                <fullName>Travel leaders</fullName>
+                <default>false</default>
+                <label>Travel leaders</label>
+            </value>
+            <value>
+                <fullName>None/Other</fullName>
+                <default>false</default>
+                <label>None/Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Dont_auto_cc_client__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the group member(s) will not automatically be CC&apos;d on emails sent via the &apos;Send Email&apos; page</description>
+    <inlineHelpText>If checked, the group member(s) will not automatically be CC&apos;d on emails sent via the &apos;Send Email&apos; page</inlineHelpText>
+    <label>Don&apos;t auto-cc client</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

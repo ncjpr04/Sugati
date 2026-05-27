@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Hide_Non_Travelling_Lead_on_Public_Site__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <label>Hide Non-Travelling Lead on Public Site</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SSB_Confidence_Weight__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Optional confidence specific to this suggestion</description>
+    <externalId>false</externalId>
+    <label>Confidence Weight</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

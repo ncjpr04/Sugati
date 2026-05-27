@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Total_Sales_Commission__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF((!ISBLANK(sugati__O_Sales_Commission__c) &amp;&amp; ISBLANK(sugati__O_Sales_CommissionP__c)),
+sugati__O_Sales_Commission__c,
+
+IF((!ISBLANK(sugati__O_Sales_CommissionP__c) &amp;&amp; ISBLANK(sugati__O_Sales_Commission__c)),
+IF(ISPICKVAL(sugati__O_Sales_Commission_Type__c , &apos;Margin&apos;),((sugati__O_Sales_CommissionP__c/100)* sugati__O_Margin__c ), ((sugati__O_Sales_CommissionP__c/100)*Amount))
+,
+
+IF((ISBLANK(sugati__O_Sales_Commission__c) &amp;&amp; ISBLANK(sugati__O_Sales_CommissionP__c)) ,if(!ISBLANK(Owner.sugati__Sales_Commission__c),Owner.sugati__Sales_Commission__c,if(!ISBLANK(Owner.sugati__Sales_Commission__c),Owner.sugati__Sales_Commission__c,IF(ISPICKVAL(sugati__O_Sales_Commission_Type__c , &apos;Margin&apos;),((Owner.sugati__Sales_CommissionP__c)* sugati__O_Margin__c ), IF(ISPICKVAL(sugati__O_Sales_Commission_Type__c , &apos;Margin&apos;)||ISPICKVAL(sugati__O_Sales_Commission_Type__c,&apos;&apos;),null,((Owner.sugati__Sales_CommissionP__c)* Amount)))
+)
+),null)
+
+))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Total Sales Commission</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

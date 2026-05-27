@@ -1,0 +1,137 @@
+<template>
+    <div class="preview-layout">
+        <div class="preview-vp">
+            <div class="preview-topbar">
+                <div class="preview-ch-tabs">
+                    <button type="button" class={emailTabClass} data-channel="email" onclick={handleChannelTab}>✉ Email</button>
+                    <button type="button" class={waTabClass} data-channel="wa" onclick={handleChannelTab}>💬 WhatsApp</button>
+                    <button type="button" class={iaTabClass} data-channel="ia" onclick={handleChannelTab}>🔔 In-App</button>
+                </div>
+                <button type="button" class="preview-back" onclick={handleBack}>← Back to Composer</button>
+            </div>
+
+            <template lwc:if={showEmail}>
+                <div class="ec-cover-toggle">
+                    <label class="ec-cover-label">
+                        <input type="checkbox" checked={showCover} onchange={handleCoverToggle} />
+                        <span>Show logo &amp; cover image</span>
+                    </label>
+                </div>
+                <div class="email-canvas">
+                    <div class={coverHiddenClass}>
+                        <div class="ec-cover-img">
+                            <div class="ec-cover-overlay">
+                                <div class="ec-cover-logo">
+                                    <div class="ec-cover-s">S</div>
+                                    <div class="ec-cover-brand">SUGATI</div>
+                                </div>
+                                <div class="ec-cover-tagline">Tokyo Honeymoon 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ec-hdr">
+                        <div class="ec-logo"><span class="ec-logo-dot"></span>S U G A T I</div>
+                        <div class="ec-meta">
+                            <div><b>From</b> Sarah Mitchell &lt;sarah@sugati.com&gt;</div>
+                            <div><b>To</b> Hiroshi &amp; Akemi Yamamura</div>
+                            <div><b>Re</b> {subject}</div>
+                        </div>
+                    </div>
+                    <div class="ec-att-bar">
+                        <span class="ec-att-label">Attachments</span>
+                        <div class="ec-att-chip"><div class="ec-att-chip-ic pdf">PDF</div>Tokyo Itinerary Final.pdf</div>
+                        <div class="ec-att-chip"><div class="ec-att-chip-ic gen">GEN</div>Japan Entry Requirements.pdf</div>
+                    </div>
+                    <div class="ec-body">
+                        <h1 class="ec-h1">Your Tokyo<br />Honeymoon Awaits</h1>
+                        <p class="ec-p">Dear Hiroshi &amp; Akemi,</p>
+                        <p class="ec-p">We are delighted to share your final itinerary for your journey to Japan. Your trip begins on <strong>12 April 2026</strong>.</p>
+                        <a href="#" class="ec-cta">View Full Itinerary Online</a>
+                        <p class="ec-p ec-sign">Warm regards,<br />Sarah Mitchell · Sugati Travel</p>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={showWa}>
+                <div class="wa-preview-scene">
+                    <div class="wa-scene-bar">
+                        <div class="wa-scene-av">🌏</div>
+                        <div>
+                            <div class="wa-scene-name">Sugati Travel</div>
+                            <div class="wa-scene-sub">online</div>
+                        </div>
+                    </div>
+                    <div class="wa-scene-body">
+                        <div class="wa-bubble">
+                            <p>Hello Hiroshi,</p>
+                            <p>Your Tokyo Honeymoon begins in just <strong>32 days!</strong> 🎉</p>
+                            <p>Your Park Hyatt Tokyo check-in is on <strong>12 April 2026</strong>.</p>
+                            <div class="wa-bubble-time">14:10 · 1 Mar 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <template lwc:if={showIa}>
+                <div class="ia-preview-scene">
+                    <div class="ia-scene-bar">
+                        <div class="ia-scene-title">S U G A T I</div>
+                        <div>🌏</div>
+                    </div>
+                    <div class="ia-scene-body">
+                        <div class="ia-notif-card">
+                            <div class="ia-nc-header">
+                                <div class="ia-nc-icon">📄</div>
+                                <div class="ia-nc-title">Documents Ready</div>
+                            </div>
+                            <div class="ia-nc-body">Your final Tokyo itinerary and hotel vouchers are now available.</div>
+                            <div class="ia-nc-link">View Documents →</div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="prev-panel">
+            <div class="pp-s">
+                <div class="pp-l">Delivery</div>
+                <div class={postmarkClass} onclick={handleDeliveryPostmark}>
+                    <div class="pp-opt-n">✦ Postmark (tracked)</div>
+                    <div class="pp-opt-s">Opened · Delivered · Bounced</div>
+                </div>
+                <div class={nativeClass} onclick={handleDeliveryNative}>
+                    <div class="pp-opt-n">Native Salesforce</div>
+                    <div class="pp-opt-s">Sent · Failed only</div>
+                </div>
+            </div>
+            <div class="pp-s">
+                <div class="pp-l">Schedule</div>
+                <div class="pp-opt on"><div class="pp-opt-n">Send immediately</div></div>
+                <div class="pp-opt"><div class="pp-opt-n">Schedule for later</div><div class="pp-opt-s">Pick date and time</div></div>
+            </div>
+            <div class="pp-s">
+                <div class="pp-l">Preview as</div>
+                <div class="pp-opt on"><div class="pp-opt-n">Hiroshi Yamamura</div></div>
+                <div class="pp-opt"><div class="pp-opt-n">Akemi Yamamura</div></div>
+            </div>
+            <div class="prev-send-zone">
+                <button type="button" class={sendBtnClass} onclick={handleSendNow}>
+                    <span>Send Now</span><span class="send-arr">→</span>
+                </button>
+                <div class="send-sec">
+                    <div class="send-sec-btn" onclick={handleBack}>← Edit</div>
+                    <div class="send-sec-btn">Save Draft</div>
+                </div>
+            </div>
+        </div>
+
+        <c-sugati-communication-send-modal
+            is-open={sendModalOpen}
+            phase={sendPhase}
+            title={sendTitle}
+            subtitle={sendSubtitle}
+            recipient-label="Hiroshi & Akemi Yamamura"
+            oncomplete={handleSendComplete}
+        ></c-sugati-communication-send-modal>
+    </div>
+</template>

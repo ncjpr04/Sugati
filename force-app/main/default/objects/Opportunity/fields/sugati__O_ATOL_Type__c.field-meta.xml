@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_ATOL_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <label>ATOL Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Package sale</fullName>
+                <default>false</default>
+                <label>Package sale</label>
+            </value>
+            <value>
+                <fullName>Flight Only</fullName>
+                <default>false</default>
+                <label>Flight Only</label>
+            </value>
+            <value>
+                <fullName>Flight Plus</fullName>
+                <default>false</default>
+                <label>Flight Plus</label>
+            </value>
+            <value>
+                <fullName>PACKAGE MULTI</fullName>
+                <default>false</default>
+                <label>PACKAGE MULTI</label>
+            </value>
+            <value>
+                <fullName>PACKAGE SINGLE</fullName>
+                <default>false</default>
+                <label>PACKAGE SINGLE</label>
+            </value>
+            <value>
+                <fullName>Flight-only sale</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Flight-only sale</label>
+            </value>
+            <value>
+                <fullName>Flight-plus sale 2A</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Flight-plus sale 2A</label>
+            </value>
+            <value>
+                <fullName>Flight-plus sale 2B</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Flight-plus sale 2B</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

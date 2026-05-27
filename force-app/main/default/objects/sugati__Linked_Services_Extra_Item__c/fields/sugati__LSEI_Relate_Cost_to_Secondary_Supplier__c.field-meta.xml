@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__LSEI_Relate_Cost_to_Secondary_Supplier__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>When this setting is checked then the system will automatically save the secondary supplier as the arranged by on the supplier booking and all cost will be associated with the secondary supplier.</inlineHelpText>
+    <label>Relate Cost to the Secondary Supplier?</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

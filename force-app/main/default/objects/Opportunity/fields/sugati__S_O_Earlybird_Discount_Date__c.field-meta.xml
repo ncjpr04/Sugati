@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_O_Earlybird_Discount_Date__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The date before / after which to offer an earlybird discount. Before or After is specified in the &quot;Earlybird Discount Date Criteria&quot; field.</description>
+    <inlineHelpText>The date before / after which to offer an earlybird discount. Before or After is specified in the &quot;Earlybird Discount Date Criteria&quot; field.</inlineHelpText>
+    <label>Earlybird Discount Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__O_Product_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Set the API name of the options to the same as the field set api name to display for this product type</description>
+    <label>Product Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>O_Adventure_Trips</fullName>
+                <default>false</default>
+                <label>O_Adventure_Trips</label>
+            </value>
+            <value>
+                <fullName>O_Mini_Experiences</fullName>
+                <default>false</default>
+                <label>O_Mini_Experiences</label>
+            </value>
+            <value>
+                <fullName>O_Tour</fullName>
+                <default>false</default>
+                <label>O_Tour</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

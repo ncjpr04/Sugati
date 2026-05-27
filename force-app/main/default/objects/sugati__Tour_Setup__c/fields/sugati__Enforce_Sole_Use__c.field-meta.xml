@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Enforce_Sole_Use__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, then a single passenger will only be able to book onto a tour in a single room.</description>
+    <inlineHelpText>If checked, then a single passenger will only be able to book onto a tour in a single room.</inlineHelpText>
+    <label>Enforce Sole Use</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

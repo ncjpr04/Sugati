@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__QAO_Questionnaire_Question__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Questionnaire Question</label>
+    <referenceTo>sugati__Questionnaire_Question__c</referenceTo>
+    <relationshipLabel>Questionnaire Answer Options</relationshipLabel>
+    <relationshipName>Questionnaire_Answer_Options</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

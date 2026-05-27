@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Consider_Agent_Comm_in_Sell_Price__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>If you want to exclude agent commission from the sell field on supplier booking then it should be checked,</inlineHelpText>
+    <label>Consider Agent Comm in Sell Price</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

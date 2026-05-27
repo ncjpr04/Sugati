@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_GM_Recommended_Sell_Price__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Total of all IBD Individual Sell Price in Booking Currency (excluding Price Adjustments)</description>
+    <label>Recommended Sell Price</label>
+    <summarizedField>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Individual_Sell_Price_Booking__c</summarizedField>
+    <summaryFilterItems>
+        <field>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Selected__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Is_Price_Adjustment__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__Individual_Booking_Detail__c.sugati__S_IBD_Group_Member__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

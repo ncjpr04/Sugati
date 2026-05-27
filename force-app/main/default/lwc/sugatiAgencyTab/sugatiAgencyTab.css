@@ -1,0 +1,42 @@
+:host {
+    display: block;
+    --sunset:       #FFC543;
+    --sunset-dark:  #c8930a;
+    --sunrise:      #FFF49D;
+    --warm-black:   #1C1C1A;
+    --off-white:    #F7F7F7;
+    --white:        #FFFFFF;
+    --surface-2:    #F0F0EE;
+    --border:       rgba(28,28,26,0.1);
+    --text-primary: #1C1C1A;
+    --text-secondary: #5a5a56;
+    --text-muted:   #9a9a94;
+    --positive:     #2e9e6b;
+    --negative:     #d04040;
+    --warning:      #e07820;
+    --info:         #3a7fc1;
+    --shadow-sm: 0 1px 3px rgba(28,28,26,0.07), 0 1px 2px rgba(28,28,26,0.04);
+    --shadow-md: 0 4px 12px rgba(28,28,26,0.1), 0 2px 4px rgba(28,28,26,0.05);
+
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    background: var(--off-white);
+}
+
+.page {
+    padding: 28px 32px;
+    max-width: 1320px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* LAYOUTS used cross-components */
+.two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 18px; align-items: stretch; }
+.full-col  { margin-bottom: 18px; }
+
+@media(max-width: 768px){
+  .two-col, .three-col { grid-template-columns: 1fr; }
+}

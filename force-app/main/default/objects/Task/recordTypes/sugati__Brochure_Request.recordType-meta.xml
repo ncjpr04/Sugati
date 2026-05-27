@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Brochure_Request</fullName>
+    <active>true</active>
+    <label>Brochure Request</label>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Normal</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Status</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deferred</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>In Progress</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not Started</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Waiting on someone else</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Subject</picklist>
+        <values>
+            <fullName>Call</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Send Letter</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Send Quote</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Call</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meeting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__Type__c</picklist>
+        <values>
+            <fullName>Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Booking Optional</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Booking cancelled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enquiry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enquiry gone cold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote gone cold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quoted to client</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Redundant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Training enquiry</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

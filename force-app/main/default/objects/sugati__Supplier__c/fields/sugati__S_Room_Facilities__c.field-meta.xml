@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_Room_Facilities__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Room Facilities</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Air Conditioning</fullName>
+                <default>false</default>
+                <label>Air Conditioning</label>
+            </value>
+            <value>
+                <fullName>Balcony / Deck</fullName>
+                <default>false</default>
+                <label>Balcony / Deck</label>
+            </value>
+            <value>
+                <fullName>Bath</fullName>
+                <default>false</default>
+                <label>Bath</label>
+            </value>
+            <value>
+                <fullName>Clothes Press</fullName>
+                <default>false</default>
+                <label>Clothes Press</label>
+            </value>
+            <value>
+                <fullName>Complimentary Wi-Fi</fullName>
+                <default>false</default>
+                <label>Complimentary Wi-Fi</label>
+            </value>
+            <value>
+                <fullName>Cooking Equipment</fullName>
+                <default>false</default>
+                <label>Cooking Equipment</label>
+            </value>
+            <value>
+                <fullName>Cooking Facilities</fullName>
+                <default>false</default>
+                <label>Cooking Facilities</label>
+            </value>
+            <value>
+                <fullName>Detached Private Bathroom</fullName>
+                <default>false</default>
+                <label>Detached Private Bathroom</label>
+            </value>
+            <value>
+                <fullName>Disabled Rooms</fullName>
+                <default>false</default>
+                <label>Disabled Rooms</label>
+            </value>
+            <value>
+                <fullName>Dressing Gowns</fullName>
+                <default>false</default>
+                <label>Dressing Gowns</label>
+            </value>
+            <value>
+                <fullName>Electrical Outlets</fullName>
+                <default>false</default>
+                <label>Electrical Outlets</label>
+            </value>
+            <value>
+                <fullName>En-Suite</fullName>
+                <default>false</default>
+                <label>En-Suite</label>
+            </value>
+            <value>
+                <fullName>Fan</fullName>
+                <default>false</default>
+                <label>Fan</label>
+            </value>
+            <value>
+                <fullName>Fireplace</fullName>
+                <default>false</default>
+                <label>Fireplace</label>
+            </value>
+            <value>
+                <fullName>Fridge</fullName>
+                <default>false</default>
+                <label>Fridge</label>
+            </value>
+            <value>
+                <fullName>Hair Dryer</fullName>
+                <default>false</default>
+                <label>Hair Dryer</label>
+            </value>
+            <value>
+                <fullName>Heated Towel Rails</fullName>
+                <default>false</default>
+                <label>Heated Towel Rails</label>
+            </value>
+            <value>
+                <fullName>Heater</fullName>
+                <default>false</default>
+                <label>Heater</label>
+            </value>
+            <value>
+                <fullName>Internet</fullName>
+                <default>false</default>
+                <label>Internet</label>
+            </value>
+            <value>
+                <fullName>Internet Access (Complimentary)</fullName>
+                <default>false</default>
+                <label>Internet Access (Complimentary)</label>
+            </value>
+            <value>
+                <fullName>Internet Access (Paid)</fullName>
+                <default>false</default>
+                <label>Internet Access (Paid)</label>
+            </value>
+            <value>
+                <fullName>Iron / Ironing Board</fullName>
+                <default>false</default>
+                <label>Iron / Ironing Board</label>
+            </value>
+            <value>
+                <fullName>Laundry Facilities</fullName>
+                <default>false</default>
+                <label>Laundry Facilities</label>
+            </value>
+            <value>
+                <fullName>Laundry Service (Available)</fullName>
+                <default>false</default>
+                <label>Laundry Service (Available)</label>
+            </value>
+            <value>
+                <fullName>Laundry Service (Complimentary)</fullName>
+                <default>false</default>
+                <label>Laundry Service (Complimentary)</label>
+            </value>
+            <value>
+                <fullName>Lounge Area</fullName>
+                <default>false</default>
+                <label>Lounge Area</label>
+            </value>
+            <value>
+                <fullName>Mini Bar</fullName>
+                <default>false</default>
+                <label>Mini Bar</label>
+            </value>
+            <value>
+                <fullName>Mini Bar (Complimentary)</fullName>
+                <default>false</default>
+                <label>Mini Bar (Complimentary)</label>
+            </value>
+            <value>
+                <fullName>Mosquito Nets</fullName>
+                <default>false</default>
+                <label>Mosquito Nets</label>
+            </value>
+            <value>
+                <fullName>Outside Shower</fullName>
+                <default>false</default>
+                <label>Outside Shower</label>
+            </value>
+            <value>
+                <fullName>Plunge Pool</fullName>
+                <default>false</default>
+                <label>Plunge Pool</label>
+            </value>
+            <value>
+                <fullName>Private Pool / Jacuzzi</fullName>
+                <default>false</default>
+                <label>Private Pool / Jacuzzi</label>
+            </value>
+            <value>
+                <fullName>Pure Cotton Linen</fullName>
+                <default>false</default>
+                <label>Pure Cotton Linen</label>
+            </value>
+            <value>
+                <fullName>Safe</fullName>
+                <default>false</default>
+                <label>Safe</label>
+            </value>
+            <value>
+                <fullName>Sala</fullName>
+                <default>false</default>
+                <label>Sala</label>
+            </value>
+            <value>
+                <fullName>Satellite / Cable Television</fullName>
+                <default>false</default>
+                <label>Satellite / Cable Television</label>
+            </value>
+            <value>
+                <fullName>Shared Ablutions</fullName>
+                <default>false</default>
+                <label>Shared Ablutions</label>
+            </value>
+            <value>
+                <fullName>Shower</fullName>
+                <default>false</default>
+                <label>Shower</label>
+            </value>
+            <value>
+                <fullName>Smoking Rooms</fullName>
+                <default>false</default>
+                <label>Smoking Rooms</label>
+            </value>
+            <value>
+                <fullName>Tea / Coffee</fullName>
+                <default>false</default>
+                <label>Tea / Coffee</label>
+            </value>
+            <value>
+                <fullName>Television</fullName>
+                <default>false</default>
+                <label>Television</label>
+            </value>
+            <value>
+                <fullName>Underfloor Heating</fullName>
+                <default>false</default>
+                <label>Underfloor Heating</label>
+            </value>
+            <value>
+                <fullName>Verandah</fullName>
+                <default>false</default>
+                <label>Verandah</label>
+            </value>
+            <value>
+                <fullName>Wheelchair Friendly</fullName>
+                <default>false</default>
+                <label>Wheelchair Friendly</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

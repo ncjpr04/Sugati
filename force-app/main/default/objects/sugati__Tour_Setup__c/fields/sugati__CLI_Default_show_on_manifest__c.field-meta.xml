@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CLI_Default_show_on_manifest__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <inlineHelpText>Should all new checklist items default to true for &apos;Show on Manifest&apos;?</inlineHelpText>
+    <label>CLI Default show on manifest</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

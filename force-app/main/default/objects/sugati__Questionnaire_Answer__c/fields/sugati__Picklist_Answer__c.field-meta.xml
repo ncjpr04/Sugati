@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Picklist_Answer__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>sugati__QA_Questionnaire_Answer_Option__r.Name</formula>
+    <label>Picklist Answer</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

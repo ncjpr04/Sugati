@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Pending_Approval_edited</fullName>
+    <columns>NAME</columns>
+    <columns>sugati__IT_Holiday_Type__c</columns>
+    <columns>sugati__IT_Status__c</columns>
+    <columns>sugati__IT_Supplier__c</columns>
+    <columns>sugati__IT_Country__c</columns>
+    <columns>sugati__IT_What_to_do__c</columns>
+    <columns>sugati__IT_Where_to_go__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>sugati__IT_Status__c</field>
+        <operation>equals</operation>
+        <value>Approved</value>
+    </filters>
+    <filters>
+        <field>LAST_UPDATE</field>
+        <operation>greaterOrEqual</operation>
+        <value>N_DAYS_AGO:7</value>
+    </filters>
+    <filters>
+        <field>UPDATEDBY_USER</field>
+        <operation>notContain</operation>
+        <value>Product,Jacqui,Tom</value>
+    </filters>
+    <label>Approved but edited last 7 days</label>
+</ListView>

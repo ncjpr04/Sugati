@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CG_Extras_Bought__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Is a supplement/extra/bolt on added to this client group?</description>
+    <inlineHelpText>Is a supplement/extra/bolt on added to this client group?</inlineHelpText>
+    <label>Extras Bought?</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

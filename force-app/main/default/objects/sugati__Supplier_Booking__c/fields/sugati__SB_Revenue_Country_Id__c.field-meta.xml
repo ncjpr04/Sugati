@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SB_Revenue_Country_Id__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF( 
+ISBLANK( sugati__SB_Departure_Airport_l__c ), 
+IF( 
+ISBLANK( sugati__SB_Where_to_go__c ), 
+IF( 
+ISBLANK( sugati__SB_Arrival_Airport_l__c ), 
+IF( 
+ISBLANK(sugati__SB_From_Place_Country_Id__c), 
+IF( 
+ISBLANK( sugati__SB_What_to_do__c ), 
+sugati__SB_Supplier__r.sugati__S_Where_to_go__r.sugati__W_Country__c, 
+sugati__SB_What_to_do__r.sugati__WH_Where_to_go__r.sugati__W_Country__c 
+), 
+sugati__SB_From_Place_Country_Id__c 
+), 
+sugati__SB_Arrival_Airport_l__r.sugati__AIR_Country__c 
+), 
+sugati__SB_Where_to_go__r.sugati__W_Country__c 
+), 
+IF( 
+BLANKVALUE( sugati__SB_Day__c, 0 ) &lt;= 0, 
+sugati__SB_Arrival_Airport_l__r.sugati__AIR_Country__c, 
+sugati__SB_Departure_Airport_l__r.sugati__AIR_Country__c 
+) 
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Revenue Country Id</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

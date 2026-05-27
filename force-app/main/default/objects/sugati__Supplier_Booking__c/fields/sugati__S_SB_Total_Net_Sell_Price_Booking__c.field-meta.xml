@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_SB_Total_Net_Sell_Price_Booking__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Sum of all Net Sell Price in Booking Currency</description>
+    <label>Total Net Sell Price (Booking Currency)</label>
+    <summarizedField>sugati__Supplier_Cost__c.sugati__S_SC_Net_Sell_Price_Booking_Currency__c</summarizedField>
+    <summaryForeignKey>sugati__Supplier_Cost__c.sugati__SC_Supplier_Booking__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

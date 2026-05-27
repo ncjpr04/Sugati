@@ -1,0 +1,58 @@
+<template>
+  <lightning-card>
+    <div class="page-body">
+
+      <!-- 1. Profile Header -->
+      <template if:true={supplier}>
+        <c-sugati-supplier-profile-header
+            supplier={supplier}>
+        </c-sugati-supplier-profile-header>
+      </template>
+
+      <!-- 2. Revenue Metrics Strip -->
+      <c-sugati-supplier-revenue-metrics
+          supplier={supplier}
+          supplier-bookings={supplierBookings}
+          lifetime-stats={lifetimeStats}
+          currency-symbol={currencySymbolSupplierBookings}>
+      </c-sugati-supplier-revenue-metrics>
+
+      <!-- 3. Annual Revenue Chart + 4. Details + 5. Bed Nights -->
+      <div class="two-col">
+        <c-sugati-supplier-annual-revenue
+            supplier={supplier}
+            supplier-bookings={supplierBookings}
+            lifetime-stats={lifetimeStats}
+            currency-symbol={currencySymbolSupplierBookings}>
+        </c-sugati-supplier-annual-revenue>
+
+        <div class="right-col">
+          <c-sugati-supplier-details
+              supplier={supplier}>
+          </c-sugati-supplier-details>
+
+          <c-sugati-supplier-bed-nights
+              supplier-bookings={supplierBookings}>
+          </c-sugati-supplier-bed-nights>
+        </div>
+      </div>
+
+      <!-- 6. Key Contacts — full width -->
+      <c-sugati-supplier-key-contact
+          supplier-contacts={supplierContacts}>
+      </c-sugati-supplier-key-contact>
+
+      <!-- 7. Recent Stays — full width -->
+      <c-sugati-supplier-recent-stays
+          supplier-bookings={supplierBookings}
+          currency-symbol={currencySymbolSupplierBookings}>
+      </c-sugati-supplier-recent-stays>
+
+      <!-- 8. FAM Visits — full width -->
+      <c-sugati-supplier-visit-fam
+          fam-visits={famVisits}
+          record-id={recordId}>
+      </c-sugati-supplier-visit-fam>
+    </div>
+  </lightning-card>
+</template>

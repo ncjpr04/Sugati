@@ -1,0 +1,136 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Credit Notes &amp; Memos</div>
+            <div class="header-right">
+                <template if:true={hasActive}>
+                    <span class="badge badge-sunset">
+                        {currencySymbol}{totalAvailable} Available
+                    </span>
+                </template>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- SUMMARY HERO — shown when active credit exists -->
+            <template if:true={hasActive}>
+                <div class="credit-hero">
+
+                    <!-- Dial -->
+                    <div class="credit-dial">
+                        <svg width="96" height="96" viewBox="0 0 96 96">
+                            <circle cx="48" cy="48" r="40" fill="none"
+                                stroke="rgba(255,197,67,0.2)" stroke-width="7"/>
+                            <circle cx="48" cy="48" r="40" fill="none"
+                                stroke="#FFC543" stroke-width="7"
+                                stroke-dasharray="251"
+                                stroke-dashoffset={dialOffset}
+                                stroke-linecap="round"/>
+                        </svg>
+                        <div class="credit-dial-inner">
+                            <div class="credit-dial-val">{remainingPct}%</div>
+                            <div class="credit-dial-sub">Remaining</div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="credit-summary">
+                        <div class="credit-big">
+                            {currencySymbol}{totalAvailable}
+                            <span class="credit-big-sub">remaining</span>
+                        </div>
+
+                        <template if:true={nearestExpiry}>
+                            <div class={expiryClass}>
+                                ⚠ &nbsp;Expires {nearestExpiryFormatted} — {daysToExpiry} days remaining
+                            </div>
+                        </template>
+
+                        <div class="credit-meta-row">
+                            <div>
+                                <div class="credit-meta-label">Original Total</div>
+                                <div class="credit-meta-val">{currencySymbol}{totalIssued}</div>
+                            </div>
+                            <div>
+                                <div class="credit-meta-label">Already Used</div>
+                                <div class="credit-meta-val">-</div>
+                            </div>
+                            <div>
+                                <div class="credit-meta-label">Active Notes</div>
+                                <div class="credit-meta-val">{activeCount}</div>
+                            </div>
+                            <div>
+                                <div class="credit-meta-label">Issued By</div>
+                                <div class="credit-meta-val">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </template>
+
+            <!-- ACTIVE CREDIT NOTES -->
+            <template if:true={hasActive}>
+                <div class="section-label">Active Credit Notes</div>
+                <ul class="credit-notes-list">
+                    <template for:each={activeNotes} for:item="creditMemo">
+                        <li key={creditMemo.Id} class="credit-note-row">
+                            <div class="cn-ref">{creditMemo.Name}</div>
+                            <div class="cn-desc">
+                                {creditMemo.sugati__CM_Opportunity__r.Name}
+                                <small>
+                                    Issued {creditMemo.issueDateFormatted}
+                                    <template if:true={creditMemo.sugati__O_Credit_Expiry_Date_c__c}>
+                                        · Expires {creditMemo.expiryDateFormatted}
+                                    </template>
+                                </small>
+                            </div>
+                            <div class="cn-amount">{currencySymbol}{creditMemo.amountFormatted}</div>
+                            <div class="cn-issued-by">—</div>
+                            <div class="cn-status">
+                                <span class="badge badge-sunset">Active</span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <div class="divider"></div>
+
+
+            <!-- EXPIRED / FULLY REDEEMED -->
+            <template if:true={hasExpired}>
+                <div class="divider"></div>
+                <div class="section-label">Expired / Fully Redeemed</div>
+                <ul class="credit-notes-list">
+                    <template for:each={expiredNotes} for:item="creditMemo">
+                        <li key={creditMemo.Id} class="credit-note-row faded">
+                            <div class="cn-ref">{creditMemo.Name}</div>
+                            <div class="cn-desc">
+                                {creditMemo.sugati__CM_Opportunity__r.Name}
+                                <small>
+                                    Issued {creditMemo.issueDateFormatted}
+                                    <template if:true={creditMemo.sugati__O_Credit_Expiry_Date_c__c}>
+                                        · Expired {creditMemo.expiryDateFormatted}
+                                    </template>
+                                </small>
+                            </div>
+                            <div class="cn-amount">{currencySymbol}{creditMemo.amountFormatted}</div>
+                            <div class="cn-issued-by">—</div>
+                            <div class="cn-status">
+                                <span class="badge badge-neutral">Expired</span>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <!-- EMPTY STATE -->
+            <template if:false={hasMemos}>
+                <div class="empty-state">No credit notes found.</div>
+            </template>
+
+        </div>
+    </div>
+</template>

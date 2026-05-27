@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SPR_Supplier_Payment_Due_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>When is the payment due?</inlineHelpText>
+    <label>Supplier Payment Due Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>At Confirmation</fullName>
+                <default>false</default>
+                <label>At Confirmation</label>
+            </value>
+            <value>
+                <fullName>End of Month after Serv Date</fullName>
+                <default>false</default>
+                <label>End of Month after Serv Date</label>
+            </value>
+            <value>
+                <fullName>Service Date</fullName>
+                <default>false</default>
+                <label>Service Date</label>
+            </value>
+            <value>
+                <fullName>Specific Date</fullName>
+                <default>false</default>
+                <label>Specific Date</label>
+            </value>
+            <value>
+                <fullName>Supplier Service Date</fullName>
+                <default>false</default>
+                <label>Supplier Service Date</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

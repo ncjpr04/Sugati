@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RTS_Availability__c</fullName>
+    <deprecated>false</deprecated>
+    <description>What day does the Time-Slot refer to?</description>
+    <inlineHelpText>What day does the Time-Slot refer to?</inlineHelpText>
+    <label>Availability</label>
+    <referenceTo>sugati__Availability__c</referenceTo>
+    <relationshipLabel>Rates / Time Slots</relationshipLabel>
+    <relationshipName>Rates_Time_Slots</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

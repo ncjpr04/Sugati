@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Minimum_trigger_count__c</fullName>
+    <defaultValue>6</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Minimum number of times the trigger must appear before generating any rule for it.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Ensures confidence is based on enough observations of the trigger. Example: If Airport A appears only 4 times and this is set to 6, no rules are created for Airport A yet—even if co‑occurrences meet MIN_SUPPORT—because the sample is too small for a reliable confidence.</inlineHelpText>
+    <label>Minimum trigger count</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

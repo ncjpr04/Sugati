@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_RBD_Prospective_Rate_Time_Slot__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This field will hold a reference to the rate time slot while selecting resources. When Confirm is clicked, we move this reference into S_RBD_Rate_Time_Slot__c.</description>
+    <label>Prospective Rate / Time Slot</label>
+    <referenceTo>sugati__Rate_Time_Slot__c</referenceTo>
+    <relationshipLabel>Resource Booking Details (Prospective Rate / Time Slot)</relationshipLabel>
+    <relationshipName>Prospective_Resource_Booking_Details</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

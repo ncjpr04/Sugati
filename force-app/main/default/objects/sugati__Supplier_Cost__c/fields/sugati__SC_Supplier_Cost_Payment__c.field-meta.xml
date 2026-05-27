@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SC_Supplier_Cost_Payment__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <label>Supplier Cost Payment</label>
+    <referenceTo>sugati__Supplier_Cost_Payment__c</referenceTo>
+    <relationshipLabel>Supplier Costs</relationshipLabel>
+    <relationshipName>Supplier_Costs</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

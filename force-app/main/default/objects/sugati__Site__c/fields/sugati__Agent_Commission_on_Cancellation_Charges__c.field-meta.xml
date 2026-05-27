@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Agent_Commission_on_Cancellation_Charges__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, the agent will receive commission on cancellation charges.</description>
+    <inlineHelpText>If checked, the agent will receive commission on cancellation charges.</inlineHelpText>
+    <label>Agent Commission on Cancellation Charges</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

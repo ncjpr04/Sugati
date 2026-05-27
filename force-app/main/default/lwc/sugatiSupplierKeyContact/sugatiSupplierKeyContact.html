@@ -1,0 +1,44 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Key Contacts</div>
+        </div>
+        <div class="card-body">
+            <template if:true={hasContacts}>
+                <!-- Horizontal scroll when >4 contacts -->
+                <div class="contact-scroll">
+                    <template for:each={contactRows} for:item="contact">
+                        <div class="contact-card" key={contact.id}>
+                            <div class="contact-avatar">{contact.initials}</div>
+                            <div class="contact-info">
+                                <div class="contact-name">{contact.fullName}</div>
+                                <div class="contact-role">{contact.title}</div>
+                                <template if:true={contact.phone}>
+                                    <div class="contact-detail">
+                                        <lightning-icon icon-name="utility:call" size="xx-small" class="detail-icon"></lightning-icon>
+                                        {contact.phone}
+                                    </div>
+                                </template>
+                                <template if:true={contact.email}>
+                                    <div class="contact-detail">
+                                        <lightning-icon icon-name="utility:email" size="xx-small" class="detail-icon"></lightning-icon>
+                                        {contact.email}
+                                    </div>
+                                </template>
+                                <template if:true={contact.language}>
+                                    <div class="contact-detail">
+                                        <lightning-icon icon-name="utility:world" size="xx-small" class="detail-icon"></lightning-icon>
+                                        {contact.language}
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template if:false={hasContacts}>
+                <div class="empty-state">No contacts found for this supplier.</div>
+            </template>
+        </div>
+    </div>
+</template>

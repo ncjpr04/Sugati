@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Print_Template</fullName>
+    <active>true</active>
+    <description>Is this the Print Template?</description>
+    <label>Print Template</label>
+    <picklistValues>
+        <picklist>sugati__ET_Auto_Attchment_Documents__c</picklist>
+        <values>
+            <fullName>ATOL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Invoice</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Itinerary</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__ET_Component__c</picklist>
+        <values>
+            <fullName>ATOL CONTRIBUTION</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bulk Cost</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission In</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commission Out</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Memo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cruise</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cycling</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Days at Leisure</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Description</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Discount</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Diving</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dom Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Extra Items</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hut</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Int Flight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Light Aircraft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Linked Services</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meet %26 Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Motorhome Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Notes</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Own Arrangement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Port</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Price Adjustment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Jet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sea Plane</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ski Club Rep Costs</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Skiing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Taxe De Sejour</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tour</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transceiver Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tuck-Tuck</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>VIP Meet And Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa Fast Track</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Walking</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Widgety Cruise</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__ET_Opportunity_Stage__c</picklist>
+        <values>
+            <fullName>Booked</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Booking Cancelled</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Booking Optional</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enquiry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Enquiry gone cold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote gone cold</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quote pending</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quoted to client</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Redundant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Training enquiry</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__ET_Order__c</picklist>
+        <values>
+            <fullName>1</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>10</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>11</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>12</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>13</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>14</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>15</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>16</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>2</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>4</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>5</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>6</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>7</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>8</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>9</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__ET_Page_Section__c</picklist>
+        <values>
+            <fullName>Accommodation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Acknowledgement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Car Hire</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cruise</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Dom Flights</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ferry</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Holiday Suggestions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Int Flight</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Light Aircraft</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Meet %26 Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Jet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Private Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rail</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sea Plane</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Send Invoice And Itinerary PDF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SendInvoicePDF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SendItineraryPDF</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Road Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Speed Boat Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shared Transfer with Excursion</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SupplierPayments</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SupplierVouchers</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Transfer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Tuck-Tuck</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>VIP Meet And Greet</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa Fast Track</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__ET_Related_To_Record__c</picklist>
+        <values>
+            <fullName>Account</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client_Group%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client_Invoice%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Client_Payment%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Group_Member%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Opportunity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplier%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplier_Cost_Payment%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplier_Payment%5F%5Fc</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__To_Address_Filter__c</picklist>
+        <values>
+            <fullName>Availability</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>General</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Payment</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Registration</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

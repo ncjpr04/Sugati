@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_S_Use_Rate_Record_for_Availability__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked, availability information will be stored at the rate level, but only a single rate will be available per day.</description>
+    <label>Use Rate Record for Availability</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

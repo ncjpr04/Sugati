@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Group_Inclusions_and_Exclusions__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Do you want to group inclusions and exclusions on the docs setting page?</description>
+    <inlineHelpText>Do you want to group inclusions and exclusions on the docs setting page?</inlineHelpText>
+    <label>Group Inclusions and Exclusions</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

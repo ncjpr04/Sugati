@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__TPP_Component_View__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Choose how to colour-code the component field. &quot;Full&quot; = highlight entire field. &quot;Indicator&quot; = Show coloured circle to left of field. &quot;None&quot; = No highlighting.</description>
+    <inlineHelpText>Choose how to colour-code the component field. &quot;Full&quot; = highlight entire field. &quot;Indicator&quot; = Show coloured circle to left of field. &quot;None&quot; = No highlighting.</inlineHelpText>
+    <label>Component Display</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Full</fullName>
+                <default>true</default>
+                <label>Full</label>
+            </value>
+            <value>
+                <fullName>Indicator</fullName>
+                <default>false</default>
+                <label>Indicator</label>
+            </value>
+            <value>
+                <fullName>None</fullName>
+                <default>false</default>
+                <label>None</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

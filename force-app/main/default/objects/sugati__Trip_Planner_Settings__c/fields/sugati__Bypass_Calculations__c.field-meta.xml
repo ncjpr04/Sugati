@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Bypass_Calculations__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Completely bypass the built in calculations on the trip planner popup - this should be used in conjunction with a custom cost component.</description>
+    <inlineHelpText>Completely bypass the built in calculations on the trip planner popup - this should be used in conjunction with a custom cost component.</inlineHelpText>
+    <label>Bypass Calculations</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

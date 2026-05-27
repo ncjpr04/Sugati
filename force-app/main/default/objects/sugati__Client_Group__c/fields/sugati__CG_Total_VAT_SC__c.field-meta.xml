@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__CG_Total_VAT_SC__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Total VAT SC</label>
+    <summarizedField>sugati__Supplier_Cost__c.sugati__SC_VAT_Value_SC__c</summarizedField>
+    <summaryFilterItems>
+        <field>sugati__Supplier_Cost__c.sugati__SC_Selected__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryFilterItems>
+        <field>sugati__Supplier_Cost__c.sugati__SC_Exclude_From_RSP__c</field>
+        <operation>equals</operation>
+        <value>False</value>
+    </summaryFilterItems>
+    <summaryForeignKey>sugati__Supplier_Cost__c.sugati__SC_Client_Group__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

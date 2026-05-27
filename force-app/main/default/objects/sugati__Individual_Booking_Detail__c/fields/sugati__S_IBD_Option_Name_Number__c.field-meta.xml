@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_IBD_Option_Name_Number__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>TEXT(sugati__S_IBD_Supplier_Cost__r.sugati__SC_Supplier_Booking__r.sugati__S_SB_Option_Number__c) + IF(NOT(ISBLANK(sugati__S_IBD_Supplier_Cost__r.sugati__SC_Supplier_Booking__r.sugati__S_SB_Option_Name__c)), &quot; : &quot;, &quot;&quot;) + sugati__S_IBD_Supplier_Cost__r.sugati__SC_Supplier_Booking__r.sugati__S_SB_Option_Name__c</formula>
+    <label>Option Name / Number</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

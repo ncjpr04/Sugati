@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Flight_Component_Names__c</fullName>
+    <defaultValue>&quot;Int Flight,Dom Flights,Light Aircraft,Private Jet,Sea Plane&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>The supplier booking record type names that are flight components.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The supplier booking record type names that are flight components - comma separated. 
+Please type in all the Flight component names for From and To fields to work correctly on IB.</inlineHelpText>
+    <label>Flight Component Names</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_LSEI_Selling_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>The selling currency for this Linked Service or Extra Item. If sell price is empty, this field will be ignored.</inlineHelpText>
+    <label>Selling Currency</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>sugati__Supplier_Currencies</valueSetName>
+    </valueSet>
+</CustomField>

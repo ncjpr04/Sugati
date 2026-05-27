@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Enable_Tabbed_View__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Show the new IB popup button in Itinerary Builder.</description>
+    <inlineHelpText>Show the new IB popup button in Itinerary Builder.</inlineHelpText>
+    <label>Enable Tabbed View (IB Popup)</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

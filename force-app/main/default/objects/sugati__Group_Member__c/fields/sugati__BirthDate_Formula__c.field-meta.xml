@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__BirthDate_Formula__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>IF( 
+AND( 
+OR( 
+MONTH(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c)&lt;= MONTH(sugati__GM_Contact__r.Birthdate), 
+MONTH(sugati__GM_Contact__r.Birthdate)&lt;= MONTH(sugati__GM_Opportunity__r.sugati__O_Return_Date__c) 
+), 
+OR( 
+DAY(sugati__GM_Opportunity__r.sugati__O_Departure_Date__c)&lt;= DAY(sugati__GM_Contact__r.Birthdate), 
+DAY(sugati__GM_Contact__r.Birthdate)&lt;= DAY(sugati__GM_Opportunity__r.sugati__O_Return_Date__c) 
+) 
+), 
+true,false 
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>BirthDate Formula</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

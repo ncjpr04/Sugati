@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Inherit_booking_record_type_from_tour__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>If checked (and opportunities have record types), new bookings will inherit the RecordTypeId from the tour record.</description>
+    <inlineHelpText>If checked (and opportunities have record types), new bookings will inherit the RecordTypeId from the tour record.</inlineHelpText>
+    <label>Inherit booking record type from tour</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

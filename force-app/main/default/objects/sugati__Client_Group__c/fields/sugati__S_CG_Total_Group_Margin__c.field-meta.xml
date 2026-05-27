@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__S_CG_Total_Group_Margin__c</fullName>
+    <deprecated>false</deprecated>
+    <formula>sugati__S_CG_Total_Group_Profit__c /  IF(ISNULL(sugati__CG_Selling_Price__c), sugati__S_CG_Total_Group_Gross_Sell_Price__c, sugati__CG_Selling_Price__c)</formula>
+    <label>Total Group Margin</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

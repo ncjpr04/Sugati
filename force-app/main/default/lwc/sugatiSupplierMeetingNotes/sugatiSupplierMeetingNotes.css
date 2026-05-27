@@ -1,0 +1,14 @@
+/* sugatiSupplierMeetingNotes.css */
+:host { display:block; flex:1; }
+.card { background:#fff; border:1px solid rgba(28,28,26,.1); border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(28,28,26,.07); height:100%; box-sizing:border-box; display:flex; flex-direction:column; }
+.card-header { padding:16px 22px 14px; border-bottom:1px solid rgba(28,28,26,.1); display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+.card-title { font-family:'Crimson Pro',serif; font-size:19px; font-weight:300; color:#1C1C1A; }
+.card-body { padding:20px 22px; flex:1; display:flex; flex-direction:column; min-height:140px; }
+
+.placeholder-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center; flex:1; }
+.placeholder-icon { font-size:32px; margin-bottom:10px; opacity:.5; }
+.placeholder-title { font-family:'Crimson Pro',serif; font-size:18px; font-weight:300; color:#1C1C1A; margin-bottom:8px; }
+.placeholder-desc { font-size:13px; color:#9a9a94; max-width:360px; line-height:1.6; margin-bottom:14px; }
+.placeholder-badge { display:inline-block; padding:4px 12px; background:rgba(255,197,67,.12); border:1px solid rgba(255,197,67,.4); border-radius:20px; font-size:11px; font-weight:600; color:#c8930a; letter-spacing:.4px; text-transform:uppercase; }
+.btn-primary { padding:6px 14px; background:#FFC543; color:#1C1C1A; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; transition:all .18s; font-family:'DM Sans',sans-serif; }
+.btn-primary:hover { background:#c8930a; color:#fff; }

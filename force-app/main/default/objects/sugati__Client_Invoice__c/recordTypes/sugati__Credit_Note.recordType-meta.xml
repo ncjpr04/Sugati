@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Credit_Note</fullName>
+    <active>true</active>
+    <description>Credit Note</description>
+    <label>Credit Note</label>
+    <picklistValues>
+        <picklist>sugati__CI_Invoice_Status__c</picklist>
+        <values>
+            <fullName>Committed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Draft</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__CI_Invoice_Types__c</picklist>
+        <values>
+            <fullName>Balance</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Credit Note</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deposit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Full</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplementary</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__CI_Proforma_Type__c</picklist>
+        <values>
+            <fullName>Committed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Deposit</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>sugati__Invoice_PDF_Page_Break__c</picklist>
+        <values>
+            <fullName>Bank Details</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Terms and Conditions</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

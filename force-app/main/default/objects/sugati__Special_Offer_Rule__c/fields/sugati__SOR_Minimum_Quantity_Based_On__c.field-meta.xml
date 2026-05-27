@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__SOR_Minimum_Quantity_Based_On__c</fullName>
+    <defaultValue>&quot;Duration&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <label>Minimum Quantity Based On</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Duration</fullName>
+                <default>false</default>
+                <label>Duration</label>
+            </value>
+            <value>
+                <fullName>Nights</fullName>
+                <default>false</default>
+                <label>Nights</label>
+            </value>
+            <value>
+                <fullName>Number of items on IB</fullName>
+                <default>false</default>
+                <label>Number of items on IB</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

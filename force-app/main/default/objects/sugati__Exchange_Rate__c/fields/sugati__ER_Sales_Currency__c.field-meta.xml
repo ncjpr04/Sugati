@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__ER_Sales_Currency__c</fullName>
+    <deprecated>false</deprecated>
+    <inlineHelpText>This is what the end customers will be paying in.</inlineHelpText>
+    <label>Booking Currency</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>GBP</fullName>
+                <default>false</default>
+                <label>GBP</label>
+            </value>
+            <value>
+                <fullName>USD</fullName>
+                <default>false</default>
+                <label>USD</label>
+            </value>
+            <value>
+                <fullName>CHF</fullName>
+                <default>false</default>
+                <label>CHF</label>
+            </value>
+            <value>
+                <fullName>EUR</fullName>
+                <default>false</default>
+                <label>EUR</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

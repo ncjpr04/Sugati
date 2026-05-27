@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__QA_Questionnaire_Question__c</fullName>
+    <deprecated>false</deprecated>
+    <label>Questionnaire Question</label>
+    <referenceTo>sugati__Questionnaire_Question__c</referenceTo>
+    <relationshipLabel>Questionnaire Answers</relationshipLabel>
+    <relationshipName>Questionnaire_Answers</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

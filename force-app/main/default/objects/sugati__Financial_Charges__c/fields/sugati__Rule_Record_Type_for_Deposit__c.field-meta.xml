@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Rule_Record_Type_for_Deposit__c</fullName>
+    <defaultValue>&quot;Deposit&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>List all the record types from rule object which needs to be considered while calculating the deposit amount for the booking. 
+Each record type must start from a new line.</description>
+    <inlineHelpText>List all the record types from rule object which needs to be considered while calculating the deposit amount for the booking. 
+Each record type must start from a new line.</inlineHelpText>
+    <label>Rule Record Type for Deposit</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

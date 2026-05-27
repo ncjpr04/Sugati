@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Sugati_Tasks</fullName>
+    <availableFields>
+        <field>sugati__Preference__c</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </availableFields>
+    <description>For Testing the class ManageTasksControllertest</description>
+    <label>Sugati Tasks</label>
+</FieldSet>

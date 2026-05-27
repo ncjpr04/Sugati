@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>sugati__Itinerary_PDF</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Itinerary PDF</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!
+   IF(
+      OR(LEN($Site.Name) == 0, ISBLANK($Setup.sugati__Site__c.sugati__Community_Base_URL__c)),
+      URLFOR($Site.BaseUrl &amp; &quot;/apex/sugati__CheckMargin?Id=&quot; &amp; Opportunity.Id + &quot;&amp;u=&quot; &amp; URLFOR($Site.BaseUrl &amp; &quot;/apex/sugati__ItineraryPDF&quot;) &amp; &quot;?id=&quot; &amp; Opportunity.Id &amp; &quot;&amp;isdtp=p1&quot;),
+      URLFOR($Site.Prefix &amp; $Setup.sugati__Site__c.sugati__Community_Base_URL__c &amp; URLENCODE(&apos;/apex/sugati__CheckMargin?Id=&apos;) + Opportunity.Id + &quot;&amp;u=/apex/sugati__ItineraryPDF?id=&quot; + Opportunity.Id)
+   )
+}</url>
+</WebLink>
