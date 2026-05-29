@@ -3,29 +3,36 @@
         <template lwc:if={isHubMode}>
             <div class="hub-sb">
                 <div class="sb-ey">Workspace</div>
-                <div class="sb-item on" data-key="all" onclick={handleSidebarClick}>All Communications</div>
-                <div class="sb-item" data-key="drafts" onclick={handleSidebarClick}>
-                    Drafts <span class="sb-badge">1</span>
+                <div class={allSidebarClass} data-key="all" onclick={handleSidebarClick}>All Communications</div>
+                <div class={draftsSidebarClass} data-key="drafts" onclick={handleSidebarClick}>
+                    Drafts
+                    <template lwc:if={showDraftBadge}>
+                        <span class="sb-badge">{draftBadgeCount}</span>
+                    </template>
                 </div>
                 <div class="sb-div"></div>
                 <div class="sb-ey">By Channel</div>
-                <div class="sb-ch-pill" data-channel="email" onclick={handleChannelPill}>
+                <div class={emailPillClass} data-channel="email" onclick={handleChannelPill}>
                     <div class="sb-ch-pip email-pip"></div>Email
                 </div>
-                <div class="sb-ch-pill" data-channel="wa" onclick={handleChannelPill}>
+                <div class={waPillClass} data-channel="wa" onclick={handleChannelPill}>
                     <div class="sb-ch-pip wa-pip"></div>WhatsApp
                 </div>
-                <div class="sb-ch-pill" data-channel="ia" onclick={handleChannelPill}>
+                <div class={iaPillClass} data-channel="ia" onclick={handleChannelPill}>
                     <div class="sb-ch-pip ia-pip"></div>In-App
                 </div>
                 <div class="sb-div"></div>
                 <div class="sb-ey">By Audience</div>
-                <div class="sb-item">Travellers</div>
-                <div class="sb-item">Suppliers</div>
+                <div class={travellersSidebarClass} data-key="travellers" onclick={handleAudienceClick}>Travellers</div>
+                <div class={suppliersSidebarClass} data-key="suppliers" onclick={handleAudienceClick}>Suppliers</div>
                 <div class="sb-div"></div>
                 <div class="sb-ey">Status</div>
-                <div class="sb-item"><span class="status-ok">●</span> Delivered · Opened</div>
-                <div class="sb-item"><span class="status-err">●</span> Failed · Bounced</div>
+                <div class={deliveredOpenedClass} data-key="delivered_opened" onclick={handleStatusGroupClick}>
+                    <span class="status-ok">●</span> Delivered · Opened
+                </div>
+                <div class={failedBouncedClass} data-key="failed_bounced" onclick={handleStatusGroupClick}>
+                    <span class="status-err">●</span> Failed · Bounced
+                </div>
             </div>
         </template>
 
@@ -73,6 +80,7 @@
             </template>
 
             <div class="hub-timeline">
+                <template lwc:if={hasTimelineItems}>
                 <template for:each={timelineItems} for:item="item">
                     <div key={item.id} class={item.rowClass} data-id={item.id} onclick={handleRowClick}>
                         <div class="tl-left">
@@ -189,7 +197,7 @@
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Created by</span><span class="tl-dm-val">{item.sentBy}</span></div>
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Recipient</span><span class="tl-dm-val">{item.recipients}</span></div>
                                                 <div class="tl-dm-row tl-dm-row-btn">
-                                                    <button type="button" class="btn-primary full" onclick={handleContinueDraft}>Continue Editing →</button>
+                                                    <button type="button" class="btn-primary full" data-id={item.id} onclick={handleContinueDraft}>Continue Editing →</button>
                                                 </div>
                                             </template>
                                             <template lwc:else>
@@ -218,6 +226,10 @@
                         </div>
                         <button type="button" class="tl-act" data-id={item.id} onclick={handleToggle}>{item.buttonLabel}</button>
                     </div>
+                </template>
+                </template>
+                <template lwc:else>
+                    <div class="hub-empty">No communications match this filter.</div>
                 </template>
             </div>
         </div>

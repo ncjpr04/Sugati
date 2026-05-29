@@ -5,6 +5,9 @@
             <nav class="topbar-nav">
                 <div class={hubNavClass} onclick={handleViewHub}>Communication Hub</div>
                 <div class={newMsgNavClass} onclick={handleNewMessage}>Channel Selector</div>
+                <div class={emailNavClass} onclick={handleViewEmail}>Email Composer</div>
+                <div class={waNavClass} onclick={handleViewWa}>WhatsApp</div>
+                <div class={iaNavClass} onclick={handleViewIa}>In-App</div>
                 <div class={tokensNavClass} onclick={handleViewTokens}>Merge Tokens</div>
                 <div class={historyNavClass} onclick={handleViewHistory}>History</div>
             </nav>
@@ -17,7 +20,7 @@
                 <span class="tag tag-sand">B2C</span>
             </div>
             <div class="ctx-sep"></div>
-            <span class="ctx-date">12 Apr – 26 Apr 2026 · 2 travellers · 32 days to departure</span>
+            <span class="ctx-date">{contextSummary}</span>
             <div class="ctx-right">
                 <div class="ctx-stat">
                     <div class="ctx-stat-n ok">{stats.sent}</div>
@@ -42,17 +45,18 @@
         </div>
 
         <div class="pages">
-            <template lwc:if={showHub}>
-                <div class="page on">
-                    <c-sugati-communication-history
-                        display-mode="hub"
-                        trip-title={tripName}
-                        trip-subtitle={tripSubtitle}
-                        onchannelnav={handleHistoryChannelNav}
-                        oncontinuedraft={handleContinueDraft}
-                    ></c-sugati-communication-history>
-                </div>
-            </template>
+            <div class={hubPageClass}>
+                <c-sugati-communication-history
+                    display-mode="hub"
+                    opportunity-id={effectiveOpportunityId}
+                    draft-count={stats.draft}
+                    refresh-key={historyRefreshKey}
+                    trip-title={tripName}
+                    trip-subtitle={tripSubtitle}
+                    onchannelnav={handleHistoryChannelNav}
+                    oncontinuedraft={handleContinueDraft}
+                ></c-sugati-communication-history>
+            </div>
 
             <template lwc:if={showChannel}>
                 <div class="page on">
@@ -65,6 +69,8 @@
             <template lwc:if={showEmail}>
                 <div class="page on">
                     <c-sugati-communication-email-composer
+                        opportunity-id={effectiveOpportunityId}
+                        draft-for-edit={draftForEdit}
                         trip-name={tripName}
                         stage-label={stageLabel}
                         open-with-template-picker={emailOpenWithTemplatePicker}
@@ -72,6 +78,8 @@
                         onnavigatepreview={handleNavigatePreview}
                         onopentemplates={handleOpenTemplatePicker}
                         onnavigatetokens={handleEmailNavigateTokens}
+                        ondraftsaved={handleDraftSaved}
+                        ondraftdiscarded={handleDraftDiscarded}
                     ></c-sugati-communication-email-composer>
                 </div>
             </template>
@@ -95,6 +103,8 @@
             <template lwc:if={showRecipients}>
                 <div class="page on">
                     <c-sugati-communication-recipient-selector
+                        opportunity-id={effectiveOpportunityId}
+                        selected-ids={selectedRecipientIds}
                         onapply={handleRecipientsApply}
                         onback={handleRecipientsBack}
                     ></c-sugati-communication-recipient-selector>
@@ -104,9 +114,12 @@
             <template lwc:if={showPreview}>
                 <div class="page on">
                     <c-sugati-communication-preview-panel
+                        opportunity-id={effectiveOpportunityId}
                         initial-channel={previewChannel}
+                        preview-payload={previewPayload}
                         onback={handlePreviewBack}
                         onsent={handleSent}
+                        ondraftsaved={handleDraftSaved}
                     ></c-sugati-communication-preview-panel>
                 </div>
             </template>
@@ -115,6 +128,8 @@
                 <div class="page on">
                     <c-sugati-communication-history
                         display-mode="history"
+                        opportunity-id={effectiveOpportunityId}
+                        refresh-key={historyRefreshKey}
                         trip-title={tripName}
                         trip-subtitle={tripSubtitle}
                         onchannelnav={handleHistoryChannelNav}
@@ -126,6 +141,7 @@
             <template lwc:if={showTokens}>
                 <div class="page on">
                     <c-sugati-communication-merge-field-picker
+                        opportunity-id={effectiveOpportunityId}
                         onback={handleTokensBack}
                         ontokeninsert={handleTokensInsert}
                     ></c-sugati-communication-merge-field-picker>
@@ -135,6 +151,7 @@
 
         <template lwc:if={showTemplatePicker}>
             <c-sugati-communication-template-picker
+                opportunity-id={effectiveOpportunityId}
                 trip-name={tripName}
                 stage-label={stageLabel}
                 onclose={handleCloseTemplatePicker}

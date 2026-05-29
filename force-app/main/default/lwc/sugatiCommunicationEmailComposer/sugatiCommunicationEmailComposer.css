@@ -1,4 +1,3 @@
-
 :host {
     --warm-black: #1c1c1a;
     --s0: #f7f7f7;
@@ -318,6 +317,9 @@
     padding: 14px 28px 12px;
     border-bottom: 1px solid var(--b1);
     background: var(--s1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .subj-input {
@@ -328,6 +330,7 @@
     font-family: var(--serif);
     font-size: 20px;
     color: var(--warm-black);
+    flex: 1;
 }
 
 .etbar {
@@ -414,19 +417,19 @@
     line-height: 1.9;
     color: var(--t2);
     outline: none;
+    border: none;
+    resize: none;
     background: var(--s0);
+    width: 100%;
+    min-height: 200px;
+    font-family: inherit;
+    box-sizing: border-box;
 }
 
-.editor-body p {
-    margin-bottom: 12px;
-}
-
-.editor-ph {
+.editor-body:empty::before {
+    content: attr(data-placeholder);
     color: var(--t4);
-    font-style: italic;
-    font-size: 13px;
-    display: block;
-    margin-top: 4px;
+    pointer-events: none;
 }
 
 .mt {
@@ -664,7 +667,13 @@
     transition: border-color 0.14s;
 }
 
-.att-upload-zone:hover { border-color: var(--ac-b); }
+.att-file-input {
+    display: none;
+}
+
+.att-upload-zone:hover {
+    border-color: var(--ac-b);
+}
 
 .att-upload-ic {
     font-size: 14px;
@@ -759,6 +768,7 @@
     .composer {
         grid-template-columns: 180px 1fr;
     }
+
     .tools-panel {
         display: none;
     }

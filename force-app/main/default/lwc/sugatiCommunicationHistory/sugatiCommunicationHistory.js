@@ -1,188 +1,66 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
+import getHistory from '@salesforce/apex/SugatiCommunicationHubController.getHistory';
 
-const DEFAULT_ITEMS = [
-    {
-        id: 'tl-1',
-        channel: 'email',
-        subject: 'Pre-trip Welcome & Itinerary Pack',
-        who: 'Hiroshi & Akemi Yamamura',
-        pillClass: 'pill p-go',
-        pillLabel: 'Opened × 3',
-        when: '2 Mar 2026, 09:41',
-        dotColor: 'var(--go)',
-        tagClass: 'tag tag-email',
-        tagLabel: '✉ Email',
-        isDraft: false,
-        statusLabel: '● Opened × 3',
-        statusClass: 'tl-dm-status opened',
-        statusStyle: '',
-        sentAt: '09:41 · 2 Mar 2026',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipients',
-        recipients: 'Hiroshi Yamamura\nAkemi Yamamura',
-        delivery: 'Postmark (tracked)',
-        attachmentsLabel: '2 files',
-        extraLabel: 'First opened',
-        extraValue: '2 Mar 2026, 11:02',
-        emailHeading: 'Welcome to Your Tokyo Adventure',
-        emailBody: 'Dear Hiroshi & Akemi, we are so excited to welcome you on this journey. Please find your initial itinerary and Japan entry requirements attached.',
-        emailCta: 'View Itinerary Online',
-        hasAttachments: true,
-        attachmentChips: [
-            { name: 'Tokyo Itinerary v1.pdf', type: 'PDF', iconClass: 'tl-att-ic pdf' },
-            { name: 'Japan Entry Requirements.pdf', type: 'GEN', iconClass: 'tl-att-ic gen' }
-        ]
-    },
-    {
-        id: 'tl-2',
-        channel: 'wa',
-        subject: 'Arrival reminder — Park Hyatt Tokyo check-in',
-        who: 'Hiroshi Yamamura',
-        pillClass: 'pill p-wa',
-        pillLabel: 'Read',
-        when: '1 Mar 2026, 14:10',
-        dotColor: 'var(--ch-wa)',
-        tagClass: 'tag tag-wa',
-        tagLabel: '💬 WhatsApp',
-        isDraft: false,
-        statusLabel: '● Read',
-        statusClass: 'tl-dm-status',
-        statusStyle: 'color:var(--ch-wa)',
-        sentAt: '14:10 · 1 Mar 2026',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipient',
-        recipients: 'Hiroshi Yamamura',
-        delivery: 'WhatsApp Cloud API',
-        template: 'arrival_reminder_v2',
-        extraLabel: 'Read at',
-        extraValue: '14:23 · 1 Mar 2026',
-        waLines: [
-            'Hello Hiroshi 👋',
-            'A quick reminder — your Park Hyatt Tokyo check-in is tomorrow, 12 April at 3:00pm.',
-            'Your transfer from Narita is booked and confirmed. Driver: Yamamoto-san.',
-            'Any questions, Sarah is here. Safe travels! ✈️'
-        ]
-    },
-    {
-        id: 'tl-3',
-        channel: 'ia',
-        subject: 'Your itinerary documents are ready to view',
-        who: 'Hiroshi & Akemi Yamamura',
-        pillClass: 'pill p-ia',
-        pillLabel: 'Delivered',
-        when: '28 Feb 2026, 11:30',
-        dotColor: 'var(--ch-ia)',
-        tagClass: 'tag tag-ia',
-        tagLabel: '🔔 In-App',
-        isDraft: false,
-        statusLabel: '● Delivered',
-        statusClass: 'tl-dm-status',
-        statusStyle: 'color:var(--ch-ia)',
-        sentAt: '11:30 · 28 Feb 2026',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipients',
-        recipients: 'Hiroshi Yamamura\nAkemi Yamamura',
-        delivery: 'Experience Cloud',
-        typeLabel: 'Document notification',
-        iaIcon: '📄',
-        iaTitle: 'Documents Ready',
-        iaMsg: 'Your final Tokyo itinerary, hotel vouchers, and Japan entry requirements are now available in your trip documents. Tap to view and download.',
-        iaCta: 'View Documents →'
-    },
-    {
-        id: 'tl-4',
-        channel: 'email',
-        subject: 'Park Hyatt Tokyo — Booking Confirmation Request',
-        who: 'reservations@parkhyatt.co.jp',
-        pillClass: 'pill p-info',
-        pillLabel: 'Delivered',
-        when: '28 Feb 2026, 09:22',
-        dotColor: 'var(--info)',
-        tagClass: 'tag tag-email',
-        tagLabel: '✉ Email',
-        isDraft: false,
-        statusLabel: '● Delivered',
-        statusClass: 'tl-dm-status delivered',
-        statusStyle: '',
-        sentAt: '09:22 · 28 Feb 2026',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipient',
-        recipients: 'reservations@parkhyatt.co.jp',
-        delivery: 'Postmark (tracked)',
-        emailHeading: 'Booking Confirmation Request',
-        emailBody: 'Dear Park Hyatt Reservations team, please confirm availability for a Deluxe Room for 2 guests from 12 April to 19 April 2026. Guest names: Hiroshi & Akemi Yamamura. Reference: TOK-2026-0412.',
-        emailCta: 'Confirm Booking',
-        hasAttachments: false,
-        attachmentsLabel: 'None'
-    },
-    {
-        id: 'tl-5',
-        channel: 'wa',
-        subject: 'Flight check-in reminder — 24 hours',
-        who: 'Hiroshi Yamamura',
-        pillClass: 'pill p-wa',
-        pillLabel: 'Read',
-        when: '25 Feb 2026, 08:00',
-        dotColor: 'var(--ch-wa)',
-        tagClass: 'tag tag-wa',
-        tagLabel: '💬 WhatsApp',
-        isDraft: false,
-        statusLabel: '● Read',
-        statusClass: 'tl-dm-status',
-        statusStyle: 'color:var(--ch-wa)',
-        sentAt: '08:00 · 25 Feb 2026',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipient',
-        recipients: 'Hiroshi Yamamura',
-        delivery: 'WhatsApp Cloud API',
-        template: 'flight_checkin_reminder',
-        extraLabel: 'Read at',
-        extraValue: '08:14 · 25 Feb 2026',
-        waLines: [
-            'Good morning Hiroshi! 🌅',
-            'Your flight to Tokyo departs in 24 hours. Check-in opens now.',
-            'Flight: JL 402 · Departing 10:45 · Terminal 3, Heathrow.',
-            'Have a wonderful journey! Sarah & the Sugati team.'
-        ]
-    },
-    {
-        id: 'tl-6',
-        channel: 'email',
-        subject: 'Japan Visa & Entry Requirements — Draft',
-        who: 'Hiroshi Yamamura',
-        pillClass: 'pill p-grey',
-        pillLabel: 'Draft',
-        when: 'Last edited 1 Mar 2026',
-        dotColor: 'var(--t4)',
-        tagClass: 'tag tag-email',
-        tagLabel: '✉ Email',
-        isDraft: true,
-        statusLabel: '● Draft',
-        statusClass: 'tl-dm-status draft',
-        statusStyle: '',
-        sentBy: 'Sarah Mitchell',
-        recipientLabel: 'Recipient',
-        recipients: 'Hiroshi Yamamura',
-        lastEdited: '1 Mar 2026',
-        emailHeading: 'Japan Entry Requirements',
-        emailBody: 'Dear Hiroshi, please find attached the latest Japan entry requirements for your trip in April 2026. British citizens do not require a visa for stays under 90 days.',
-        hasAttachments: false
-    }
-];
+const DEFAULT_ITEMS = [];
 
 export default class SugatiCommunicationHistory extends LightningElement {
     @api displayMode = 'hub';
-    @api tripTitle = 'Tokyo Honeymoon 2026';
-    @api tripSubtitle = 'Yamamura';
+    @api tripTitle = '';
+    @api tripSubtitle = '';
+    @api opportunityId;
+    @api draftCount = 0;
+    @api refreshKey = 0;
 
     channelFilter = null;
+    audienceFilter = null;
+    statusGroupFilter = null;
     expandedId = null;
     activeSidebar = 'all';
     _items = DEFAULT_ITEMS.map((i) => ({ ...i }));
 
-    emailCount = 6;
-    waCount = 3;
-    iaCount = 2;
+    emailCount = 0;
+    waCount = 0;
+    iaCount = 0;
+    _wiredHistoryResult;
+    _summaryCounts = { email: 0, wa: 0, ia: 0 };
+    _lastRefreshKey = -1;
+
+    @wire(getHistory, {
+        opportunityId: '$opportunityId',
+        channelFilter: '$channelFilterParam',
+        statusFilter: '$statusFilterParam',
+        audienceFilter: '$audienceFilterParam',
+        statusGroupFilter: '$statusGroupFilterParam'
+    })
+    wiredHistory(result) {
+        this._wiredHistoryResult = result;
+        const data = result?.data;
+        this._items = (data || []).map((row) => this.mapHistoryRow(row));
+        if (this.isDefaultFilters) {
+            this._summaryCounts = {
+                email: this._items.filter((x) => x.channel === 'email').length,
+                wa: this._items.filter((x) => x.channel === 'wa').length,
+                ia: this._items.filter((x) => x.channel === 'ia').length
+            };
+            this.emailCount = this._summaryCounts.email;
+            this.waCount = this._summaryCounts.wa;
+            this.iaCount = this._summaryCounts.ia;
+        } else {
+            this.emailCount = this._summaryCounts.email;
+            this.waCount = this._summaryCounts.wa;
+            this.iaCount = this._summaryCounts.ia;
+        }
+    }
+
+    renderedCallback() {
+        if (this.refreshKey !== this._lastRefreshKey) {
+            this._lastRefreshKey = this.refreshKey;
+            if (this._wiredHistoryResult) {
+                refreshApex(this._wiredHistoryResult);
+            }
+        }
+    }
 
     get isHubMode() {
         return this.displayMode === 'hub';
@@ -196,35 +74,148 @@ export default class SugatiCommunicationHistory extends LightningElement {
         return this.isHubMode ? 'hub' : 'history-layout';
     }
 
+    get isDefaultFilters() {
+        return (
+            this.activeSidebar === 'all' &&
+            !this.channelFilter &&
+            !this.audienceFilter &&
+            !this.statusGroupFilter
+        );
+    }
+
     get hubTitle() {
-        return this.isHistoryOnly ? 'Communication History' : 'All Communications';
+        if (this.isHistoryOnly) {
+            return 'Communication History';
+        }
+        if (this.activeSidebar === 'drafts') {
+            return 'Drafts';
+        }
+        if (this.channelFilter === 'email') {
+            return 'Email';
+        }
+        if (this.channelFilter === 'wa') {
+            return 'WhatsApp';
+        }
+        if (this.channelFilter === 'ia') {
+            return 'In-App';
+        }
+        if (this.audienceFilter === 'travellers') {
+            return 'Travellers';
+        }
+        if (this.audienceFilter === 'suppliers') {
+            return 'Suppliers & Agents';
+        }
+        if (this.statusGroupFilter === 'delivered_opened') {
+            return 'Delivered & Opened';
+        }
+        if (this.statusGroupFilter === 'failed_bounced') {
+            return 'Failed & Bounced';
+        }
+        return 'All Communications';
     }
 
     get timelineItems() {
-        return this._items
-            .filter((item) => !this.channelFilter || item.channel === this.channelFilter)
-            .map((item) => ({
-                ...item,
-                isExpanded: this.expandedId === item.id,
-                dotStyle: `background:${item.dotColor}`,
-                rowClass: this._buildRowClass(item),
-                buttonLabel: this.expandedId === item.id ? 'Close' : 'View',
-                isEmail: item.channel === 'email',
-                isWa: item.channel === 'wa',
-                isIa: item.channel === 'ia'
-            }));
+        return this._items.map((item) => ({
+            ...item,
+            isExpanded: this.expandedId === item.id,
+            dotStyle: `background:${item.dotColor}`,
+            rowClass: this._buildRowClass(item),
+            buttonLabel: this.expandedId === item.id ? 'Close' : 'View',
+            isEmail: item.channel === 'email',
+            isWa: item.channel === 'wa',
+            isIa: item.channel === 'ia'
+        }));
+    }
+
+    get hasTimelineItems() {
+        return this.timelineItems.length > 0;
+    }
+
+    get channelFilterParam() {
+        if (this.channelFilter === 'wa') {
+            return 'WhatsApp';
+        }
+        if (this.channelFilter === 'ia') {
+            return 'In-App';
+        }
+        if (this.channelFilter === 'email') {
+            return 'Email';
+        }
+        return null;
+    }
+
+    get statusFilterParam() {
+        return this.activeSidebar === 'drafts' ? 'Draft' : null;
+    }
+
+    get audienceFilterParam() {
+        return this.audienceFilter || null;
+    }
+
+    get statusGroupFilterParam() {
+        return this.statusGroupFilter || null;
+    }
+
+    get draftBadgeCount() {
+        const n = Number(this.draftCount);
+        return Number.isFinite(n) && n > 0 ? n : 0;
+    }
+
+    get showDraftBadge() {
+        return this.draftBadgeCount > 0;
+    }
+
+    get allSidebarClass() {
+        return this.activeSidebar === 'all' && !this.audienceFilter && !this.statusGroupFilter ? 'sb-item on' : 'sb-item';
+    }
+
+    get draftsSidebarClass() {
+        return this.activeSidebar === 'drafts' ? 'sb-item on' : 'sb-item';
+    }
+
+    get travellersSidebarClass() {
+        return this.audienceFilter === 'travellers' ? 'sb-item on' : 'sb-item';
+    }
+
+    get suppliersSidebarClass() {
+        return this.audienceFilter === 'suppliers' ? 'sb-item on' : 'sb-item';
+    }
+
+    get deliveredOpenedClass() {
+        return this.statusGroupFilter === 'delivered_opened' ? 'sb-item on' : 'sb-item';
+    }
+
+    get failedBouncedClass() {
+        return this.statusGroupFilter === 'failed_bounced' ? 'sb-item on' : 'sb-item';
+    }
+
+    get emailPillClass() {
+        return this.channelFilter === 'email' ? 'sb-ch-pill on' : 'sb-ch-pill';
+    }
+
+    get waPillClass() {
+        return this.channelFilter === 'wa' ? 'sb-ch-pill on' : 'sb-ch-pill';
+    }
+
+    get iaPillClass() {
+        return this.channelFilter === 'ia' ? 'sb-ch-pill on' : 'sb-ch-pill';
     }
 
     _buildRowClass(item) {
         let cls = 'tl-item';
-        if (this.expandedId === item.id) cls += ' expanded';
-        if (item.isNew) cls += ' new-entry';
+        if (this.expandedId === item.id) {
+            cls += ' expanded';
+        }
+        if (item.isNew) {
+            cls += ' new-entry';
+        }
         return cls;
     }
 
     handleRowClick(event) {
-        // Only toggle if clicking the row itself, not the View button
-        if (event.target.classList.contains('tl-act')) return;
+        if (event.target.classList.contains('tl-act')) {
+            return;
+        }
         const id = event.currentTarget.dataset.id;
         this.expandedId = this.expandedId === id ? null : id;
     }
@@ -241,27 +232,55 @@ export default class SugatiCommunicationHistory extends LightningElement {
 
     handleSidebarClick(event) {
         const key = event.currentTarget.dataset.key;
-        this.activeSidebar = key;
-        this.template.querySelectorAll('.sb-item').forEach((el) => el.classList.remove('on'));
-        event.currentTarget.classList.add('on');
+        if (key === 'drafts') {
+            this.activeSidebar = 'drafts';
+            this.audienceFilter = null;
+            this.statusGroupFilter = null;
+            return;
+        }
+        this.activeSidebar = 'all';
+        this.audienceFilter = null;
+        this.statusGroupFilter = null;
+        this.channelFilter = null;
     }
 
     handleChannelPill(event) {
         event.stopPropagation();
         const ch = event.currentTarget.dataset.channel;
-        if (this.channelFilter === ch) {
-            this.channelFilter = null;
-            event.currentTarget.classList.remove('on');
-        } else {
-            this.channelFilter = ch;
-            this.template.querySelectorAll('.sb-ch-pill').forEach((p) => p.classList.remove('on'));
-            event.currentTarget.classList.add('on');
+        this.activeSidebar = 'all';
+        this.statusGroupFilter = null;
+        this.channelFilter = this.channelFilter === ch ? null : ch;
+    }
+
+    handleAudienceClick(event) {
+        const key = event.currentTarget.dataset.key;
+        this.activeSidebar = 'all';
+        this.statusGroupFilter = null;
+        this.audienceFilter = this.audienceFilter === key ? null : key;
+    }
+
+    handleStatusGroupClick(event) {
+        const key = event.currentTarget.dataset.key;
+        this.activeSidebar = 'all';
+        this.audienceFilter = null;
+        this.statusGroupFilter = this.statusGroupFilter === key ? null : key;
+    }
+
+    @api
+    async refreshHistory() {
+        if (this._wiredHistoryResult) {
+            await refreshApex(this._wiredHistoryResult);
         }
     }
 
     handleContinueDraft(event) {
         event.stopPropagation();
-        this.dispatchEvent(new CustomEvent('continuedraft'));
+        const commLogId = event.currentTarget.dataset.id;
+        this.dispatchEvent(
+            new CustomEvent('continuedraft', {
+                detail: { commLogId }
+            })
+        );
     }
 
     handleChannelCard(event) {
@@ -279,7 +298,7 @@ export default class SugatiCommunicationHistory extends LightningElement {
             id: `tl-${Date.now()}`,
             channel: 'email',
             subject: entry.subject || 'Your Tokyo Honeymoon — Final Itinerary',
-            who: entry.who || 'Hiroshi & Akemi Yamamura',
+            who: entry.who || 'Recipients',
             pillClass: 'pill p-go',
             pillLabel: '✓ Sent',
             when: 'Today',
@@ -292,22 +311,86 @@ export default class SugatiCommunicationHistory extends LightningElement {
             statusClass: 'tl-dm-status opened',
             statusStyle: '',
             sentAt: entry.sentAt || 'Just now',
-            sentBy: 'Sarah Mitchell',
+            sentBy: 'System',
             recipientLabel: 'Recipients',
-            recipients: entry.recipients || 'Hiroshi Yamamura\nAkemi Yamamura',
-            delivery: 'Postmark (tracked)',
-            attachmentsLabel: entry.attachments || '3 files',
-            emailHeading: entry.subject || 'Your Tokyo Honeymoon — Final Itinerary',
-            emailBody: 'Your complete itinerary has been sent successfully.',
+            recipients: entry.recipients || 'Recipients',
+            delivery: 'Postmark',
+            attachmentsLabel: entry.attachments || 'None',
+            emailHeading: entry.subject || 'Message Sent',
+            emailBody: 'Message sent successfully.',
             emailCta: 'View Online',
-            hasAttachments: true,
-            attachmentChips: [
-                { name: 'Final Itinerary.pdf', type: 'PDF', iconClass: 'tl-att-ic pdf' }
-            ],
+            hasAttachments: false,
+            attachmentChips: [],
             messageId: entry.messageId
         };
         this._items = [newItem, ...this._items];
         this.expandedId = newItem.id;
-        this.emailCount += 1;
+        if (this.isDefaultFilters) {
+            this.emailCount += 1;
+            this._summaryCounts = { ...this._summaryCounts, email: this.emailCount };
+        }
+    }
+
+    mapHistoryRow(row) {
+        const ch = row.channel === 'WhatsApp' ? 'wa' : row.channel === 'In-App' ? 'ia' : 'email';
+        const isDraft = row.status === 'Draft';
+        const statusLower = (row.status || '').toLowerCase();
+        const sentDate = row.sentAt ? new Date(row.sentAt) : null;
+        const when = sentDate ? sentDate.toLocaleString() : 'Just now';
+        const recipientNames = (row.who || '')
+            .split('\n')
+            .map((name) => (name || '').trim())
+            .filter(Boolean);
+        const recipientText = recipientNames.length ? recipientNames.join(', ') : 'No recipients';
+        return {
+            id: row.id,
+            channel: ch,
+            subject: row.subject || 'Untitled message',
+            who: recipientText,
+            pillClass: ch === 'wa' ? 'pill p-wa' : ch === 'ia' ? 'pill p-ia' : 'pill p-go',
+            pillLabel: row.status || 'Sent',
+            when,
+            dotColor: ch === 'wa' ? 'var(--ch-wa)' : ch === 'ia' ? 'var(--ch-ia)' : 'var(--go)',
+            tagClass: ch === 'wa' ? 'tag tag-wa' : ch === 'ia' ? 'tag tag-ia' : 'tag tag-email',
+            tagLabel: ch === 'wa' ? '💬 WhatsApp' : ch === 'ia' ? '🔔 In-App' : '✉ Email',
+            isDraft,
+            statusLabel: `● ${row.status || 'Sent'}`,
+            statusClass: `tl-dm-status ${statusLower}`,
+            statusStyle: '',
+            sentAt: when,
+            sentBy: row.sentBy || 'System',
+            recipientLabel: row.recipientCount === 1 ? 'Recipient' : 'Recipients',
+            recipients: recipientNames.length ? recipientNames.join('\n') : 'No recipients',
+            delivery: row.deliveryMode || 'Postmark',
+            attachmentsLabel: row.attachmentSummary || 'None',
+            emailHeading: row.subject || 'Communication',
+            emailBody: this.stripHtml(row.bodyHtml) || 'No preview available.',
+            emailCta: 'Open',
+            hasAttachments: (row.attachmentCount || 0) > 0,
+            attachmentChips: this.buildAttachmentChips(row.attachmentSummary)
+        };
+    }
+
+    stripHtml(content) {
+        if (!content) {
+            return '';
+        }
+        return content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    buildAttachmentChips(summary) {
+        if (!summary || summary === 'None') {
+            return [];
+        }
+        return summary.split(',').map((name, index) => {
+            const trimmed = (name || '').trim();
+            const isPdf = trimmed.toLowerCase().endsWith('.pdf');
+            return {
+                id: `att-chip-${index}`,
+                name: trimmed,
+                type: isPdf ? 'PDF' : 'GEN',
+                iconClass: isPdf ? 'tl-att-chip ic-pdf' : 'tl-att-chip ic-gen'
+            };
+        });
     }
 }

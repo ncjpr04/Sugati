@@ -25,48 +25,49 @@
                                     <div class="ec-cover-s">S</div>
                                     <div class="ec-cover-brand">SUGATI</div>
                                 </div>
-                                <div class="ec-cover-tagline">Tokyo Honeymoon 2026</div>
+                            <div class="ec-cover-tagline">{displaySubject}</div>
                             </div>
                         </div>
                     </div>
                     <div class="ec-hdr">
                         <div class="ec-logo"><span class="ec-logo-dot"></span>S U G A T I</div>
                         <div class="ec-meta">
-                            <div><b>From</b> Sarah Mitchell &lt;sarah@sugati.com&gt;</div>
-                            <div><b>To</b> Hiroshi &amp; Akemi Yamamura</div>
-                            <div><b>Re</b> {subject}</div>
+                            <div><b>From</b> {fromLine}</div>
+                            <div><b>To</b> {toLine}</div>
+                            <div><b>Re</b> {displaySubject}</div>
                         </div>
                     </div>
                     <div class="ec-att-bar">
                         <span class="ec-att-label">Attachments</span>
-                        <div class="ec-att-chip"><div class="ec-att-chip-ic pdf">PDF</div>Tokyo Itinerary Final.pdf</div>
-                        <div class="ec-att-chip"><div class="ec-att-chip-ic gen">GEN</div>Japan Entry Requirements.pdf</div>
+                        <template lwc:if={hasPreviewAttachments}>
+                            <template for:each={previewAttachmentChips} for:item="chip">
+                                <div key={chip.id} class="ec-att-chip">
+                                    <div class={chip.iconClass}>{chip.typeLabel}</div>
+                                    {chip.name}
+                                </div>
+                            </template>
+                        </template>
+                        <template lwc:if={showNoAttachments}>
+                            <div class="ec-att-chip">
+                                <div class="ec-att-chip-ic gen">GEN</div>No attachments selected
+                            </div>
+                        </template>
                     </div>
                     <div class="ec-body">
-                        <h1 class="ec-h1">Your Tokyo<br />Honeymoon Awaits</h1>
-                        <p class="ec-p">Dear Hiroshi &amp; Akemi,</p>
-                        <p class="ec-p">We are delighted to share your final itinerary for your journey to Japan. Your trip begins on <strong>12 April 2026</strong>.</p>
+                        <h1 class="ec-h1">{displaySubject}</h1>
+                        <p class="ec-p">Preview generated from Salesforce template and merge resolution.</p>
+                        <div class="ec-p ec-body-content" lwc:dom="manual"></div>
                         <a href="#" class="ec-cta">View Full Itinerary Online</a>
-                        <p class="ec-p ec-sign">Warm regards,<br />Sarah Mitchell · Sugati Travel</p>
+                        <p class="ec-p ec-sign">Warm regards,<br />Sugati Communication Hub</p>
                     </div>
                 </div>
             </template>
 
             <template lwc:if={showWa}>
                 <div class="wa-preview-scene">
-                    <div class="wa-scene-bar">
-                        <div class="wa-scene-av">🌏</div>
-                        <div>
-                            <div class="wa-scene-name">Sugati Travel</div>
-                            <div class="wa-scene-sub">online</div>
-                        </div>
-                    </div>
                     <div class="wa-scene-body">
                         <div class="wa-bubble">
-                            <p>Hello Hiroshi,</p>
-                            <p>Your Tokyo Honeymoon begins in just <strong>32 days!</strong> 🎉</p>
-                            <p>Your Park Hyatt Tokyo check-in is on <strong>12 April 2026</strong>.</p>
-                            <div class="wa-bubble-time">14:10 · 1 Mar 2026</div>
+                            <p>WhatsApp preview is available when WhatsApp channel is enabled.</p>
                         </div>
                     </div>
                 </div>
@@ -74,18 +75,9 @@
 
             <template lwc:if={showIa}>
                 <div class="ia-preview-scene">
-                    <div class="ia-scene-bar">
-                        <div class="ia-scene-title">S U G A T I</div>
-                        <div>🌏</div>
-                    </div>
                     <div class="ia-scene-body">
                         <div class="ia-notif-card">
-                            <div class="ia-nc-header">
-                                <div class="ia-nc-icon">📄</div>
-                                <div class="ia-nc-title">Documents Ready</div>
-                            </div>
-                            <div class="ia-nc-body">Your final Tokyo itinerary and hotel vouchers are now available.</div>
-                            <div class="ia-nc-link">View Documents →</div>
+                            <div class="ia-nc-body">In-App preview is available when In-App channel is enabled.</div>
                         </div>
                     </div>
                 </div>
@@ -120,7 +112,7 @@
                 </button>
                 <div class="send-sec">
                     <div class="send-sec-btn" onclick={handleBack}>← Edit</div>
-                    <div class="send-sec-btn">Save Draft</div>
+                    <div class="send-sec-btn" onclick={handleSaveDraft}>Save Draft</div>
                 </div>
             </div>
         </div>
@@ -130,7 +122,7 @@
             phase={sendPhase}
             title={sendTitle}
             subtitle={sendSubtitle}
-            recipient-label="Hiroshi & Akemi Yamamura"
+            recipient-label={toLine}
             oncomplete={handleSendComplete}
         ></c-sugati-communication-send-modal>
     </div>

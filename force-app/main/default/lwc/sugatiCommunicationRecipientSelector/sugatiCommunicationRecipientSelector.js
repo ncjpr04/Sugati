@@ -1,60 +1,91 @@
-import { LightningElement, api } from 'lwc';
-
-const TRAVELLERS = [
-    { id: 'r1', initials: 'HY', name: 'Hiroshi Yamamura', email: 'hiroshi@yamamura.com', role: 'Lead Booker', roleKey: 'lead', status: 'Booked', statusKey: 'booked', avClass: 'av-gold', selected: true },
-    { id: 'r2', initials: 'AY', name: 'Akemi Yamamura', email: 'akemi@yamamura.com', role: 'Traveller', roleKey: 'traveller', status: 'Booked', statusKey: 'booked', avClass: 'av-gold', selected: true },
-    { id: 'r3', initials: 'KY', name: 'Kenji Yamamura', email: 'kenji@yamamura.com', role: 'Traveller', roleKey: 'traveller', status: 'Booked', statusKey: 'booked', avClass: 'av-blue', selected: false },
-    { id: 'r4', initials: 'SN', name: 'Sakura Nakamura', email: 's.nakamura@email.com', role: 'Lead Booker', roleKey: 'lead', status: 'On Request', statusKey: 'request', avClass: 'av-ok', selected: false },
-    { id: 'r5', initials: 'TK', name: 'Takeshi Kobayashi', email: 't.kobayashi@email.com', role: 'Lead Booker', roleKey: 'lead', status: 'Waiting List', statusKey: 'waiting', avClass: 'av-warn', selected: false },
-    { id: 'r6', initials: 'YK', name: 'Yuki Kobayashi', email: 'y.kobayashi@email.com', role: 'Traveller', roleKey: 'traveller', status: 'Waiting List', statusKey: 'waiting', avClass: 'av-warn', selected: false },
-    { id: 'r7', initials: 'MT', name: 'Mika Tanaka', email: 'm.tanaka@email.com', role: 'Lead Booker', roleKey: 'lead', status: 'Cancelled', statusKey: 'cancelled', avClass: 'av-err', selected: false }
-];
-
-const SUPPLIERS = [
-    { id: 's1', initials: 'PH', name: 'Park Hyatt Tokyo', email: 'reservations@parkhyatt.co.jp', role: 'Hotel', roleKey: 'supplier', status: 'Confirmed', statusKey: 'confirmed', avClass: 'av-blue', selected: false },
-    { id: 's2', initials: 'WT', name: 'Wayo Tours', email: 'bookings@wayotours.jp', role: 'Guide', roleKey: 'supplier', status: 'Confirmed', statusKey: 'confirmed', avClass: 'av-blue', selected: false },
-    { id: 's3', initials: 'JA', name: 'JAL Airlines', email: 'groups@jal.co.jp', role: 'Transport', roleKey: 'supplier', status: 'Confirmed', statusKey: 'confirmed', avClass: 'av-blue', selected: false },
-    { id: 's4', initials: 'RH', name: 'Ryokan Hoshino', email: 'info@hoshinoresorts.com', role: 'Hotel', roleKey: 'supplier', status: 'Confirmed', statusKey: 'confirmed', avClass: 'av-blue', selected: false }
-];
-
-const STATUS_COUNTS = { all: 7, booked: 3, request: 1, waiting: 2, cancelled: 1 };
+import { LightningElement, api, wire } from 'lwc';
+import getRecipients from '@salesforce/apex/SugatiCommunicationHubController.getRecipients';
 
 export default class SugatiCommunicationRecipientSelector extends LightningElement {
-    @api selectedIds = [];
+    _selectedIds = [];
+    @api opportunityId;
 
     activeTab = 'travellers';
     statusFilter = 'all';
-    _travellers = TRAVELLERS.map((r) => ({ ...r }));
-    _suppliers = SUPPLIERS.map((r) => ({ ...r }));
+    _travellers = [];
+    _suppliers = [];
+    _contacts = [];
+    _agents = [];
+
+    @api
+    get selectedIds() {
+        return this._selectedIds;
+    }
+
+    set selectedIds(value) {
+        this._selectedIds = Array.isArray(value) ? value : [];
+        this.applyPreselection();
+    }
+
+    @wire(getRecipients, { opportunityId: '$opportunityId' })
+    wiredRecipients({ data }) {
+        if (!data || !data.length) {
+            return;
+        }
+        const mapped = data.map((r) => ({
+            ...r,
+            id: r.id,
+            initials: r.initials || this.computeInitials(r.name),
+            name: r.name,
+            email: r.email,
+            role: r.role || 'Traveller',
+            roleKey: r.roleKey || 'traveller',
+            status: r.status || 'Booked',
+            statusKey: r.statusKey || 'booked',
+            avClass: r.roleKey === 'lead' ? 'av-gold' : 'av-blue',
+            selected: Boolean(r.selected)
+        }));
+        this._travellers = mapped.filter((r) => (r.audience || 'travellers') === 'travellers');
+        this._suppliers = mapped.filter((r) => r.audience === 'suppliers');
+        this._contacts = mapped.filter((r) => r.audience === 'contacts');
+        this._agents = mapped.filter((r) => r.audience === 'agents');
+        this.applyPreselection();
+    }
 
     get tabs() {
         return [
-            { id: 'travellers', label: '🧳 Travellers', count: 7, className: this.activeTab === 'travellers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
-            { id: 'agents',     label: '🏢 Agent',       count: null, className: this.activeTab === 'agents' ? 'rec-aud-tab on' : 'rec-aud-tab' },
-            { id: 'suppliers',  label: '🏨 Suppliers',   count: 4, className: this.activeTab === 'suppliers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
-            { id: 'contacts',   label: '📋 Sup. Contacts', count: 6, className: this.activeTab === 'contacts' ? 'rec-aud-tab on' : 'rec-aud-tab' }
+            { id: 'travellers', label: '🧳 Travellers', count: this._travellers.length, className: this.activeTab === 'travellers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
+            { id: 'agents',     label: '🏢 Agent',       count: this._agents.length || null, className: this.activeTab === 'agents' ? 'rec-aud-tab on' : 'rec-aud-tab' },
+            { id: 'suppliers',  label: '🏨 Suppliers',   count: this._suppliers.length, className: this.activeTab === 'suppliers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
+            { id: 'contacts',   label: '📋 Sup. Contacts', count: this._contacts.length, className: this.activeTab === 'contacts' ? 'rec-aud-tab on' : 'rec-aud-tab' }
         ];
     }
 
     get statusTabs() {
+        const counts = this.statusCounts;
         return [
-            { id: 'all',       label: 'All',          count: STATUS_COUNTS.all,       countClass: 'rec-stab-n',           className: this.statusFilter === 'all'       ? 'rec-stab on' : 'rec-stab' },
-            { id: 'booked',    label: 'Booked',       count: STATUS_COUNTS.booked,    countClass: 'rec-stab-n booked',    className: this.statusFilter === 'booked'    ? 'rec-stab on' : 'rec-stab' },
-            { id: 'request',   label: 'On Request',   count: STATUS_COUNTS.request,   countClass: 'rec-stab-n request',   className: this.statusFilter === 'request'   ? 'rec-stab on' : 'rec-stab' },
-            { id: 'waiting',   label: 'Waiting List', count: STATUS_COUNTS.waiting,   countClass: 'rec-stab-n waiting',   className: this.statusFilter === 'waiting'   ? 'rec-stab on' : 'rec-stab' },
-            { id: 'cancelled', label: 'Cancelled',    count: STATUS_COUNTS.cancelled, countClass: 'rec-stab-n cancelled', className: this.statusFilter === 'cancelled' ? 'rec-stab on' : 'rec-stab' }
+            { id: 'all',       label: 'All',          count: counts.all,       countClass: 'rec-stab-n',           className: this.statusFilter === 'all'       ? 'rec-stab on' : 'rec-stab' },
+            { id: 'booked',    label: 'Booked',       count: counts.booked,    countClass: 'rec-stab-n booked',    className: this.statusFilter === 'booked'    ? 'rec-stab on' : 'rec-stab' },
+            { id: 'request',   label: 'On Request',   count: counts.request,   countClass: 'rec-stab-n request',   className: this.statusFilter === 'request'   ? 'rec-stab on' : 'rec-stab' },
+            { id: 'waiting',   label: 'Waiting List', count: counts.waiting,   countClass: 'rec-stab-n waiting',   className: this.statusFilter === 'waiting'   ? 'rec-stab on' : 'rec-stab' },
+            { id: 'cancelled', label: 'Cancelled',    count: counts.cancelled, countClass: 'rec-stab-n cancelled', className: this.statusFilter === 'cancelled' ? 'rec-stab on' : 'rec-stab' }
         ];
     }
 
     get showTravellers() { return this.activeTab === 'travellers'; }
     get showSuppliers()  { return this.activeTab === 'suppliers'; }
-    get showAgentsEmpty(){ return this.activeTab === 'agents'; }
-    get showContacts()   { return this.activeTab === 'contacts'; }
+    get showAgentsEmpty(){ return this.activeTab === 'agents' && this._agents.length === 0; }
+    get showContacts()   { return this.activeTab === 'contacts' && this._contacts.length === 0; }
+    get showAgentsList() { return this.activeTab === 'agents' && this._agents.length > 0; }
+    get showContactsList() { return this.activeTab === 'contacts' && this._contacts.length > 0; }
 
     get visibleRecipients() {
-        const list = this.activeTab === 'suppliers' ? this._suppliers : this._travellers;
+        const list =
+            this.activeTab === 'suppliers'
+                ? this._suppliers
+                : this.activeTab === 'contacts'
+                  ? this._contacts
+                  : this.activeTab === 'agents'
+                    ? this._agents
+                    : this._travellers;
         return list
             .filter((r) => {
+                if (this.activeTab !== 'travellers') return true;
                 if (this.statusFilter === 'all') return true;
                 return r.statusKey === this.statusFilter;
             })
@@ -68,12 +99,23 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
     }
 
     get selectedCount() {
-        return [...this._travellers, ...this._suppliers].filter((r) => r.selected).length;
+        return [...this._travellers, ...this._suppliers, ...this._contacts, ...this._agents].filter((r) => r.selected).length;
     }
 
     get selectedCountLabel() {
         const n = this.selectedCount;
         return `${n} recipient${n === 1 ? '' : 's'} selected`;
+    }
+
+    get statusCounts() {
+        const list = this.activeTab === 'suppliers' ? this._suppliers : this._travellers;
+        return {
+            all: list.length,
+            booked: list.filter((x) => x.statusKey === 'booked').length,
+            request: list.filter((x) => x.statusKey === 'request').length,
+            waiting: list.filter((x) => x.statusKey === 'waiting').length,
+            cancelled: list.filter((x) => x.statusKey === 'cancelled').length
+        };
     }
 
     handleTab(event) {
@@ -89,6 +131,8 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         const toggle = (list) => list.map((r) => (r.id === id ? { ...r, selected: !r.selected } : r));
         this._travellers = toggle(this._travellers);
         this._suppliers = toggle(this._suppliers);
+        this._contacts = toggle(this._contacts);
+        this._agents = toggle(this._agents);
     }
 
     handleQuickSelect(event) {
@@ -101,17 +145,38 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         };
         if (this.activeTab === 'suppliers') {
             this._suppliers = update(this._suppliers);
+        } else if (this.activeTab === 'contacts') {
+            this._contacts = update(this._contacts);
+        } else if (this.activeTab === 'agents') {
+            this._agents = update(this._agents);
         } else {
             this._travellers = update(this._travellers);
         }
     }
 
     handleApply() {
-        const selected = [...this._travellers, ...this._suppliers].filter((r) => r.selected);
+        const selected = [...this._travellers, ...this._suppliers, ...this._contacts, ...this._agents].filter((r) => r.selected);
         this.dispatchEvent(new CustomEvent('apply', { detail: { recipients: selected } }));
     }
 
     handleBack() {
         this.dispatchEvent(new CustomEvent('back'));
+    }
+
+    computeInitials(name) {
+        if (!name) return '--';
+        const parts = name.trim().split(/\s+/);
+        const a = parts[0]?.[0] || '-';
+        const b = parts[1]?.[0] || parts[0]?.[0] || '-';
+        return `${a}${b}`.toUpperCase();
+    }
+
+    applyPreselection() {
+        const selectedSet = new Set((this._selectedIds || []).filter(Boolean));
+        const mark = (list) => list.map((r) => ({ ...r, selected: selectedSet.has(r.id) }));
+        this._travellers = mark(this._travellers);
+        this._suppliers = mark(this._suppliers);
+        this._contacts = mark(this._contacts);
+        this._agents = mark(this._agents);
     }
 }

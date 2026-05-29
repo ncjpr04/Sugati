@@ -1,74 +1,14 @@
 import { LightningElement, api } from 'lwc';
-
-const STAGES = [
-    { id: 'all', label: 'All stages' },
-    { id: 'enquiry', label: 'Enquiry' },
-    { id: 'proposal', label: 'Proposal' },
-    { id: 'booked', label: 'Booked' },
-    { id: 'pre-dep', label: 'Pre-Departure ●', active: true },
-    { id: 'travelling', label: 'Travelling' },
-    { id: 'post', label: 'Post-Trip' }
-];
-
-const TEMPLATES = [
-    {
-        id: '1',
-        name: 'Pre-trip Welcome Pack',
-        meta: 'Traveller · B2C · Pre-Departure',
-        preview:
-            'Dear Traveller First Name, We are delighted to share your final itinerary for Destination Country…',
-        suggested: true,
-        usage: 'Used 3× at this stage',
-        stage: 'pre-dep'
-    },
-    {
-        id: '2',
-        name: 'Final Itinerary & Documents',
-        meta: 'Traveller · B2C · Pre-Departure',
-        preview:
-            'Dear Traveller First Name, your complete travel documents for Destination Country are now attached…',
-        suggested: true,
-        usage: 'Used 2× at this stage',
-        stage: 'pre-dep'
-    },
-    {
-        id: '3',
-        name: 'Balance Due Reminder',
-        meta: 'Traveller · B2C · Booked',
-        preview:
-            'Dear Traveller First Name, a friendly reminder that your balance of Balance Due is due on Payment Due Date…',
-        suggested: false,
-        usage: 'Booked stage',
-        stage: 'booked'
-    },
-    {
-        id: '4',
-        name: 'Supplier Booking Request',
-        meta: 'Supplier · Ops · Booked',
-        preview:
-            'Dear Supplier Contact First Name, please confirm availability and rate for Trip Start Date…',
-        suggested: false,
-        usage: 'Booked stage',
-        stage: 'booked'
-    },
-    {
-        id: '5',
-        name: 'Post-Trip Feedback Request',
-        meta: 'Traveller · B2C · Post-Trip',
-        preview:
-            'Dear Traveller First Name, we hope you had a wonderful journey to Destination Country…',
-        suggested: false,
-        usage: 'Post-Trip stage',
-        stage: 'post'
-    }
-];
+import getTemplates from '@salesforce/apex/SugatiCommunicationHubController.getTemplates';
 
 export default class SugatiCommunicationTemplatePicker extends LightningElement {
-    @api tripName = 'Tokyo Honeymoon 2026';
-    @api stageLabel = 'Pre-Departure';
+    @api tripName = '';
+    @api stageLabel = '';
+    @api opportunityId;
 
     selectedStage = 'all';
     _escapeHandler;
+    _templates = [];
 
     connectedCallback() {
         this._escapeHandler = (event) => {
@@ -78,6 +18,7 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         };
         window.addEventListener('keydown', this._escapeHandler);
         document.body.style.overflow = 'hidden';
+        this.loadTemplates();
     }
 
     disconnectedCallback() {
@@ -88,7 +29,12 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
     }
 
     get stageFilters() {
-        return STAGES.map((s) => {
+        const dynamic = Array.from(new Set(this._templates.map((t) => t.stage).filter(Boolean))).map((stage) => ({
+            id: stage.toLowerCase(),
+            label: stage,
+            active: stage === this.stageLabel
+        }));
+        return [{ id: 'all', label: 'All stages' }, ...dynamic].map((s) => {
             let cls = 'tmpl-sf';
             if (s.id === this.selectedStage) {
                 cls += ' on';
@@ -101,11 +47,11 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
     }
 
     get visibleTemplates() {
-        return TEMPLATES.filter((t) => {
+        return this._templates.filter((t) => {
             if (this.selectedStage === 'all') {
                 return true;
             }
-            return t.stage === this.selectedStage;
+            return (t.stage || '').toLowerCase() === this.selectedStage;
         }).map((t) => ({
             ...t,
             itemClass: t.suggested ? 'tmpl-pick-item suggested' : 'tmpl-pick-item'
@@ -143,5 +89,30 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
 
     stopPropagation(event) {
         event.stopPropagation();
+    }
+
+    async loadTemplates() {
+        if (!this.opportunityId) {
+            return;
+        }
+        try {
+            const rows = await getTemplates({
+                opportunityId: this.opportunityId,
+                stage: null,
+                recipientType: null,
+                channel: 'Email'
+            });
+            this._templates = (rows || []).map((row, idx) => ({
+                id: row.id,
+                name: row.name,
+                meta: row.meta,
+                stage: row.stage,
+                preview: (row.body || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(),
+                suggested: idx < 2,
+                usage: row.stage ? `${row.stage} stage` : 'Template'
+            }));
+        } catch (e) {
+            this._templates = [];
+        }
     }
 }

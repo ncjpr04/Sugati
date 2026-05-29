@@ -782,6 +782,13 @@
     background: #f0b630;
 }
 
+.hub-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--t3);
+    font-size: 13px;
+}
+
 @media (max-width: 900px) {
     .hub { grid-template-columns: 1fr; }
     .hub-sb { display: none; }
