@@ -276,6 +276,7 @@
 /* Rec info */
 .rec-name  { font-size: 13px; color: var(--warm-black); font-weight: 400; }
 .rec-email { font-size: 11px; color: var(--t4); margin-top: 1px; }
+.rec-linked-to { font-size: 10px; color: var(--t3); margin-top: 3px; font-weight: 500; }
 
 /* Role/status badges */
 .rec-role-badge, .rec-status-badge {

@@ -255,6 +255,22 @@
     }
 }
 
+.email-compose-shell {
+    position: relative;
+}
+
+.composer-host-hidden {
+    display: none !important;
+}
+
+.composer-host {
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .page c-sugati-communication-history,
 .page c-sugati-communication-channel-selector,
 .page c-sugati-communication-email-composer,

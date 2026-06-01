@@ -24,6 +24,21 @@
                 <default>false</default>
                 <label>Agent</label>
             </value>
+            <value>
+                <fullName>To</fullName>
+                <default>false</default>
+                <label>To</label>
+            </value>
+            <value>
+                <fullName>Cc</fullName>
+                <default>false</default>
+                <label>Cc</label>
+            </value>
+            <value>
+                <fullName>Bcc</fullName>
+                <default>false</default>
+                <label>Bcc</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

@@ -12,6 +12,9 @@ export default class SugatiCommunicationSendModal extends LightningElement {
     }
 
     get iconClass() {
+        if (this.phase === 'failed') {
+            return 'send-modal-icon failed';
+        }
         if (this.phase === 'sent') {
             return 'send-modal-icon sent';
         }
@@ -22,6 +25,9 @@ export default class SugatiCommunicationSendModal extends LightningElement {
     }
 
     get iconText() {
+        if (this.phase === 'failed') {
+            return '✕';
+        }
         if (this.phase === 'sent') {
             return '✓';
         }
@@ -32,7 +38,23 @@ export default class SugatiCommunicationSendModal extends LightningElement {
     }
 
     get showOkButton() {
+        return this.phase === 'sent' || this.phase === 'failed';
+    }
+
+    get isSuccess() {
         return this.phase === 'sent';
+    }
+
+    get isFailure() {
+        return this.phase === 'failed';
+    }
+
+    get okButtonLabel() {
+        return this.isFailure ? 'Close' : 'View in Activity History →';
+    }
+
+    get okButtonClass() {
+        return this.isFailure ? 'send-modal-ok send-modal-ok-failed' : 'send-modal-ok';
     }
 
     get subtitleHtml() {

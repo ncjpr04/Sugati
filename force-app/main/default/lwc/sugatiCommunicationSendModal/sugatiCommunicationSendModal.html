@@ -4,7 +4,7 @@
             <div class={iconClass}>{iconText}</div>
             <div class="send-modal-title">{title}</div>
             <div class="send-modal-sub">
-                <template lwc:if={showOkButton}>
+                <template lwc:if={isSuccess}>
                     <strong>{recipientLabel}</strong>
                     <template lwc:if={subtitle}>
                         <br>{subtitle}
@@ -13,13 +13,16 @@
                         <br>Logged to Opportunity Activity History
                     </template>
                 </template>
+                <template lwc:elseif={isFailure}>
+                    {subtitle}
+                </template>
                 <template lwc:else>
                     {subtitleHtml}
                 </template>
             </div>
             <template lwc:if={showOkButton}>
-                <button type="button" class="send-modal-ok" onclick={handleOk}>
-                    View in Activity History →
+                <button type="button" class={okButtonClass} onclick={handleOk}>
+                    {okButtonLabel}
                 </button>
             </template>
         </div>

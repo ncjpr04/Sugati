@@ -34,6 +34,9 @@
                         <div class="ec-meta">
                             <div><b>From</b> {fromLine}</div>
                             <div><b>To</b> {toLine}</div>
+                            <template lwc:if={showPreviewAsHint}>
+                                <div><b>Preview as</b> {previewAsLabel}</div>
+                            </template>
                             <div><b>Re</b> {displaySubject}</div>
                         </div>
                     </div>
@@ -98,17 +101,44 @@
             </div>
             <div class="pp-s">
                 <div class="pp-l">Schedule</div>
-                <div class="pp-opt on"><div class="pp-opt-n">Send immediately</div></div>
-                <div class="pp-opt"><div class="pp-opt-n">Schedule for later</div><div class="pp-opt-s">Pick date and time</div></div>
+                <div class={scheduleNowClass} onclick={handleScheduleNow}>
+                    <div class="pp-opt-n">Send immediately</div>
+                </div>
+                <div class={scheduleLaterClass} onclick={handleScheduleLater}>
+                    <div class="pp-opt-n">Schedule for later</div>
+                    <div class="pp-opt-s">Pick date and time</div>
+                </div>
+                <template lwc:if={showScheduleDateTime}>
+                    <div class="pp-schedule-field">
+                        <lightning-input
+                            type="datetime"
+                            label="Send at"
+                            value={scheduledAt}
+                            onchange={handleScheduledAtChange}
+                            required
+                        ></lightning-input>
+                    </div>
+                </template>
             </div>
             <div class="pp-s">
                 <div class="pp-l">Preview as</div>
-                <div class="pp-opt on"><div class="pp-opt-n">Hiroshi Yamamura</div></div>
-                <div class="pp-opt"><div class="pp-opt-n">Akemi Yamamura</div></div>
+                <template for:each={previewAsOptions} for:item="person">
+                    <div
+                        key={person.key}
+                        class={person.className}
+                        data-contact-id={person.contactId}
+                        onclick={handlePreviewAs}
+                    >
+                        <div class="pp-opt-n">{person.name}</div>
+                    </div>
+                </template>
+                <template lwc:if={showPreviewAsEmpty}>
+                    <div class="pp-opt-s">Add To recipients with contacts to preview merge fields per traveller.</div>
+                </template>
             </div>
             <div class="prev-send-zone">
-                <button type="button" class={sendBtnClass} onclick={handleSendNow}>
-                    <span>Send Now</span><span class="send-arr">→</span>
+                <button type="button" class={sendBtnClass} disabled={sendButtonDisabled} onclick={handleSendNow}>
+                    <span>{sendButtonLabel}</span><span class="send-arr">→</span>
                 </button>
                 <div class="send-sec">
                     <div class="send-sec-btn" onclick={handleBack}>← Edit</div>

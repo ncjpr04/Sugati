@@ -43,7 +43,14 @@
             <div class="addr-block">
                 <div class="addr-row">
                     <div class="addr-key">From</div>
-                    <div class="addr-val">{fromDisplay}</div>
+                    <div class="addr-val">
+                        <lightning-combobox
+                            variant="label-hidden"
+                            value={fromComboboxValue}
+                            options={fromOptions}
+                            onchange={handleFromChange}
+                        ></lightning-combobox>
+                    </div>
                 </div>
                 <div class="addr-row">
                     <div class="addr-key">To</div>
@@ -58,7 +65,7 @@
                         <div class="r-add" onclick={handleRecipientsNav}>＋ Add</div>
                     </div>
                 </div>
-                <div class="addr-row addr-row-last">
+                <div class="addr-row">
                     <div class="addr-key">CC</div>
                     <div class="addr-val">
                         <template for:each={ccChips} for:item="chip">
@@ -69,6 +76,19 @@
                             </div>
                         </template>
                         <div class="r-add" onclick={handleCcNav}>＋ CC</div>
+                    </div>
+                </div>
+                <div class="addr-row addr-row-last">
+                    <div class="addr-key">BCC</div>
+                    <div class="addr-val">
+                        <template for:each={bccChips} for:item="chip">
+                            <div key={chip.id} class="r-chip">
+                                <div class="r-chip-av">{chip.initials}</div>
+                                {chip.name} ({chip.email})
+                                <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveBccChip}>×</span>
+                            </div>
+                        </template>
+                        <div class="r-add" onclick={handleBccNav}>＋ BCC</div>
                     </div>
                 </div>
             </div>

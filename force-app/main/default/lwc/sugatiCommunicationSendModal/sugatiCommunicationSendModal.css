@@ -71,6 +71,13 @@
     animation: none;
 }
 
+.send-modal-icon.failed {
+    background: rgba(194, 57, 52, 0.09);
+    border-color: rgba(194, 57, 52, 0.35);
+    color: #c23934;
+    animation: none;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
@@ -109,4 +116,15 @@
 
 .send-modal-ok:hover {
     background: var(--ac-h);
+}
+
+.send-modal-ok-failed {
+    background: #f3f2f2;
+    color: var(--warm-black);
+    box-shadow: none;
+    border: 1px solid var(--b1);
+}
+
+.send-modal-ok-failed:hover {
+    background: #e5e5e5;
 }

@@ -5,50 +5,73 @@
                 <div>
                     <div class="tmpl-picker-title">Choose a Template</div>
                     <div class="tmpl-picker-sub">
-                        Suggested for <strong>Stage: {stageLabel}</strong> · {tripName}
+                        Suggested for <strong>Stage: {stageDisplay}</strong> · {tripDisplay}
                     </div>
                 </div>
-                <button type="button" class="tmpl-picker-close" onclick={handleClose} aria-label="Close">✕</button>
+                <button type="button" class="tmpl-picker-close" onclick={handleClose} aria-label="Close" title="Close">
+                    ✕
+                </button>
             </div>
-            <div class="tmpl-stage-filters">
-                <template for:each={stageFilters} for:item="stage">
-                    <div
-                        key={stage.id}
-                        class={stage.className}
-                        data-stage={stage.id}
-                        onclick={handleStageClick}
-                    >
-                        {stage.label}
-                    </div>
-                </template>
-            </div>
+
+            <template lwc:if={showStageFilters}>
+                <div class="tmpl-stage-filters" role="tablist" aria-label="Filter by stage">
+                    <template for:each={stageFilters} for:item="sf">
+                        <button
+                            key={sf.id}
+                            type="button"
+                            role="tab"
+                            aria-selected={sf.isSelected}
+                            class={sf.className}
+                            data-stage={sf.id}
+                            onclick={handleStageFilter}
+                        >
+                            {sf.label}
+                        </button>
+                    </template>
+                </div>
+            </template>
+
             <div class="tmpl-picker-list">
-                <template for:each={visibleTemplates} for:item="tmpl">
-                    <div
-                        key={tmpl.id}
-                        class={tmpl.itemClass}
-                        data-name={tmpl.name}
-                        data-meta={tmpl.meta}
-                        data-stage={tmpl.stage}
-                        onclick={handleSelect}
-                    >
-                        <div class="tmpl-pick-left">
-                            <div class="tmpl-pick-name">{tmpl.name}</div>
-                            <div class="tmpl-pick-meta">{tmpl.meta}</div>
-                            <div class="tmpl-pick-preview">{tmpl.preview}</div>
+                <template lwc:if={isLoading}>
+                    <div class="tmpl-empty">Loading templates…</div>
+                </template>
+                <template lwc:elseif={loadError}>
+                    <div class="tmpl-empty">{loadError}</div>
+                </template>
+                <template lwc:elseif={hasNoTemplates}>
+                    <div class="tmpl-empty">No templates match this stage. Start blank or try another filter.</div>
+                </template>
+                <template lwc:else>
+                    <template for:each={visibleTemplates} for:item="tmpl">
+                        <div
+                            key={tmpl.id}
+                            class={tmpl.pickClass}
+                            data-id={tmpl.id}
+                            tabindex="0"
+                            role="button"
+                            onclick={handleTemplatePick}
+                            onkeydown={handleTemplateKeydown}
+                            aria-label={tmpl.ariaLabel}
+                        >
+                            <div class="tmpl-pick-left">
+                                <div class="tmpl-pick-name">{tmpl.name}</div>
+                                <div class="tmpl-pick-meta">{tmpl.pickMeta}</div>
+                                <div class="tmpl-pick-preview">{tmpl.pickPreview}</div>
+                            </div>
+                            <div class="tmpl-pick-right">
+                                <template lwc:if={tmpl.isSuggested}>
+                                    <span class="tmpl-pick-badge">✦ Suggested</span>
+                                </template>
+                                <div class="tmpl-pick-use">{tmpl.pickUse}</div>
+                            </div>
                         </div>
-                        <div class="tmpl-pick-right">
-                            <template lwc:if={tmpl.suggested}>
-                                <span class="tmpl-pick-badge">✦ Suggested</span>
-                            </template>
-                            <div class="tmpl-pick-use">{tmpl.usage}</div>
-                        </div>
-                    </div>
+                    </template>
                 </template>
             </div>
+
             <div class="tmpl-picker-footer">
-                <button type="button" class="btn-sec" onclick={handleBlank}>Start blank — no template</button>
-                <div class="tmpl-picker-footnote">Or pick a template above to pre-fill subject &amp; body</div>
+                <button type="button" class="btn btn-sec" onclick={handleBlank}>Start blank — no template</button>
+                <div class="tmpl-picker-foot-hint">Or pick a template above to pre-fill subject &amp; body</div>
             </div>
         </div>
     </div>

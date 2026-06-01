@@ -65,20 +65,33 @@
                 </div>
             </template>
 
-            <template lwc:if={showEmail}>
-                <div class="page on">
-                    <c-sugati-communication-email-composer
-                        opportunity-id={effectiveOpportunityId}
-                        draft-for-edit={draftForEdit}
-                        trip-name={tripName}
-                        stage-label={stageLabel}
-                        open-with-template-picker={emailOpenWithTemplatePicker}
-                        onnavigaterecipients={handleNavigateRecipients}
-                        onnavigatepreview={handleNavigatePreview}
-                        onopentemplates={handleOpenTemplatePicker}
-                        ondraftsaved={handleDraftSaved}
-                        ondraftdiscarded={handleDraftDiscarded}
-                    ></c-sugati-communication-email-composer>
+            <template lwc:if={showEmailComposerShell}>
+                <div class="page on email-compose-shell">
+                    <template lwc:if={showRecipients}>
+                        <c-sugati-communication-recipient-selector
+                            opportunity-id={effectiveOpportunityId}
+                            selected-ids={selectedRecipientIds}
+                            selected-emails={selectedRecipientEmails}
+                            onapply={handleRecipientsApply}
+                            onback={handleRecipientsBack}
+                        ></c-sugati-communication-recipient-selector>
+                    </template>
+                    <div class={composerHostClass}>
+                        <c-sugati-communication-email-composer
+                            opportunity-id={effectiveOpportunityId}
+                            draft-for-edit={draftForEdit}
+                            trip-name={tripName}
+                            stage-label={stageLabel}
+                            open-with-template-picker={emailOpenWithTemplatePicker}
+                            onnavigaterecipients={handleNavigateRecipients}
+                            onnavigatepreview={handleNavigatePreview}
+                            onopentemplates={handleOpenTemplatePicker}
+                            ondraftsaved={handleDraftSaved}
+                            ondraftdiscarded={handleDraftDiscarded}
+                            onrecipientsloaded={syncRecipientStateFromComposer}
+                            onrecipientsupdated={syncRecipientStateFromComposer}
+                        ></c-sugati-communication-email-composer>
+                    </div>
                 </div>
             </template>
 
@@ -98,17 +111,6 @@
                 </div>
             </template>
 
-            <template lwc:if={showRecipients}>
-                <div class="page on">
-                    <c-sugati-communication-recipient-selector
-                        opportunity-id={effectiveOpportunityId}
-                        selected-ids={selectedRecipientIds}
-                        onapply={handleRecipientsApply}
-                        onback={handleRecipientsBack}
-                    ></c-sugati-communication-recipient-selector>
-                </div>
-            </template>
-
             <template lwc:if={showPreview}>
                 <div class="page on">
                     <c-sugati-communication-preview-panel
@@ -118,6 +120,7 @@
                         onback={handlePreviewBack}
                         onsent={handleSent}
                         ondraftsaved={handleDraftSaved}
+                        onfreshsendpayload={handleFreshSendPayload}
                     ></c-sugati-communication-preview-panel>
                 </div>
             </template>

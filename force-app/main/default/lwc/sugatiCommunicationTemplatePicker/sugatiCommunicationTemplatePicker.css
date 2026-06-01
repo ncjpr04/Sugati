@@ -5,6 +5,7 @@
     --s2: #f2eee9;
     --s3: #ede8e2;
     --t1: #1c1c1a;
+    --t2: #3d3b38;
     --t3: #7a756e;
     --t4: #a89f96;
     --go: #e8a820;
@@ -13,7 +14,6 @@
     --ac: #ffc543;
     --ac-s: rgba(255, 197, 67, 0.12);
     --ac-b: rgba(255, 197, 67, 0.4);
-    --b0: rgba(28, 28, 26, 0.06);
     --b1: rgba(28, 28, 26, 0.1);
     --b2: rgba(28, 28, 26, 0.18);
     --b3: rgba(28, 28, 26, 0.3);
@@ -21,10 +21,12 @@
     --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
     position: fixed;
     inset: 0;
-    z-index: 9000;
+    z-index: 8000;
     display: block;
     font-family: var(--sans);
     font-weight: 300;
+    color: var(--t1);
+    -webkit-font-smoothing: antialiased;
 }
 
 .tmpl-overlay {
@@ -34,42 +36,20 @@
     align-items: center;
     justify-content: center;
     background: rgba(28, 28, 26, 0.52);
-    padding: 24px 16px;
+    padding: 12px;
     box-sizing: border-box;
-    animation: tmplOverlayIn 0.2s ease;
 }
 
 .tmpl-picker {
     background: var(--s1);
     border-radius: 18px;
-    width: min(660px, 95vw);
-    max-height: min(82vh, 720px);
-    min-height: 320px;
+    width: 660px;
+    max-width: 95vw;
+    max-height: 82vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 24px 72px rgba(28, 28, 26, 0.22);
     overflow: hidden;
-    animation: tmplPickerIn 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes tmplOverlayIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes tmplPickerIn {
-    from {
-        opacity: 0;
-        transform: translateY(14px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    box-shadow: 0 24px 72px rgba(28, 28, 26, 0.22);
 }
 
 .tmpl-picker-hdr {
@@ -87,7 +67,6 @@
     font-weight: 400;
     color: var(--warm-black);
     margin-bottom: 3px;
-    line-height: 1.1;
 }
 
 .tmpl-picker-sub {
@@ -97,7 +76,7 @@
 
 .tmpl-picker-sub strong {
     font-weight: 600;
-    color: var(--warm-black);
+    color: var(--t2);
 }
 
 .tmpl-picker-close {
@@ -117,6 +96,7 @@
     transition: all 0.12s;
     padding: 0;
     line-height: 1;
+    font-family: inherit;
 }
 
 .tmpl-picker-close:hover {
@@ -126,10 +106,10 @@
 
 .tmpl-stage-filters {
     display: flex;
-    flex-wrap: wrap;
     gap: 5px;
     padding: 12px 24px;
     border-bottom: 1px solid var(--b1);
+    flex-wrap: wrap;
     flex-shrink: 0;
     background: var(--s2);
 }
@@ -145,6 +125,7 @@
     cursor: pointer;
     transition: all 0.12s;
     white-space: nowrap;
+    font-family: inherit;
 }
 
 .tmpl-sf:hover {
@@ -158,17 +139,26 @@
     border-color: var(--warm-black);
 }
 
-.tmpl-sf.active-stage:not(.on) {
+.tmpl-sf.active-stage {
     border-color: var(--ac-b);
-    color: #7a5c00;
+    color: var(--ac);
     background: var(--ac-s);
 }
 
 .tmpl-picker-list {
     flex: 1;
-    min-height: 0;
     overflow-y: auto;
     padding: 10px 16px;
+    min-height: 120px;
+}
+
+.tmpl-picker-list::-webkit-scrollbar {
+    width: 3px;
+}
+
+.tmpl-picker-list::-webkit-scrollbar-thumb {
+    background: var(--b2);
+    border-radius: 2px;
 }
 
 .tmpl-pick-item {
@@ -183,6 +173,7 @@
     margin-bottom: 7px;
     cursor: pointer;
     transition: all 0.13s;
+    outline: none;
 }
 
 .tmpl-pick-item:hover {
@@ -198,6 +189,12 @@
 .tmpl-pick-item.suggested:hover {
     border-color: var(--ac-b);
     background: var(--ac-s);
+}
+
+.tmpl-pick-item.selected {
+    border-color: var(--ac);
+    background: var(--ac-s);
+    box-shadow: 0 0 0 3px rgba(255, 197, 67, 0.15);
 }
 
 .tmpl-pick-left {
@@ -226,6 +223,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 380px;
 }
 
 .tmpl-pick-right {
@@ -253,6 +251,14 @@
 .tmpl-pick-use {
     font-size: 10px;
     color: var(--t4);
+    text-align: right;
+}
+
+.tmpl-empty {
+    padding: 20px 14px;
+    font-size: 11.5px;
+    color: var(--t4);
+    text-align: center;
 }
 
 .tmpl-picker-footer {
@@ -266,28 +272,51 @@
     flex-shrink: 0;
 }
 
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--sans);
+    font-weight: 500;
+    border-radius: 7px;
+    transition: all 0.16s;
+    white-space: nowrap;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+}
+
 .btn-sec {
     background: var(--s1);
     border: 1.5px solid var(--b2);
-    color: var(--t3);
+    color: var(--t2);
     padding: 8px 16px;
-    border-radius: 7px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 500;
-    white-space: nowrap;
-    flex-shrink: 0;
 }
 
 .btn-sec:hover {
     background: var(--s2);
     border-color: var(--b3);
-    color: var(--warm-black);
+    color: var(--t1);
 }
 
-.tmpl-picker-footnote {
+.tmpl-picker-foot-hint {
     font-size: 11px;
     color: var(--t4);
     text-align: right;
+    line-height: 1.4;
+}
+
+@media (max-width: 560px) {
+    .tmpl-picker-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tmpl-picker-foot-hint {
+        text-align: center;
+    }
+
+    .tmpl-pick-preview {
+        max-width: 100%;
+    }
 }

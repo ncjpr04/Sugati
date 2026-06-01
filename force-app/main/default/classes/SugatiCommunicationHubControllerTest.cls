@@ -39,50 +39,50 @@ private class SugatiCommunicationHubControllerTest {
             update opp;
         }
 
-        if (g.containsKey('sugati__Supplier__c') && g.containsKey('sugati__Opportunity_Supplier__c')) {
+        if (g.containsKey('sugati__Supplier__c')) {
             SObject supplier = g.get('sugati__Supplier__c').newSObject();
             supplier.put('Name', 'Sample Supplier');
             supplier.put('sugati__S_Email__c', 'supplier@example.com');
             insert supplier;
 
-            SObject os = g.get('sugati__Opportunity_Supplier__c').newSObject();
-            os.put('sugati__OS_Opportunity__c', opp.Id);
-            os.put('sugati__OS_Supplier__c', supplier.get('Id'));
-            insert os;
+            if (g.containsKey('sugati__Supplier_Booking__c')) {
+                SObject booking = g.get('sugati__Supplier_Booking__c').newSObject();
+                booking.put('sugati__SB_Opportunity__c', opp.Id);
+                booking.put('sugati__SB_Supplier__c', supplier.get('Id'));
+                insert booking;
+            } else if (g.containsKey('sugati__Opportunity_Supplier__c')) {
+                SObject os = g.get('sugati__Opportunity_Supplier__c').newSObject();
+                os.put('sugati__OS_Opportunity__c', opp.Id);
+                os.put('sugati__OS_Supplier__c', supplier.get('Id'));
+                insert os;
+            }
+
+            if (g.containsKey('sugati__Supplier_Contact__c')) {
+                SObject supplierContact = g.get('sugati__Supplier_Contact__c').newSObject();
+                supplierContact.put('sugati__SC_Supplier__c', supplier.get('Id'));
+                supplierContact.put('sugati__SC_Email__c', 'supplier.contact@example.com');
+                supplierContact.put('sugati__SC_First_Name__c', 'Supplier');
+                supplierContact.put('sugati__SC_Last_Name__c', 'Desk');
+                insert supplierContact;
+            }
         }
 
-        SObject t = Schema.getGlobalDescribe().get('Comm_Template__c').newSObject();
-        t.put('Name', 'Pre-trip Welcome Pack');
-        t.put('Channel__c', 'Email');
-        t.put('Stage__c', 'Pre-Departure');
-        t.put('Type__c', 'Traveller');
-        t.put('Subject__c', 'Hello {{Opportunity.Name}}');
-        t.put('Body__c', '<p>Owner: {{Owner.Name}}</p>');
-
-        Map<String, Schema.SObjectField> fieldMap = Schema.SObjectType.Comm_Template__c.fields.getMap();
-        if (fieldMap.containsKey('Is_Active__c')) {
-            t.put('Is_Active__c', true);
-        }
-        if (fieldMap.containsKey('Template_Status__c')) {
-            t.put('Template_Status__c', 'Active');
-        }
-        insert t;
     }
 
     @IsTest
     static void testReadMethodsAndPreview() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
         List<Contact> contacts = [SELECT Id FROM Contact ORDER BY LastName ASC];
-        Id templateId = (Id) Database.query('SELECT Id FROM Comm_Template__c LIMIT 1')[0].get('Id');
 
         Test.startTest();
         SugatiCommunicationHubController.HubContextDTO ctx = SugatiCommunicationHubController.getHubContext(opp.Id);
         List<SugatiCommunicationHubController.RecipientDTO> recipients = SugatiCommunicationHubController.getRecipients(opp.Id);
         List<SugatiCommunicationHubController.TemplateDTO> templates =
             SugatiCommunicationHubController.getTemplates(opp.Id, null, null, 'Email');
+        SugatiLegacyEmailService.LegacyEmailLoadDTO loaded =
+            SugatiLegacyEmailService.loadDefaultSendEmailTemplate(opp.Id);
         SugatiCommunicationHubController.PreviewRequest req = new SugatiCommunicationHubController.PreviewRequest();
         req.opportunityId = opp.Id;
-        req.templateId = templateId;
         req.recipientIds = new List<Id>{ contacts[0].Id };
         req.subjectTemplate = 'Trip {{Opportunity.Name}}';
         req.bodyTemplate = '<p>{{Owner.Name}}</p><p>{{Opportunity.StageName}}</p>';
@@ -91,39 +91,81 @@ private class SugatiCommunicationHubControllerTest {
 
         System.assertEquals(opp.Id, ctx.opportunityId);
         System.assert(recipients.size() >= 1, 'Expected recipients');
-        System.assert(templates.size() >= 1, 'Expected active templates');
-        System.assertEquals('Trip {{Opportunity.Name}}', preview.subject, 'Expected subject passthrough');
-        System.assert(preview.bodyHtml.contains('{{Owner.Name}}'), 'Expected body passthrough');
+        Boolean hasTraveller = false;
+        for (SugatiCommunicationHubController.RecipientDTO row : recipients) {
+            if (row.audience == 'travellers' && String.isNotBlank(row.email)) {
+                hasTraveller = true;
+                System.assertNotEquals(null, row.id, 'Traveller row id should be group member id');
+                if (row.contactId != null) {
+                    System.assertNotEquals(row.contactId, row.id, 'Traveller row id should not duplicate contact id');
+                }
+            }
+        }
+        System.assert(hasTraveller, 'Expected at least one traveller with email');
+        System.assertNotEquals(null, loaded);
+        System.assertNotEquals(null, preview.subject, 'Preview should return rendered subject');
+        System.assertNotEquals(null, preview.bodyHtml, 'Preview should return rendered HTML from legacy template load');
     }
 
     @IsTest
     static void testSendMessageNativeModeCreatesLogs() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
-        List<Contact> contacts = [SELECT Id FROM Contact ORDER BY CreatedDate ASC];
-        Id templateId = (Id) Database.query('SELECT Id FROM Comm_Template__c LIMIT 1')[0].get('Id');
+        List<Contact> contacts = [SELECT Id, Email FROM Contact ORDER BY CreatedDate ASC];
 
         SugatiCommunicationHubController.SendRequest req = new SugatiCommunicationHubController.SendRequest();
         req.opportunityId = opp.Id;
-        req.templateId = templateId;
-        req.recipientIds = new List<Id>{ contacts[0].Id, contacts[1].Id };
-        req.subjectTemplate = 'Trip {{Opportunity.Name}}';
-        req.bodyTemplate = '<p>Body {{Owner.Name}}</p>';
+        req.toEmails = new List<String>{ contacts[0].Email };
+        req.ccEmails = new List<String>{ contacts[1].Email };
+        req.bccEmails = new List<String>{ UserInfo.getUserEmail() };
+        req.subjectTemplate = 'Trip Test';
+        req.bodyTemplate = '<p>Body</p>';
+        req.resolvedSubject = 'Trip Test';
+        req.resolvedBodyHtml = '<p>Body</p>';
         req.deliveryMode = 'native';
         req.channel = 'Email';
 
         Test.startTest();
-        SugatiCommunicationHubController.SendResponse res = SugatiCommunicationHubController.sendMessage(req);
+        List<Object> toRecipientRows = new List<Object>{
+            new Map<String, Object>{ 'email' => contacts[0].Email, 'contactId' => contacts[0].Id }
+        };
+        req.sugatiEmailTemplateConfigId = null;
+        SugatiCommunicationHubController.SendResponse res = SugatiCommunicationHubController.sendMessage(
+            opp.Id,
+            req.toEmails,
+            req.ccEmails,
+            req.bccEmails,
+            JSON.serialize(req.toEmails),
+            JSON.serialize(req.ccEmails),
+            JSON.serialize(req.bccEmails),
+            JSON.serialize(toRecipientRows),
+            req.deliveryMode,
+            req.orgWideEmailAddressId,
+            null,
+            opp.Id,
+            req.resolvedSubject,
+            req.resolvedBodyHtml,
+            req
+        );
         Test.stopTest();
 
         System.assertNotEquals(null, res.commLogId);
         System.assertEquals('Delivered', res.status);
 
-        Comm_Log__c log = [SELECT Id, Status__c, Opportunity__c FROM Comm_Log__c WHERE Id = :res.commLogId LIMIT 1];
+        Comm_Log__c log = [
+            SELECT Id, Status__c, Opportunity__c, Subject__c, Body_HTML__c, Sent_By__c, Sent_By__r.Email
+            FROM Comm_Log__c
+            WHERE Id = :res.commLogId
+            LIMIT 1
+        ];
         System.assertEquals('Delivered', log.Status__c);
         System.assertEquals(opp.Id, log.Opportunity__c);
+        System.assertEquals('Trip Test', log.Subject__c);
+        System.assert(log.Body_HTML__c != null && log.Body_HTML__c.contains('Body'), 'Body should be saved on Comm_Log__c');
+        System.assertEquals(UserInfo.getUserId(), log.Sent_By__c, 'Sent_By should be the running user');
+        System.assertEquals(UserInfo.getUserEmail(), log.Sent_By__r.Email, 'From address comes from Sent_By user email');
 
         Integer recCount = [SELECT COUNT() FROM Comm_Recipient__c WHERE Comm_Log__c = :log.Id];
-        System.assertEquals(2, recCount, 'Expected child recipient rows');
+        System.assertEquals(3, recCount, 'Expected To, Cc, and Bcc recipient rows');
     }
 
     @IsTest
@@ -141,6 +183,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ contacts[0].Email },
             new List<String>{ contacts[0].Name },
             new List<String>{ 'Traveller' },
+            new List<String>{ 'TO' },
             'Draft subject {{Opportunity.Name}}',
             '<p>Draft body</p>',
             'postmark',
@@ -155,7 +198,7 @@ private class SugatiCommunicationHubControllerTest {
         System.assertEquals('Draft', res.status);
 
         Comm_Log__c log = [
-            SELECT Id, Status__c, Subject__c, Body_HTML__c, Sent_At__c
+            SELECT Id, Status__c, Subject__c, Body_HTML__c, Sent_At__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id = :res.commLogId
             LIMIT 1
@@ -163,6 +206,12 @@ private class SugatiCommunicationHubControllerTest {
         System.assertEquals('Draft', log.Status__c);
         System.assertEquals('Draft subject {{Opportunity.Name}}', log.Subject__c);
         System.assertEquals(null, log.Sent_At__c);
+        System.assertNotEquals(null, log.Last_Modified_At__c, 'Draft save should stamp Last_Modified_At__c');
+
+        List<SugatiCommunicationHubController.HistoryItemDTO> history =
+            SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null);
+        System.assertEquals(1, history.size());
+        System.assertNotEquals(null, history[0].lastModifiedAt, 'History should expose last modified for drafts');
     }
 
     @IsTest
@@ -179,6 +228,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ contacts[0].Email },
             new List<String>{ contacts[0].Name },
             new List<String>{ 'Traveller' },
+            new List<String>{ 'TO' },
             'Draft to edit',
             '<p>Body</p>',
             'postmark',
@@ -205,6 +255,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ contacts[0].Email, contacts[1].Email },
             new List<String>{ contacts[0].Name, contacts[1].Name },
             new List<String>{ 'Traveller', 'Traveller' },
+            new List<String>{ 'TO', 'CC' },
             'Draft updated',
             '<p>Updated body</p>',
             'native',
@@ -215,18 +266,32 @@ private class SugatiCommunicationHubControllerTest {
         );
         Test.stopTest();
 
-        Comm_Log__c log = [SELECT Subject__c, Delivery_Mode__c FROM Comm_Log__c WHERE Id = :created.commLogId LIMIT 1];
+        Comm_Log__c log = [
+            SELECT Subject__c, Delivery_Mode__c, Last_Modified_At__c
+            FROM Comm_Log__c
+            WHERE Id = :created.commLogId
+            LIMIT 1
+        ];
+        System.assertNotEquals(null, log.Last_Modified_At__c, 'Draft update should refresh Last_Modified_At__c');
         System.assertEquals('Draft updated', log.Subject__c);
         System.assertEquals('native', log.Delivery_Mode__c);
 
         List<Comm_Recipient__c> recs = [
-            SELECT Id, Contact__c
+            SELECT Id, Contact__c, Email_Send_Type__c
             FROM Comm_Recipient__c
             WHERE Comm_Log__c = :created.commLogId
             ORDER BY CreatedDate ASC
         ];
         System.assertEquals(2, recs.size(), 'Expected one kept and one new recipient');
         System.assertEquals(keptRecipientId, recs[0].Id, 'Expected original recipient row to remain');
+        System.assertEquals('TO', recs[0].Email_Send_Type__c);
+        System.assertEquals('CC', recs[1].Email_Send_Type__c);
+
+        SugatiCommunicationHubController.DraftEditDTO reloaded =
+            SugatiCommunicationHubController.getDraftForEdit(created.commLogId);
+        System.assertEquals(2, reloaded.recipients.size());
+        System.assertEquals('TO', reloaded.recipients[0].emailSendType);
+        System.assertEquals('CC', reloaded.recipients[1].emailSendType);
     }
 
     @IsTest
@@ -243,6 +308,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ contacts[0].Email },
             new List<String>{ contacts[0].Name },
             new List<String>{ 'Traveller' },
+            new List<String>{ 'TO' },
             'Draft to discard',
             '<p>Body</p>',
             'postmark',
@@ -297,6 +363,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ contacts[0].Email },
             new List<String>{ contacts[0].Name },
             new List<String>{ 'Traveller' },
+            new List<String>{ 'TO' },
             'Draft with files',
             '<p>Body</p>',
             'postmark',

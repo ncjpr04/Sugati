@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Subject__c</fullName>
-    <externalId>false</externalId>
-    <label>Subject</label>
-    <length>255</length>
+    <fullName>Last_Modified_At__c</fullName>
+    <label>Last Modified At</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>Text</type>
-    <unique>false</unique>
+    <type>DateTime</type>
 </CustomField>

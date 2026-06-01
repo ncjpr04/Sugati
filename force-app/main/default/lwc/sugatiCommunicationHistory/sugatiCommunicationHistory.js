@@ -336,7 +336,21 @@ export default class SugatiCommunicationHistory extends LightningElement {
         const isDraft = row.status === 'Draft';
         const statusLower = (row.status || '').toLowerCase();
         const sentDate = row.sentAt ? new Date(row.sentAt) : null;
-        const when = sentDate ? sentDate.toLocaleString() : 'Just now';
+        const lastModifiedDate = row.lastModifiedAt ? new Date(row.lastModifiedAt) : null;
+        const when = isDraft
+            ? lastModifiedDate
+                ? lastModifiedDate.toLocaleString()
+                : sentDate
+                    ? sentDate.toLocaleString()
+                    : 'Just now'
+            : sentDate
+                ? sentDate.toLocaleString()
+                : 'Just now';
+        const lastEdited = lastModifiedDate
+            ? lastModifiedDate.toLocaleString()
+            : sentDate
+                ? sentDate.toLocaleString()
+                : '—';
         const recipientNames = (row.who || '')
             .split('\n')
             .map((name) => (name || '').trim())
@@ -354,6 +368,7 @@ export default class SugatiCommunicationHistory extends LightningElement {
             tagClass: ch === 'wa' ? 'tag tag-wa' : ch === 'ia' ? 'tag tag-ia' : 'tag tag-email',
             tagLabel: ch === 'wa' ? '💬 WhatsApp' : ch === 'ia' ? '🔔 In-App' : '✉ Email',
             isDraft,
+            lastEdited,
             statusLabel: `● ${row.status || 'Sent'}`,
             statusClass: `tl-dm-status ${statusLower}`,
             statusStyle: '',

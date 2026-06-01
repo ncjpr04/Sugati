@@ -13,6 +13,7 @@ public with sharing class SugatiCommunicationHubController {
 
     public class RecipientDTO {
         @AuraEnabled public Id id;
+        @AuraEnabled public Id contactId;
         @AuraEnabled public String initials;
         @AuraEnabled public String name;
         @AuraEnabled public String email;
@@ -22,6 +23,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String statusKey;
         @AuraEnabled public Boolean selected;
         @AuraEnabled public String audience;
+        @AuraEnabled public String linkedToLabel;
     }
 
     public class TemplateDTO {
@@ -43,6 +45,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String status;
         @AuraEnabled public Datetime sentAt;
         @AuraEnabled public String sentBy;
+        @AuraEnabled public String fromEmail;
         @AuraEnabled public Integer recipientCount;
         @AuraEnabled public Integer deliveredCount;
         @AuraEnabled public Integer openedCount;
@@ -50,6 +53,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String deliveryMode;
         @AuraEnabled public Integer attachmentCount;
         @AuraEnabled public String attachmentSummary;
+        @AuraEnabled public Datetime lastModifiedAt;
     }
 
     public class AttachmentDTO {
@@ -65,6 +69,8 @@ public with sharing class SugatiCommunicationHubController {
     public class PreviewRequest {
         @AuraEnabled public Id opportunityId;
         @AuraEnabled public Id templateId;
+        @AuraEnabled public Id sugatiEmailTemplateConfigId;
+        @AuraEnabled public Id relatedRecordId;
         @AuraEnabled public List<Id> recipientIds;
         @AuraEnabled public List<String> recipientEmails;
         @AuraEnabled public List<String> recipientNames;
@@ -81,9 +87,16 @@ public with sharing class SugatiCommunicationHubController {
     public class SendRequest {
         @AuraEnabled public Id opportunityId;
         @AuraEnabled public Id templateId;
+        @AuraEnabled public Id sugatiEmailTemplateConfigId;
+        @AuraEnabled public Id relatedRecordId;
+        @AuraEnabled public Id orgWideEmailAddressId;
         @AuraEnabled public List<Id> recipientIds;
         @AuraEnabled public List<String> recipientEmails;
         @AuraEnabled public List<String> recipientNames;
+        @AuraEnabled public List<String> toEmails;
+        @AuraEnabled public List<String> ccEmails;
+        @AuraEnabled public List<String> bccEmails;
+        @AuraEnabled public String toRecipientsJson;
         @AuraEnabled public String subjectTemplate;
         @AuraEnabled public String bodyTemplate;
         @AuraEnabled public String resolvedSubject;
@@ -108,6 +121,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String email;
         @AuraEnabled public String name;
         @AuraEnabled public String role;
+        @AuraEnabled public String emailSendType;
     }
 
     public class DraftEditDTO {
@@ -174,7 +188,18 @@ public with sharing class SugatiCommunicationHubController {
     public static List<RecipientDTO> getRecipients(Id opportunityId) {
         List<RecipientDTO> rows = new List<RecipientDTO>();
         Opportunity opp = [
-            SELECT Id, sugati__O_Lead_CG__c, sugati__O_Booking_Contact__c, sugati__O_Agent__c, sugati__O_Agent_SC__c
+            SELECT Id,
+                sugati__O_Lead_CG__c,
+                sugati__O_Booking_Contact__c,
+                sugati__O_Agent__c,
+                sugati__O_Agent_SC__c,
+                sugati__O_Agent_SC__r.Id,
+                sugati__O_Agent_SC__r.Name,
+                sugati__O_Agent_SC__r.sugati__SC_Name__c,
+                sugati__O_Agent_SC__r.sugati__SC_First_Name__c,
+                sugati__O_Agent_SC__r.sugati__SC_Last_Name__c,
+                sugati__O_Agent_SC__r.sugati__SC_Email__c,
+                sugati__O_Agent_SC__r.sugati__Type__c
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
@@ -203,12 +228,13 @@ public with sharing class SugatiCommunicationHubController {
         ];
         for (sugati__Group_Member__c gm : travellers) {
             String displayName = gm.sugati__GM_Contact__r != null ? gm.sugati__GM_Contact__r.Name : gm.Name;
-            String email = gm.sugati__GM_Contact__r != null ? gm.sugati__GM_Contact__r.Email : gm.sugati__GM_Email__c;
+            String email = resolveTravellerEmail(gm);
             String primaryStatus = gm.sugati__GM_Client_Group__r != null ? gm.sugati__GM_Client_Group__r.sugati__S_CG_Booking_Status__c : null;
             String secondaryStatus = gm.sugati__S_GM_Client_Group_Booking_Status__c;
             String statusLabel = normalizeStatusLabel(primaryStatus, secondaryStatus);
             RecipientDTO dto = new RecipientDTO();
-            dto.id = gm.sugati__GM_Contact__c != null ? gm.sugati__GM_Contact__c : gm.Id;
+            dto.contactId = gm.sugati__GM_Contact__c;
+            dto.id = gm.Id;
             dto.name = displayName;
             dto.email = email;
             dto.initials = buildInitials(displayName);
@@ -221,115 +247,266 @@ public with sharing class SugatiCommunicationHubController {
             rows.add(dto);
         }
 
+        Id agentSupplierId = opp.sugati__O_Agent__c;
         Set<Id> supplierIds = new Set<Id>();
-        for (sugati__Opportunity_Supplier__c os : [
-            SELECT Id, sugati__OS_Supplier__c, sugati__OS_Supplier__r.Name, sugati__OS_Supplier__r.sugati__S_Email__c
-            FROM sugati__Opportunity_Supplier__c
-            WHERE sugati__OS_Opportunity__c = :opportunityId
-        ]) {
-            if (os.sugati__OS_Supplier__c == null) {
-                continue;
-            }
-            supplierIds.add(os.sugati__OS_Supplier__c);
-            RecipientDTO dto = new RecipientDTO();
-            dto.id = os.sugati__OS_Supplier__c;
-            dto.name = os.sugati__OS_Supplier__r != null ? os.sugati__OS_Supplier__r.Name : 'Supplier';
-            dto.email = os.sugati__OS_Supplier__r != null ? os.sugati__OS_Supplier__r.sugati__S_Email__c : null;
-            dto.initials = buildInitials(dto.name);
-            dto.role = 'Supplier';
-            dto.roleKey = 'supplier';
-            dto.status = 'Confirmed';
-            dto.statusKey = 'booked';
-            dto.selected = false;
-            dto.audience = 'suppliers';
-            rows.add(dto);
-        }
+        Set<Id> supplierRowIds = new Set<Id>();
+        Set<Id> supplierContactRowIds = new Set<Id>();
 
-        if (!supplierIds.isEmpty()) {
-            for (sugati__Supplier_Contact__c sc : [
-                SELECT Id, Name, sugati__SC_Name__c, sugati__SC_First_Name__c, sugati__SC_Last_Name__c,
-                    sugati__SC_Email__c, sugati__SC_Supplier__r.Name, sugati__Type__c
-                FROM sugati__Supplier_Contact__c
-                WHERE sugati__SC_Supplier__c IN :supplierIds
-                ORDER BY sugati__SC_Supplier__r.Name, Name
+        if (Schema.sObjectType.sugati__Supplier_Booking__c.isAccessible()) {
+            for (sugati__Supplier_Booking__c sb : [
+                SELECT
+                    sugati__SB_Supplier__c,
+                    sugati__SB_Supplier__r.Name,
+                    sugati__SB_Supplier__r.sugati__S_Email__c
+                FROM sugati__Supplier_Booking__c
+                WHERE sugati__SB_Opportunity__c = :opportunityId
+                AND sugati__SB_Supplier__c != null
             ]) {
-                String displayName = !String.isBlank(sc.sugati__SC_Name__c)
-                    ? sc.sugati__SC_Name__c
-                    : (!String.isBlank(sc.Name) ? sc.Name : ((sc.sugati__SC_First_Name__c == null ? '' : sc.sugati__SC_First_Name__c) + ' ' + (sc.sugati__SC_Last_Name__c == null ? '' : sc.sugati__SC_Last_Name__c)).trim());
-                RecipientDTO dto = new RecipientDTO();
-                dto.id = sc.Id;
-                dto.name = displayName;
-                dto.email = sc.sugati__SC_Email__c;
-                dto.initials = buildInitials(displayName);
-                dto.role = String.isBlank(sc.sugati__Type__c) ? 'Supplier Contact' : sc.sugati__Type__c;
-                dto.roleKey = 'supplier';
-                dto.status = 'Confirmed';
-                dto.statusKey = 'booked';
-                dto.selected = false;
-                dto.audience = 'contacts';
-                rows.add(dto);
+                supplierIds.add(sb.sugati__SB_Supplier__c);
+                if (sb.sugati__SB_Supplier__c == agentSupplierId) {
+                    continue;
+                }
+                if (
+                    !supplierRowIds.contains(sb.sugati__SB_Supplier__c) &&
+                    sb.sugati__SB_Supplier__r != null &&
+                    String.isNotBlank(sb.sugati__SB_Supplier__r.sugati__S_Email__c)
+                ) {
+                    supplierRowIds.add(sb.sugati__SB_Supplier__c);
+                    rows.add(
+                        buildSupplierRecipient(
+                            sb.sugati__SB_Supplier__c,
+                            sb.sugati__SB_Supplier__r.Name,
+                            sb.sugati__SB_Supplier__r.sugati__S_Email__c,
+                            'suppliers'
+                        )
+                    );
+                }
             }
         }
 
-        if (opp.sugati__O_Agent__c != null) {
+        if (Schema.sObjectType.sugati__Opportunity_Supplier__c.isAccessible()) {
+            for (sugati__Opportunity_Supplier__c os : [
+                SELECT Id, sugati__OS_Supplier__c, sugati__OS_Supplier__r.Name, sugati__OS_Supplier__r.sugati__S_Email__c
+                FROM sugati__Opportunity_Supplier__c
+                WHERE sugati__OS_Opportunity__c = :opportunityId
+                AND sugati__OS_Supplier__c != null
+            ]) {
+                supplierIds.add(os.sugati__OS_Supplier__c);
+                if (os.sugati__OS_Supplier__c == agentSupplierId) {
+                    continue;
+                }
+                if (
+                    !supplierRowIds.contains(os.sugati__OS_Supplier__c) &&
+                    os.sugati__OS_Supplier__r != null &&
+                    String.isNotBlank(os.sugati__OS_Supplier__r.sugati__S_Email__c)
+                ) {
+                    supplierRowIds.add(os.sugati__OS_Supplier__c);
+                    rows.add(
+                        buildSupplierRecipient(
+                            os.sugati__OS_Supplier__c,
+                            os.sugati__OS_Supplier__r.Name,
+                            os.sugati__OS_Supplier__r.sugati__S_Email__c,
+                            'suppliers'
+                        )
+                    );
+                }
+            }
+        }
+
+        if (agentSupplierId != null) {
+            supplierIds.add(agentSupplierId);
             List<sugati__Supplier__c> agents = [
                 SELECT Id, Name, sugati__S_Email__c
                 FROM sugati__Supplier__c
-                WHERE Id = :opp.sugati__O_Agent__c
+                WHERE Id = :agentSupplierId
                 LIMIT 1
             ];
-            if (!agents.isEmpty()) {
-                RecipientDTO dto = new RecipientDTO();
-                dto.id = agents[0].Id;
-                dto.name = agents[0].Name;
-                dto.email = agents[0].sugati__S_Email__c;
-                dto.initials = buildInitials(dto.name);
-                dto.role = 'Agent';
-                dto.roleKey = 'agent';
-                dto.status = 'Booked';
-                dto.statusKey = 'booked';
-                dto.selected = false;
-                dto.audience = 'agents';
-                rows.add(dto);
+            if (!agents.isEmpty() && String.isNotBlank(agents[0].sugati__S_Email__c)) {
+                rows.add(buildSupplierRecipient(agents[0].Id, agents[0].Name, agents[0].sugati__S_Email__c, 'agents', 'Agency', 'agent'));
+            }
+        }
+
+        if (!supplierIds.isEmpty() && Schema.sObjectType.sugati__Supplier_Contact__c.isAccessible()) {
+            for (sugati__Supplier_Contact__c sc : [
+                SELECT
+                    Id,
+                    Name,
+                    sugati__SC_Name__c,
+                    sugati__SC_First_Name__c,
+                    sugati__SC_Last_Name__c,
+                    sugati__SC_Email__c,
+                    sugati__SC_Supplier__c,
+                    sugati__SC_Supplier__r.Name,
+                    sugati__Type__c
+                FROM sugati__Supplier_Contact__c
+                WHERE sugati__SC_Supplier__c IN :supplierIds
+                AND sugati__SC_Email__c != null
+                ORDER BY sugati__SC_Supplier__r.Name, Name
+            ]) {
+                if (supplierContactRowIds.contains(sc.Id)) {
+                    continue;
+                }
+                supplierContactRowIds.add(sc.Id);
+                String displayName = formatSupplierContactName(sc);
+                Boolean isAgency = sc.sugati__SC_Supplier__c == agentSupplierId;
+                String supplierName = sc.sugati__SC_Supplier__r != null ? sc.sugati__SC_Supplier__r.Name : null;
+                String roleLabel = String.isBlank(sc.sugati__Type__c) ? 'Contact' : sc.sugati__Type__c;
+                rows.add(
+                    buildSupplierContactRecipient(
+                        sc.Id,
+                        displayName,
+                        sc.sugati__SC_Email__c,
+                        roleLabel,
+                        buildSupplierContactLinkedLabel(supplierName, isAgency)
+                    )
+                );
             }
         }
         return rows;
     }
 
+    private static RecipientDTO buildSupplierRecipient(Id supplierId, String supplierName, String email, String audience) {
+        return buildSupplierRecipient(supplierId, supplierName, email, audience, 'Supplier', 'supplier');
+    }
+
+    private static RecipientDTO buildSupplierRecipient(
+        Id supplierId,
+        String supplierName,
+        String email,
+        String audience,
+        String role,
+        String roleKey
+    ) {
+        RecipientDTO dto = new RecipientDTO();
+        dto.id = supplierId;
+        dto.name = String.isBlank(supplierName) ? 'Supplier' : supplierName;
+        dto.email = email;
+        dto.initials = buildInitials(dto.name);
+        dto.role = role;
+        dto.roleKey = roleKey;
+        dto.status = 'Confirmed';
+        dto.statusKey = 'booked';
+        dto.selected = false;
+        dto.audience = audience;
+        return dto;
+    }
+
+    private static RecipientDTO buildSupplierContactRecipient(
+        Id supplierContactId,
+        String displayName,
+        String email,
+        String role,
+        String linkedToLabel
+    ) {
+        RecipientDTO dto = new RecipientDTO();
+        dto.id = supplierContactId;
+        dto.name = displayName;
+        dto.email = email;
+        dto.initials = buildInitials(displayName);
+        dto.role = role;
+        dto.roleKey = 'supplier';
+        dto.status = 'Confirmed';
+        dto.statusKey = 'booked';
+        dto.selected = false;
+        dto.audience = 'contacts';
+        dto.linkedToLabel = linkedToLabel;
+        return dto;
+    }
+
+    private static String buildSupplierContactLinkedLabel(String supplierName, Boolean isAgency) {
+        String entity = isAgency ? 'Agency' : 'Supplier';
+        String name = String.isBlank(supplierName) ? 'Unknown' : supplierName;
+        return entity + ': ' + name;
+    }
+
+    private static String resolveTravellerEmail(sugati__Group_Member__c gm) {
+        if (gm == null) {
+            return null;
+        }
+        if (String.isNotBlank(gm.sugati__GM_Email__c)) {
+            return gm.sugati__GM_Email__c;
+        }
+        if (gm.sugati__GM_Contact__r != null && String.isNotBlank(gm.sugati__GM_Contact__r.Email)) {
+            return gm.sugati__GM_Contact__r.Email;
+        }
+        return null;
+    }
+
+    private static String formatSupplierContactName(sugati__Supplier_Contact__c sc) {
+        if (!String.isBlank(sc.sugati__SC_Name__c)) {
+            return sc.sugati__SC_Name__c;
+        }
+        if (!String.isBlank(sc.Name)) {
+            return sc.Name;
+        }
+        return ((sc.sugati__SC_First_Name__c == null ? '' : sc.sugati__SC_First_Name__c) +
+            ' ' +
+            (sc.sugati__SC_Last_Name__c == null ? '' : sc.sugati__SC_Last_Name__c))
+            .trim();
+    }
+
     @AuraEnabled(cacheable=true)
     public static List<TemplateDTO> getTemplates(Id opportunityId, String stage, String recipientType, String channel) {
-        String useChannel = String.isBlank(channel) ? EMAIL_CHANNEL : channel;
-        Map<String, Schema.SObjectField> fieldsMap = Schema.SObjectType.Comm_Template__c.fields.getMap();
-        String activeFilter = buildTemplateActiveFilter(fieldsMap);
-
-        String soql =
-            'SELECT Id, Name, Subject__c, Body__c, Stage__c, Type__c, Channel__c ' +
-            'FROM Comm_Template__c ' +
-            'WHERE Channel__c = :useChannel ' +
-            activeFilter;
-        if (!String.isBlank(stage)) {
-            soql += ' AND Stage__c = :stage';
-        }
-        if (!String.isBlank(recipientType)) {
-            soql += ' AND Type__c = :recipientType';
-        }
-        soql += ' ORDER BY Name ASC';
-
-        List<Comm_Template__c> rows = Database.query(soql);
         List<TemplateDTO> out = new List<TemplateDTO>();
-        for (Comm_Template__c rec : rows) {
+        SugatiLegacyEmailService.LegacyTemplateCatalogDTO catalog = SugatiLegacyEmailService.getSendEmailTemplateCatalog(
+            opportunityId
+        );
+        if (catalog == null || catalog.templates == null) {
+            return out;
+        }
+        for (SugatiLegacyEmailService.LegacyTemplateRowDTO row : catalog.templates) {
+            if (!String.isBlank(stage) && !stageMatches(row.templateStage, stage)) {
+                continue;
+            }
             TemplateDTO dto = new TemplateDTO();
-            dto.id = rec.Id;
-            dto.name = rec.Name;
-            dto.subject = rec.Subject__c;
-            dto.body = rec.Body__c;
-            dto.stage = rec.Stage__c;
-            dto.type = rec.Type__c;
-            dto.channel = rec.Channel__c;
-            dto.meta = String.join(new List<String>{ blankToDash(rec.Type__c), 'B2C', blankToDash(rec.Stage__c) }, ' · ');
+            dto.id = row.id;
+            dto.name = row.name;
+            dto.subject = '';
+            dto.body = '';
+            dto.stage = String.isNotBlank(row.templateStage) ? row.templateStage : '';
+            dto.type = row.relatedToRecord;
+            dto.channel = String.isBlank(channel) ? EMAIL_CHANNEL : channel;
+            dto.meta = row.meta;
             out.add(dto);
         }
         return out;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<SugatiLegacyEmailService.EmailAddressOptionDTO> getEmailAddressBook(Id opportunityId) {
+        return SugatiLegacyEmailService.getEmailAddressBook(opportunityId);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<SugatiLegacyEmailService.EmailAddressOptionDTO> getOrgWideFromAddresses() {
+        return SugatiLegacyEmailService.getOrgWideFromAddresses();
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static SugatiLegacyEmailService.LegacyTemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
+        return SugatiLegacyEmailService.getSendEmailTemplateCatalog(opportunityId);
+    }
+
+    @AuraEnabled
+    public static SugatiLegacyEmailService.LegacyEmailLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
+        return SugatiLegacyEmailService.loadDefaultSendEmailTemplate(opportunityId);
+    }
+
+    @AuraEnabled
+    public static SugatiLegacyEmailService.LegacyEmailLoadDTO loadSendEmailTemplate(
+        Id opportunityId,
+        Id configId,
+        Id relatedRecordId,
+        Id clientGroupId,
+        Id previewAsContactId
+    ) {
+        return SugatiLegacyEmailService.loadSendEmailTemplate(
+            opportunityId,
+            configId,
+            relatedRecordId,
+            clientGroupId,
+            previewAsContactId
+        );
     }
 
     @AuraEnabled(cacheable=true)
@@ -351,7 +528,8 @@ public with sharing class SugatiCommunicationHubController {
         }
 
         String soql =
-            'SELECT Id, Channel__c, Subject__c, Status__c, Sent_At__c, Body_HTML__c, Delivery_Mode__c, Sent_By__r.Name ' +
+            'SELECT Id, Channel__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
+            'Body_HTML__c, Delivery_Mode__c, Sent_By__r.Name, Sent_By__r.Email ' +
             'FROM Comm_Log__c WHERE Opportunity__c = :opportunityId';
         if (!String.isBlank(channelFilter)) {
             soql += ' AND Channel__c = :channelFilter';
@@ -368,7 +546,7 @@ public with sharing class SugatiCommunicationHubController {
         if (issueLogIds != null) {
             soql += ' AND Id IN :issueLogIds';
         }
-        soql += ' ORDER BY Sent_At__c DESC NULLS LAST, CreatedDate DESC';
+        soql += ' ORDER BY Last_Modified_At__c DESC NULLS LAST, Sent_At__c DESC NULLS LAST, CreatedDate DESC';
 
         List<Comm_Log__c> logs = Database.query(soql);
         if (logs.isEmpty()) {
@@ -419,7 +597,9 @@ public with sharing class SugatiCommunicationHubController {
             dto.subject = row.Subject__c;
             dto.status = row.Status__c;
             dto.sentAt = row.Sent_At__c;
+            dto.lastModifiedAt = row.Last_Modified_At__c != null ? row.Last_Modified_At__c : row.CreatedDate;
             dto.sentBy = row.Sent_By__r != null ? row.Sent_By__r.Name : null;
+            dto.fromEmail = row.Sent_By__r != null ? row.Sent_By__r.Email : null;
             dto.bodyHtml = row.Body_HTML__c;
             dto.deliveryMode = row.Delivery_Mode__c;
             dto.recipientCount = recs.size();
@@ -478,17 +658,22 @@ public with sharing class SugatiCommunicationHubController {
     @AuraEnabled
     public static PreviewResponse previewMessage(PreviewRequest request) {
         validatePreviewRequest(request);
-        Comm_Template__c template = request.templateId != null
-            ? [SELECT Id, Subject__c, Body__c FROM Comm_Template__c WHERE Id = :request.templateId LIMIT 1]
-            : null;
-
-        String subjectTemplate = String.isBlank(request.subjectTemplate) && template != null ? template.Subject__c : request.subjectTemplate;
-        String bodyTemplate = String.isBlank(request.bodyTemplate) && template != null ? template.Body__c : request.bodyTemplate;
-
         PreviewResponse response = new PreviewResponse();
         response.recipients = recipientsByInputs(request.recipientIds, request.recipientEmails, request.recipientNames);
-        response.subject = blankSafe(subjectTemplate);
-        response.bodyHtml = blankSafe(bodyTemplate);
+
+        Id configId = request.sugatiEmailTemplateConfigId != null
+            ? request.sugatiEmailTemplateConfigId
+            : request.templateId;
+        Id relatedId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
+        SugatiLegacyEmailService.LegacyEmailLoadDTO loaded = SugatiLegacyEmailService.loadSendEmailTemplate(
+            request.opportunityId,
+            configId,
+            relatedId,
+            null,
+            null
+        );
+        response.subject = blankSafe(loaded.subject);
+        response.bodyHtml = blankSafe(loaded.bodyHtml);
         return response;
     }
 
@@ -496,6 +681,8 @@ public with sharing class SugatiCommunicationHubController {
     public static PreviewResponse previewMessageDirect(
         Id opportunityId,
         Id templateId,
+        Id sugatiEmailTemplateConfigId,
+        Id relatedRecordId,
         List<Id> recipientIds,
         List<String> recipientEmails,
         List<String> recipientNames,
@@ -505,6 +692,8 @@ public with sharing class SugatiCommunicationHubController {
         PreviewRequest request = new PreviewRequest();
         request.opportunityId = opportunityId;
         request.templateId = templateId;
+        request.sugatiEmailTemplateConfigId = sugatiEmailTemplateConfigId;
+        request.relatedRecordId = relatedRecordId;
         request.recipientIds = recipientIds == null ? new List<Id>() : recipientIds;
         request.recipientEmails = recipientEmails == null ? new List<String>() : recipientEmails;
         request.recipientNames = recipientNames == null ? new List<String>() : recipientNames;
@@ -514,11 +703,124 @@ public with sharing class SugatiCommunicationHubController {
     }
 
     @AuraEnabled
-    public static SendResponse sendMessage(SendRequest request) {
+    public static SendResponse sendMessage(
+        Id opportunityId,
+        List<String> toEmails,
+        List<String> ccEmails,
+        List<String> bccEmails,
+        String toEmailsJson,
+        String ccEmailsJson,
+        String bccEmailsJson,
+        String toRecipientsJson,
+        String deliveryMode,
+        Id orgWideEmailAddressId,
+        Id sugatiEmailTemplateConfigId,
+        Id relatedRecordId,
+        String resolvedSubject,
+        String resolvedBodyHtml,
+        SendRequest request
+    ) {
+        try {
+            return sendMessageInternal(
+                opportunityId,
+                toEmails,
+                ccEmails,
+                bccEmails,
+                toEmailsJson,
+                ccEmailsJson,
+                bccEmailsJson,
+                toRecipientsJson,
+                deliveryMode,
+                orgWideEmailAddressId,
+                sugatiEmailTemplateConfigId,
+                relatedRecordId,
+                resolvedSubject,
+                resolvedBodyHtml,
+                request
+            );
+        } catch (AuraHandledException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new AuraHandledException(toUserFacingExceptionMessage(ex));
+        }
+    }
+
+    private static SendResponse sendMessageInternal(
+        Id opportunityId,
+        List<String> toEmails,
+        List<String> ccEmails,
+        List<String> bccEmails,
+        String toEmailsJson,
+        String ccEmailsJson,
+        String bccEmailsJson,
+        String toRecipientsJson,
+        String deliveryMode,
+        Id orgWideEmailAddressId,
+        Id sugatiEmailTemplateConfigId,
+        Id relatedRecordId,
+        String resolvedSubject,
+        String resolvedBodyHtml,
+        SendRequest request
+    ) {
+        request = request != null ? request : new SendRequest();
+        if (String.isNotBlank(toRecipientsJson)) {
+            request.toRecipientsJson = toRecipientsJson;
+        }
+        if (opportunityId != null) {
+            request.opportunityId = opportunityId;
+        }
+        if (String.isNotBlank(deliveryMode)) {
+            request.deliveryMode = deliveryMode;
+        }
+        if (orgWideEmailAddressId != null) {
+            request.orgWideEmailAddressId = orgWideEmailAddressId;
+        }
+        if (sugatiEmailTemplateConfigId != null) {
+            request.sugatiEmailTemplateConfigId = sugatiEmailTemplateConfigId;
+        }
+        if (relatedRecordId != null) {
+            request.relatedRecordId = relatedRecordId;
+        }
+        if (String.isBlank(request.deliveryMode)) {
+            request.deliveryMode = 'native';
+        }
+        mergeSendContent(request, resolvedSubject, resolvedBodyHtml);
+        mergeSendEmailLists(request, toEmails, ccEmails, bccEmails, toEmailsJson, ccEmailsJson, bccEmailsJson);
+        applySendRequestOpportunityFallbacks(request);
         validateSendRequest(request);
-        PreviewResponse preview = previewMessage(new PreviewRequestBuilder(request).build());
-        String outboundSubject = !String.isBlank(request.resolvedSubject) ? request.resolvedSubject : preview.subject;
-        String outboundBodyHtml = !String.isBlank(request.resolvedBodyHtml) ? request.resolvedBodyHtml : preview.bodyHtml;
+        String outboundSubject = !String.isBlank(request.resolvedSubject)
+            ? request.resolvedSubject
+            : blankSafe(request.subjectTemplate);
+        String outboundBodyHtml = !String.isBlank(request.resolvedBodyHtml)
+            ? request.resolvedBodyHtml
+            : blankSafe(request.bodyTemplate);
+        if (String.isBlank(outboundSubject)) {
+            throw new AuraHandledException('Subject is required.');
+        }
+        if (String.isBlank(outboundBodyHtml)) {
+            throw new AuraHandledException('Email body is required.');
+        }
+
+        Id templateConfigId = request.sugatiEmailTemplateConfigId != null
+            ? request.sugatiEmailTemplateConfigId
+            : request.templateId;
+        Id renderRelatedRecordId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
+        if (templateConfigId != null) {
+            Id generalWhoId = SugatiLegacyEmailService.resolveLeadContactIdForSend(request.opportunityId);
+            SugatiLegacyEmailService.RenderedEmailDTO generalRendered = SugatiLegacyEmailService.renderSendEmailContent(
+                request.opportunityId,
+                templateConfigId,
+                renderRelatedRecordId,
+                generalWhoId,
+                renderRelatedRecordId == request.opportunityId
+            );
+            if (!String.isBlank(generalRendered.subject)) {
+                outboundSubject = generalRendered.subject;
+            }
+            if (!String.isBlank(generalRendered.bodyHtml)) {
+                outboundBodyHtml = generalRendered.bodyHtml;
+            }
+        }
 
         Comm_Log__c log = new Comm_Log__c();
         log.Opportunity__c = request.opportunityId;
@@ -530,55 +832,40 @@ public with sharing class SugatiCommunicationHubController {
         log.Sent_By__c = UserInfo.getUserId();
         log.Delivery_Mode__c = request.deliveryMode;
         log.Status__c = 'Sent';
-        insert log;
-
-        List<Comm_Recipient__c> recRows = new List<Comm_Recipient__c>();
-        for (RecipientDTO recipient : preview.recipients) {
-            Comm_Recipient__c rec = new Comm_Recipient__c();
-            rec.Comm_Log__c = log.Id;
-            rec.Contact__c = sanitizeContactId(recipient.id);
-            rec.Name = resolveRecipientName(recipient.name, recipient.email);
-            rec.Email_Address__c = recipient.email;
-            rec.Recipient_Type__c = normalizeRecipientType(recipient.role);
-            rec.Status__c = 'Sent';
-            recRows.add(rec);
-        }
-        if (!recRows.isEmpty()) {
-            insert recRows;
-        }
-
-        Set<Id> attachmentDocIds = buildAttachmentDocumentIdSet(
-            request.attachmentContentDocumentIds,
-            request.newAttachmentFileNames,
-            request.newAttachmentFileData,
-            log.Id,
-            request.opportunityId
-        );
-        syncCommLogAttachments(log.Id, attachmentDocIds);
-
-        String providerMessageId = 'LOCAL-' + String.valueOf(log.Id).right(10);
-        Boolean providerOk = false;
+        Savepoint sendSavepoint = Database.setSavepoint();
         try {
-            providerMessageId = sendViaPostmark(outboundSubject, outboundBodyHtml, recRows, request.deliveryMode);
-            providerOk = true;
-        } catch (Exception ex) {
-            log.Status__c = 'Failed';
-            update log;
-            for (Comm_Recipient__c rec : recRows) {
-                rec.Status__c = 'Failed';
-            }
-            if (!recRows.isEmpty()) {
-                update recRows;
-            }
-            SendResponse failed = new SendResponse();
-            failed.commLogId = log.Id;
-            failed.status = 'Failed';
-            failed.providerMessageId = null;
-            failed.message = ex.getMessage();
-            return failed;
-        }
+            insert log;
 
-        if (providerOk) {
+            List<Comm_Recipient__c> recRows = buildCommRecipientsFromSendRequest(log.Id, request);
+            if (!recRows.isEmpty()) {
+                insert recRows;
+            }
+
+            Set<Id> attachmentDocIds = buildAttachmentDocumentIdSet(
+                request.attachmentContentDocumentIds,
+                request.newAttachmentFileNames,
+                request.newAttachmentFileData,
+                log.Id,
+                request.opportunityId
+            );
+            syncCommLogAttachments(log.Id, attachmentDocIds);
+
+            String providerMessageId;
+            if (request.deliveryMode == 'native') {
+                providerMessageId = sendViaNativeSalesforce(request, attachmentDocIds);
+            } else {
+                try {
+                    providerMessageId = sendViaPostmark(request, attachmentDocIds);
+                } catch (Exception postmarkEx) {
+                    if (!isPostmarkInfrastructureError(postmarkEx)) {
+                        throw postmarkEx;
+                    }
+                    providerMessageId = sendViaNativeSalesforce(request, attachmentDocIds);
+                    log.Delivery_Mode__c = 'native';
+                    request.deliveryMode = 'native';
+                }
+            }
+
             for (Comm_Recipient__c rec : recRows) {
                 rec.Status__c = 'Delivered';
                 rec.Delivered_At__c = System.now();
@@ -589,14 +876,17 @@ public with sharing class SugatiCommunicationHubController {
             }
             log.Status__c = 'Delivered';
             update log;
-        }
 
-        SendResponse response = new SendResponse();
-        response.commLogId = log.Id;
-        response.status = log.Status__c;
-        response.providerMessageId = providerMessageId;
-        response.message = 'Message logged and sent';
-        return response;
+            SendResponse response = new SendResponse();
+            response.commLogId = log.Id;
+            response.status = log.Status__c;
+            response.providerMessageId = providerMessageId;
+            response.message = 'Message logged and sent';
+            return response;
+        } catch (Exception ex) {
+            Database.rollback(sendSavepoint);
+            throw new AuraHandledException(toUserFacingExceptionMessage(ex));
+        }
     }
 
     @AuraEnabled
@@ -624,7 +914,14 @@ public with sharing class SugatiCommunicationHubController {
         dto.recipients = new List<DraftRecipientInput>();
 
         for (Comm_Recipient__c rec : [
-            SELECT Id, Name, Contact__c, Contact__r.Name, Contact__r.Email, Email_Address__c, Recipient_Type__c
+            SELECT Id,
+                Name,
+                Contact__c,
+                Contact__r.Name,
+                Contact__r.Email,
+                Email_Address__c,
+                Recipient_Type__c,
+                Email_Send_Type__c
             FROM Comm_Recipient__c
             WHERE Comm_Log__c = :commLogId
             ORDER BY CreatedDate ASC
@@ -636,7 +933,8 @@ public with sharing class SugatiCommunicationHubController {
                 ? rec.Contact__r.Email
                 : rec.Email_Address__c;
             row.name = resolveRecipientDisplayName(rec);
-            row.role = rec.Recipient_Type__c;
+            row.emailSendType = resolveEmailSendType(rec.Email_Send_Type__c, rec.Recipient_Type__c);
+            row.role = resolveAudienceRole(rec.Recipient_Type__c, row.emailSendType);
             dto.recipients.add(row);
         }
 
@@ -705,6 +1003,7 @@ public with sharing class SugatiCommunicationHubController {
         List<String> recipientEmails,
         List<String> recipientNames,
         List<String> recipientRoles,
+        List<String> recipientEmailSendTypes,
         String subjectTemplate,
         String bodyTemplate,
         String deliveryMode,
@@ -722,7 +1021,8 @@ public with sharing class SugatiCommunicationHubController {
             recipientContactIds,
             recipientEmails,
             recipientNames,
-            recipientRoles
+            recipientRoles,
+            recipientEmailSendTypes
         );
 
         Comm_Log__c log;
@@ -740,6 +1040,7 @@ public with sharing class SugatiCommunicationHubController {
             log.Body_HTML__c = bodyTemplate;
             log.Delivery_Mode__c = deliveryMode;
             log.Sent_By__c = UserInfo.getUserId();
+            stampDraftLastModified(log);
             update log;
             syncDraftRecipients(log.Id, recipients == null ? new List<DraftRecipientInput>() : recipients);
         } else {
@@ -752,6 +1053,7 @@ public with sharing class SugatiCommunicationHubController {
             log.Sent_By__c = UserInfo.getUserId();
             log.Delivery_Mode__c = deliveryMode;
             log.Status__c = 'Draft';
+            stampDraftLastModified(log);
             insert log;
             insertDraftRecipients(log.Id, recipients == null ? new List<DraftRecipientInput>() : recipients);
         }
@@ -844,6 +1146,7 @@ public with sharing class SugatiCommunicationHubController {
         rec.Name = resolveRecipientName(input.name, input.email);
         rec.Email_Address__c = input.email;
         rec.Recipient_Type__c = normalizeRecipientType(input.role);
+        rec.Email_Send_Type__c = normalizeEmailSendType(input.emailSendType);
         rec.Status__c = 'Queued';
         return rec;
     }
@@ -853,7 +1156,8 @@ public with sharing class SugatiCommunicationHubController {
         List<Id> recipientContactIds,
         List<String> recipientEmails,
         List<String> recipientNames,
-        List<String> recipientRoles
+        List<String> recipientRoles,
+        List<String> recipientEmailSendTypes
     ) {
         List<DraftRecipientInput> out = new List<DraftRecipientInput>();
         Integer count = recipientEmails == null ? 0 : recipientEmails.size();
@@ -868,6 +1172,13 @@ public with sharing class SugatiCommunicationHubController {
             input.email = email;
             input.name = listStringAt(recipientNames, i);
             input.role = listStringAt(recipientRoles, i);
+            String rawSendType = listStringAt(recipientEmailSendTypes, i);
+            if (!String.isBlank(rawSendType)) {
+                input.emailSendType = normalizeEmailSendType(rawSendType);
+            } else {
+                input.emailSendType = inferEmailSendTypeFromRole(input.role);
+            }
+            input.role = resolveAudienceRole(input.role, input.emailSendType);
             out.add(input);
         }
         return out;
@@ -930,6 +1241,8 @@ public with sharing class SugatiCommunicationHubController {
             PreviewRequest req = new PreviewRequest();
             req.opportunityId = source.opportunityId;
             req.templateId = source.templateId;
+            req.sugatiEmailTemplateConfigId = source.sugatiEmailTemplateConfigId;
+            req.relatedRecordId = source.relatedRecordId;
             req.recipientIds = source.recipientIds;
             req.recipientEmails = source.recipientEmails;
             req.recipientNames = source.recipientNames;
@@ -939,43 +1252,529 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
-    private static String sendViaPostmark(String subject, String bodyHtml, List<Comm_Recipient__c> recipients, String deliveryMode) {
-        if (deliveryMode == 'native') {
-            return 'NATIVE-' + String.valueOf(Crypto.getRandomLong()).replace('-', '');
+    private static List<Comm_Recipient__c> buildCommRecipientsFromSendRequest(Id commLogId, SendRequest request) {
+        List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
+        rows.addAll(buildCommRecipientRows(commLogId, request.toEmails, 'TO'));
+        rows.addAll(buildCommRecipientRows(commLogId, request.ccEmails, 'CC'));
+        rows.addAll(buildCommRecipientRows(commLogId, request.bccEmails, 'BCC'));
+
+        return rows;
+    }
+
+    private static List<Comm_Recipient__c> buildCommRecipientRows(Id commLogId, List<String> emails, String emailSendType) {
+        List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
+        if (emails == null) {
+            return rows;
         }
-        if (recipients.isEmpty()) {
-            return 'NO-RECIPIENTS';
+        Set<String> seen = new Set<String>();
+        for (String email : emails) {
+            if (String.isBlank(email)) {
+                continue;
+            }
+            String normalized = email.trim().toLowerCase();
+            if (seen.contains(normalized)) {
+                continue;
+            }
+            seen.add(normalized);
+            Comm_Recipient__c rec = new Comm_Recipient__c();
+            rec.Comm_Log__c = commLogId;
+            rec.Email_Address__c = email.trim();
+            rec.Name = email.trim();
+            rec.Email_Send_Type__c = normalizeEmailSendType(emailSendType);
+            rec.Recipient_Type__c = 'Traveller';
+            rec.Status__c = 'Sent';
+            rows.add(rec);
+        }
+        return rows;
+    }
+
+    private class TravellerSendTarget {
+        private String email;
+        private Id contactId;
+        private Id groupMemberId;
+    }
+
+    private static String sendViaNativeSalesforce(SendRequest request, Set<Id> attachmentDocIds) {
+        List<TravellerSendTarget> toTargets = parseTravellerSendTargets(request);
+        List<String> ccAddresses = cleanEmailList(request.ccEmails);
+        List<String> bccAddresses = cleanEmailList(request.bccEmails);
+        if (toTargets.isEmpty() && ccAddresses.isEmpty() && bccAddresses.isEmpty()) {
+            throw new AuraHandledException('At least one recipient is required.');
         }
 
-        List<String> toEmails = new List<String>();
-        for (Comm_Recipient__c rec : recipients) {
-            if (!String.isBlank(rec.Email_Address__c)) {
-                toEmails.add(rec.Email_Address__c);
+        List<ContentVersion> docuLinks = loadContentVersionsForSend(attachmentDocIds);
+        List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(request, toTargets, ccAddresses, bccAddresses, docuLinks);
+
+        if (Test.isRunningTest()) {
+            return 'NATIVE-TEST';
+        }
+
+        dispatchNativeEmailMessages(messages);
+        return 'NATIVE-' + String.valueOf(Crypto.getRandomLong()).replace('-', '');
+    }
+
+    private static List<TravellerSendTarget> parseTravellerSendTargets(SendRequest request) {
+        List<TravellerSendTarget> targets = new List<TravellerSendTarget>();
+        if (request == null) {
+            return targets;
+        }
+        if (!String.isBlank(request.toRecipientsJson)) {
+            try {
+                List<Object> rows = (List<Object>) JSON.deserializeUntyped(request.toRecipientsJson);
+                for (Object row : rows) {
+                    if (!(row instanceof Map<String, Object>)) {
+                        continue;
+                    }
+                    Map<String, Object> mapped = (Map<String, Object>) row;
+                    Object emailRaw = mapped.get('email');
+                    if (emailRaw == null || String.isBlank(String.valueOf(emailRaw))) {
+                        continue;
+                    }
+                    TravellerSendTarget target = new TravellerSendTarget();
+                    target.email = String.valueOf(emailRaw).trim();
+                    Object contactRaw = mapped.get('contactId');
+                    if (contactRaw != null) {
+                        String contactKey = String.valueOf(contactRaw);
+                        if (contactKey.startsWith('003') && (contactKey.length() == 15 || contactKey.length() == 18)) {
+                            target.contactId = (Id) contactKey;
+                        }
+                    }
+                    Object groupMemberRaw = mapped.get('groupMemberId');
+                    if (groupMemberRaw != null) {
+                        String gmKey = String.valueOf(groupMemberRaw);
+                        if (gmKey.length() == 15 || gmKey.length() == 18) {
+                            target.groupMemberId = (Id) gmKey;
+                        }
+                    }
+                    targets.add(target);
+                }
+            } catch (Exception ex) {
+                // fall through to email-only targets
             }
         }
-        if (toEmails.isEmpty()) {
-            return 'NO-EMAIL';
+        if (!targets.isEmpty()) {
+            return dedupeTravellerTargets(targets);
+        }
+        for (String email : cleanEmailList(request.toEmails)) {
+            TravellerSendTarget target = new TravellerSendTarget();
+            target.email = email;
+            targets.add(target);
+        }
+        return dedupeTravellerTargets(targets);
+    }
+
+    private static List<TravellerSendTarget> dedupeTravellerTargets(List<TravellerSendTarget> targets) {
+        List<TravellerSendTarget> out = new List<TravellerSendTarget>();
+        Set<String> seen = new Set<String>();
+        for (TravellerSendTarget target : targets) {
+            if (target == null || String.isBlank(target.email)) {
+                continue;
+            }
+            String key = target.email.trim().toLowerCase();
+            if (seen.contains(key)) {
+                continue;
+            }
+            seen.add(key);
+            out.add(target);
+        }
+        return out;
+    }
+
+    private static Map<String, Id> resolveTravellerContactIdsByEmail(Id opportunityId, Set<String> emails) {
+        Map<String, Id> out = new Map<String, Id>();
+        if (opportunityId == null || emails == null || emails.isEmpty()) {
+            return out;
+        }
+        for (sugati__Group_Member__c gm : [
+            SELECT sugati__GM_Contact__c, sugati__GM_Email__c, sugati__GM_Contact__r.Email
+            FROM sugati__Group_Member__c
+            WHERE sugati__GM_Opportunity__c = :opportunityId
+        ]) {
+            if (gm.sugati__GM_Contact__c != null) {
+                if (gm.sugati__GM_Contact__r != null && !String.isBlank(gm.sugati__GM_Contact__r.Email)) {
+                    out.put(gm.sugati__GM_Contact__r.Email.trim().toLowerCase(), gm.sugati__GM_Contact__c);
+                }
+            }
+            if (!String.isBlank(gm.sugati__GM_Email__c)) {
+                Id contactId = gm.sugati__GM_Contact__c;
+                if (contactId != null) {
+                    out.put(gm.sugati__GM_Email__c.trim().toLowerCase(), contactId);
+                }
+            }
+        }
+        return out;
+    }
+
+    private static Map<Id, Id> resolveTravellerContactIdsByGroupMemberIds(Set<Id> groupMemberIds) {
+        Map<Id, Id> out = new Map<Id, Id>();
+        if (groupMemberIds == null || groupMemberIds.isEmpty()) {
+            return out;
+        }
+        for (sugati__Group_Member__c gm : [
+            SELECT Id, sugati__GM_Contact__c
+            FROM sugati__Group_Member__c
+            WHERE Id IN :groupMemberIds
+        ]) {
+            if (gm.sugati__GM_Contact__c != null) {
+                out.put(gm.Id, gm.sugati__GM_Contact__c);
+            }
+        }
+        return out;
+    }
+
+    private static Id resolveTemplateConfigIdForSend(SendRequest request) {
+        if (request == null) {
+            return null;
+        }
+        if (request.sugatiEmailTemplateConfigId != null) {
+            return request.sugatiEmailTemplateConfigId;
+        }
+        return request.templateId;
+    }
+
+    private static Id resolveRenderContactIdForTarget(
+        TravellerSendTarget target,
+        Map<String, Id> contactByEmail,
+        Map<Id, Id> contactByGroupMemberId
+    ) {
+        if (target == null) {
+            return null;
+        }
+        if (target.contactId != null) {
+            return target.contactId;
+        }
+        if (!String.isBlank(target.email) && contactByEmail != null) {
+            Id byEmail = contactByEmail.get(target.email.trim().toLowerCase());
+            if (byEmail != null) {
+                return byEmail;
+            }
+        }
+        if (target.groupMemberId != null && contactByGroupMemberId != null) {
+            return contactByGroupMemberId.get(target.groupMemberId);
+        }
+        return null;
+    }
+
+    private static List<Messaging.SingleEmailMessage> buildOutboundEmailMessages(
+        SendRequest request,
+        List<TravellerSendTarget> toTargets,
+        List<String> ccAddresses,
+        List<String> bccAddresses,
+        List<ContentVersion> docuLinks
+    ) {
+        List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+
+        Id templateConfigId = resolveTemplateConfigIdForSend(request);
+        Id relatedRecordId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
+        Boolean useOpportunityAsWhat = relatedRecordId == request.opportunityId;
+        Boolean hasAnyRecipients = !toTargets.isEmpty() || !ccAddresses.isEmpty() || !bccAddresses.isEmpty();
+
+        if (templateConfigId == null && hasAnyRecipients && !Test.isRunningTest()) {
+            throw new AuraHandledException(
+                'Email template configuration is required to send personalized emails to travellers.'
+            );
         }
 
-        HttpRequest req = new HttpRequest();
-        req.setEndpoint('callout:Postmark_NC/email');
-        req.setMethod('POST');
-        req.setHeader('Content-Type', 'application/json');
-        Map<String, Object> payload = new Map<String, Object>{
-            'From' => UserInfo.getUserEmail(),
-            'To' => String.join(toEmails, ','),
-            'Subject' => subject,
-            'HtmlBody' => bodyHtml
-        };
-        req.setBody(JSON.serialize(payload));
-
-        Http http = new Http();
-        HttpResponse res = http.send(req);
-        if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
-            throw new AuraHandledException('Postmark send failed: ' + res.getStatusCode() + ' ' + res.getBody());
+        if (templateConfigId == null && Test.isRunningTest()) {
+            String subjectText = !String.isBlank(request.resolvedSubject)
+                ? request.resolvedSubject
+                : blankSafe(request.subjectTemplate);
+            String bodyHtml = !String.isBlank(request.resolvedBodyHtml)
+                ? request.resolvedBodyHtml
+                : blankSafe(request.bodyTemplate);
+            for (TravellerSendTarget target : toTargets) {
+                messages.add(
+                    buildNativeEmailMessage(
+                        new List<String>{ target.email },
+                        new List<String>(),
+                        new List<String>(),
+                        subjectText,
+                        bodyHtml,
+                        request.opportunityId,
+                        request.orgWideEmailAddressId,
+                        docuLinks
+                    )
+                );
+            }
+            if (!ccAddresses.isEmpty() || !bccAddresses.isEmpty()) {
+                messages.add(
+                    buildNativeEmailMessage(
+                        ccAddresses,
+                        new List<String>(),
+                        bccAddresses,
+                        subjectText,
+                        bodyHtml,
+                        request.opportunityId,
+                        request.orgWideEmailAddressId,
+                        docuLinks
+                    )
+                );
+            }
+            return messages;
         }
-        Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
-        return body != null && body.containsKey('MessageID') ? String.valueOf(body.get('MessageID')) : 'POSTMARK-SENT';
+
+        SugatiLegacyEmailService.RenderedEmailDTO generalRendered;
+        Id generalWhoId = SugatiLegacyEmailService.resolveLeadContactIdForSend(request.opportunityId);
+        generalRendered = SugatiLegacyEmailService.renderSendEmailContent(
+            request.opportunityId,
+            templateConfigId,
+            relatedRecordId,
+            generalWhoId,
+            useOpportunityAsWhat
+        );
+
+        Set<String> emailLookupKeys = new Set<String>();
+        Set<Id> groupMemberIds = new Set<Id>();
+        for (TravellerSendTarget target : toTargets) {
+            emailLookupKeys.add(target.email.trim().toLowerCase());
+            if (target.groupMemberId != null) {
+                groupMemberIds.add(target.groupMemberId);
+            }
+        }
+        Map<String, Id> contactByEmail = resolveTravellerContactIdsByEmail(request.opportunityId, emailLookupKeys);
+        Map<Id, Id> contactByGroupMemberId = resolveTravellerContactIdsByGroupMemberIds(groupMemberIds);
+
+        for (TravellerSendTarget target : toTargets) {
+            Id renderWhoId = resolveRenderContactIdForTarget(target, contactByEmail, contactByGroupMemberId);
+            if (renderWhoId == null) {
+                throw new AuraHandledException(
+                    'Could not resolve a Contact for To recipient ' +
+                        target.email +
+                        '. Link the traveller to a Contact with a valid email.'
+                );
+            }
+            SugatiLegacyEmailService.RenderedEmailDTO personalRendered = SugatiLegacyEmailService.renderSendEmailContent(
+                request.opportunityId,
+                templateConfigId,
+                relatedRecordId,
+                renderWhoId,
+                useOpportunityAsWhat
+            );
+            String subjectText = personalRendered.subject;
+            String bodyHtml = personalRendered.bodyHtml;
+            messages.add(
+                buildNativeEmailMessage(
+                    new List<String>{ target.email },
+                    new List<String>(),
+                    new List<String>(),
+                    subjectText,
+                    bodyHtml,
+                    request.opportunityId,
+                    request.orgWideEmailAddressId,
+                    docuLinks
+                )
+            );
+        }
+
+        if (!ccAddresses.isEmpty() || !bccAddresses.isEmpty()) {
+            messages.add(
+                buildNativeEmailMessage(
+                    ccAddresses,
+                    new List<String>(),
+                    bccAddresses,
+                    generalRendered.subject,
+                    generalRendered.bodyHtml,
+                    request.opportunityId,
+                    request.orgWideEmailAddressId,
+                    docuLinks
+                )
+            );
+        }
+
+        return messages;
+    }
+
+    private static Messaging.SingleEmailMessage buildNativeEmailMessage(
+        List<String> toAddresses,
+        List<String> ccAddresses,
+        List<String> bccAddresses,
+        String subject,
+        String bodyHtml,
+        Id opportunityId,
+        Id orgWideEmailAddressId,
+        List<ContentVersion> docuLinks
+    ) {
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setSubject(subject);
+        mail.setHtmlBody(bodyHtml);
+        if (orgWideEmailAddressId != null) {
+            mail.setOrgWideEmailAddressId(orgWideEmailAddressId);
+        }
+        mail.setToAddresses(toAddresses);
+        if (!ccAddresses.isEmpty()) {
+            mail.setCcAddresses(ccAddresses);
+        }
+        if (!bccAddresses.isEmpty()) {
+            mail.setBccAddresses(bccAddresses);
+        }
+        if (opportunityId != null) {
+            mail.setWhatId(opportunityId);
+        }
+        mail.setSaveAsActivity(false);
+
+        List<Messaging.EmailFileAttachment> fileAttachments = new List<Messaging.EmailFileAttachment>();
+        for (ContentVersion cv : docuLinks) {
+            Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+            efa.setFileName(cv.PathOnClient != null ? cv.PathOnClient : cv.Title);
+            efa.setBody(cv.VersionData);
+            fileAttachments.add(efa);
+        }
+        if (!fileAttachments.isEmpty()) {
+            mail.setFileAttachments(fileAttachments);
+        }
+        return mail;
+    }
+
+    private static void dispatchNativeEmailMessages(List<Messaging.SingleEmailMessage> messages) {
+        if (messages == null || messages.isEmpty()) {
+            throw new AuraHandledException('No email messages were prepared for send.');
+        }
+        Integer batchSize = 100;
+        for (Integer offset = 0; offset < messages.size(); offset += batchSize) {
+            Integer endIndex = Math.min(offset + batchSize, messages.size());
+            List<Messaging.SingleEmailMessage> batch = new List<Messaging.SingleEmailMessage>();
+            for (Integer i = offset; i < endIndex; i++) {
+                batch.add(messages[i]);
+            }
+            Messaging.SendEmailResult[] results = Messaging.sendEmail(batch);
+            if (results == null || results.isEmpty()) {
+                throw new AuraHandledException('Salesforce did not return an email send result.');
+            }
+            List<String> errors = new List<String>();
+            for (Messaging.SendEmailResult result : results) {
+                if (result == null || result.isSuccess()) {
+                    continue;
+                }
+                List<Messaging.SendEmailError> errs = result.getErrors();
+                if (errs != null && !errs.isEmpty()) {
+                    errors.add(errs[0].getMessage());
+                } else {
+                    errors.add('Salesforce email send failed.');
+                }
+            }
+            if (!errors.isEmpty()) {
+                throw new AuraHandledException(String.join(errors, '; '));
+            }
+        }
+    }
+
+    private static List<ContentVersion> loadContentVersionsForSend(Set<Id> attachmentDocIds) {
+        List<ContentVersion> docuLinks = new List<ContentVersion>();
+        if (attachmentDocIds == null || attachmentDocIds.isEmpty()) {
+            return docuLinks;
+        }
+        for (ContentVersion cv : [
+            SELECT Id, VersionData, Title, PathOnClient
+            FROM ContentVersion
+            WHERE ContentDocumentId IN :attachmentDocIds AND IsLatest = true
+        ]) {
+            docuLinks.add(cv);
+        }
+        return docuLinks;
+    }
+
+    private static List<String> cleanEmailList(List<String> emails) {
+        List<String> out = new List<String>();
+        if (emails == null) {
+            return out;
+        }
+        Set<String> seen = new Set<String>();
+        for (String email : emails) {
+            if (String.isBlank(email)) {
+                continue;
+            }
+            String trimmed = email.trim();
+            String key = trimmed.toLowerCase();
+            if (!seen.contains(key)) {
+                seen.add(key);
+                out.add(trimmed);
+            }
+        }
+        return out;
+    }
+
+    private static String sendViaPostmark(SendRequest request, Set<Id> attachmentDocIds) {
+        if (Test.isRunningTest()) {
+            return 'POSTMARK-TEST';
+        }
+
+        List<TravellerSendTarget> toTargets = parseTravellerSendTargets(request);
+        List<String> ccAddresses = cleanEmailList(request.ccEmails);
+        List<String> bccAddresses = cleanEmailList(request.bccEmails);
+        if (toTargets.isEmpty() && ccAddresses.isEmpty() && bccAddresses.isEmpty()) {
+            throw new AuraHandledException('At least one recipient is required.');
+        }
+
+        List<ContentVersion> docuLinks = loadContentVersionsForSend(attachmentDocIds);
+        List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(
+            request,
+            toTargets,
+            ccAddresses,
+            bccAddresses,
+            docuLinks
+        );
+        String lastMessageId = 'POSTMARK-SENT';
+        String fromAddress = SugatiLegacyEmailService.resolveFromEmailAddress(request.orgWideEmailAddressId);
+        try {
+            for (Messaging.SingleEmailMessage mail : messages) {
+                Map<String, Object> payload = new Map<String, Object>{
+                    'From' => fromAddress,
+                    'To' => String.join(mail.getToAddresses(), ','),
+                    'Subject' => mail.getSubject(),
+                    'HtmlBody' => mail.getHtmlBody()
+                };
+                List<String> ccList = mail.getCcAddresses();
+                if (ccList != null && !ccList.isEmpty()) {
+                    payload.put('Cc', String.join(ccList, ','));
+                }
+                List<String> bccList = mail.getBccAddresses();
+                if (bccList != null && !bccList.isEmpty()) {
+                    payload.put('Bcc', String.join(bccList, ','));
+                }
+
+                HttpRequest req = new HttpRequest();
+                req.setEndpoint('callout:Postmark_NC/email');
+                req.setMethod('POST');
+                req.setHeader('Content-Type', 'application/json');
+                req.setBody(JSON.serialize(payload));
+
+                Http http = new Http();
+                HttpResponse res = http.send(req);
+                if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
+                    throw new AuraHandledException('Postmark send failed: ' + res.getStatusCode() + ' ' + res.getBody());
+                }
+                Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+                if (body != null && body.containsKey('MessageID')) {
+                    lastMessageId = String.valueOf(body.get('MessageID'));
+                }
+            }
+            return lastMessageId;
+        } catch (Exception ex) {
+            throw new AuraHandledException(
+                'Postmark is not available (' +
+                    toUserFacingExceptionMessage(ex) +
+                    '). Configure the Postmark_NC named credential or choose Native Salesforce Email.'
+            );
+        }
+    }
+
+    private static Boolean isPostmarkInfrastructureError(Exception ex) {
+        String message = toUserFacingExceptionMessage(ex).toLowerCase();
+        return message.contains('postmark') ||
+            message.contains('named credential') ||
+            message.contains('callout') ||
+            message.contains('unauthorized endpoint') ||
+            message.contains('could not find');
+    }
+
+    private static String toUserFacingExceptionMessage(Exception ex) {
+        if (ex == null) {
+            return 'Unknown error';
+        }
+        if (ex instanceof AuraHandledException) {
+            return ex.getMessage();
+        }
+        return String.isNotBlank(ex.getMessage()) ? ex.getMessage() : ex.getTypeName();
     }
 
     private static List<RecipientDTO> recipientsByInputs(List<Id> ids, List<String> emails, List<String> names) {
@@ -1054,6 +1853,16 @@ public with sharing class SugatiCommunicationHubController {
 
     private static String blankToDash(String value) {
         return String.isBlank(value) ? '-' : value;
+    }
+
+    private static Boolean stageMatches(String templateStage, String filterStage) {
+        if (String.isBlank(filterStage)) {
+            return true;
+        }
+        if (String.isBlank(templateStage)) {
+            return true;
+        }
+        return templateStage.trim().equalsIgnoreCase(filterStage.trim());
     }
 
     private static String blankSafe(String value) {
@@ -1322,6 +2131,13 @@ public with sharing class SugatiCommunicationHubController {
         return fileName.substring(0, dotIndex);
     }
 
+    private static void stampDraftLastModified(Comm_Log__c log) {
+        if (log == null) {
+            return;
+        }
+        log.Last_Modified_At__c = System.now();
+    }
+
     private static void syncCommLogAttachments(Id commLogId, Set<Id> contentDocumentIds) {
         if (commLogId == null) {
             return;
@@ -1408,13 +2224,67 @@ public with sharing class SugatiCommunicationHubController {
 
     private static String normalizeRecipientType(String role) {
         String r = String.isBlank(role) ? '' : role.toLowerCase();
+        if (r == 'cc' || r == 'bcc' || r == 'to') {
+            return 'Traveller';
+        }
         if (r.contains('supplier')) {
             return 'Supplier';
         }
         if (r.contains('agent')) {
             return 'Agent';
         }
+        if (r.contains('lead')) {
+            return 'Traveller';
+        }
         return 'Traveller';
+    }
+
+    private static String normalizeEmailSendType(String sendType) {
+        String value = String.isBlank(sendType) ? '' : sendType.trim().toUpperCase();
+        if (value == 'CC') {
+            return 'CC';
+        }
+        if (value == 'BCC') {
+            return 'BCC';
+        }
+        return 'TO';
+    }
+
+    private static String inferEmailSendTypeFromRole(String role) {
+        String r = String.isBlank(role) ? '' : role.toLowerCase();
+        if (r == 'cc') {
+            return 'CC';
+        }
+        if (r == 'bcc') {
+            return 'BCC';
+        }
+        return 'TO';
+    }
+
+    private static String resolveEmailSendType(String emailSendType, String recipientType) {
+        if (!String.isBlank(emailSendType)) {
+            return normalizeEmailSendType(emailSendType);
+        }
+        return inferEmailSendTypeFromRole(recipientType);
+    }
+
+    private static String resolveAudienceRole(String role, String emailSendType) {
+        String normalizedRole = normalizeRecipientType(role);
+        String send = String.isBlank(emailSendType) ? 'TO' : emailSendType.toUpperCase();
+        if (send == 'CC' || send == 'BCC' || send == 'TO') {
+            String r = String.isBlank(role) ? '' : role.toLowerCase();
+            if (r.contains('supplier')) {
+                return 'Supplier';
+            }
+            if (r.contains('agent')) {
+                return 'Agent';
+            }
+            if (r == 'cc' || r == 'bcc' || r == 'to') {
+                return 'Traveller';
+            }
+            return normalizedRole;
+        }
+        return normalizedRole;
     }
 
     private static String buildInitials(String fullName) {
@@ -1436,14 +2306,85 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
+    private static void applySendRequestOpportunityFallbacks(SendRequest request) {
+        if (request == null || request.opportunityId != null) {
+            return;
+        }
+        if (request.relatedRecordId != null && String.valueOf(request.relatedRecordId).startsWith('006')) {
+            request.opportunityId = request.relatedRecordId;
+        }
+    }
+
+    private static void mergeSendContent(SendRequest request, String resolvedSubject, String resolvedBodyHtml) {
+        if (request == null) {
+            return;
+        }
+        if (String.isNotBlank(resolvedSubject)) {
+            request.resolvedSubject = resolvedSubject.trim();
+        }
+        if (String.isNotBlank(resolvedBodyHtml)) {
+            request.resolvedBodyHtml = resolvedBodyHtml;
+        }
+    }
+
+    private static void mergeSendEmailLists(
+        SendRequest request,
+        List<String> toEmails,
+        List<String> ccEmails,
+        List<String> bccEmails,
+        String toEmailsJson,
+        String ccEmailsJson,
+        String bccEmailsJson
+    ) {
+        if (request == null) {
+            return;
+        }
+        request.toEmails = resolveEmailListParam(toEmails, toEmailsJson, request.toEmails);
+        request.ccEmails = resolveEmailListParam(ccEmails, ccEmailsJson, request.ccEmails);
+        request.bccEmails = resolveEmailListParam(bccEmails, bccEmailsJson, request.bccEmails);
+    }
+
+    private static List<String> resolveEmailListParam(
+        List<String> directList,
+        String jsonList,
+        List<String> requestList
+    ) {
+        List<String> fromJson = parseEmailJsonList(jsonList);
+        if (!fromJson.isEmpty()) {
+            return fromJson;
+        }
+        List<String> fromDirect = cleanEmailList(directList);
+        if (!fromDirect.isEmpty()) {
+            return fromDirect;
+        }
+        return cleanEmailList(requestList);
+    }
+
+    private static List<String> parseEmailJsonList(String jsonList) {
+        if (String.isBlank(jsonList)) {
+            return new List<String>();
+        }
+        try {
+            List<Object> raw = (List<Object>) JSON.deserializeUntyped(jsonList);
+            List<String> emails = new List<String>();
+            for (Object row : raw) {
+                if (row != null && !String.isBlank(String.valueOf(row))) {
+                    emails.add(String.valueOf(row));
+                }
+            }
+            return cleanEmailList(emails);
+        } catch (Exception ex) {
+            return new List<String>();
+        }
+    }
+
     private static void validateSendRequest(SendRequest request) {
         if (request == null || request.opportunityId == null) {
             throw new AuraHandledException('Opportunity is required for send.');
         }
-        Boolean hasIds = request.recipientIds != null && !request.recipientIds.isEmpty();
-        Boolean hasEmails = request.recipientEmails != null && !request.recipientEmails.isEmpty();
-        if (!hasIds && !hasEmails) {
-            throw new AuraHandledException('At least one recipient is required.');
+        Boolean hasTo = request.toEmails != null && !request.toEmails.isEmpty();
+        if (!hasTo) {
+            throw new AuraHandledException('At least one To recipient is required.');
         }
     }
 }

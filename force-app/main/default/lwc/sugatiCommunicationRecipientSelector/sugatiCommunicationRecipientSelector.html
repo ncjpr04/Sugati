@@ -2,7 +2,7 @@
     <div class="rec-page">
         <div class="rec-ey">Step 2 of 5 · Recipient Selection</div>
         <h2 class="rec-title">Who are you writing to?</h2>
-        <p class="rec-sub">Filter by booking status, select by role, then pick individual recipients. Selected contacts are added to the To field in the composer.</p>
+        <p class="rec-sub">Select travellers, suppliers, or contacts, then click Apply. Selections are added to the To, CC, or BCC line you opened from the composer.</p>
 
         <div class="rec-aud-tabs">
             <template for:each={tabs} for:item="tab">
@@ -30,7 +30,7 @@
                 </div>
                 <div class="rec-list" id="rec-list">
                     <template for:each={visibleRecipients} for:item="rec">
-                        <div key={rec.id} class={rec.rowClass}>
+                        <div key={rec.rowKey} class={rec.rowClass}>
                             <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
                             <div class={rec.avClass}>{rec.initials}</div>
                             <div class="rec-info">
@@ -54,7 +54,7 @@
                 </div>
                 <div class="rec-list">
                     <template for:each={visibleRecipients} for:item="rec">
-                        <div key={rec.id} class={rec.rowClass}>
+                        <div key={rec.rowKey} class={rec.rowClass}>
                             <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
                             <div class={rec.avClass}>{rec.initials}</div>
                             <div class="rec-info">
@@ -72,8 +72,8 @@
         <template lwc:if={showAgentsEmpty}>
             <div class="rec-empty-state">
                 <div class="rec-empty-icon">🏢</div>
-                <div class="rec-empty-title">No agent on this trip</div>
-                <p class="rec-empty-desc">This opportunity has no Agency record linked. B2B agent emails are sent via the Agency contact on the Opportunity.</p>
+                <div class="rec-empty-title">No agency on this trip</div>
+                <p class="rec-empty-desc">Link an Agency on the Opportunity to select the agency account. Agency contacts appear under Sup. Contacts.</p>
             </div>
         </template>
 
@@ -86,7 +86,7 @@
                 </div>
                 <div class="rec-list">
                     <template for:each={visibleRecipients} for:item="rec">
-                        <div key={rec.id} class={rec.rowClass}>
+                        <div key={rec.rowKey} class={rec.rowClass}>
                             <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
                             <div class={rec.avClass}>{rec.initials}</div>
                             <div class="rec-info">
@@ -105,7 +105,7 @@
             <div class="rec-empty-state">
                 <div class="rec-empty-icon">📋</div>
                 <div class="rec-empty-title">Supplier contacts</div>
-                <p class="rec-empty-desc">Supplier contacts will appear here based on the linked suppliers on the Opportunity.</p>
+                <p class="rec-empty-desc">Supplier and agency contacts from bookings on this trip appear here with their linked account.</p>
             </div>
         </template>
 
@@ -118,12 +118,15 @@
                 </div>
                 <div class="rec-list">
                     <template for:each={visibleRecipients} for:item="rec">
-                        <div key={rec.id} class={rec.rowClass}>
+                        <div key={rec.rowKey} class={rec.rowClass}>
                             <div class={rec.cbClass} data-id={rec.id} onclick={handleToggle}>✓</div>
                             <div class={rec.avClass}>{rec.initials}</div>
                             <div class="rec-info">
                                 <div class="rec-name">{rec.name}</div>
                                 <div class="rec-email">{rec.email}</div>
+                                <template lwc:if={rec.showLinkedTo}>
+                                    <div class="rec-linked-to">{rec.linkedToLabel}</div>
+                                </template>
                             </div>
                             <div class="rec-role-col"><span class={rec.roleClass}>{rec.role}</span></div>
                             <div class="rec-status-col"><span class={rec.statusClass}>{rec.status}</span></div>

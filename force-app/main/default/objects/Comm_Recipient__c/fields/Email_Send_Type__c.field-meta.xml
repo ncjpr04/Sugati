@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Channel__c</fullName>
-    <label>Channel</label>
+    <fullName>Email_Send_Type__c</fullName>
+    <label>Email Send Type</label>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
@@ -10,19 +10,19 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Email</fullName>
+                <fullName>TO</fullName>
                 <default>false</default>
-                <label>Email</label>
+                <label>TO</label>
             </value>
             <value>
-                <fullName>WhatsApp</fullName>
+                <fullName>CC</fullName>
                 <default>false</default>
-                <label>WhatsApp</label>
+                <label>CC</label>
             </value>
             <value>
-                <fullName>In-App</fullName>
+                <fullName>BCC</fullName>
                 <default>false</default>
-                <label>In-App</label>
+                <label>BCC</label>
             </value>
         </valueSetDefinition>
     </valueSet>

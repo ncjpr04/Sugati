@@ -384,6 +384,10 @@
     margin-top: 2px;
 }
 
+.pp-schedule-field {
+    margin-top: 10px;
+}
+
 .prev-send-zone {
     margin-top: auto;
     padding: 16px;
@@ -405,6 +409,11 @@
 .send-btn.email {
     background: var(--ac);
     color: var(--warm-black);
+}
+
+.send-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }
 
 .send-btn.wa {

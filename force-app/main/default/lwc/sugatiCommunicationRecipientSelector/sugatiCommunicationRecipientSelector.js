@@ -1,8 +1,10 @@
 import { LightningElement, api, wire } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getRecipients from '@salesforce/apex/SugatiCommunicationHubController.getRecipients';
 
 export default class SugatiCommunicationRecipientSelector extends LightningElement {
     _selectedIds = [];
+    _selectedEmails = [];
     @api opportunityId;
 
     activeTab = 'travellers';
@@ -22,6 +24,16 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         this.applyPreselection();
     }
 
+    @api
+    get selectedEmails() {
+        return this._selectedEmails;
+    }
+
+    set selectedEmails(value) {
+        this._selectedEmails = Array.isArray(value) ? value : [];
+        this.applyPreselection();
+    }
+
     @wire(getRecipients, { opportunityId: '$opportunityId' })
     wiredRecipients({ data }) {
         if (!data || !data.length) {
@@ -30,6 +42,9 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         const mapped = data.map((r) => ({
             ...r,
             id: r.id,
+            rowKey: r.id,
+            contactId: r.contactId || null,
+            audience: r.audience || 'travellers',
             initials: r.initials || this.computeInitials(r.name),
             name: r.name,
             email: r.email,
@@ -37,6 +52,7 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
             roleKey: r.roleKey || 'traveller',
             status: r.status || 'Booked',
             statusKey: r.statusKey || 'booked',
+            linkedToLabel: r.linkedToLabel || '',
             avClass: r.roleKey === 'lead' ? 'av-gold' : 'av-blue',
             selected: Boolean(r.selected)
         }));
@@ -50,7 +66,7 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
     get tabs() {
         return [
             { id: 'travellers', label: '🧳 Travellers', count: this._travellers.length, className: this.activeTab === 'travellers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
-            { id: 'agents',     label: '🏢 Agent',       count: this._agents.length || null, className: this.activeTab === 'agents' ? 'rec-aud-tab on' : 'rec-aud-tab' },
+            { id: 'agents',     label: '🏢 Agency',      count: this._agents.length || null, className: this.activeTab === 'agents' ? 'rec-aud-tab on' : 'rec-aud-tab' },
             { id: 'suppliers',  label: '🏨 Suppliers',   count: this._suppliers.length, className: this.activeTab === 'suppliers' ? 'rec-aud-tab on' : 'rec-aud-tab' },
             { id: 'contacts',   label: '📋 Sup. Contacts', count: this._contacts.length, className: this.activeTab === 'contacts' ? 'rec-aud-tab on' : 'rec-aud-tab' }
         ];
@@ -91,10 +107,12 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
             })
             .map((r) => ({
                 ...r,
+                rowKey: r.rowKey || r.id,
                 rowClass: r.selected ? 'rec-item sel' : 'rec-item',
                 cbClass: r.selected ? 'rec-cb on' : 'rec-cb',
                 roleClass: `rec-role-badge ${r.roleKey}`,
-                statusClass: `rec-status-badge ${r.statusKey}`
+                statusClass: `rec-status-badge ${r.statusKey}`,
+                showLinkedTo: this.activeTab === 'contacts' && Boolean(r.linkedToLabel)
             }));
     }
 
@@ -129,10 +147,15 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
     handleToggle(event) {
         const id = event.currentTarget.dataset.id;
         const toggle = (list) => list.map((r) => (r.id === id ? { ...r, selected: !r.selected } : r));
-        this._travellers = toggle(this._travellers);
-        this._suppliers = toggle(this._suppliers);
-        this._contacts = toggle(this._contacts);
-        this._agents = toggle(this._agents);
+        if (this.activeTab === 'suppliers') {
+            this._suppliers = toggle(this._suppliers);
+        } else if (this.activeTab === 'contacts') {
+            this._contacts = toggle(this._contacts);
+        } else if (this.activeTab === 'agents') {
+            this._agents = toggle(this._agents);
+        } else {
+            this._travellers = toggle(this._travellers);
+        }
     }
 
     handleQuickSelect(event) {
@@ -154,8 +177,47 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         }
     }
 
+    normalizeApplyRow(row) {
+        const email = (row.email || '').trim();
+        return {
+            id: row.id,
+            contactId: row.contactId || null,
+            audience: row.audience || 'travellers',
+            name: row.name,
+            email,
+            initials: row.initials,
+            role: row.role,
+            roleKey: row.roleKey
+        };
+    }
+
+    getActiveTabRecipients() {
+        if (this.activeTab === 'suppliers') {
+            return this._suppliers;
+        }
+        if (this.activeTab === 'contacts') {
+            return this._contacts;
+        }
+        if (this.activeTab === 'agents') {
+            return this._agents;
+        }
+        return this._travellers;
+    }
+
     handleApply() {
-        const selected = [...this._travellers, ...this._suppliers, ...this._contacts, ...this._agents].filter((r) => r.selected);
+        const selected = this.getActiveTabRecipients()
+            .filter((r) => r.selected && (r.email || '').trim())
+            .map((r) => this.normalizeApplyRow(r));
+        if (!selected.length) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'No recipients selected',
+                    message: 'Select at least one traveller, supplier, or contact with an email address.',
+                    variant: 'warning'
+                })
+            );
+            return;
+        }
         this.dispatchEvent(new CustomEvent('apply', { detail: { recipients: selected } }));
     }
 
@@ -172,8 +234,24 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
     }
 
     applyPreselection() {
-        const selectedSet = new Set((this._selectedIds || []).filter(Boolean));
-        const mark = (list) => list.map((r) => ({ ...r, selected: selectedSet.has(r.id) }));
+        const selectedIdSet = new Set((this._selectedIds || []).filter(Boolean));
+        const selectedEmailSet = new Set(
+            (this._selectedEmails || []).map((email) => String(email).trim().toLowerCase()).filter(Boolean)
+        );
+        const isPreselected = (row) => {
+            if (!row) {
+                return false;
+            }
+            if (row.contactId && selectedIdSet.has(row.contactId)) {
+                return true;
+            }
+            if (row.id && selectedIdSet.has(row.id)) {
+                return true;
+            }
+            const email = (row.email || '').trim().toLowerCase();
+            return email && selectedEmailSet.has(email);
+        };
+        const mark = (list) => list.map((r) => ({ ...r, selected: isPreselected(r) }));
         this._travellers = mark(this._travellers);
         this._suppliers = mark(this._suppliers);
         this._contacts = mark(this._contacts);
