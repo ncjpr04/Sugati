@@ -1,32 +1,5 @@
 public with sharing class SugatiCommunicationHubController {
-    private static final Set<String> ALLOWED_ROOTS = new Set<String>{
-        'Opportunity',
-        'Owner',
-        'Traveller',
-        'LeadBooker',
-        'ClientGroup',
-        'Supplier',
-        'SupplierContact',
-        'SupplierBooking',
-        'ClientPayment',
-        'SupplierCostPayment'
-    };
     private static final String EMAIL_CHANNEL = 'Email';
-    private static final Integer MAX_TOKEN_FIELDS_PER_GROUP = 120;
-
-    private class TokenRootConfig {
-        String groupId;
-        String groupLabel;
-        String rootName;
-        String sobjectApi;
-        TokenRootConfig(String groupId, String groupLabel, String rootName, String sobjectApi) {
-            this.groupId = groupId;
-            this.groupLabel = groupLabel;
-            this.rootName = rootName;
-            this.sobjectApi = sobjectApi;
-        }
-    }
-
     public class HubContextDTO {
         @AuraEnabled public Id opportunityId;
         @AuraEnabled public String opportunityName;
@@ -60,23 +33,6 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String type;
         @AuraEnabled public String channel;
         @AuraEnabled public String meta;
-    }
-
-    public class TokenGroupDTO {
-        @AuraEnabled public String id;
-        @AuraEnabled public String label;
-        @AuraEnabled public Integer count;
-    }
-
-    public class TokenFieldDTO {
-        @AuraEnabled public String name;
-        @AuraEnabled public String api;
-        @AuraEnabled public Boolean highlight;
-    }
-
-    public class TokenCatalogDTO {
-        @AuraEnabled public List<TokenGroupDTO> groups;
-        @AuraEnabled public Map<String, List<TokenFieldDTO>> fieldsByGroup;
     }
 
     public class HistoryItemDTO {
@@ -119,9 +75,7 @@ public with sharing class SugatiCommunicationHubController {
     public class PreviewResponse {
         @AuraEnabled public String subject;
         @AuraEnabled public String bodyHtml;
-        @AuraEnabled public List<String> unresolvedTokens;
         @AuraEnabled public List<RecipientDTO> recipients;
-        @AuraEnabled public Map<String, String> tokenValues;
     }
 
     public class SendRequest {
@@ -379,17 +333,6 @@ public with sharing class SugatiCommunicationHubController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static TokenCatalogDTO getMergeTokens(Id opportunityId) {
-        TokenCatalogDTO dto = new TokenCatalogDTO();
-        dto.groups = new List<TokenGroupDTO>();
-        dto.fieldsByGroup = new Map<String, List<TokenFieldDTO>>();
-        for (TokenRootConfig cfg : tokenRootConfigs()) {
-            addGroup(dto, cfg.groupId, cfg.groupLabel, buildFieldsForRoot(cfg.rootName, cfg.sobjectApi));
-        }
-        return dto;
-    }
-
-    @AuraEnabled(cacheable=true)
     public static List<HistoryItemDTO> getHistory(
         Id opportunityId,
         String channelFilter,
@@ -543,15 +486,9 @@ public with sharing class SugatiCommunicationHubController {
         String bodyTemplate = String.isBlank(request.bodyTemplate) && template != null ? template.Body__c : request.bodyTemplate;
 
         PreviewResponse response = new PreviewResponse();
-        response.unresolvedTokens = new List<String>();
         response.recipients = recipientsByInputs(request.recipientIds, request.recipientEmails, request.recipientNames);
-        Set<String> requestedTokens = extractTokenPaths(new List<String>{ subjectTemplate, bodyTemplate });
-        Map<String, Set<String>> fieldsByRoot = fieldsByRoot(requestedTokens);
-        SObject oppRow = queryOpportunityForPreview(request.opportunityId, fieldsByRoot.containsKey('Opportunity') ? fieldsByRoot.get('Opportunity') : new Set<String>());
-        Map<String, String> tokenValues = buildTokenValues(request.opportunityId, oppRow, response.recipients, requestedTokens, fieldsByRoot);
-        response.tokenValues = tokenValues;
-        response.subject = resolveTemplate(subjectTemplate, tokenValues, response.unresolvedTokens);
-        response.bodyHtml = resolveTemplate(bodyTemplate, tokenValues, response.unresolvedTokens);
+        response.subject = blankSafe(subjectTemplate);
+        response.bodyHtml = blankSafe(bodyTemplate);
         return response;
     }
 
@@ -580,13 +517,15 @@ public with sharing class SugatiCommunicationHubController {
     public static SendResponse sendMessage(SendRequest request) {
         validateSendRequest(request);
         PreviewResponse preview = previewMessage(new PreviewRequestBuilder(request).build());
+        String outboundSubject = !String.isBlank(request.resolvedSubject) ? request.resolvedSubject : preview.subject;
+        String outboundBodyHtml = !String.isBlank(request.resolvedBodyHtml) ? request.resolvedBodyHtml : preview.bodyHtml;
 
         Comm_Log__c log = new Comm_Log__c();
         log.Opportunity__c = request.opportunityId;
         log.Channel__c = String.isBlank(request.channel) ? EMAIL_CHANNEL : request.channel;
         log.Direction__c = 'Outbound';
-        log.Subject__c = preview.subject;
-        log.Body_HTML__c = preview.bodyHtml;
+        log.Subject__c = outboundSubject;
+        log.Body_HTML__c = outboundBodyHtml;
         log.Sent_At__c = System.now();
         log.Sent_By__c = UserInfo.getUserId();
         log.Delivery_Mode__c = request.deliveryMode;
@@ -620,7 +559,7 @@ public with sharing class SugatiCommunicationHubController {
         String providerMessageId = 'LOCAL-' + String.valueOf(log.Id).right(10);
         Boolean providerOk = false;
         try {
-            providerMessageId = sendViaPostmark(preview, recRows, request.deliveryMode);
+            providerMessageId = sendViaPostmark(outboundSubject, outboundBodyHtml, recRows, request.deliveryMode);
             providerOk = true;
         } catch (Exception ex) {
             log.Status__c = 'Failed';
@@ -1000,7 +939,7 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
-    private static String sendViaPostmark(PreviewResponse preview, List<Comm_Recipient__c> recipients, String deliveryMode) {
+    private static String sendViaPostmark(String subject, String bodyHtml, List<Comm_Recipient__c> recipients, String deliveryMode) {
         if (deliveryMode == 'native') {
             return 'NATIVE-' + String.valueOf(Crypto.getRandomLong()).replace('-', '');
         }
@@ -1025,8 +964,8 @@ public with sharing class SugatiCommunicationHubController {
         Map<String, Object> payload = new Map<String, Object>{
             'From' => UserInfo.getUserEmail(),
             'To' => String.join(toEmails, ','),
-            'Subject' => preview.subject,
-            'HtmlBody' => preview.bodyHtml
+            'Subject' => subject,
+            'HtmlBody' => bodyHtml
         };
         req.setBody(JSON.serialize(payload));
 
@@ -1037,220 +976,6 @@ public with sharing class SugatiCommunicationHubController {
         }
         Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
         return body != null && body.containsKey('MessageID') ? String.valueOf(body.get('MessageID')) : 'POSTMARK-SENT';
-    }
-
-    private static Map<String, String> buildTokenValues(
-        Id opportunityId,
-        SObject oppRow,
-        List<RecipientDTO> selectedRecipients,
-        Set<String> requestedTokens,
-        Map<String, Set<String>> requestedByRoot
-    ) {
-        Map<String, String> values = new Map<String, String>();
-        if (requestedTokens == null || requestedTokens.isEmpty()) {
-            return values;
-        }
-
-        Set<Id> selectedIds = new Set<Id>();
-        if (selectedRecipients != null) {
-            for (RecipientDTO rec : selectedRecipients) {
-                if (rec != null && rec.id != null) {
-                    selectedIds.add(rec.id);
-                }
-            }
-        }
-
-        Map<String, SObject> rootRows = new Map<String, SObject>();
-        rootRows.put('Opportunity', oppRow);
-
-        if (requestedByRoot.containsKey('Owner') && oppRow != null) {
-            Id ownerId = (Id) oppRow.get('OwnerId');
-            if (ownerId != null) {
-                SObject ownerRow = queryOneById('User', ownerId, requestedByRoot.get('Owner'));
-                if (ownerRow != null) {
-                    rootRows.put('Owner', ownerRow);
-                }
-            }
-        }
-
-        if (requestedByRoot.containsKey('Traveller')) {
-            rootRows.put('Traveller', queryTraveller(opportunityId, selectedIds, requestedByRoot.get('Traveller')));
-        }
-
-        Id leadCgId = oppRow != null ? (Id) oppRow.get('sugati__O_Lead_CG__c') : null;
-        SObject clientGroup = null;
-        if (leadCgId != null && (requestedByRoot.containsKey('ClientGroup') || requestedByRoot.containsKey('LeadBooker'))) {
-            Set<String> cgFields = new Set<String>();
-            if (requestedByRoot.containsKey('ClientGroup')) {
-                cgFields.addAll(requestedByRoot.get('ClientGroup'));
-            }
-            cgFields.add('sugati__CG_Lead_Group_Member__c');
-            clientGroup = queryOneById('sugati__Client_Group__c', leadCgId, cgFields);
-            if (clientGroup != null && requestedByRoot.containsKey('ClientGroup')) {
-                rootRows.put('ClientGroup', clientGroup);
-            }
-        }
-
-        if (requestedByRoot.containsKey('LeadBooker') && clientGroup != null) {
-            Id leadGmId = (Id) clientGroup.get('sugati__CG_Lead_Group_Member__c');
-            if (leadGmId != null) {
-                rootRows.put('LeadBooker', queryOneById('sugati__Group_Member__c', leadGmId, requestedByRoot.get('LeadBooker')));
-            }
-        }
-
-        Id supplierId = queryPrimarySupplierId(opportunityId);
-        if (supplierId != null && requestedByRoot.containsKey('Supplier')) {
-            rootRows.put('Supplier', queryOneById('sugati__Supplier__c', supplierId, requestedByRoot.get('Supplier')));
-        }
-        if (supplierId != null && requestedByRoot.containsKey('SupplierContact')) {
-            rootRows.put('SupplierContact', querySupplierContact(supplierId, requestedByRoot.get('SupplierContact')));
-        }
-        if (requestedByRoot.containsKey('SupplierBooking')) {
-            rootRows.put('SupplierBooking', queryByOpportunity('sugati__Supplier_Booking__c', 'sugati__SB_Opportunity__c', opportunityId, requestedByRoot.get('SupplierBooking')));
-        }
-        if (requestedByRoot.containsKey('ClientPayment')) {
-            rootRows.put('ClientPayment', queryByOpportunity('sugati__Client_Payment__c', 'sugati__CP_Opportunity__c', opportunityId, requestedByRoot.get('ClientPayment')));
-        }
-        if (requestedByRoot.containsKey('SupplierCostPayment')) {
-            rootRows.put('SupplierCostPayment', queryByOpportunity('sugati__Supplier_Cost_Payment__c', 'sugati__SCP_Opportunity__c', opportunityId, requestedByRoot.get('SupplierCostPayment')));
-        }
-
-        for (String tokenPath : requestedTokens) {
-            if (!isAllowedToken(tokenPath)) {
-                continue;
-            }
-            List<String> bits = tokenPath.split('\\.');
-            if (bits.size() < 2) {
-                continue;
-            }
-            String root = bits[0];
-            SObject row = rootRows.get(root);
-            values.put(tokenPath, resolveValueFromRow(row, tokenPath));
-        }
-        return values;
-    }
-
-    private static SObject queryOpportunityForPreview(Id opportunityId, Set<String> requestedFields) {
-        Map<String, Schema.SObjectField> oppFields = Schema.SObjectType.Opportunity.fields.getMap();
-        Set<String> wanted = new Set<String>{
-            'Id',
-            'OwnerId',
-            'sugati__O_Lead_CG__c'
-        };
-        if (requestedFields != null) {
-            wanted.addAll(requestedFields);
-        }
-
-        List<String> selectFields = new List<String>();
-        for (String candidate : wanted) {
-            if (oppFields.containsKey(candidate)) {
-                selectFields.add(candidate);
-            }
-        }
-
-        String soql = 'SELECT ' + String.join(selectFields, ',') + ' FROM Opportunity WHERE Id = :opportunityId LIMIT 1';
-        List<SObject> rows = Database.query(soql);
-        return rows.isEmpty() ? null : rows[0];
-    }
-
-    private static String resolveValueFromRow(SObject row, String tokenPath) {
-        if (row == null || String.isBlank(tokenPath)) {
-            return '';
-        }
-        List<String> bits = tokenPath.split('\\.');
-        if (bits.isEmpty()) {
-            return '';
-        }
-
-        SObject cursor = row;
-        for (Integer i = 1; i < bits.size(); i++) {
-            String bit = bits[i];
-            Boolean isLeaf = i == bits.size() - 1;
-            if (isLeaf) {
-                Map<String, Schema.SObjectField> fields = cursor.getSObjectType().getDescribe().fields.getMap();
-                if (!fields.containsKey(bit)) {
-                    return '';
-                }
-                try {
-                    Object val = cursor.get(bit);
-                    return val == null ? '' : String.valueOf(val);
-                } catch (Exception ex) {
-                    return '';
-                }
-            }
-            try {
-                SObject related = cursor.getSObject(bit);
-                if (related == null) {
-                    return '';
-                }
-                cursor = related;
-            } catch (Exception ex) {
-                return '';
-            }
-        }
-        return '';
-    }
-
-    private static String resolveTemplate(String input, Map<String, String> tokenValues, List<String> unresolved) {
-        if (String.isBlank(input)) {
-            return '';
-        }
-        List<String> chunks = new List<String>();
-        Set<String> seenUnresolved = new Set<String>();
-        Integer pos = 0;
-        while (pos < input.length()) {
-            Integer openIdx = input.indexOf('{{', pos);
-            if (openIdx < 0) {
-                chunks.add(input.substring(pos));
-                break;
-            }
-            Integer closeIdx = input.indexOf('}}', openIdx + 2);
-            if (closeIdx < 0) {
-                chunks.add(input.substring(pos));
-                break;
-            }
-            chunks.add(input.substring(pos, openIdx));
-            String rawToken = input.substring(openIdx + 2, closeIdx);
-            String tokenPath = normalizeTokenPath(rawToken);
-            if (!isAllowedToken(tokenPath)) {
-                if (!seenUnresolved.contains(tokenPath)) {
-                    unresolved.add(tokenPath);
-                    seenUnresolved.add(tokenPath);
-                }
-                pos = closeIdx + 2;
-                continue;
-            }
-            String replacement = '';
-            if (tokenValues.containsKey(tokenPath)) {
-                replacement = tokenValues.get(tokenPath);
-            }
-            if (String.isBlank(replacement) && !seenUnresolved.contains(tokenPath)) {
-                unresolved.add(tokenPath);
-                seenUnresolved.add(tokenPath);
-            }
-            chunks.add(replacement == null ? '' : replacement);
-            pos = closeIdx + 2;
-        }
-        return String.join(chunks, '');
-    }
-
-    private static Boolean isAllowedToken(String tokenPath) {
-        if (String.isBlank(tokenPath)) {
-            return false;
-        }
-        List<String> bits = tokenPath.split('\\.');
-        if (bits.isEmpty()) {
-            return false;
-        }
-        return ALLOWED_ROOTS.contains(bits[0]);
-    }
-
-    private static String normalizeTokenPath(String tokenPath) {
-        if (String.isBlank(tokenPath)) {
-            return '';
-        }
-        String compact = tokenPath.replaceAll('\\s+', '');
-        return compact.replaceAll('[^A-Za-z0-9_\\.]', '');
     }
 
     private static List<RecipientDTO> recipientsByInputs(List<Id> ids, List<String> emails, List<String> names) {
@@ -1315,201 +1040,6 @@ public with sharing class SugatiCommunicationHubController {
             }
         }
         return out;
-    }
-
-    private static List<TokenRootConfig> tokenRootConfigs() {
-        return new List<TokenRootConfig>{
-            new TokenRootConfig('opportunity', 'Opportunity', 'Opportunity', 'Opportunity'),
-            new TokenRootConfig('owner', 'Owner', 'Owner', 'User'),
-            new TokenRootConfig('traveller', 'Traveller', 'Traveller', 'sugati__Group_Member__c'),
-            new TokenRootConfig('lead', 'Lead Booker', 'LeadBooker', 'sugati__Group_Member__c'),
-            new TokenRootConfig('client', 'Client Group', 'ClientGroup', 'sugati__Client_Group__c'),
-            new TokenRootConfig('supplier', 'Supplier', 'Supplier', 'sugati__Supplier__c'),
-            new TokenRootConfig('supcontact', 'Supplier Contact', 'SupplierContact', 'sugati__Supplier_Contact__c'),
-            new TokenRootConfig('supbooking', 'Supplier Booking', 'SupplierBooking', 'sugati__Supplier_Booking__c'),
-            new TokenRootConfig('clientpayment', 'Client Payment', 'ClientPayment', 'sugati__Client_Payment__c'),
-            new TokenRootConfig('suppliercost', 'Supplier Cost Payment', 'SupplierCostPayment', 'sugati__Supplier_Cost_Payment__c')
-        };
-    }
-
-    private static List<TokenFieldDTO> buildFieldsForRoot(String rootName, String sobjectApi) {
-        Map<String, Schema.SObjectType> allTypes = Schema.getGlobalDescribe();
-        if (!allTypes.containsKey(sobjectApi)) {
-            return new List<TokenFieldDTO>();
-        }
-        Map<String, Schema.SObjectField> fields = allTypes.get(sobjectApi).getDescribe().fields.getMap();
-        List<String> apiNames = new List<String>(fields.keySet());
-        apiNames.sort();
-
-        List<TokenFieldDTO> out = new List<TokenFieldDTO>();
-        for (String apiName : apiNames) {
-            Schema.DescribeFieldResult dfr = fields.get(apiName).getDescribe();
-            if (!dfr.isAccessible() || !isSupportedTokenType(dfr.getType())) {
-                continue;
-            }
-            String exactApiName = dfr.getName();
-            out.add(new TokenFieldDTO());
-            out[out.size() - 1].name = dfr.getLabel();
-            out[out.size() - 1].api = rootName + '.' + exactApiName;
-            out[out.size() - 1].highlight = dfr.isNameField();
-            if (out.size() >= MAX_TOKEN_FIELDS_PER_GROUP) {
-                break;
-            }
-        }
-        return out;
-    }
-
-    private static Boolean isSupportedTokenType(Schema.DisplayType dt) {
-        return dt == Schema.DisplayType.String
-            || dt == Schema.DisplayType.TextArea
-            || dt == Schema.DisplayType.Email
-            || dt == Schema.DisplayType.Phone
-            || dt == Schema.DisplayType.Url
-            || dt == Schema.DisplayType.Currency
-            || dt == Schema.DisplayType.Double
-            || dt == Schema.DisplayType.Integer
-            || dt == Schema.DisplayType.Percent
-            || dt == Schema.DisplayType.Date
-            || dt == Schema.DisplayType.DateTime
-            || dt == Schema.DisplayType.Boolean
-            || dt == Schema.DisplayType.Picklist
-            || dt == Schema.DisplayType.MultiPicklist
-            || dt == Schema.DisplayType.Reference
-            || dt == Schema.DisplayType.Id;
-    }
-
-    private static Set<String> extractTokenPaths(List<String> templates) {
-        Set<String> out = new Set<String>();
-        if (templates == null) {
-            return out;
-        }
-        for (String input : templates) {
-            if (String.isBlank(input)) {
-                continue;
-            }
-            Integer pos = 0;
-            while (pos < input.length()) {
-                Integer openIdx = input.indexOf('{{', pos);
-                if (openIdx < 0) {
-                    break;
-                }
-                Integer closeIdx = input.indexOf('}}', openIdx + 2);
-                if (closeIdx < 0) {
-                    break;
-                }
-                String token = normalizeTokenPath(input.substring(openIdx + 2, closeIdx));
-                out.add(token);
-                pos = closeIdx + 2;
-            }
-        }
-        return out;
-    }
-
-    private static Map<String, Set<String>> fieldsByRoot(Set<String> tokenPaths) {
-        Map<String, Set<String>> out = new Map<String, Set<String>>();
-        if (tokenPaths == null) {
-            return out;
-        }
-        for (String tokenPath : tokenPaths) {
-            if (!isAllowedToken(tokenPath)) {
-                continue;
-            }
-            List<String> bits = tokenPath.split('\\.');
-            if (bits.size() < 2) {
-                continue;
-            }
-            String root = bits[0];
-            if (!out.containsKey(root)) {
-                out.put(root, new Set<String>());
-            }
-            out.get(root).add(bits[1]);
-        }
-        return out;
-    }
-
-    private static SObject queryOneById(String sobjectApi, Id recordId, Set<String> requestedFields) {
-        if (recordId == null) {
-            return null;
-        }
-        List<String> selectFields = buildSelectFields(sobjectApi, requestedFields, new Set<String>{ 'Id' });
-        String soql = 'SELECT ' + String.join(selectFields, ',') + ' FROM ' + sobjectApi + ' WHERE Id = :recordId LIMIT 1';
-        List<SObject> rows = Database.query(soql);
-        return rows.isEmpty() ? null : rows[0];
-    }
-
-    private static SObject queryByOpportunity(String sobjectApi, String opportunityFieldApi, Id opportunityId, Set<String> requestedFields) {
-        List<String> selectFields = buildSelectFields(sobjectApi, requestedFields, new Set<String>{ 'Id' });
-        String soql = 'SELECT ' + String.join(selectFields, ',') + ' FROM ' + sobjectApi +
-            ' WHERE ' + opportunityFieldApi + ' = :opportunityId ORDER BY CreatedDate ASC LIMIT 1';
-        List<SObject> rows = Database.query(soql);
-        return rows.isEmpty() ? null : rows[0];
-    }
-
-    private static SObject queryTraveller(Id opportunityId, Set<Id> selectedIds, Set<String> requestedFields) {
-        List<String> required = new List<String>{ 'Id', 'sugati__GM_Opportunity__c', 'sugati__GM_Contact__c' };
-        List<String> selectFields = buildSelectFields('sugati__Group_Member__c', requestedFields, new Set<String>(required));
-        String soql = 'SELECT ' + String.join(selectFields, ',') +
-            ' FROM sugati__Group_Member__c WHERE sugati__GM_Opportunity__c = :opportunityId';
-        if (selectedIds != null && !selectedIds.isEmpty()) {
-            soql += ' AND (Id IN :selectedIds OR sugati__GM_Contact__c IN :selectedIds)';
-        }
-        soql += ' ORDER BY CreatedDate ASC LIMIT 1';
-        List<SObject> rows = Database.query(soql);
-        return rows.isEmpty() ? null : rows[0];
-    }
-
-    private static Id queryPrimarySupplierId(Id opportunityId) {
-        List<sugati__Opportunity_Supplier__c> rows = [
-            SELECT sugati__OS_Supplier__c
-            FROM sugati__Opportunity_Supplier__c
-            WHERE sugati__OS_Opportunity__c = :opportunityId
-            ORDER BY CreatedDate ASC
-            LIMIT 1
-        ];
-        return rows.isEmpty() ? null : rows[0].sugati__OS_Supplier__c;
-    }
-
-    private static SObject querySupplierContact(Id supplierId, Set<String> requestedFields) {
-        List<String> selectFields = buildSelectFields('sugati__Supplier_Contact__c', requestedFields, new Set<String>{ 'Id' });
-        String soql = 'SELECT ' + String.join(selectFields, ',') +
-            ' FROM sugati__Supplier_Contact__c WHERE sugati__SC_Supplier__c = :supplierId ORDER BY CreatedDate ASC LIMIT 1';
-        List<SObject> rows = Database.query(soql);
-        return rows.isEmpty() ? null : rows[0];
-    }
-
-    private static List<String> buildSelectFields(String sobjectApi, Set<String> requestedFields, Set<String> requiredFields) {
-        Map<String, Schema.SObjectType> allTypes = Schema.getGlobalDescribe();
-        if (!allTypes.containsKey(sobjectApi)) {
-            return new List<String>{ 'Id' };
-        }
-        Map<String, Schema.SObjectField> fields = allTypes.get(sobjectApi).getDescribe().fields.getMap();
-        Set<String> selected = new Set<String>();
-        if (requiredFields != null) {
-            selected.addAll(requiredFields);
-        }
-        if (requestedFields != null) {
-            for (String api : requestedFields) {
-                if (fields.containsKey(api)) {
-                    selected.add(api);
-                }
-            }
-        }
-        if (!selected.contains('Id')) {
-            selected.add('Id');
-        }
-        List<String> out = new List<String>();
-        out.addAll(selected);
-        out.sort();
-        return out;
-    }
-
-    private static void addGroup(TokenCatalogDTO dto, String idValue, String labelValue, List<TokenFieldDTO> fields) {
-        TokenGroupDTO tokenGroup = new TokenGroupDTO();
-        tokenGroup.id = idValue;
-        tokenGroup.label = labelValue;
-        tokenGroup.count = fields.size();
-        dto.groups.add(tokenGroup);
-        dto.fieldsByGroup.put(idValue, fields);
     }
 
     private static String buildTemplateActiveFilter(Map<String, Schema.SObjectField> fieldsMap) {

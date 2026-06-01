@@ -261,8 +261,7 @@
 .page c-sugati-communication-whatsapp-composer,
 .page c-sugati-communication-in-app-composer,
 .page c-sugati-communication-recipient-selector,
-.page c-sugati-communication-preview-panel,
-.page c-sugati-communication-merge-field-picker {
+.page c-sugati-communication-preview-panel {
     flex: 1;
     height: 100%;
     display: block;

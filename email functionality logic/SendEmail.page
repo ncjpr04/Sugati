@@ -1,0 +1,98 @@
+<apex:page standardStylesheets="false" standardController="Opportunity" sidebar="false" title="Sugati - Send Email">
+    <title>Send Email</title>
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+        
+        <c:BasicResources ></c:BasicResources>
+        <!--<apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/jquery-1.10.2.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/jquery-ui.js')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.Framework, 'AdditionalResouce/jquery-ui.css')}" />-->
+        
+        <apex:stylesheet value="{!URLFOR($Resource.Framework, 'AdditionalResouce/select.css')}" />
+        <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/angular-resource.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/select-tpls.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/moment.min.js')}" />
+        <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/angular-sanitize.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.Framework2, 'slds-appssential.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.Framework2, 'slds-appssential.js')}"/>
+        <style>
+            oi-select .select-dropdown {
+                font-size: 12px; 
+            }
+            
+            oi-select .select-search-list-item {
+                font-size: 12px; 
+            }
+        </style>
+        
+        <script>
+            // create copies of the browser-default alert() and confirm() methods before they get overridden by SugatiJsUtils
+            // so that ckEditor can use the browser default confirm (otherwise if you go to create a hyperlink and then cancel, 
+            // the sugati confirm box comes up and you can't dismiss it).
+            var basicAlert = alert;
+            var basicConfirm = confirm;
+            
+
+            var myApp = angular.module('MyApp', ['ui.bootstrap','oi.select','ngSanitize', 'ui.select','checklist-model']);
+            var contrl = myApp.controller('myController' ,function($scope,$http, $timeout,oiSelect){});
+            //CKEditor 
+            myApp.directive('ckEditor', [function () {
+                return {
+                    require: '?ngModel',
+                    link: function ($scope, elm, attr, ngModel) {
+            
+                        var ck = CKEDITOR.inline(elm[0]);
+                        ck.on('pasteState', function () {
+                            $scope.$apply(function () {
+                                ngModel.$setViewValue(ck.getData());
+                            });
+                        });
+            
+                        ngModel.$render = function (value) {
+                            ck.setData(ngModel.$modelValue);
+                        };
+                    }
+                };
+            }]);
+            myApp.directive('jqdatepicker', function () {
+                return {
+                    restrict: 'A',
+                    require: 'ngModel',
+                     link: function (scope, element, attrs, ngModelCtrl) {
+                        $(element).datepicker({
+                            dateFormat: 'dd/mm/yy',
+                            onSelect: function (date) {
+                                ngModelCtrl.$setViewValue(date);
+                                ngModelCtrl.$render();
+                                scope.$apply();
+                            }
+                        });
+                    }
+                };
+            });
+            $( document ).ready(function() {
+                angular.element(document.getElementById('SendEmail')).scope().selectTemplate();
+            });
+            
+        </script>
+        
+                
+        <body>
+                    
+            <!-- FLS Check component -->
+            <c:FLSSecuirtyCheck />
+            
+            
+            <div ng-app="MyApp" ng-cloak="ng-cloak">
+                <div id="mycontroller" ng-controller="myController" >
+                    <div class="slds">
+                        <c:Loading ></c:Loading>
+                        <c:SugatiJsUtils />
+                    </div>
+                    <c:ClientTemplateScripts opportunityId="{!$CurrentPage.parameters.id}" templateName="SendEmail"/>
+                    <c:MailService opportunityId="{!$CurrentPage.parameters.id}" templateName="SendEmail"/>
+                </div>
+            </div>
+        </body>
+    </html>
+      
+</apex:page>

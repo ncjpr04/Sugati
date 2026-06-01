@@ -1,6 +1,5 @@
 import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import previewMessageDirect from '@salesforce/apex/SugatiCommunicationHubController.previewMessageDirect';
 import sendMessage from '@salesforce/apex/SugatiCommunicationHubController.sendMessage';
 import saveDraftDirect from '@salesforce/apex/SugatiCommunicationHubController.saveDraftDirect';
 
@@ -12,7 +11,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     @api subject = '';
     _previewPayload = {};
     _isConnected = false;
-    _previewRequestSeq = 0;
 
     previewChannel = 'email';
     showCover = true;
@@ -25,7 +23,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     sendTitle = 'Sending…';
     sendSubtitle = '';
     resolvedBody = '';
-    unresolvedTokens = [];
     recipientLabel = '';
     fromLabel = '';
     _pendingBodyHtml = '';
@@ -316,85 +313,20 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     }
 
     async loadPreview() {
-        if (!this.opportunityId || this.previewChannel !== 'email') {
+        if (this.previewChannel !== 'email') {
             return;
         }
-        const requestSeq = ++this._previewRequestSeq;
         this.isPreviewLoading = true;
         try {
-            const recipients = [
-                ...(this._previewPayload?.recipients || []),
-                ...(this._previewPayload?.ccRecipients || [])
-            ];
-            const recipientIds = recipients.map((r) => r.id).filter(Boolean);
-            const recipientEmails = recipients.map((r) => r.email).filter(Boolean);
-            const recipientNames = recipients.map((r) => r.name || r.email || '');
-            const requestPayload = {
-                opportunityId: this.opportunityId,
-                templateId: this._previewPayload?.templateId || null,
-                recipientIds,
-                recipientEmails,
-                recipientNames,
-                subjectTemplate: this._previewPayload?.subjectTemplate || this.subject,
-                bodyTemplate: this._previewPayload?.bodyTemplate || ''
-            };
-            if (DEBUG_PREVIEW_FLOW) {
-                console.log(`[Preview] loadPreview request#${requestSeq}`, this.debugStringify(requestPayload));
-            }
-            const result = await previewMessageDirect({
-                opportunityId: requestPayload.opportunityId,
-                templateId: requestPayload.templateId,
-                recipientIds: requestPayload.recipientIds,
-                recipientEmails: requestPayload.recipientEmails,
-                recipientNames: requestPayload.recipientNames,
-                subjectTemplate: requestPayload.subjectTemplate,
-                bodyTemplate: requestPayload.bodyTemplate
-            });
-            if (requestSeq !== this._previewRequestSeq) {
-                return;
-            }
-            if (DEBUG_PREVIEW_FLOW) {
-                console.log(`[Preview] loadPreview response#${requestSeq}`, this.debugStringify(result || {}));
-            }
-            const apexResolvedSubject = result?.subject ?? '';
-            const apexResolvedBody = result?.bodyHtml || '';
-            this.subject = apexResolvedSubject;
-            this.resolvedBody = apexResolvedBody;
+            this.subject =
+                this._previewPayload?.subjectTemplate ||
+                this._previewPayload?.subject ||
+                this.subject ||
+                '';
+            this.resolvedBody = this._previewPayload?.bodyTemplate || '';
             this._pendingBodyHtml = this.resolvedBody;
-            this.unresolvedTokens = result?.unresolvedTokens || [];
-            if (DEBUG_PREVIEW_FLOW) {
-                console.log(
-                    `[Preview] final render state#${requestSeq}`,
-                    this.debugStringify({
-                        subject: this.subject,
-                        resolvedBody: this.resolvedBody,
-                        unresolvedTokens: this.unresolvedTokens
-                    })
-                );
-            }
-        } catch (e) {
-            if (requestSeq !== this._previewRequestSeq) {
-                return;
-            }
-            if (DEBUG_PREVIEW_FLOW) {
-                console.error(
-                    `[Preview] loadPreview error#${requestSeq}`,
-                    this.debugStringify({
-                        message: e?.body?.message || e?.message || 'Unknown error',
-                        bodyMessage: e?.body?.message || null,
-                        body: e?.body || null,
-                        stack: e?.stack || null
-                    })
-                );
-            }
-            this.subject = '';
-            this.unresolvedTokens = [];
-            this.resolvedBody = '';
-            this._pendingBodyHtml = '<p>Unable to generate preview.</p>';
         } finally {
-            if (requestSeq === this._previewRequestSeq) {
-                this.isPreviewLoading = false;
-            }
+            this.isPreviewLoading = false;
         }
     }
 

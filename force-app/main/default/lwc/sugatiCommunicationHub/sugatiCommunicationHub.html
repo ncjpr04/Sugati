@@ -8,7 +8,6 @@
                 <div class={emailNavClass} onclick={handleViewEmail}>Email Composer</div>
                 <div class={waNavClass} onclick={handleViewWa}>WhatsApp</div>
                 <div class={iaNavClass} onclick={handleViewIa}>In-App</div>
-                <div class={tokensNavClass} onclick={handleViewTokens}>Merge Tokens</div>
                 <div class={historyNavClass} onclick={handleViewHistory}>History</div>
             </nav>
         </header>
@@ -77,7 +76,6 @@
                         onnavigaterecipients={handleNavigateRecipients}
                         onnavigatepreview={handleNavigatePreview}
                         onopentemplates={handleOpenTemplatePicker}
-                        onnavigatetokens={handleEmailNavigateTokens}
                         ondraftsaved={handleDraftSaved}
                         ondraftdiscarded={handleDraftDiscarded}
                     ></c-sugati-communication-email-composer>
@@ -138,15 +136,6 @@
                 </div>
             </template>
 
-            <template lwc:if={showTokens}>
-                <div class="page on">
-                    <c-sugati-communication-merge-field-picker
-                        opportunity-id={effectiveOpportunityId}
-                        onback={handleTokensBack}
-                        ontokeninsert={handleTokensInsert}
-                    ></c-sugati-communication-merge-field-picker>
-                </div>
-            </template>
         </div>
 
         <template lwc:if={showTemplatePicker}>

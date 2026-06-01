@@ -1,0 +1,56 @@
+<apex:component controller="ClientTemplateScriptsController" layout="none">
+    <apex:attribute name="opportunityId" type="String" description="Id of Opportuntiy"/>
+    <apex:attribute name="templateName" type="String" description="Name of the template which is accessing the component"/>
+    
+    <apex:repeat value="{!lstTemplateScriptSettings}" var="script">
+        <apex:includeScript value="{!script.Static_Resource_URL__c}"/>
+    </apex:repeat>
+    
+    <script>
+        var sugati__clientTemplateScripts = {};
+        var sugati__opportunityId = '{!JSENCODE(opportunityId)}';
+        var sugati__namespace;
+        var sugati__namespacePrefix;
+        var clientTemplateScriptSettings;
+        
+        (function(w){
+            console.log('ClientTemplateScripts Execution');
+            sugati__clientTemplateScripts = {};
+            sugati__opportunityId = '{!JSENCODE(opportunityId)}';
+            sugati__namespace = w['{!JSENCODE(Namespace)}'];
+            sugati__namespacePrefix = '{!IF(ISBLANK(Namespace), '', JSENCODE(Namespace))}';
+            console.log(sugati__namespacePrefix);
+            if( sugati__namespacePrefix.trim() == "__" ){
+                sugati__namespacePrefix = ""
+                sugati__namespace = w;
+            }
+            else {
+                sugati__namespace = w[sugati__namespacePrefix];
+            }
+            
+            if( sugati__namespace == undefined )
+                sugati__namespace = w;
+            
+            if( sugati__namespacePrefix.length > 2 && sugati__namespacePrefix.indexOf('__') == -1 ) {
+                sugati__namespacePrefix = sugati__namespacePrefix + '__';
+            }
+            clientTemplateScriptSettings = JSON.parse('{!JSENCODE( ClientTemplateScriptSettings )}');
+            console.log('Checking sugati__namespacePrefix: ', sugati__namespacePrefix);
+            console.log('clientTemplateScriptSettings: ', clientTemplateScriptSettings);
+            
+            for( let k = 0; k < clientTemplateScriptSettings.length; k++ ) {
+                
+                let scriptObj = {};
+                scriptObj['callback'] = clientTemplateScriptSettings[k][sugati__namespacePrefix + 'Callback_Function_Name__c']; 
+                scriptObj['substituteTerm'] = clientTemplateScriptSettings[k][sugati__namespacePrefix + 'Substitute_Term__c']; 
+                scriptObj['apexClassName'] = clientTemplateScriptSettings[k][sugati__namespacePrefix + 'Apex_Class_Name__c'];
+                scriptObj['onSendEmailAction'] = clientTemplateScriptSettings[k][sugati__namespacePrefix + 'On_Send_Email_Function_Name__c']; 
+                scriptObj['developerName'] = clientTemplateScriptSettings[k]['DeveloperName']; 
+                
+                sugati__clientTemplateScripts[ clientTemplateScriptSettings[k].DeveloperName ] = scriptObj;
+                sugati__clientTemplateScripts[ clientTemplateScriptSettings[k].Label ] = scriptObj;
+            }
+        })(window);
+    </script>
+   
+</apex:component>

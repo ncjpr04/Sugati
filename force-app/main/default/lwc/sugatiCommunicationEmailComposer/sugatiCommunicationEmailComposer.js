@@ -37,7 +37,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     bodyTemplate = '';
     currentUserName = '';
     currentUserEmail = '';
-    tokenInsertTarget = 'body';
     _lastFocusedField = 'body';
     _subjectCursorPos = 0;
     _bodyCursorPos = 0;
@@ -157,7 +156,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             this.editingCommLogId = payload.editingCommLogId || null;
             this.deliveryMode = payload.deliveryMode || 'postmark';
             this._lastFocusedField = payload.lastFocusedField || 'body';
-            this.tokenInsertTarget = this._lastFocusedField;
             this._subjectCursorPos = payload.subjectCursorPos || 0;
             this._bodyCursorPos = payload.bodyCursorPos || 0;
             if (Array.isArray(payload.selectedAttachmentIds)) {
@@ -538,7 +536,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.templateSearch = '';
         this.deliveryMode = 'postmark';
         this._lastFocusedField = 'body';
-        this.tokenInsertTarget = 'body';
         this._subjectCursorPos = 0;
         this._bodyCursorPos = 0;
         this._bodySelectionRange = null;
@@ -583,7 +580,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.activeTemplateName = state.activeTemplateName || '';
         this.activeTemplateMeta = state.activeTemplateMeta || '';
         this._lastFocusedField = state.lastFocusedField || 'body';
-        this.tokenInsertTarget = this._lastFocusedField;
         this._subjectCursorPos = state.subjectCursorPos || 0;
         this._bodyCursorPos = state.bodyCursorPos || 0;
         this._bodySelectionRange = null;
@@ -692,25 +688,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.persistDraft();
     }
 
-    handleOpenMerge() {
-        // Use last focused field, captured before button click steals focus.
-        this.tokenInsertTarget = this._lastFocusedField || 'body';
-        this.captureFieldCursor(this.tokenInsertTarget);
-        this.dispatchEvent(
-            new CustomEvent('navigatetokens', {
-                detail: { target: this.tokenInsertTarget },
-                bubbles: true,
-                composed: true
-            })
-        );
-    }
-
-    handleTokenMouseDown(event) {
-        // Keep current field selection intact while clicking token button.
-        event.preventDefault();
-        this.captureFieldCursor(this._lastFocusedField || 'body');
-    }
-
     handleFormatMouseDown(event) {
         event.preventDefault();
         this.captureBodySelection();
@@ -725,20 +702,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return;
         }
         this.captureBodySelection();
-    }
-
-    insertAtCursor(fieldKey, cursorKey, selector, token) {
-        const base = this[fieldKey] || '';
-        const pos = Math.max(0, Math.min(this[cursorKey] ?? base.length, base.length));
-        this[fieldKey] = base.slice(0, pos) + token + base.slice(pos);
-        this[cursorKey] = pos + token.length;
-        requestAnimationFrame(() => {
-            const el = this.template.querySelector(selector);
-            if (el) {
-                el.focus();
-                el.setSelectionRange(this[cursorKey], this[cursorKey]);
-            }
-        });
     }
 
     syncBodyEditorFromState() {
@@ -805,53 +768,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
         editor.focus();
         this.restoreBodySelection(editor);
-    }
-
-    insertTokenInBody(token) {
-        const editor = this.template.querySelector('.editor-body');
-        if (!editor) {
-            return;
-        }
-        editor.focus();
-        this.restoreBodySelection(editor);
-
-        const selection = window.getSelection();
-        const range =
-            selection && selection.rangeCount > 0 && editor.contains(selection.getRangeAt(0).commonAncestorContainer)
-                ? selection.getRangeAt(0)
-                : null;
-
-        if (range) {
-            range.deleteContents();
-            const tokenNode = document.createTextNode(token);
-            range.insertNode(tokenNode);
-            range.setStartAfter(tokenNode);
-            range.collapse(true);
-            if (selection) {
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        } else if (!document.execCommand('insertText', false, token)) {
-            editor.appendChild(document.createTextNode(token));
-        }
-
-        this.bodyTemplate = editor.innerHTML;
-        this._editorSyncedHtml = this.bodyTemplate;
-        this.captureBodySelection();
-    }
-
-    @api
-    insertToken(token, target) {
-        if (!token) {
-            return;
-        }
-        const actualTarget = target || this.tokenInsertTarget || this._lastFocusedField || 'body';
-        if (actualTarget === 'subject') {
-            this.insertAtCursor('subject', '_subjectCursorPos', '.subj-input', token);
-        } else {
-            this.insertTokenInBody(token);
-        }
-        this.persistDraft();
     }
 
     handleEditorAction(event) {

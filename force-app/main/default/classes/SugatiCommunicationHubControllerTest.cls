@@ -80,8 +80,6 @@ private class SugatiCommunicationHubControllerTest {
         List<SugatiCommunicationHubController.RecipientDTO> recipients = SugatiCommunicationHubController.getRecipients(opp.Id);
         List<SugatiCommunicationHubController.TemplateDTO> templates =
             SugatiCommunicationHubController.getTemplates(opp.Id, null, null, 'Email');
-        SugatiCommunicationHubController.TokenCatalogDTO tokens = SugatiCommunicationHubController.getMergeTokens(opp.Id);
-
         SugatiCommunicationHubController.PreviewRequest req = new SugatiCommunicationHubController.PreviewRequest();
         req.opportunityId = opp.Id;
         req.templateId = templateId;
@@ -94,9 +92,8 @@ private class SugatiCommunicationHubControllerTest {
         System.assertEquals(opp.Id, ctx.opportunityId);
         System.assert(recipients.size() >= 1, 'Expected recipients');
         System.assert(templates.size() >= 1, 'Expected active templates');
-        System.assert(tokens.groups.size() >= 1, 'Expected token groups');
-        System.assert(preview.subject.contains('Trip'), 'Expected resolved subject');
-        System.assertNotEquals(null, preview.bodyHtml);
+        System.assertEquals('Trip {{Opportunity.Name}}', preview.subject, 'Expected subject passthrough');
+        System.assert(preview.bodyHtml.contains('{{Owner.Name}}'), 'Expected body passthrough');
     }
 
     @IsTest

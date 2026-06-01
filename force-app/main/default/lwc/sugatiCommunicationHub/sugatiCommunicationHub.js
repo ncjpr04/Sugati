@@ -11,7 +11,6 @@ const VIEWS = {
     IA: 'ia',
     RECIPIENTS: 'recipients',
     PREVIEW: 'preview',
-    TOKENS: 'tokens',
     HISTORY: 'history'
 };
 const HARDCODED_OPPORTUNITY_ID = '006d3000005oJpNAAU';
@@ -35,8 +34,6 @@ export default class SugatiCommunicationHub extends LightningElement {
     recipientTarget = 'to';
     toRecipients = [];
     ccRecipients = [];
-    tokenInsertTarget = 'body';
-    composerDraftState = null;
     draftForEdit = null;
     historyRefreshKey = 0;
     _wiredHubContextResult;
@@ -121,10 +118,6 @@ export default class SugatiCommunicationHub extends LightningElement {
         return this.currentView === VIEWS.HISTORY;
     }
 
-    get showTokens() {
-        return this.currentView === VIEWS.TOKENS;
-    }
-
     get hubNavClass() {
         return this.currentView === VIEWS.HUB ? 'tn on' : 'tn';
     }
@@ -147,14 +140,6 @@ export default class SugatiCommunicationHub extends LightningElement {
 
     get historyNavClass() {
         return this.currentView === VIEWS.HISTORY ? 'tn on' : 'tn';
-    }
-
-    get tokensNavClass() {
-        return this.currentView === VIEWS.TOKENS ? 'tn on' : 'tn';
-    }
-
-    isComposerView(view) {
-        return view === VIEWS.EMAIL || view === VIEWS.WA || view === VIEWS.IA;
     }
 
     handleNewMessage() {
@@ -187,16 +172,6 @@ export default class SugatiCommunicationHub extends LightningElement {
             this.pendingRecipients = [];
         }
         this.currentView = VIEWS.RECIPIENTS;
-    }
-
-    handleEmailNavigateTokens(event) {
-        const composer = this.template.querySelector('c-sugati-communication-email-composer');
-        if (composer && typeof composer.getComposeState === 'function') {
-            this.composerDraftState = composer.getComposeState();
-        }
-        this.tokenInsertTarget = event?.detail?.target || 'body';
-        this._returnView = VIEWS.EMAIL;
-        this.currentView = VIEWS.TOKENS;
     }
 
     handleRecipientsApply(event) {
@@ -329,13 +304,6 @@ export default class SugatiCommunicationHub extends LightningElement {
         this.currentView = VIEWS.IA;
     }
 
-    handleViewTokens() {
-        const fromView = this.currentView;
-        this._returnView =
-            fromView === VIEWS.TOKENS || !this.isComposerView(fromView) ? VIEWS.EMAIL : fromView;
-        this.currentView = VIEWS.TOKENS;
-    }
-
     handleOpenTemplatePicker() {
         this.showTemplatePicker = true;
     }
@@ -352,32 +320,6 @@ export default class SugatiCommunicationHub extends LightningElement {
         if (composer) {
             composer.applyTemplateSelection(event.detail);
         }
-    }
-
-    handleTokensBack() {
-        this.currentView = this._returnView || VIEWS.EMAIL;
-    }
-
-    handleTokensInsert(event) {
-        const token = event.detail?.token;
-        const target = this.tokenInsertTarget || 'body';
-        const returnView = this._returnView || VIEWS.EMAIL;
-        this.currentView = returnView;
-        if (returnView !== VIEWS.EMAIL) {
-            this.composerDraftState = null;
-            return;
-        }
-        Promise.resolve().then(() => {
-            const composer = this.template.querySelector('c-sugati-communication-email-composer');
-            if (!composer) return;
-            if (this.composerDraftState && typeof composer.applyComposeState === 'function') {
-                composer.applyComposeState(this.composerDraftState);
-            }
-            if (token && typeof composer.insertToken === 'function') {
-                composer.insertToken(token, target);
-            }
-            this.composerDraftState = null;
-        });
     }
 
     applySelectedRecipients() {

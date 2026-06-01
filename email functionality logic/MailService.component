@@ -1,0 +1,970 @@
+<!--
+  @File Name          : MailService.component
+  @Description        : 
+  @Author             : ????@sugatitravel.com
+  @Group              : 
+  @Last Modified By   : naval@sugatitravel.com
+  @Last Modified On   : 29/12/2024
+  @Modification Log   : 
+  Ver       Date             Author                  Modification
+  1.0    ??/??/????   ????@sugatitravel.com      Initial Version
+  2.0    07/04/2020   naval@sugatitravel.com     Added check for uploading JS resources if it is not required to avoid conflicts
+-->
+<apex:component controller="AckComponent">
+    <apex:attribute name="opportunityid" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="templateName" type="String" description="TODO: Describe me"/>
+    <apex:attribute name="doNoLoadResource" type="Boolean" description="Avoid conflicts by not loading the resources" default="false"/>
+    <apex:attribute name="currentvfPageName" type="String" description="name of the page where this component is being callsed" assignTo="{!pageName}" />
+    <apex:attribute name="clientGroupId" type="String" description="Client Group Id for Client Invoice"/>
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> 
+        
+            <head>
+                <!--<apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/jquery-ui.js')}" />
+                <apex:stylesheet value="{!URLFOR($Resource.Framework, 'AdditionalResouce/jquery-ui.css')}" />-->
+                
+                <apex:outputText rendered="{!NOT(doNoLoadResource)}">
+                    <c:BasicResources ></c:BasicResources>
+                    <apex:stylesheet value="{!URLFOR($Resource.Framework, 'AdditionalResouce/select.css')}" />
+                    <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/angular-resource.js')}" />
+                    <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/select-tpls.js')}" />
+                    <apex:includescript value="{!URLFOR($Resource.Framework,'AdditionalResouce/moment.min.js')}" />
+                    <apex:stylesheet value="{!URLFOR($Resource.fontawesome4, 'css/font-awesome.min.css')}"/>
+                    <apex:includeScript value="{!URLFOR($Resource.SugatiJSConstants, 'timeOptions.js')}"/>
+                    
+                    <script>
+                        try {
+                            console.log(typeof USER_LOCALE_DATE_FORMAT_MOMENTJS);
+                            if( typeof USER_LOCALE_DATE_FORMAT_MOMENTJS == 'undefined' ){
+                                var USER_LOCALE_DATE_FORMAT_MOMENTJS = "{!UPPER(dateFormat)}";
+                            }
+                            console.log(USER_LOCALE_DATE_FORMAT_MOMENTJS);
+                            if( typeof USER_LOCALE_DATE_FORMAT_JQUERY == 'undefined' ){
+                                var USER_LOCALE_DATE_FORMAT_JQUERY = "{!LEFT( LOWER(dateFormat), LEN(dateFormat)- 2)}";
+                            }
+                            if( typeof USER_LOCALE_DATE_FORMAT_VF == 'undefined' ){
+                                var USER_LOCALE_DATE_FORMAT_VF = "{!JSENCODE(dateFormat)}";
+                            }
+                        }
+                        catch(err){
+                        }
+                    </script>
+                </apex:outputText>
+                <apex:outputText rendered="{!doNoLoadResource}">
+                    <c:Loading ></c:Loading>                    
+                </apex:outputText>
+                
+                
+                <style>
+                    .ng-invalid{
+                        //border-color: red !important;
+                    }
+                    .cke_textarea_inline.cke_editable.cke_editable_inline.cke_contents_ltr.cke_show_borders {
+                        border: dashed 0.5px;
+                        padding : 12px;
+                    }
+                    .emailBody1{
+                        font-size: 80%;    
+                    }
+                    .selectTemplate{
+                        width:0px; !important
+                        float: left;
+                        margin-top: 5px;
+                        padding-right:5px;
+                        color: #54698d;
+                        font-size: 12px;
+                    }
+                    .selectTemplateList{
+                        padding-top:5px;
+                    }
+                    .slds:not(html), .slds body{
+                        font-size: inherit;    
+                    }
+                </style>
+                <!-- Angular Controller -->
+                <script>
+                   function redirect(url) {
+                        if ( (typeof sforce != 'undefined') && (sforce != null) ) {
+                            sforce.one.navigateToURL(url);
+                        }
+                        else {
+                            //location.href = url;
+                            window.open(url,'_self')
+                        }
+                    }
+                
+                    
+                    
+                    CKEDITOR.editorConfig = function( config ) {
+                        config.toolbarGroups = [
+                            { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                            { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                            { name: 'links', groups: [ 'links' ] },
+                            { name: 'insert', groups: [ 'insert' ] },
+                            { name: 'forms', groups: [ 'forms' ] },
+                            { name: 'tools', groups: [ 'tools' ] },
+                            { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                            { name: 'others', groups: [ 'others' ] },
+                            '/',
+                            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                            { name: 'colors', groups: [ 'colors' ] },
+                            { name: 'styles', groups: [ 'styles' ] },
+                            { name: 'about', groups: [ 'about' ] }
+                        ];
+                    
+                        config.removeButtons = 'Underline,Subscript,Superscript,Cut,Copy,Paste,PasteText,PasteFromWord';
+                        config.allowedContent = true;
+                    };
+                    CKEDITOR.config.allowedContent = true;
+                    
+                    var lastSetBy = '';
+                    var contrl1 = myApp.controller('{!substitute(templateName,' ','')}' ,function($scope,$http, $timeout,oiSelect){
+                        window.sScope = $scope;
+                        $scope.version = oiSelect.version.full;
+                        $scope.emailAddresses;
+                        $scope.emailW = JSON.parse('{!JSENCODE(getEmailW)}');
+                        $scope.oppRecords = [];
+                        $scope.emailTemp;
+                        $scope.opportunityId;
+                        $scope.clientGroupId = '';
+                        $scope.leadPessanger;
+                        $scope.ErrorMessages = {};
+                        $scope.lstTemplate;
+                        $scope.selectedTemplate = '';
+                        $scope.mapRecords;
+                        $scope.selectedEmailTmp = '';
+                        $scope.opportinityStage = '';
+                        $scope.selectedObject = '';
+                        $scope.reports = '';
+                        $scope.selectedRecord = '';
+                        $scope.showFolloUp = true;
+                        $scope.nameSpacePrefix = '{!JSENCODE(nameSpacePrefix)}';
+                        $scope.autoSuggestTime = SUGATI_TIME_PICKLIST_OPTIONS;
+                        $scope.selectedEmailTmp = '';
+                        $scope.backButton= ((typeof sforce != 'undefined') && (sforce != null));
+                        $scope.fromemailAddresses;
+                        $scope.useNewDataModel = {!IF(useNewDataModel, true, false)};
+                        
+                        $scope.USER_LOCALE_DATE_FORMAT_MOMENTJS = USER_LOCALE_DATE_FORMAT_MOMENTJS;
+                        $scope.USER_LOCALE_DATE_FORMAT_JQUERY = USER_LOCALE_DATE_FORMAT_JQUERY;
+                        $scope.USER_LOCALE_DATE_FORMAT_VF = USER_LOCALE_DATE_FORMAT_VF;
+                        
+                        $scope.loadRcap = function(){
+                            loading(true);
+                            lastSetBy = 'getErrorMessages';
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getErrorMessages}', '{!$CurrentPage.Name}',
+                                function(result, event){
+                                    if (event.status) {
+                                    //Result contains list of page messages 
+                                       $scope.ErrorMessages = result;
+                                       if($scope.ErrorMessages['HE_Brochure_Request_Created'] == undefined){
+                                            $scope.ErrorMessages['HE_Brochure_Request_Created'] = "Brochure request has been created successfully.";
+                                       }
+                                       if($scope.ErrorMessages['HE_Select_Record'] == undefined){
+                                            $scope.ErrorMessages['HE_Select_Record'] = "Please select a record.";
+                                       }
+                                       if($scope.ErrorMessages['Mail_Sent'] == undefined){
+                                            $scope.ErrorMessages['Mail_Sent'] = "Email has been successfully sent.";
+                                       }
+                                       $scope.$apply();
+                                    }else if (event.type === 'exception') 
+                                        alert(htmlEncode(event.message),{"type": "error"});
+                                    if(lastSetBy == 'getErrorMessages' || lastSetBy == '')
+                                        loading(false);
+                                }, 
+                                {escape: false}
+                            );
+                            
+                            loading(true);
+                            lastSetBy = 'getContact';
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getContact}',$scope.opportunityId,
+                                function(result, event){
+                                    if (event.status) {
+                                    //Result contains list of account names and account id
+                                       $scope.emailAddresses = result;
+                                       $scope.$apply();
+                                       
+                                    }else if (event.type === 'exception') 
+                                        alert(htmlEncode(event.message),{"type": "error"});
+                                    if(lastSetBy == 'getContact' || lastSetBy == '')
+                                        loading(false);
+                                }, 
+                                {escape: false}
+                            );
+                            
+                            loading(true);
+                            lastSetBy = 'getFromAddress';
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getFromAddress}',
+                                function(result, event){
+                                    if (event.status) {
+                                    //Result contains list of account names and account id
+                                       $scope.fromemailAddresses = result;
+                                       $scope.$apply();
+                                       
+                                    }else if (event.type === 'exception') 
+                                        alert(htmlEncode(event.message),{"type": "error"});
+                                    if(lastSetBy == 'getFromAddress' || lastSetBy == '')
+                                        loading(false);
+                                }, 
+                                {escape: false}
+                            );
+                            
+                            loading(true);
+                            lastSetBy = 'getTemplate';
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getTemplate}',$scope.opportunityId,$scope.clientGroupId,'{!JSENCODE(templateName)}','{!JSENCODE(pageName)}',
+                                function(result, event){
+                                    if (event.status) {
+                                        console.log(result);
+                                        $scope.showFolloUp = true;
+                                    //Result contains list of account names and account id
+                                    if(result != null && result !== undefined){
+                                       $scope.emailTemp = JSON.parse(result.emailBody);
+                                       $scope.emailW.subject = result.subject;
+                                       console.log(result.selectedTo);
+                                       $scope.leadPessanger = result.leadpassenger;
+                                       $scope.emailW.selectedTo = result.selectedTo;
+                                       $scope.emailW.selectedBcc = result.selectedBcc;
+                                       $scope.emailW.selectedCc = result.selectedCc;
+                                       $scope.emailW.selectedFrom = result.selectedFrom;
+                                   }
+                                       $scope.$apply();
+                                    }else if (event.type === 'exception') 
+                                        alert(htmlEncode(event.message), {"type": "error"});
+                                    if(lastSetBy == 'getTemplate' || lastSetBy == '')
+                                        loading(false);
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        
+                        // // Brochure and Request Contact
+                        
+                        $scope.saveContactBrochureRequest= function(){
+                          loading(true);
+                          Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.saveBroucheRequestContact}',JSON.stringify($scope.leadPessanger),
+                                function(result, event){
+                                    if (event.status) {
+                                      alert($scope.ErrorMessages['HE_Brochure_Request_Created']); 
+                                      loading(false);
+                                    }else if(event.type === 'exception'){
+                                        alert(htmlEncode(event.message),{"type": "error"});
+                                        loading(false);
+                                    }else if(!event.status){
+                                        alert($scope.ErrorMessages['HE_Select_Record'],{"type": "error"});
+                                        loading(false);
+                                    }    
+                                }, 
+                                {escape: false}
+                            ); 
+                            
+                        }
+                        
+                        
+                        //Load Data
+                        if('{!$currentpage.Name}'.indexOf('HolidayEnquiry') == -1){
+                            if('{!opportunityid}' != '')
+                                $scope.opportunityId  =  '{!opportunityid}';
+                            else
+                                $scope.opportunityId  =  '{!$CurrentPage.parameters.id}';   
+                            if('{!clientGroupId}' != '')
+                                $scope.clientGroupId = '{!clientGroupId}';
+                            $scope.loadRcap();
+                        }
+                        
+                        
+                        
+                        $scope.sendEmail = function(tabName){
+                            loading(true);
+                            var attachmentIds = [];
+                            $('#attachedFiles a').each(function(){
+                                console.log(this.id);
+                                attachmentIds.push(this.id);    
+                            });
+                            $scope.emailW.selectedFrom = $scope.emailW.selectedFrom.value;
+                            if($scope.opportinityStage === undefined){
+                                $scope.opportinityStage = '';
+                            }
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.sendEmail}',filterJSON($scope.emailW),$scope.emailTemp,$scope.opportunityId, '{!JSENCODE(templateName)}','{!JSENCODE(pageName)}', attachmentIds, $scope.selectedEmailTmp,$scope.opportinityStage,$scope.selectedRecord,
+                                function(result, event){
+                                    console.log(result);
+                                    if (event.status && result == 'Sucess') {
+                                        //Result contains list of account names and account id
+                                        loading(false);
+                                        alert($scope.ErrorMessages['Mail_Sent'] || "Email has been successfully sent.");
+                                        
+                                        if( sugati__clientTemplateScripts !== undefined && sugati__clientTemplateScripts[ $scope.selectedEmailTmp ] !== undefined && sugati__clientTemplateScripts[ $scope.selectedEmailTmp ].onSendEmailAction != undefined ) {
+                                            window[ sugati__clientTemplateScripts[ $scope.selectedEmailTmp ].onSendEmailAction ]( '{!opportunityId}', sugati__clientTemplateScripts[ $scope.selectedEmailTmp ] );    
+                                        } 
+                                        
+                                        if(tabName != ''){
+                                            $('#tab-'+tabName).parent("li").next().children("a").click(); 
+                                            $scope.opportunity[$scope.nameSpacePrefix+'O_Holiday_Enquiry_Stage__c'] = $scope.opportunity[$scope.nameSpacePrefix+'O_Holiday_Enquiry_Stage__c']+1;      
+                                        }
+                                    }else if (event.type === 'exception'){ 
+                                        loading(false);
+                                        alert(htmlEncode(event.message), {"type": "error"});
+                                    }
+                                    else{
+                                        loading(false);
+                                        alert(result, {"type": "error"});    
+                                    }
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        
+                        $scope.selectTemplate = function(){
+                            loading(true);
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getFolderReports}','{!$CurrentPage.Name}','{!$CurrentPage.Parameters.Id}',
+                                function(result, event){
+                                    if (event.status) {
+                                        //Result contains list of account names and account id
+                                        loading(false);
+                                        console.log(result);
+                                        $scope.mapRecords = result.mapRecords;
+                                        $scope.reports = result.lstTemplate ;
+                                        $scope.mapEmailTemplate = result.mapEmailTemplate;
+                                        $scope.$apply();
+                                        $('.popupTemp').toggle('show');
+                                        $scope.getOppRecords();
+                                       
+                                    }else if (event.type === 'exception'){ 
+                                        loading(false);
+                                        alert(htmlEncode(event.message), {"type": "error"});
+                                    }
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        
+                        $scope.getOppRecords = function(){
+                            loading(true);
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getOppRecords}','{!$CurrentPage.Parameters.Id}',
+                                function(result, event){
+                                    if (event.status) {
+                                        //Result contains list of account names and account id
+                                        loading(false);
+                                        console.log(result);
+                                        $scope.oppRecords = result;
+                                    }else if (event.type === 'exception'){ 
+                                        loading(false);
+                                        alert(htmlEncode(event.message), {"type": "error"});
+                                    }
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        
+                        $scope.saveAsTemplate = function(){
+                            $scope.setOfOppIds = [];
+                            angular.forEach($scope.oppRecords, function(state) {
+                                if (state.included) {
+                                    $scope.setOfOppIds.push(state.Id);
+                                }
+                            });
+                            if ($scope.unsortedEmailAddresses != undefined) {
+                                $scope.emailAddresses = angular.copy($scope.unsortedEmailAddresses);
+                            }
+                            loading(true);
+                            //$scope.selectedRecord = $scope.mapRecords[$scope.selectedObject][0].value;
+                            console.log($scope.selectedRecord);
+                            Visualforce.remoting.Manager.invokeAction(
+                               '{!$RemoteAction.AckComponent.getSelectedTemplate}',$scope.opportunityId,'{!JSENCODE(templateName)}',$scope.selectedReport,$scope.selectedObject,$scope.selectedRecord,$scope.setOfOppIds,
+                                function(result, event) {
+                                    console.log(result);
+                                    if (event.status) {
+                                        console.log(result);
+                                        //Result contains list of account names and account id
+                                        if  (result != null && result !== undefined) { 
+                                            $scope.emailTemp = JSON.parse(result.emailBody);
+                                            $scope.emailW.subject = result.subject;
+                                            $scope.emailW.selectedAttchment = result.selectedAttchment;
+                                            if ($scope.emailW.selectedAttchment.length > 0) {
+                                               getAttchments();
+                                            }
+                                            console.log(result.selectedTo);
+                                            $scope.leadPessanger = result.leadpassenger;
+                                            $scope.emailW.selectedTo = result.selectedTo;
+                                            $scope.emailW.selectedBcc = result.selectedBcc;
+                                            $scope.emailW.selectedCc= result.selectedCc;
+                                            $scope.selectedEmailTmp = result.selectedTemplateName;
+                                            if( sugati__clientTemplateScripts !== undefined && sugati__clientTemplateScripts[ $scope.selectedEmailTmp ] !== undefined && sugati__clientTemplateScripts[ $scope.selectedEmailTmp ].callback != undefined ) {
+                                                window[ sugati__clientTemplateScripts[ $scope.selectedEmailTmp ].callback ]( '{!opportunityId}', sugati__clientTemplateScripts[ $scope.selectedEmailTmp ] );    
+                                            }     
+                                            $scope.opportinityStage = result.opportunityStage;
+                                            $scope.emailW.selectedFrom = result.selectedBcc;
+                                            $('.popupTemp').toggle('hide');
+                                            $scope.showFolloUp = true;
+
+                                            // If the selected object is a supplier:
+                                            if ($scope.selectedObject == "Supplier__c") {
+                                                // make a copy of the original emailAddresses list as we are going to bump some 
+                                                // to the top of the list temporarily
+                                                $scope.unsortedEmailAddresses = angular.copy($scope.emailAddresses);
+                                                // pre-populate the To: field with the supplier email address
+                                                var toAddress;
+                                                $($scope.emailAddresses).each(function(index, emailAddress) {
+                                                    if (emailAddress.originalLabel != undefined) {
+                                                        emailAddress.label = emailAddress.originalLabel;
+                                                    }
+                                                    emailAddress.bumpToTop = false;
+                                                    if (emailAddress.supplierId == $scope.selectedRecord && emailAddress.isSupplier == true) {
+                                                        // this is the to address
+                                                        $scope.emailW.selectedTo = [];
+                                                        $scope.emailW.selectedTo.push(emailAddress);
+                                                    } else if (emailAddress.supplierId == $scope.selectedRecord && emailAddress.isSupplier == false) {
+                                                        // this is a supplier contact - add a badge to the address label
+                                                        emailAddress.originalLabel = emailAddress.label;
+                                                        emailAddress.label += '&nbsp;<span class="slds-badge" style="vertical-align: inherit !important;">Supplier Contact';
+                                                        if (emailAddress.supplierContactTypes != undefined) {
+                                                            if (emailAddress.supplierContactTypes.length > 0) {
+                                                                emailAddress.label += ' - ' + emailAddress.supplierContactTypes.join(", ");
+                                                            }
+                                                        }
+                                                        emailAddress.label += '</span>'
+                                                        emailAddress.bumpToTop = true;
+                                                    }
+                                                });
+
+                                                // bump the supplier contacts to the top of the list
+                                                var tempEmailAddresses = [];
+                                                $($scope.emailAddresses).each(function(index, emailAddress) {
+                                                    if (emailAddress.supplierId == $scope.selectedRecord && emailAddress.isSupplier == false) {
+                                                        tempEmailAddresses.push(emailAddress);
+                                                    }
+                                                });
+                                                $($scope.emailAddresses).each(function(index, emailAddress) {
+                                                    if (emailAddress.supplierId == undefined || emailAddress.supplierId != $scope.selectedRecord) {
+                                                        tempEmailAddresses.push(emailAddress);
+                                                    }
+                                                });
+                                                $scope.emailAddresses = tempEmailAddresses;
+                                            }
+                                        }
+                                        else{
+                                            alert('Please create salesforce email template first.',{"type": "error"});    
+                                        }
+                                        $scope.$apply();
+                                    } else if (event.type === 'exception') { 
+                                        alert(htmlEncode(event.message), {"type": "error"});
+                                    }
+                                    if(lastSetBy == 'getTemplate' || lastSetBy == '') {
+                                        loading(false);
+                                    }
+                                }, 
+                                {escape: false}
+                            );
+                        }
+                        $scope.globalFormateInput = function($model,list) {
+                            var inputLabel = '';
+                            angular.forEach(list, function(state) {
+                                if ($model === state.value) {
+                                    inputLabel = state.label;
+                                }
+                            });
+                            return inputLabel;
+                        }
+                        $scope.TypeAheadData = [];
+                        $scope.TypeAheadText = '';
+                        $scope.typeHeadAjax  = function(txt){
+                            $http({method: 'Get', url: 'Account_JSON?TO='+$scope.TypeAheadText}).
+                                success(function(data, status) {
+                                $scope.TypeAheadData = data;
+                                console.log($scope.TypeAheadData);
+                            }) ;  
+                        }
+                        
+                        $scope.selectedReportNameStr = '{!JSENCODE(templateName)}';
+                        $scope.selectedReportName = function(){
+                            $scope.selectedObject = $scope.mapEmailTemplate[$scope.selectedReport];
+                            console.log('Testing Objects');
+                            console.log($scope.selectedObject);
+                            $scope.selectedObjectDisabled = false;
+                            if($scope.selectedObject!= undefined){
+                                $scope.selectedObjectDisabled = true;
+                            }
+                            console.log($scope.selectedObjectDisabled);
+                            angular.forEach($scope.reports, function(state) {
+                                if (state.Id  ==  $scope.selectedReport) {
+                                    $scope.selectedReportNameStr = state[$scope.nameSpacePrefix+'ET_Template_Name__c'];
+                                }
+                            });
+                            
+                            $scope.selectedRecord = $scope.mapRecords[$scope.selectedObject][0].value;
+                        }
+                        
+                        $scope.formatInputTime = function($model) {
+                            var inputLabel = '';
+                            angular.forEach($scope.autoSuggestTime, function(state) {
+                                if ($model === state.value) {
+                                    inputLabel = state.label;
+                                }
+                            });
+                            return inputLabel;
+                        }
+                        
+                        $scope.openRecords = function(){
+                            
+                            $('.popupRecords').show('show');    
+                        }
+                        
+                        $scope.mergeDate = function(){
+                            var Date = '';
+                            var time = '';
+                            if($scope.emailW.followUpD != null){
+                                $scope.emailTemp = $scope.emailTemp.replace('[INSERT DATE]',''+$scope.emailW.followUpD);
+                                $scope.showFolloUp = false;
+                            }
+                            if($scope.emailW.followUpTime != null){
+                                $scope.emailTemp = $scope.emailTemp.replace('[INSERT TIME]',''+$scope.emailW.followUpTime);
+                                $scope.showFolloUp = false;
+                            }
+                            
+                        }
+                        
+                        $scope.moveToItineraryBuilder = function() {
+                            if({!isPartnerUser}){
+                                window.open("{!communityURL}/s/sfdcpage/{!URLENCODE('/apex/'+ nameSpacePrefix +'ItineraryBuilder?id=')}" + "{!$CurrentPage.parameters.Id}", "_parent");
+                            }
+                            else {
+                                redirect('/apex/{!JSENCODE(nameSpacePrefix)}ItineraryBuilder?id='+ "{!$CurrentPage.parameters.Id}");
+                            }
+                        }
+                        
+                    });
+                    
+                    myApp.directive('jqdatepicker', function () {
+                        return {
+                            restrict: 'A',
+                            require: 'ngModel',
+                             link: function (scope, element, attrs, ngModelCtrl) {
+                                $(element).datepicker({
+                                    dateFormat: USER_LOCALE_DATE_FORMAT_JQUERY,
+                                    onSelect: function (date) {
+                                        ngModelCtrl.$setViewValue(date);
+                                        ngModelCtrl.$render();
+                                        scope.$apply();
+                                    }
+                                });
+                            }
+                        };
+                    });
+                    
+                    //Filter the SObject JSON
+                    function filterJSON(data) {
+                        var ele = data;
+                        for (key in ele) {
+                           ele =  dateTimeReviver(ele,key);
+                        }  
+                        for (var i in ele) {
+                            for (key in ele[i]) {
+                               ele[i] =  dateTimeReviver(ele[i],key);
+                            }                 
+                            var ele1 = ele[i];
+                            if(ele[i] != null && ele[i].hasOwnProperty('$$hashKey')){
+                                delete ele[i]['$$hashKey']
+                            }
+                            for (var j in ele1) {
+                                for (key in ele1[j]) {
+                                   ele1[j] =  dateTimeReviver(ele1[j],key);
+                                } 
+                                if(typeof(ele1[j]) == 'object'){
+                                    if(ele[i][j] != null && ele[i][j].hasOwnProperty('$$hashKey')){
+                                        delete ele[i][j]['$$hashKey']
+                                    }
+                                    for (var k in ele1[j]) {
+                                        for (var l in ele1[j][k]) {
+                                            if(ele[i][j][k][l] != null && ele[i][j][k][l].hasOwnProperty('$$hashKey')){
+                                                delete ele[i][j][k][l]['$$hashKey']
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(ele !== undefined && ele.length === undefined){
+                            delete  ele['$$hashKey'];        
+                        }
+                        return ele;
+                    }
+                    
+                    
+                    dateTimeReviver = function (ele , key) {
+                        var value = ele[key];
+                        var a;
+                        if (typeof value === 'string' && key != 'followUpD') {
+                            var dtMv = moment(value, USER_LOCALE_DATE_FORMAT_MOMENTJS, true);
+                            if (dtMv.isValid()) {
+                                ele[key] = dtMv.format('YYYY-MM-DD');
+                                return ele;
+                            }
+                        }
+                        
+                        return ele;
+                    }
+                    
+                    // back function
+                    
+                    function back(){
+                        console.log("{!vfPageName}");
+                        if("{!vfPageName}".indexOf('HolidayEnquiry') == -1){
+                            if({!isPartnerUser}){
+                                window.open("{!communityURL}/s/sfdcpage/{!URLENCODE('/apex/'+ nameSpacePrefix +'ItineraryBuilder?id=')}" + "{!$CurrentPage.parameters.Id}", "_parent");
+                            }
+                            else {
+                                navigateToUrl('/apex/{!JSENCODE(nameSpacePrefix)}ItineraryBuilder?id='+ "{!$CurrentPage.parameters.Id}");
+                            }
+                        }
+                        else {
+                            if({!isPartnerUser}){
+                                window.open("{!communityURL}/s/sfdcpage/{!URLENCODE('/apex/'+ nameSpacePrefix +'HolidayEnquiry?id=')}" + "{!$CurrentPage.parameters.Id}", "_parent");
+                            }
+                            else {
+                                navigateToUrl('/apex/{!JSENCODE(nameSpacePrefix)}HolidayEnquiry?id='+ "{!$CurrentPage.parameters.Id}");
+                            }
+                        }
+                    }
+
+                    function backWithNewDataModel() {
+                        console.log("{!vfPageName}");
+                        if("{!vfPageName}".indexOf('HolidayEnquiry') == -1){
+                            if({!isPartnerUser}){
+                                window.open("{!communityURL}/s/sfdcpage/" + "{!$CurrentPage.parameters.Id}", "_parent");
+                            }
+                            else {
+                                navigateToUrl("/{!$CurrentPage.parameters.Id}");
+                            }
+                        }
+                        else {
+                            if({!isPartnerUser}){
+                                window.open("{!communityURL}/s/sfdcpage/" + "{!$CurrentPage.parameters.Id}", "_parent");
+                            }
+                            else {
+                                navigateToUrl("/{!$CurrentPage.parameters.Id}");
+                            }
+                        }
+                    }
+                </script>
+                
+            </head>
+                <c:SugatiJsUtils />
+                
+                <div style="min-height:450px">
+                    <div id="{!substitute(templateName,' ','')}" ng-controller="{!substitute(templateName,' ','')}" >
+                        <div class="slds form-email" style="margin-bottom: 50px;">
+                           
+                                    <div class="slds-modal__content slds-scrollable--y">
+                                        <h3 class="slds-section-title--divider">Client Information</h3>
+                                         <div class="slds-grid">
+                                            <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--8-of-12"> 
+                                                <div class="slds-p-around--medium slds-form" role="list">
+                                                    <div class="slds-grid slds-wrap">
+                                                        
+                                                        <div class="slds-form-element slds-form-element_horizontal slds-is-editing  slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                                                            <div >
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="inputNameSample1">To&nbsp;&nbsp;</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <oi-select style="padding: 5px 0;" oi-options="item.label for item in emailAddresses track by item.value" ng-model="emailW.selectedTo" multiple="multiple"  oi-select-options="{newItem: true,
+                                                                            newItemModel: {value: $query, label: $query}}" placeholder="Select">
+                                                                        </oi-select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="slds-form-element slds-form-element_horizontal slds-is-editing  slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                                                            <div >
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="inputNameSample1">Cc&nbsp;&nbsp;</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <oi-select style="padding: 5px 0;" oi-options="item.label for item in emailAddresses track by item.value" ng-model="emailW.selectedCc" multiple="multiple"  oi-select-options="{newItem: true,
+                                                                            newItemModel: {value: $query, label: $query}}" placeholder="Select">
+                                                                        </oi-select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="slds-form-element slds-form-element_horizontal slds-is-editing  slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                                                            <div>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="inputNameSample1">Bcc&nbsp;&nbsp;</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <oi-select style="padding: 5px 0;" oi-options="item.label for item in emailAddresses track by item.value" ng-model="emailW.selectedBcc" multiple="multiple"  oi-select-options="{newItem: true,
+                                                                            newItemModel: {value: $query, label: $query}}" placeholder="Select">
+                                                                        </oi-select>
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                                                            <div>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="inputNameSample1">Subject&nbsp;&nbsp;</label>
+                                                                    <div class="slds-form-element__control">
+                                                                        <input type="text" ng-model ="emailW.subject" style="width: 100% !important;" class="slds-input" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                      <div class="slds-form-element slds-form-element_horizontal slds-is-editing slds-col slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                                                            <div>
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-form-element__label" for="inputNameSample1">From&nbsp;&nbsp;</label>
+                                                                    <div class="slds-form-element__control">
+                                                                            <select class="slds-select" ng-options="item.label for item in fromemailAddresses track by item.value" ng-model ="emailW.selectedFrom" >
+                                                                                <option value="" label="Select"></option>
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                               </div>
+                                               </div>     
+                                            </div>  
+                                           <br/><br/>
+                                        </div>
+                                    </div>
+                                    <div class="slds-modal__content" ng-form="followUp">
+                                        <div ng-if="selectedReportNameStr.indexOf('Acknowledgement') != -1">
+                                            <h3 class="slds-section-title--divider">
+                                                Date/Time for Follow-Up Call
+                                            </h3>
+                                            <div class="slds-form-element" style="padding-left: 15px;">
+                                                <input type="text" class="slds-input" jqdatepicker="jqdatepicker" ng-model="emailW.followUpD" style="width: 120px !important;"/>    
+                                                <input type="text" class="slds-input" typeahead-editable="false"  ng-model="emailW.followUpTime" typeahead-input-formatter="formatInputTime($model)" 
+                                                            typeahead="state.value as state.label for state in autoSuggestTime | filter:$viewValue | limitTo:5" 
+                                                            style="width: 70px !important;"/>
+                                                <button ng-if="showFolloUp && !followUp.$invalid"  class="slds-button slds-button--brand"  ng-click="mergeDate()"  onclick="return false;">Add In Email</button>   &nbsp;
+                                            </div> 
+                                        </div>
+                                        <h3 class="slds-section-title--divider">
+                                            Compose Email
+                                        </h3>
+                                        <div class="slds-form-element_stacked">
+                                            <div class="slds-form-element">
+                                                <label class="slds-form-element__label">Body</label>
+                                                <div class="slds-form-element__control" style="all: initial;">
+                                                    <textArea ck-Editor="ck-Editor" ng-model="emailTemp"/>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                        <br/>
+                                        <h3 class="slds-section-title--divider" ng-show="'{!pageName}'.indexOf('HolidayEnquiry') == -1 && '{!pageName}'.indexOf('AckPage') == -1 && '{!pageName}'.indexOf('HolidaySuggestion') == -1">
+                                            Attached Files
+                                        </h3>
+                                       
+                                        <div class="slds-form-element" ng-show="'{!pageName}'.indexOf('HolidayEnquiry') == -1 && '{!pageName}'.indexOf('AckPage') == -1 && '{!pageName}'.indexOf('HolidaySuggestion') == -1">
+                                            <div id="attachedFiles" style="font-weight: bold; font-size: 12px; font-family: arial;">
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fixed-footer slds-modal__footer" style="margin: 0;">
+                                        <div class="slds-x-small-buttons--horizontal" style=" float: right;">
+                                            <!-- <button class="slds-button slds-button--brand" ng-show="'{!$currentpage.Name}' == 'HolidayEnquiry'" ng-click="saveContactBrochureRequest()" onclick="return false;">Brochure Request</button>&nbsp;  -->
+                                            <button class="slds-button slds-button--brand" onclick="showFileUploader();return false;" ng-show="'{!pageName}'.indexOf('HolidayEnquiry') == -1 && '{!pageName}'.indexOf('AckPage') == -1 && '{!pageName}'.indexOf('HolidaySuggestion') == -1" >Attach Files</button>
+                                            <button ng-show="'{!pageName}'.indexOf('HolidayEnquiry') == -1 && '{!pageName}'.indexOf('AckPage') == -1 && '{!pageName}'.indexOf('HolidaySuggestion') == -1" class="slds-button slds-button--brand"   ng-click="selectTemplate()"  onclick="return false;">Select Template</button>
+                                            <button class="slds-button slds-button--brand" ng-click="sendEmail('')" ng-if="'{!$currentpage.Name}'.indexOf('HolidayEnquiry') == -1 || '{!templateName}' != 'Acknowledgement'"  onclick="return false;" ng-disabled="emailW.selectedTo.length == 0">Send</button>
+                                            <button class="slds-button slds-button--brand" ng-click="sendEmail('Acknowledgement')" ng-if="'{!$currentpage.Name}'.indexOf('HolidayEnquiry') != -1 && '{!templateName}' == 'Acknowledgement' && !followUp.$invalid" onclick="return false;" ng-disabled="emailW.selectedTo.length == 0"  >Send</button>
+                                            <!-- <button class="slds-button slds-button--brand" onclick="$('#tab-Acknowledgement').parent('li').next().children('a').click();return false;" ng-if="'{!$currentpage.Name}'.indexOf('HolidayEnquiry') != -1 && '{!templateName}' == 'Acknowledgement' && {!$Setup.Pro_UE__c.Holiday_Suggestion__c}"  ng-disabled="emailW.selectedTo.length == 0" >Next</button> -->
+                                            <span ng-if="useNewDataModel == false" class="slds-var-m-left_x-small">
+                                                <button class="slds-button slds-button--brand" ng-if="'{!$currentpage.Name}'.indexOf('SupplierVoucherEmail') == -1">
+                                                    <a target="_blank" style="color:white;text-decoration:none;" ng-click="moveToItineraryBuilder()">Go To Itinerary Builder</a>
+                                                </button>
+                                                <button class="slds-button slds-button--brand" onclick="back();" ng-if="backButton">Back</button>
+                                            </span>
+                                            <span ng-if="useNewDataModel == true" class="slds-var-m-left_x-small">
+                                                <button class="slds-button slds-button--brand" onclick="backWithNewDataModel();">Back</button>
+                                            </span>
+                                            
+                                            <!--<button class="slds-button slds-button--brand"  ng-show="'{!$currentpage.Name}' != 'HolidayEnquiry'" onclick="return false;">Close</button> -->
+                                            
+                                            
+                                        </div>
+                                     
+                            </div>
+                            <!-- Select Template Popup -->
+                            <div class="popupTemp" style="display: none;">
+                                <div aria-hidden="false" role="dialog" class="slds-modal slds-modal--prompt slds-fade-in-open" style="z-index:1111111">
+                                    <div class="slds-modal__container slds-modal--prompt">
+                                        <div class="slds-modal__header slds-modal__header slds-theme--success" style="padding: 12px 8px;">
+                                            <h2 class="slds-text-heading--small">Please select template</h2>
+                                            <button class="slds-button slds-button--icon-inverse slds-modal__close">
+                                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--medium">
+                                                <use xlink:href="{!URLFOR($Resource.SLDS011, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Close</span>
+                                            </button>
+                                        </div>
+                                        <div class="slds-modal__content"> 
+                                            <div class="slds-form_horizontal" style="width: 100%;">
+                                                <label class="selectTemplate" for="inputSample2">
+                                                    <span>Select Template</span>
+                                                </label>
+                                                <div class="slds-form-element__control selectTemplateList">
+                                                    <select id="selectFolder" class="slds-select" ng-change="selectedReportName()" ng-model="selectedReport" ng-options="record.Id as record['{!HTMLENCODE(JSENCODE(nameSpacePrefix))}ET_Template_Name__c'] for record in reports">
+                                                        <option value="" label="--Select--"></option>
+                                                    </select>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-modal__content"> 
+                                            <div class="slds-form_horizontal" style="width: 100%;">
+                                                <label class="selectTemplate" for="inputSample2">
+                                                    <span>Related To Record</span>
+                                                </label>
+                                                <div class="slds-form-element__control selectTemplateList">
+                                                    <select id="selectFolder" class="slds-select" ng-model="selectedObject" ng-disabled="selectedObjectDisabled">
+                                                        <option value="" label="--Select--"></option>
+                                                        <option value="Account" label="Account"></option>
+                                                        <option value="Client_Group__c" label="Client Group"></option>
+                                                        <option value="Client_Invoice__c" label="Client Invoice"></option>
+                                                        <option value="Client_Payment__c" label="Client Payment"></option>
+                                                        <option value="Group_Member__c" label="Group Member"></option>
+                                                        <option value="Opportunity" label="Opportunity"></option>
+                                                        <option value="Supplier__c" label="Supplier"></option>
+                                                        <option value="Supplier_Booking__c" label="Supplier Booking"></option>
+                                                        <option value="Supplier_Payment__c" label="Supplier Payment"></option>
+                                                        <option value="Supplier_Cost_Payment__c" label="Supplier Cost & Payment"></option>
+                                                    </select>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="slds-modal__content"> 
+                                            <div class="slds-form_horizontal" style="width: 100%;">
+                                                <label class="selectTemplate" for="inputSample2">
+                                                    <span>Select A Record</span>
+                                                </label>
+                                                <div class="slds-form-element__control selectTemplateList">
+                                                    <select id="selectR" class="slds-select" ng-show="selectedObject != 'Opportunity' "
+                                                         ng-model="selectedRecord"  ng-options="val.value as val.label for val in mapRecords[selectedObject]">
+                                                        <option value="" label="--Select--"></option> 
+                                                    </select>
+                                                    <!-- In case the related record is Opportunity -->
+                                                    <select id="selectR" class="slds-select" ng-show="selectedObject == 'Opportunity' "   
+                                                        ng-model="selectedRecord" ng-options="val.value as val.label for val in mapRecords[selectedObject]">
+                                                    </select>
+                                                </div>
+                                                
+                                            </div>
+                                            <br/>
+                                            <div ng-show="selectedReportNameStr.indexOf('Itinerary Pdf') != -1"  class="slds-scrollable--x">
+                                                <table class="itinerary slds-table slds-table--bordered">
+                                                    <thead>
+                                                        <tr class="slds-text-heading--label">
+                                                            <th class="slds-row-select" scope="col">
+                                                                <span class="slds-truncate">Opportunity Name</span>
+                                                            </th>
+                                                            <th class="slds-is-sortable" scope="col">
+                                                                <span class="slds-truncate">Departure Date</span>
+                                                            </th>
+                                                            <th scope="col">
+                                                                <span class="slds-truncate">Return Date</span>
+                                                            </th>
+                                                            <th scope="col">
+                                                                <span class="slds-truncate">Created Date</span>
+                                                            </th>
+                                                            <th scope="col">
+                                                                <span class="slds-truncate">Include</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="slds-hint-parent" ng-repeat="opp in oppRecords track by $index">
+                                                            <td data-label="Opportunity Name">
+                                                                {{opp.Name}}
+                                                            </td>
+                                                            <td data-label="Departure Date">
+                                                                {{opp[nameSpacePrefix+'O_Departure_Date__c'] | date: USER_LOCALE_DATE_FORMAT_VF}}
+                                                            </td>
+                                                            <td data-label="Return Date">
+                                                                {{opp[nameSpacePrefix+'O_Return_Date__c'] | date: USER_LOCALE_DATE_FORMAT_VF}}
+                                                            </td>
+                                                            <td data-label="Created Date">
+                                                                {{opp.CreatedDate | date: USER_LOCALE_DATE_FORMAT_VF}}
+                                                            </td>
+                                                            <td data-label="Include">
+                                                                <div class="slds-form-element">
+                                                                    <label class="slds-checkbox">
+                                                                        <input name="checkboxi{{$index}}" type="checkbox" id="checkboxSample1{{$index}}" ng-model="opp.included"/>
+                                                                        <span class="slds-checkbox--faux"></span>
+                                                                        <span class="slds-form-element__label">{{val.value}}</span>
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>    
+                                        </div>
+                                        <div class="slds-modal__footer slds-theme--default">
+                                            <div class="slds-x-small-buttons--horizontal">
+                                                <button ng-click="saveAsTemplate();" ng-disabled="selectedReport === undefined" class="slds-button slds-button--brand" onclick="return false;">Save &amp; Close</button>
+                                                <button class="closeButtonTemp slds-button slds-button--brand" onclick="return false;">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-backdrop slds-backdrop--open" style="z-index:1111110"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $('.popupTemp .slds-modal__close').on('click', function(){
+                        $('.popupTemp').toggle('hide');    
+                    });
+                    $('.popupTemp  .closeButtonTemp').on('click', function(){
+                        $('.popupTemp').toggle('hide');    
+                    });
+                    
+                    function getAttchments(){
+                        attachmentParentName = $('#selectR').text();
+                        attachmentParentId = $('#selectR').val().substring($('#selectR').val().indexOf(':')+1);
+                        var encodeName = encodeURIComponent("{!JSENCODE(opp.Name)}");
+                        console.log('WWWWWWWWWTEST' + encodeName );
+                        if(attachmentParentName === undefined || attachmentParentName == '')    
+                            attachmentParentName = encodeName;  
+                            
+                        if(attachmentParentId === undefined || attachmentParentId == '')    
+                            attachmentParentId = '{!opp.Id}';  
+                            
+                        $('#attachmentParent').html(attachmentParentName + '&#39;s Attachments');
+                        angular.element(document.getElementById('FileUpload')).scope().getAttchments();
+                        angular.element(document.getElementById('FileUpload')).scope().getFiles();
+                    }
+                    
+                    function showFileUploader(){
+                        attachmentParentName = $('#selectR').text();
+                        attachmentParentId = $('#selectR').val().substring($('#selectR').val().indexOf(':')+1);
+                        var encodeName = encodeURIComponent("{!JSENCODE(opp.Name)}");
+                        console.log('WWWWWWWWWTEST' + encodeName );
+                        if(attachmentParentName === undefined || attachmentParentName == '')    
+                            attachmentParentName = encodeName;  
+                            
+                        if(attachmentParentId === undefined || attachmentParentId == '')    
+                            attachmentParentId = '{!opp.Id}';  
+                            
+                        $('#attachmentParent').html(attachmentParentName + '&#39;s Attachments');
+                        angular.element(document.getElementById('FileUpload')).scope().getAttchments();
+                        angular.element(document.getElementById('FileUpload')).scope().getFiles();
+                        $('.popupUpload').toggle('show'); 
+                    }
+                </script>
+                <c:FileUploader NameSpacePrefix="{!NameSpacePrefix}" />           
+          
+    </html>
+</apex:component>
