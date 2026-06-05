@@ -27,8 +27,9 @@ export default class SugatiCommunicationHub extends LightningElement {
     tripSubtitle = '';
     stageLabel = '';
     contextSummary = '';
-    stats = { sent: 0, delivered: 0, opened: 0, draft: 0 };
-    emailOpenWithTemplatePicker = false;
+    bookingChannelLabel = 'B2C';
+    stats = { sent: 0, delivered: 0, opened: 0, draft: 0, total: 0 };
+    channelSummary = { email: 0, wa: 0, ia: 0, total: 0 };
     showTemplatePicker = false;
     previewPayload = {};
     pendingRecipients = [];
@@ -59,25 +60,12 @@ export default class SugatiCommunicationHub extends LightningElement {
         return HARDCODED_OPPORTUNITY_ID;
     }
 
-    get emailDraftStorageKey() {
-        return `sugati.email.draft.${this.effectiveOpportunityId || 'default'}`;
-    }
-
-    clearEmailDraftStorage() {
-        try {
-            window.localStorage.removeItem(this.emailDraftStorageKey);
-        } catch (e) {
-            // ignore storage errors
-        }
-    }
-
     beginNewMessage() {
         this.draftForEdit = null;
         this.previewPayload = {};
         this.toRecipients = [];
         this.ccRecipients = [];
         this.bccRecipients = [];
-        this.clearEmailDraftStorage();
     }
 
     prepareEmailComposerForNewMessage() {
@@ -99,11 +87,19 @@ export default class SugatiCommunicationHub extends LightningElement {
         this.tripName = data.opportunityName || this.tripName;
         this.tripSubtitle = data.ownerName || this.tripSubtitle;
         this.stageLabel = data.stageLabel || this.stageLabel;
+        this.bookingChannelLabel = data.bookingChannelLabel || 'B2C';
         this.stats = {
-            sent: data.sentCount ?? this.stats.sent,
-            delivered: data.deliveredCount ?? this.stats.delivered,
-            opened: data.openedCount ?? this.stats.opened,
-            draft: data.draftCount ?? this.stats.draft
+            sent: data.sentCount ?? 0,
+            delivered: data.deliveredCount ?? 0,
+            opened: data.openedCount ?? 0,
+            draft: data.draftCount ?? 0,
+            total: data.totalCount ?? 0
+        };
+        this.channelSummary = {
+            email: data.emailCount ?? 0,
+            wa: data.whatsAppCount ?? 0,
+            ia: data.inAppCount ?? 0,
+            total: data.totalCount ?? 0
         };
     }
 
@@ -151,6 +147,12 @@ export default class SugatiCommunicationHub extends LightningElement {
             this.currentView === VIEWS.RECIPIENTS ||
             this.currentView === VIEWS.PREVIEW
         );
+    }
+
+    get emailComposePageClass() {
+        const showComposerPage =
+            this.currentView === VIEWS.EMAIL || this.currentView === VIEWS.RECIPIENTS;
+        return showComposerPage ? 'page on email-compose-shell' : 'page page-off email-compose-shell';
     }
 
     get hideEmailComposer() {
@@ -210,9 +212,11 @@ export default class SugatiCommunicationHub extends LightningElement {
         const { channel } = event.detail;
         if (channel === 'email') {
             this.beginNewMessage();
-            this.emailOpenWithTemplatePicker = true;
             this.currentView = VIEWS.EMAIL;
             this.prepareEmailComposerForNewMessage();
+            Promise.resolve().then(() => {
+                this.showTemplatePicker = true;
+            });
         } else if (channel === 'wa') {
             this.currentView = VIEWS.WA;
         } else if (channel === 'ia') {
@@ -221,7 +225,6 @@ export default class SugatiCommunicationHub extends LightningElement {
     }
 
     handleNavigateRecipients(event) {
-        this.emailOpenWithTemplatePicker = false;
         const composer = this.template.querySelector('c-sugati-communication-email-composer');
         if (composer) {
             if (typeof composer.persistComposerState === 'function') {
@@ -272,8 +275,6 @@ export default class SugatiCommunicationHub extends LightningElement {
     }
 
     handleDraftSaved() {
-        this.clearEmailDraftStorage();
-        this.emailOpenWithTemplatePicker = false;
         this.showTemplatePicker = false;
         this.currentView = VIEWS.HUB;
         Promise.resolve().then(() => {
@@ -303,6 +304,30 @@ export default class SugatiCommunicationHub extends LightningElement {
         if (typeof composer.getEmailSendContext === 'function') {
             templateContext = composer.getEmailSendContext() || {};
         }
+        let composeState = {};
+        if (typeof composer.getComposeState === 'function') {
+            composeState = composer.getComposeState() || {};
+        }
+        if (typeof composer.syncBodyFromEditor === 'function') {
+            composer.syncBodyFromEditor();
+        }
+        const subject = (composeState.subject || payload.subject || payload.subjectTemplate || '').trim();
+        const bodyTemplate = (composer.bodyTemplate || composeState.bodyTemplate || payload.bodyTemplate || '').trim();
+        let attachments = payload.attachments || [];
+        let attachmentContentDocumentIds = payload.attachmentContentDocumentIds || [];
+        let attachmentRecordIds = payload.attachmentRecordIds || [];
+        let newAttachmentFileNames = payload.newAttachmentFileNames || [];
+        let newAttachmentFileData = payload.newAttachmentFileData || [];
+        if (typeof composer.getSelectedAttachmentsForPayload === 'function') {
+            attachments = composer.getSelectedAttachmentsForPayload();
+        }
+        if (typeof composer.buildDraftAttachmentArrays === 'function') {
+            const attachmentArrays = composer.buildDraftAttachmentArrays();
+            attachmentContentDocumentIds = attachmentArrays.attachmentContentDocumentIds || [];
+            attachmentRecordIds = attachmentArrays.attachmentRecordIds || [];
+            newAttachmentFileNames = attachmentArrays.newAttachmentFileNames || [];
+            newAttachmentFileData = attachmentArrays.newAttachmentFileData || [];
+        }
         return {
             ...payload,
             recipients: to,
@@ -311,6 +336,21 @@ export default class SugatiCommunicationHub extends LightningElement {
             toEmails: emailFromRows(to),
             ccEmails: emailFromRows(cc),
             bccEmails: emailFromRows(bcc),
+            subject,
+            subjectTemplate: subject,
+            bodyTemplate,
+            attachments,
+            attachmentContentDocumentIds,
+            attachmentRecordIds,
+            newAttachmentFileNames,
+            newAttachmentFileData,
+            orgWideEmailAddressId:
+                composer.orgWideEmailAddressId || payload.orgWideEmailAddressId || null,
+            deliveryMode:
+                payload.deliveryMode ||
+                (typeof composer.getDeliveryMode === 'function' ? composer.getDeliveryMode() : null) ||
+                composer.deliveryMode ||
+                'postmark',
             sugatiEmailTemplateConfigId:
                 templateContext.sugatiEmailTemplateConfigId || payload.sugatiEmailTemplateConfigId || null,
             relatedRecordId:
@@ -356,7 +396,6 @@ export default class SugatiCommunicationHub extends LightningElement {
 
     handleSent() {
         this.beginNewMessage();
-        this.clearEmailDraftStorage();
         this.currentView = VIEWS.HISTORY;
         Promise.resolve().then(() => {
             const composer = this.template.querySelector('c-sugati-communication-email-composer');
@@ -371,6 +410,9 @@ export default class SugatiCommunicationHub extends LightningElement {
         const { channel } = event.detail;
         if (channel === 'email') {
             this.currentView = VIEWS.EMAIL;
+            Promise.resolve().then(() => {
+                this.openTemplatePickerIfNeeded();
+            });
         } else if (channel === 'wa') {
             this.currentView = VIEWS.WA;
         } else if (channel === 'ia') {
@@ -380,6 +422,7 @@ export default class SugatiCommunicationHub extends LightningElement {
 
     async handleContinueDraft(event) {
         const commLogId = event?.detail?.commLogId;
+        this.showTemplatePicker = false;
         if (!commLogId) {
             this.draftForEdit = null;
             this.currentView = VIEWS.EMAIL;
@@ -412,6 +455,7 @@ export default class SugatiCommunicationHub extends LightningElement {
 
     handleViewHistory() {
         this.currentView = VIEWS.HISTORY;
+        this.scheduleHubDataRefresh();
     }
 
     handleViewHub() {
@@ -420,27 +464,33 @@ export default class SugatiCommunicationHub extends LightningElement {
     }
 
     handleViewEmail() {
-        this.emailOpenWithTemplatePicker = false;
-        this.showTemplatePicker = false;
-        this.draftForEdit = null;
         this.currentView = VIEWS.EMAIL;
         Promise.resolve().then(() => {
-            const composer = this.template.querySelector('c-sugati-communication-email-composer');
-            if (composer && typeof composer.loadDefaultTemplate === 'function') {
-                composer.loadDefaultTemplate();
-            }
+            this.openTemplatePickerIfNeeded();
         });
     }
 
+    openTemplatePickerIfNeeded() {
+        if (this.draftForEdit) {
+            return;
+        }
+        const composer = this.template.querySelector('c-sugati-communication-email-composer');
+        if (composer && typeof composer.hasActiveTemplateSelection === 'function') {
+            if (!composer.hasActiveTemplateSelection()) {
+                this.showTemplatePicker = true;
+            }
+            return;
+        }
+        this.showTemplatePicker = true;
+    }
+
     handleViewWa() {
-        this.emailOpenWithTemplatePicker = false;
         this.showTemplatePicker = false;
         this.draftForEdit = null;
         this.currentView = VIEWS.WA;
     }
 
     handleViewIa() {
-        this.emailOpenWithTemplatePicker = false;
         this.showTemplatePicker = false;
         this.draftForEdit = null;
         this.currentView = VIEWS.IA;
@@ -450,22 +500,17 @@ export default class SugatiCommunicationHub extends LightningElement {
         this.showTemplatePicker = true;
     }
 
-    handleCloseTemplatePicker() {
+    handleCloseTemplatePicker(event) {
         this.showTemplatePicker = false;
-        this.emailOpenWithTemplatePicker = false;
+        if (event?.detail?.navigateToChannel) {
+            this.currentView = VIEWS.CHANNEL;
+        }
     }
 
     handleTemplatePickerSelect(event) {
         this.showTemplatePicker = false;
-        this.emailOpenWithTemplatePicker = false;
         const composer = this.template.querySelector('c-sugati-communication-email-composer');
-        if (composer) {
-            if (typeof composer.applyLegacyTemplateSelection === 'function') {
-                composer.applyLegacyTemplateSelection(event.detail);
-            } else if (typeof composer.applyTemplateSelection === 'function') {
-                composer.applyTemplateSelection(event.detail);
-            }
-        }
+        composer?.applyTemplateSelection?.(event.detail);
     }
 
     mergeRecipientsByEmail(existing, selected) {

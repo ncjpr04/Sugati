@@ -10,6 +10,10 @@ export default class SugatiCommunicationHistory extends LightningElement {
     @api tripSubtitle = '';
     @api opportunityId;
     @api draftCount = 0;
+    @api summaryEmailCount;
+    @api summaryWaCount;
+    @api summaryIaCount;
+    @api summaryTotalCount;
     @api refreshKey = 0;
 
     channelFilter = null;
@@ -43,14 +47,37 @@ export default class SugatiCommunicationHistory extends LightningElement {
                 wa: this._items.filter((x) => x.channel === 'wa').length,
                 ia: this._items.filter((x) => x.channel === 'ia').length
             };
-            this.emailCount = this._summaryCounts.email;
-            this.waCount = this._summaryCounts.wa;
-            this.iaCount = this._summaryCounts.ia;
+            this.syncSummaryCountsFromHub();
         } else {
             this.emailCount = this._summaryCounts.email;
             this.waCount = this._summaryCounts.wa;
             this.iaCount = this._summaryCounts.ia;
         }
+    }
+
+    syncSummaryCountsFromHub() {
+        if (this.isHubMode && this.hasHubSummaryCounts) {
+            this.emailCount = this.summaryEmailCount;
+            this.waCount = this.summaryWaCount;
+            this.iaCount = this.summaryIaCount;
+            this._summaryCounts = {
+                email: this.summaryEmailCount,
+                wa: this.summaryWaCount,
+                ia: this.summaryIaCount
+            };
+            return;
+        }
+        this.emailCount = this._summaryCounts.email;
+        this.waCount = this._summaryCounts.wa;
+        this.iaCount = this._summaryCounts.ia;
+    }
+
+    get hasHubSummaryCounts() {
+        return (
+            Number.isFinite(Number(this.summaryEmailCount)) &&
+            Number.isFinite(Number(this.summaryWaCount)) &&
+            Number.isFinite(Number(this.summaryIaCount))
+        );
     }
 
     renderedCallback() {
@@ -59,6 +86,9 @@ export default class SugatiCommunicationHistory extends LightningElement {
             if (this._wiredHistoryResult) {
                 refreshApex(this._wiredHistoryResult);
             }
+        }
+        if (this.isHubMode && this.isDefaultFilters && this.hasHubSummaryCounts) {
+            this.syncSummaryCountsFromHub();
         }
     }
 
@@ -318,7 +348,6 @@ export default class SugatiCommunicationHistory extends LightningElement {
             attachmentsLabel: entry.attachments || 'None',
             emailHeading: entry.subject || 'Message Sent',
             emailBody: 'Message sent successfully.',
-            emailCta: 'View Online',
             hasAttachments: false,
             attachmentChips: [],
             messageId: entry.messageId
@@ -334,17 +363,18 @@ export default class SugatiCommunicationHistory extends LightningElement {
     mapHistoryRow(row) {
         const ch = row.channel === 'WhatsApp' ? 'wa' : row.channel === 'In-App' ? 'ia' : 'email';
         const isDraft = row.status === 'Draft';
-        const statusLower = (row.status || '').toLowerCase();
+        const statusPresentation = this.resolveStatusPresentation(row.status);
         const sentDate = row.sentAt ? new Date(row.sentAt) : null;
         const lastModifiedDate = row.lastModifiedAt ? new Date(row.lastModifiedAt) : null;
+        const activityDate = lastModifiedDate || sentDate;
         const when = isDraft
             ? lastModifiedDate
                 ? lastModifiedDate.toLocaleString()
                 : sentDate
                     ? sentDate.toLocaleString()
                     : 'Just now'
-            : sentDate
-                ? sentDate.toLocaleString()
+            : activityDate
+                ? activityDate.toLocaleString()
                 : 'Just now';
         const lastEdited = lastModifiedDate
             ? lastModifiedDate.toLocaleString()
@@ -356,34 +386,132 @@ export default class SugatiCommunicationHistory extends LightningElement {
             .map((name) => (name || '').trim())
             .filter(Boolean);
         const recipientText = recipientNames.length ? recipientNames.join(', ') : 'No recipients';
+        const openCount = row.logOpenCount ?? row.openedCount ?? 0;
+        const clickCount = row.logClickCount ?? 0;
+        const trackingSummary = row.trackingSummary || '';
+        const hasTracking =
+            !isDraft &&
+            (trackingSummary ||
+                openCount > 0 ||
+                clickCount > 0 ||
+                row.deliveredAt ||
+                row.bouncedAt ||
+                row.bounceType);
         return {
             id: row.id,
             channel: ch,
             subject: row.subject || 'Untitled message',
             who: recipientText,
-            pillClass: ch === 'wa' ? 'pill p-wa' : ch === 'ia' ? 'pill p-ia' : 'pill p-go',
+            pillClass: statusPresentation.pillClass,
             pillLabel: row.status || 'Sent',
             when,
-            dotColor: ch === 'wa' ? 'var(--ch-wa)' : ch === 'ia' ? 'var(--ch-ia)' : 'var(--go)',
+            dotColor: statusPresentation.dotColor,
             tagClass: ch === 'wa' ? 'tag tag-wa' : ch === 'ia' ? 'tag tag-ia' : 'tag tag-email',
             tagLabel: ch === 'wa' ? '💬 WhatsApp' : ch === 'ia' ? '🔔 In-App' : '✉ Email',
             isDraft,
             lastEdited,
             statusLabel: `● ${row.status || 'Sent'}`,
-            statusClass: `tl-dm-status ${statusLower}`,
-            statusStyle: '',
+            statusClass: statusPresentation.detailClass,
+            statusStyle: statusPresentation.detailStyle,
             sentAt: when,
             sentBy: row.sentBy || 'System',
+            fromDisplay: row.fromDisplay || this.formatFromFallback(row.sentBy, row.fromEmail),
             recipientLabel: row.recipientCount === 1 ? 'Recipient' : 'Recipients',
             recipients: recipientNames.length ? recipientNames.join('\n') : 'No recipients',
-            delivery: row.deliveryMode || 'Postmark',
+            delivery: this.buildDeliveryLabel(row),
             attachmentsLabel: row.attachmentSummary || 'None',
             emailHeading: row.subject || 'Communication',
             emailBody: this.stripHtml(row.bodyHtml) || 'No preview available.',
-            emailCta: 'Open',
             hasAttachments: (row.attachmentCount || 0) > 0,
-            attachmentChips: this.buildAttachmentChips(row.attachmentSummary)
+            attachmentChips: this.buildAttachmentChips(row.attachmentSummary),
+            hasTracking,
+            trackingSummary,
+            openCountLabel: openCount > 0 ? `${openCount} open${openCount === 1 ? '' : 's'}` : null,
+            clickCountLabel: clickCount > 0 ? `${clickCount} click${clickCount === 1 ? '' : 's'}` : null,
+            bounceLabel: row.bounceType
+                ? `${row.bounceType}${row.bounceDescription ? ` — ${row.bounceDescription}` : ''}`
+                : row.bounceDescription || null,
+            postmarkMessageId: row.postmarkMessageId || null
         };
+    }
+
+    resolveStatusPresentation(status) {
+        const normalized = (status || 'sent').trim().toLowerCase();
+        const detailKey = normalized.replace(/\s+/g, '-');
+        const presets = {
+            draft: {
+                pillClass: 'pill p-draft',
+                dotColor: 'var(--t4)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            sent: {
+                pillClass: 'pill p-sent',
+                dotColor: 'var(--ok)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            delivered: {
+                pillClass: 'pill p-delivered',
+                dotColor: 'var(--go)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            opened: {
+                pillClass: 'pill p-opened',
+                dotColor: 'var(--info)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            bounced: {
+                pillClass: 'pill p-bounced',
+                dotColor: 'var(--err)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            'spam complaint': {
+                pillClass: 'pill p-spam',
+                dotColor: 'var(--warn)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            received: {
+                pillClass: 'pill p-received',
+                dotColor: 'var(--ok)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            },
+            failed: {
+                pillClass: 'pill p-failed',
+                dotColor: 'var(--err)',
+                detailClass: `tl-dm-status ${detailKey}`,
+                detailStyle: ''
+            }
+        };
+        return presets[normalized] || presets.sent;
+    }
+
+    buildDeliveryLabel(row) {
+        const mode = row.deliveryMode || 'Postmark';
+        const delivered = row.deliveredCount || 0;
+        const opened = row.openedCount || 0;
+        const total = row.recipientCount || 0;
+        if (total > 0 && (delivered > 0 || opened > 0)) {
+            return `${mode} · ${delivered}/${total} delivered · ${opened} opened`;
+        }
+        if (row.trackingSummary) {
+            return `${mode} · ${row.trackingSummary}`;
+        }
+        return mode;
+    }
+
+    formatFromFallback(sentBy, fromEmail) {
+        const name = (sentBy || '').trim();
+        const email = (fromEmail || '').trim();
+        if (name && email) {
+            return `${name} <${email}>`;
+        }
+        return email || name || 'Unknown sender';
     }
 
     stripHtml(content) {

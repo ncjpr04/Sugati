@@ -9,6 +9,12 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
     @api opportunityId;
 
     selectedTemplateId = null;
+    pendingTemplate = null;
+    pendingRelatedRecordId = '';
+    recordSearchTerm = '';
+    templateSearchTerm = '';
+    pickerStep = 'templates';
+    _searchInputFocused = false;
     _escapeHandler;
     _catalog = {
         templates: [],
@@ -24,7 +30,12 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
 
     connectedCallback() {
         this._escapeHandler = (event) => {
-            if (event.key === 'Escape') {
+            if (event.key !== 'Escape') {
+                return;
+            }
+            if (this.isRecordStep) {
+                this.handleCancelRelatedRecord();
+            } else {
                 this.handleClose();
             }
         };
@@ -40,8 +51,43 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         document.body.style.overflow = '';
     }
 
+    get isRecordStep() {
+        return this.pickerStep === 'record';
+    }
+
+    get pickerEyebrow() {
+        return this.isRecordStep ? 'Step 2 of 2' : 'Step 1 of 2';
+    }
+
+    get headerTitle() {
+        return this.isRecordStep ? 'Choose merge record' : 'Choose a template';
+    }
+
+    get pendingRelatedBadgeClass() {
+        const raw = this.pendingTemplate?.relatedToRecord || 'Opportunity';
+        return this.buildRelatedBadgeClass(raw);
+    }
+
+    get headerSubtitle() {
+        if (this.isRecordStep) {
+            return 'Pick which record supplies merge fields for this email';
+        }
+        const stage = this.stageDisplay;
+        const trip = this.tripDisplay;
+        return stage ? `${stage} · ${trip}` : trip;
+    }
+
+    get pendingTemplateName() {
+        return this.pendingTemplate?.templateName || this.pendingTemplate?.name || 'Template';
+    }
+
+    get pendingRelatedTypeLabel() {
+        return this.formatObjectLabel(this.pendingTemplate?.relatedToRecord || 'Record');
+    }
+
     get stageDisplay() {
-        return this._catalog.opportunityStage || this.stageLabel || 'Current';
+        const raw = this._catalog.opportunityStage || this.stageLabel || '';
+        return this.stripStageSuffix(raw);
     }
 
     get tripDisplay() {
@@ -113,38 +159,183 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         return cls;
     }
 
+    get templateSearchQuery() {
+        return (this.templateSearchTerm || '').trim().toLowerCase();
+    }
+
+    get showTemplateSearchClear() {
+        return !!this.templateSearchQuery;
+    }
+
     get filteredTemplates() {
+        const q = this.templateSearchQuery;
         const filterKey =
             this.selectedStageFilter === ALL_STAGES
                 ? null
                 : this.normalizeStageKey(this.selectedStageFilter);
         const filtered = (this._catalog.templates || []).filter((t) => {
-            if (!filterKey) {
+            if (filterKey) {
+                if (!t.templateStage) {
+                    return false;
+                }
+                if (this.normalizeStageKey(t.templateStage) !== filterKey) {
+                    return false;
+                }
+            }
+            if (!q) {
                 return true;
             }
-            if (!t.templateStage) {
-                return false;
-            }
-            return this.normalizeStageKey(t.templateStage) === filterKey;
+            const haystack = [
+                t.name,
+                t.templateName,
+                t.meta,
+                t.relatedToRecord,
+                t.templateStage,
+                t.assignedUserName,
+                this.formatObjectLabel(t.relatedToRecord)
+            ]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase();
+            return haystack.includes(q);
         });
         return this.sortTemplatesByOpportunityStage(filtered);
+    }
+
+    get catalogTemplateCount() {
+        return (this._catalog.templates || []).length;
+    }
+
+    get templateListSummary() {
+        const shown = this.filteredTemplates.length;
+        const total = this.catalogTemplateCount;
+        if (this.isLoading) {
+            return '';
+        }
+        if (this.loadError) {
+            return '';
+        }
+        if (this.templateSearchQuery || this.selectedStageFilter !== ALL_STAGES) {
+            return `${shown} of ${total} templates`;
+        }
+        return `${total} template${total === 1 ? '' : 's'}`;
+    }
+
+    get shouldGroupSuggested() {
+        return (
+            !this.templateSearchQuery &&
+            this.selectedStageFilter === ALL_STAGES &&
+            !this.isLoading &&
+            !this.loadError
+        );
+    }
+
+    get suggestedVisibleTemplates() {
+        if (!this.shouldGroupSuggested) {
+            return [];
+        }
+        return this.visibleTemplates.filter((t) => t.isSuggested);
+    }
+
+    get otherVisibleTemplates() {
+        if (!this.shouldGroupSuggested) {
+            return this.visibleTemplates;
+        }
+        return this.visibleTemplates.filter((t) => !t.isSuggested);
+    }
+
+    get showSuggestedSection() {
+        return this.suggestedVisibleTemplates.length > 0;
+    }
+
+    get showOtherSectionLabel() {
+        return this.shouldGroupSuggested && this.otherVisibleTemplates.length > 0;
+    }
+
+    get emptyStateTitle() {
+        if (this.templateSearchQuery) {
+            return 'No matching templates';
+        }
+        if (this.selectedStageFilter !== ALL_STAGES) {
+            return 'No templates for this stage';
+        }
+        return 'No templates found';
+    }
+
+    get emptyStateMessage() {
+        if (this.templateSearchQuery) {
+            return 'Try a different search term or clear filters.';
+        }
+        if (this.selectedStageFilter !== ALL_STAGES) {
+            return 'Choose another stage filter or start with a blank email.';
+        }
+        return 'Start with a blank email or check template setup for this trip.';
+    }
+
+    get recordListSummary() {
+        const rows = this.filterRelatedRecords(this.pendingTemplate?.relatedToRecord || '');
+        const shown = this.filteredRecordRows.length;
+        if (!rows.length) {
+            return '';
+        }
+        if (this.recordSearchTerm.trim()) {
+            return `${shown} of ${rows.length} records`;
+        }
+        return `${rows.length} record${rows.length === 1 ? '' : 's'}`;
     }
 
     get visibleTemplates() {
         const oppStage = this.effectiveTemplateStage;
         return this.filteredTemplates.map((t) => {
             const isSuggested = this.isTemplateSuggested(t, oppStage);
-            const name = t.name || 'Template';
+            const displayName = t.templateName || t.name || 'Template';
+            const relatedRaw = t.relatedToRecord || 'Opportunity';
+            const stagePill = this.buildStagePillLabel(t);
+            const pickPreview = this.buildPickPreview(t);
             return {
                 ...t,
+                displayName,
                 isSuggested,
                 pickClass: this.buildPickClass(isSuggested, t.id),
-                pickMeta: this.buildPickMeta(t),
-                pickPreview: this.buildPickPreview(t),
-                pickUse: this.buildPickUse(t, isSuggested),
-                ariaLabel: `Use template ${name}`
+                pickPreview,
+                showPickPreview: !!pickPreview,
+                stagePill,
+                showStagePill: !!stagePill,
+                stagePillClass: this.buildStagePillClass(isSuggested),
+                relatedBadge: this.formatObjectLabel(relatedRaw),
+                relatedBadgeClass: this.buildRelatedBadgeClass(relatedRaw),
+                showRelatedPill: true,
+                ariaLabel: `Use template ${displayName}`
             };
         });
+    }
+
+    buildRelatedBadgeClass(relatedRaw) {
+        const key = this.normalizeRelatedObjectKey(relatedRaw);
+        return key === 'opportunity' ? 'tmpl-rel-badge opp' : 'tmpl-rel-badge custom';
+    }
+
+    formatObjectLabel(raw) {
+        const key = this.normalizeRelatedObjectKey(raw);
+        if (key === 'opportunity') {
+            return 'Opportunity';
+        }
+        if (key === 'supplier_booking') {
+            return 'Supplier booking';
+        }
+        if (key === 'supplier_cost_payment') {
+            return 'Supplier cost / payment';
+        }
+        if (key === 'group_member') {
+            return 'Traveller';
+        }
+        if (key === 'contact') {
+            return 'Contact';
+        }
+        if (key === 'client_group') {
+            return 'Client group';
+        }
+        return (raw || 'Record').replace(/__c$/i, '').replace(/_/g, ' ');
     }
 
     buildPickClass(isSuggested, id) {
@@ -158,55 +349,140 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         return cls;
     }
 
-    buildPickMeta(t) {
-        const parts = [];
-        if (t.templateName) {
-            parts.push(t.templateName);
+    buildStagePillLabel(t) {
+        if (!t.templateStage) {
+            return '';
         }
-        parts.push('Opportunity');
-        if (t.templateStage) {
-            parts.push(t.templateStage);
-        } else if (t.assignedUserName) {
-            parts.push(t.assignedUserName);
+        return this.stripStageSuffix(t.templateStage);
+    }
+
+    buildStagePillClass(isSuggested) {
+        let cls = 'tmpl-stage-pill';
+        if (isSuggested) {
+            cls += ' suggested';
         }
-        return parts.join(' · ');
+        return cls;
     }
 
     buildPickPreview(t) {
         const raw = (t.intro || t.closing || '').trim();
         if (!raw) {
-            return 'Template will pre-fill subject and body for this opportunity.';
+            return '';
         }
         const plain = raw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
         return plain.length > 120 ? `${plain.substring(0, 117)}…` : plain;
     }
 
-    buildPickUse(t, isSuggested) {
-        if (isSuggested) {
-            return 'Suggested for this stage';
-        }
-        if (t.templateStage) {
-            return `${t.templateStage} stage`;
-        }
-        return 'Opportunity template';
-    }
-
     get hasNoTemplates() {
-        return !this.isLoading && !this.loadError && this.visibleTemplates.length === 0;
+        return !this.isLoading && !this.loadError && this.filteredTemplates.length === 0;
     }
 
-    handleBackdropClick(event) {
-        if (event.target === event.currentTarget) {
-            this.handleClose();
+    get stepOneClass() {
+        return this.isRecordStep ? 'tmpl-progress-step done' : 'tmpl-progress-step active';
+    }
+
+    get stepTwoClass() {
+        if (this.isRecordStep) {
+            return 'tmpl-progress-step active';
         }
+        return 'tmpl-progress-step muted';
+    }
+
+    get showRelatedRecordPicker() {
+        return !!this.pendingTemplate;
+    }
+
+    get confirmRelatedDisabled() {
+        return !this.pendingRelatedRecordId;
+    }
+
+    get relatedRecordOptions() {
+        const relatedType = this.pendingTemplate?.relatedToRecord || 'Opportunity';
+        return this.filterRelatedRecords(relatedType).map((row) => ({
+            label: row.label,
+            value: row.recordId
+        }));
+    }
+
+    get filteredRecordRows() {
+        const term = (this.recordSearchTerm || '').trim().toLowerCase();
+        const relatedType = this.pendingTemplate?.relatedToRecord || 'Opportunity';
+        const rows = this.filterRelatedRecords(relatedType).map((row) => ({
+            recordId: row.recordId,
+            label: row.label,
+            objectTypeLabel: this.formatObjectLabel(row.objectType),
+            isSelected: row.recordId === this.pendingRelatedRecordId,
+            rowClass:
+                'tmpl-record-row' + (row.recordId === this.pendingRelatedRecordId ? ' selected' : '')
+        }));
+        if (!term) {
+            return rows;
+        }
+        return rows.filter((row) => (row.label || '').toLowerCase().includes(term));
+    }
+
+    get hasRelatedRecordOptions() {
+        return this.filterRelatedRecords(this.pendingTemplate?.relatedToRecord || '').length > 0;
+    }
+
+    get hasNoFilteredRecords() {
+        return this.hasRelatedRecordOptions && this.filteredRecordRows.length === 0;
+    }
+
+    get relatedRecordEmptyMessage() {
+        const type = this.formatObjectLabel(this.pendingTemplate?.relatedToRecord || 'record');
+        return `No ${type} records exist on this Opportunity yet. Add one in the trip or pick a different template.`;
+    }
+
+    normalizeRelatedObjectKey(value) {
+        let key = (value || '').trim().toLowerCase();
+        if (key.startsWith('sugati__')) {
+            key = key.substring('sugati__'.length);
+        }
+        return key.endsWith('__c') ? key.slice(0, -3) : key;
+    }
+
+    filterRelatedRecords(relatedObjectType) {
+        const needle = this.normalizeRelatedObjectKey(relatedObjectType);
+        return (this._catalog.relatedRecords || []).filter((row) => {
+            return this.normalizeRelatedObjectKey(row.objectType) === needle;
+        });
     }
 
     handleClose() {
-        this.dispatchEvent(new CustomEvent('close'));
+        this.dispatchEvent(
+            new CustomEvent('close', {
+                detail: { navigateToChannel: true }
+            })
+        );
+    }
+
+    dismissPicker() {
+        this.dispatchEvent(
+            new CustomEvent('close', {
+                detail: { navigateToChannel: false }
+            })
+        );
     }
 
     handleStageFilter(event) {
         this.selectedStageFilter = event.currentTarget.dataset.stage || ALL_STAGES;
+    }
+
+    handleTemplateSearch(event) {
+        this.templateSearchTerm = event.target.value || '';
+    }
+
+    handleClearTemplateSearch() {
+        this.templateSearchTerm = '';
+        this.focusTemplateSearch();
+    }
+
+    focusTemplateSearch() {
+        const input = this.template.querySelector('[data-id="template-search"]');
+        if (input) {
+            input.focus();
+        }
     }
 
     handleTemplatePick(event) {
@@ -229,16 +505,80 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
             return;
         }
         this.selectedTemplateId = id;
-        this.confirmSelection(selected);
+        const relatedType = selected.relatedToRecord || 'Opportunity';
+
+        if (this.normalizeRelatedObjectKey(relatedType) === 'opportunity') {
+            this.confirmSelection(selected, this.opportunityId, relatedType);
+            return;
+        }
+
+        const matches = this.filterRelatedRecords(relatedType);
+        this.pendingTemplate = selected;
+        this.recordSearchTerm = '';
+        this.pickerStep = 'record';
+        this.pendingRelatedRecordId = matches.length ? matches[0].recordId : '';
+    }
+
+    handleRecordSearchInput(event) {
+        this.recordSearchTerm = event.target.value || '';
+    }
+
+    handleRecordRadioChange(event) {
+        this.pendingRelatedRecordId = event.target.value;
+    }
+
+    handleRelatedRecordChange(event) {
+        this.pendingRelatedRecordId = event.detail.value;
+    }
+
+    handleConfirmRelatedRecord() {
+        if (!this.pendingTemplate || !this.pendingRelatedRecordId) {
+            return;
+        }
+        const match = (this._catalog.relatedRecords || []).find(
+            (row) => row.recordId === this.pendingRelatedRecordId
+        );
+        this.confirmSelection(
+            this.pendingTemplate,
+            this.pendingRelatedRecordId,
+            this.pendingTemplate.relatedToRecord || 'Opportunity',
+            match?.label
+        );
+        this.resetRecordStep();
+    }
+
+    handleCancelRelatedRecord() {
+        this.resetRecordStep();
+    }
+
+    resetRecordStep() {
+        this.pendingTemplate = null;
+        this.pendingRelatedRecordId = '';
+        this.recordSearchTerm = '';
+        this.pickerStep = 'templates';
+    }
+
+    renderedCallback() {
+        if (
+            !this._searchInputFocused &&
+            !this.isRecordStep &&
+            !this.isLoading &&
+            !this.loadError &&
+            this.catalogTemplateCount > 0
+        ) {
+            this._searchInputFocused = true;
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            requestAnimationFrame(() => this.focusTemplateSearch());
+        }
     }
 
     handleBlank() {
         this.dispatchEvent(new CustomEvent('select', { detail: { blank: true } }));
-        this.handleClose();
+        this.dismissPicker();
     }
 
-    confirmSelection(selected) {
-        const relatedId = this.opportunityId;
+    confirmSelection(selected, relatedRecordId, relatedObjectType, relatedLabel) {
+        const relatedId = relatedRecordId || this.opportunityId;
         this.dispatchEvent(
             new CustomEvent('select', {
                 detail: {
@@ -246,24 +586,37 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
                     templateName: selected.templateName || selected.name,
                     name: selected.name,
                     relatedRecordId: relatedId,
-                    relatedObjectType: 'Opportunity',
+                    relatedObjectType: relatedObjectType || 'Opportunity',
+                    attachmentParentLabel: relatedLabel || this.tripDisplay,
                     meta: selected.meta
                 }
             })
         );
-        this.handleClose();
-    }
-
-    stopPropagation(event) {
-        event.stopPropagation();
+        this.dismissPicker();
     }
 
     syncDefaultStageFilter() {
+        const oppStage = this.effectiveTemplateStage;
+        if (oppStage && this.orderedTemplateStages.some((s) => this.normalizeStageKey(s) === this.normalizeStageKey(oppStage))) {
+            this.selectedStageFilter = this.orderedTemplateStages.find(
+                (s) => this.normalizeStageKey(s) === this.normalizeStageKey(oppStage)
+            );
+            return;
+        }
         this.selectedStageFilter = ALL_STAGES;
     }
 
     normalizeStageKey(stage) {
         return (stage || '').trim().toLowerCase();
+    }
+
+    stripStageSuffix(stage) {
+        if (!stage) {
+            return '';
+        }
+        return String(stage)
+            .replace(/\s*stage\s*$/i, '')
+            .trim();
     }
 
     getStageOrderIndex(stage) {
@@ -274,10 +627,6 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         const order = this._catalog.opportunityStageOrder || [];
         const index = order.findIndex((s) => this.normalizeStageKey(s) === key);
         return index >= 0 ? index : 9998;
-    }
-
-    sortStagesByOpportunityOrder(stages) {
-        return [...stages].sort((a, b) => this.getStageOrderIndex(a) - this.getStageOrderIndex(b));
     }
 
     isTemplateSuggested(t, oppStage) {
@@ -299,7 +648,9 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
             if (stageDiff !== 0) {
                 return stageDiff;
             }
-            return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+            const aName = a.templateName || a.name || '';
+            const bName = b.templateName || b.name || '';
+            return aName.localeCompare(bName, undefined, { sensitivity: 'base' });
         });
     }
 

@@ -41,6 +41,43 @@
     overflow: hidden;
 }
 
+.rec-page-modal {
+    background: var(--s1);
+}
+
+.rec-modal-hdr {
+    padding: 18px 22px 12px;
+    border-bottom: 1px solid var(--b1);
+    flex-shrink: 0;
+}
+
+.rec-modal-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--warm-black);
+    margin-bottom: 4px;
+}
+
+.rec-modal-sub {
+    font-size: 12px;
+    color: var(--t3);
+    line-height: 1.5;
+}
+
+.rec-page-modal .rec-aud-tabs {
+    padding: 0 22px;
+}
+
+.rec-page-modal .rec-quick-row,
+.rec-page-modal .rec-status-tabs {
+    padding-left: 22px;
+    padding-right: 22px;
+}
+
+.rec-page-modal .rec-footer {
+    padding: 12px 22px;
+}
+
 .rec-ey {
     font-size: 9.5px;
     font-weight: 600;
@@ -71,7 +108,7 @@
 /* Audience type tabs — prototype style */
 .rec-aud-tabs {
     display: flex;
-    gap: 0;
+    gap: 12px;
     padding: 0 28px;
     border-bottom: 1px solid var(--b1);
     flex-shrink: 0;
@@ -82,7 +119,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 12px 18px;
+    padding: 12px 20px;
     font-size: 12px;
     color: var(--t3);
     cursor: pointer;
@@ -163,7 +200,7 @@
 /* Status filter tabs */
 .rec-status-tabs {
     display: flex;
-    gap: 6px;
+    gap: 10px;
     padding: 4px 28px 10px;
     flex-shrink: 0;
     flex-wrap: wrap;

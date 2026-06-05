@@ -62,7 +62,63 @@
                                 <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveChip}>×</span>
                             </div>
                         </template>
-                        <div class="r-add" onclick={handleRecipientsNav}>＋ Add</div>
+                        <div class="r-add-wrap" data-field="to" onclick={stopAddrWrapPropagation}>
+                            <div class="r-add" data-field="to" onclick={handleOpenAddrDropdown}>＋ Add</div>
+                            <div class={toDropdownClass}>
+                                <input
+                                    class="addr-search"
+                                    type="text"
+                                    data-field="to"
+                                    placeholder="Name or email…"
+                                    value={addrSearchTerm}
+                                    oninput={handleAddrSearch}
+                                    onkeydown={handleAddrSearchKey}
+                                    onclick={stopAddrWrapPropagation}
+                                />
+                                <div class="addr-dd-list">
+                                    <template for:each={toAddrDropdownEntries} for:item="entry">
+                                        <template lwc:if={entry.isEmpty}>
+                                            <div key={entry.key} class="addr-dd-empty">No matches found</div>
+                                        </template>
+                                        <template lwc:elseif={entry.isGroupHeader}>
+                                            <div key={entry.key} class={entry.headerClass}>
+                                                <span class="addr-dd-group-icon">{entry.icon}</span>
+                                                <span class="addr-dd-group-label">{entry.label}</span>
+                                                <span class="addr-dd-group-count">{entry.count}</span>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <div
+                                                key={entry.key}
+                                                class="addr-dd-item"
+                                                data-field={entry.field}
+                                                data-email={entry.email}
+                                                data-name={entry.name}
+                                                data-initials={entry.initials}
+                                                data-contact-id={entry.contactId}
+                                                data-row-id={entry.id}
+                                                data-audience={entry.audience}
+                                                data-role={entry.role}
+                                                onclick={handleAddrItemClick}
+                                            >
+                                                <div class={entry.avClass}>{entry.initials}</div>
+                                                <div class="addr-dd-info">
+                                                    <div class="addr-dd-name">{entry.name}</div>
+                                                    <div class="addr-dd-email">{entry.email}</div>
+                                                    <div class="addr-dd-subrole">{entry.subrole}</div>
+                                                </div>
+                                                <div class="addr-dd-right">
+                                                    <template lwc:if={entry.status}>
+                                                        <span class="addr-dd-status">{entry.status}</span>
+                                                    </template>
+                                                    <span class={entry.badgeClass}>{entry.badgeLabel}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="addr-row">
@@ -75,7 +131,63 @@
                                 <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveCcChip}>×</span>
                             </div>
                         </template>
-                        <div class="r-add" onclick={handleCcNav}>＋ CC</div>
+                        <div class="r-add-wrap" data-field="cc" onclick={stopAddrWrapPropagation}>
+                            <div class="r-add" data-field="cc" onclick={handleOpenAddrDropdown}>＋ CC</div>
+                            <div class={ccDropdownClass}>
+                                <input
+                                    class="addr-search"
+                                    type="text"
+                                    data-field="cc"
+                                    placeholder="Name or email…"
+                                    value={addrSearchTerm}
+                                    oninput={handleAddrSearch}
+                                    onkeydown={handleAddrSearchKey}
+                                    onclick={stopAddrWrapPropagation}
+                                />
+                                <div class="addr-dd-list">
+                                    <template for:each={ccAddrDropdownEntries} for:item="entry">
+                                        <template lwc:if={entry.isEmpty}>
+                                            <div key={entry.key} class="addr-dd-empty">No matches found</div>
+                                        </template>
+                                        <template lwc:elseif={entry.isGroupHeader}>
+                                            <div key={entry.key} class={entry.headerClass}>
+                                                <span class="addr-dd-group-icon">{entry.icon}</span>
+                                                <span class="addr-dd-group-label">{entry.label}</span>
+                                                <span class="addr-dd-group-count">{entry.count}</span>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <div
+                                                key={entry.key}
+                                                class="addr-dd-item"
+                                                data-field={entry.field}
+                                                data-email={entry.email}
+                                                data-name={entry.name}
+                                                data-initials={entry.initials}
+                                                data-contact-id={entry.contactId}
+                                                data-row-id={entry.id}
+                                                data-audience={entry.audience}
+                                                data-role={entry.role}
+                                                onclick={handleAddrItemClick}
+                                            >
+                                                <div class={entry.avClass}>{entry.initials}</div>
+                                                <div class="addr-dd-info">
+                                                    <div class="addr-dd-name">{entry.name}</div>
+                                                    <div class="addr-dd-email">{entry.email}</div>
+                                                    <div class="addr-dd-subrole">{entry.subrole}</div>
+                                                </div>
+                                                <div class="addr-dd-right">
+                                                    <template lwc:if={entry.status}>
+                                                        <span class="addr-dd-status">{entry.status}</span>
+                                                    </template>
+                                                    <span class={entry.badgeClass}>{entry.badgeLabel}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="addr-row addr-row-last">
@@ -88,7 +200,63 @@
                                 <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveBccChip}>×</span>
                             </div>
                         </template>
-                        <div class="r-add" onclick={handleBccNav}>＋ BCC</div>
+                        <div class="r-add-wrap" data-field="bcc" onclick={stopAddrWrapPropagation}>
+                            <div class="r-add" data-field="bcc" onclick={handleOpenAddrDropdown}>＋ BCC</div>
+                            <div class={bccDropdownClass}>
+                                <input
+                                    class="addr-search"
+                                    type="text"
+                                    data-field="bcc"
+                                    placeholder="Name or email…"
+                                    value={addrSearchTerm}
+                                    oninput={handleAddrSearch}
+                                    onkeydown={handleAddrSearchKey}
+                                    onclick={stopAddrWrapPropagation}
+                                />
+                                <div class="addr-dd-list">
+                                    <template for:each={bccAddrDropdownEntries} for:item="entry">
+                                        <template lwc:if={entry.isEmpty}>
+                                            <div key={entry.key} class="addr-dd-empty">No matches found</div>
+                                        </template>
+                                        <template lwc:elseif={entry.isGroupHeader}>
+                                            <div key={entry.key} class={entry.headerClass}>
+                                                <span class="addr-dd-group-icon">{entry.icon}</span>
+                                                <span class="addr-dd-group-label">{entry.label}</span>
+                                                <span class="addr-dd-group-count">{entry.count}</span>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <div
+                                                key={entry.key}
+                                                class="addr-dd-item"
+                                                data-field={entry.field}
+                                                data-email={entry.email}
+                                                data-name={entry.name}
+                                                data-initials={entry.initials}
+                                                data-contact-id={entry.contactId}
+                                                data-row-id={entry.id}
+                                                data-audience={entry.audience}
+                                                data-role={entry.role}
+                                                onclick={handleAddrItemClick}
+                                            >
+                                                <div class={entry.avClass}>{entry.initials}</div>
+                                                <div class="addr-dd-info">
+                                                    <div class="addr-dd-name">{entry.name}</div>
+                                                    <div class="addr-dd-email">{entry.email}</div>
+                                                    <div class="addr-dd-subrole">{entry.subrole}</div>
+                                                </div>
+                                                <div class="addr-dd-right">
+                                                    <template lwc:if={entry.status}>
+                                                        <span class="addr-dd-status">{entry.status}</span>
+                                                    </template>
+                                                    <span class={entry.badgeClass}>{entry.badgeLabel}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,43 +300,122 @@
                     <span class="tp-title">Template</span>
                     <span class="tp-act" onclick={handleOpenTemplates}>Browse all →</span>
                 </div>
-                <div class="tmpl-search-wrap-outer">
-                    <div class="tmpl-search-wrap">
-                        <span class="tmpl-search-ic">⌕</span>
-                        <input
-                            class="tmpl-search-input"
-                            type="text"
-                            placeholder="Search templates…"
-                            value={templateSearch}
-                            oninput={handleTemplateSearch}
-                        />
+                <template lwc:if={isComposerRecordStep}>
+                    <div class="composer-record-step">
+                        <div class="composer-record-hdr">
+                            <button type="button" class="composer-record-back" onclick={handleComposerCancelRecord}>← Templates</button>
+                        </div>
+                        <div class="composer-selected-card">
+                            <div class="composer-selected-label">Selected template</div>
+                            <div class="composer-selected-name">{pendingComposerTemplateName}</div>
+                            <div class="composer-selected-meta">Merge against <strong>{pendingComposerRelatedLabel}</strong></div>
+                        </div>
+                        <template lwc:if={composerHasRelatedRecordOptions}>
+                            <div class="composer-record-search">
+                                <lightning-input
+                                    type="search"
+                                    label="Search records"
+                                    placeholder="Filter by name…"
+                                    value={composerRecordSearch}
+                                    onchange={handleComposerRecordSearch}
+                                    variant="label-hidden"
+                                ></lightning-input>
+                            </div>
+                            <div class="composer-record-list" role="radiogroup">
+                                <template for:each={composerFilteredRecordRows} for:item="row">
+                                    <label key={row.recordId} class={row.rowClass}>
+                                        <input
+                                            type="radio"
+                                            name="composerMergeRecord"
+                                            value={row.recordId}
+                                            checked={row.isSelected}
+                                            onchange={handleComposerRecordRadioChange}
+                                        />
+                                        <span class="composer-record-body">
+                                            <span class="composer-record-name">{row.label}</span>
+                                            <span class="composer-record-type">{row.objectTypeLabel}</span>
+                                        </span>
+                                    </label>
+                                </template>
+                                <template lwc:if={composerHasNoFilteredRecords}>
+                                    <div class="composer-record-empty">No records match your search.</div>
+                                </template>
+                            </div>
+                            <button
+                                type="button"
+                                class="composer-record-load"
+                                onclick={handleComposerConfirmRecord}
+                                disabled={composerConfirmRecordDisabled}
+                            >
+                                Load template →
+                            </button>
+                        </template>
+                        <template lwc:else>
+                            <div class="composer-record-empty-state">
+                                <div class="composer-record-empty-title">No records found</div>
+                                <div class="composer-record-empty">{composerRelatedRecordEmptyMessage}</div>
+                            </div>
+                            <button type="button" class="composer-record-load" disabled>Load template →</button>
+                        </template>
                     </div>
-                </div>
-                <div class="tmpl-folder-tabs">
-                    <template for:each={folderTabs} for:item="tab">
-                        <div key={tab.id} class={tab.className} data-folder={tab.id} onclick={handleFolderTab}>{tab.label}</div>
-                    </template>
-                </div>
-                <div class="tmpl-scroll-list">
-                    <template for:each={filteredTemplates} for:item="tmpl">
-                        <div
-                            key={tmpl.id}
-                            class={tmpl.itemClass}
-                            data-id={tmpl.id}
-                            data-name={tmpl.name}
-                            onclick={handleTemplateActivate}
-                        >
-                            <div class="tmpl-item-left">
-                                <div class="tmpl-item-name">{tmpl.name}</div>
-                                <div class="tmpl-item-meta">{tmpl.meta}</div>
-                            </div>
-                            <div class="tmpl-item-badges">
-                                <span class={tmpl.stageClass}>{tmpl.stage}</span>
-                                <template lwc:if={tmpl.suggested}><span class="tmpl-suggested">✦</span></template>
-                            </div>
+                </template>
+                <template lwc:else>
+                    <div class="tmpl-search-wrap-outer">
+                        <div class="tmpl-search-wrap">
+                            <span class="tmpl-search-ic">⌕</span>
+                            <input
+                                class="tmpl-search-input"
+                                type="text"
+                                placeholder="Search templates…"
+                                value={templateSearch}
+                                oninput={handleTemplateSearch}
+                            />
+                        </div>
+                    </div>
+                    <template lwc:if={showComposerStageFilters}>
+                        <div class="tmpl-stage-filters composer-stage-filters" role="tablist" aria-label="Filter by stage">
+                            <template for:each={composerStageFilters} for:item="sf">
+                                <button
+                                    key={sf.id}
+                                    type="button"
+                                    role="tab"
+                                    class={sf.className}
+                                    data-stage={sf.id}
+                                    onclick={handleComposerStageFilter}
+                                >
+                                    {sf.label}
+                                </button>
+                            </template>
                         </div>
                     </template>
-                </div>
+                    <div class="tmpl-scroll-list">
+                        <template for:each={filteredTemplates} for:item="tmpl">
+                            <div
+                                key={tmpl.id}
+                                class={tmpl.itemClass}
+                                data-id={tmpl.id}
+                                onclick={handleTemplateActivate}
+                            >
+                                <div class="tmpl-item-left">
+                                    <div class="tmpl-item-name-row">
+                                        <span class="tmpl-item-name">{tmpl.displayName}</span>
+                                        <template lwc:if={tmpl.showStagePill}>
+                                            <span class={tmpl.stagePillClass}>{tmpl.stagePill}</span>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="tmpl-item-right">
+                                    <template lwc:if={tmpl.isSuggested}>
+                                        <span class="tmpl-suggested">✦</span>
+                                    </template>
+                                    <template lwc:if={tmpl.showRelatedPill}>
+                                        <span class={tmpl.relatedBadgeClass}>{tmpl.relatedBadge}</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
             </div>
             <div class="tp-section">
                 <div class="tp-hdr">
@@ -176,7 +423,7 @@
                     <span class="tp-act att-count">{attCountLabel}</span>
                 </div>
                 <div class="att-scroll-list">
-                    <div class="att-grp">Opportunity Files</div>
+                    <div class="att-grp">{attachmentSectionLabel}</div>
                     <template for:each={attachments} for:item="att">
                         <div key={att.id} class="att-item">
                             <div class={att.cbClass} data-id={att.id} onclick={handleAttachmentToggle}>✓</div>
@@ -198,7 +445,7 @@
                         onchange={handleFilesSelected}
                     />
                     <div class="att-upload-ic">↑</div>
-                    <div class="att-upload-txt">Upload a file from your device</div>
+                    <div class="att-upload-txt">{attachmentUploadHint}</div>
                 </label>
             </div>
             <div class="tp-section">
@@ -235,5 +482,6 @@
             onclose={handleCloseAi}
             onapply={handleAiApply}
         ></c-sugati-communication-ai-assist>
+
     </div>
 </template>

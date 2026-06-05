@@ -45,11 +45,11 @@ private class SugatiCommunicationHubControllerTest {
             supplier.put('sugati__S_Email__c', 'supplier@example.com');
             insert supplier;
 
-            if (g.containsKey('sugati__Supplier_Booking__c')) {
-                SObject booking = g.get('sugati__Supplier_Booking__c').newSObject();
-                booking.put('sugati__SB_Opportunity__c', opp.Id);
-                booking.put('sugati__SB_Supplier__c', supplier.get('Id'));
-                insert booking;
+            if (g.containsKey('sugati__Supplier_Cost_Payment__c')) {
+                SObject scp = g.get('sugati__Supplier_Cost_Payment__c').newSObject();
+                scp.put('sugati__SCP_Opportunity__c', opp.Id);
+                scp.put('sugati__SCP_Supplier__c', supplier.get('Id'));
+                insert scp;
             } else if (g.containsKey('sugati__Opportunity_Supplier__c')) {
                 SObject os = g.get('sugati__Opportunity_Supplier__c').newSObject();
                 os.put('sugati__OS_Opportunity__c', opp.Id);
@@ -79,8 +79,8 @@ private class SugatiCommunicationHubControllerTest {
         List<SugatiCommunicationHubController.RecipientDTO> recipients = SugatiCommunicationHubController.getRecipients(opp.Id);
         List<SugatiCommunicationHubController.TemplateDTO> templates =
             SugatiCommunicationHubController.getTemplates(opp.Id, null, null, 'Email');
-        SugatiLegacyEmailService.LegacyEmailLoadDTO loaded =
-            SugatiLegacyEmailService.loadDefaultSendEmailTemplate(opp.Id);
+        SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loaded =
+            SugatiCommunicationHubEmailService.loadDefaultSendEmailTemplate(opp.Id);
         SugatiCommunicationHubController.PreviewRequest req = new SugatiCommunicationHubController.PreviewRequest();
         req.opportunityId = opp.Id;
         req.recipientIds = new List<Id>{ contacts[0].Id };
@@ -90,6 +90,8 @@ private class SugatiCommunicationHubControllerTest {
         Test.stopTest();
 
         System.assertEquals(opp.Id, ctx.opportunityId);
+        System.assertEquals('B2C', ctx.bookingChannelLabel);
+        System.assertEquals(false, ctx.isAgencyBooking);
         System.assert(recipients.size() >= 1, 'Expected recipients');
         Boolean hasTraveller = false;
         for (SugatiCommunicationHubController.RecipientDTO row : recipients) {
@@ -102,6 +104,13 @@ private class SugatiCommunicationHubControllerTest {
             }
         }
         System.assert(hasTraveller, 'Expected at least one traveller with email');
+        Boolean hasSupplierContact = false;
+        for (SugatiCommunicationHubController.RecipientDTO row : recipients) {
+            if (row.audience == 'contacts' && row.email == 'supplier.contact@example.com') {
+                hasSupplierContact = true;
+            }
+        }
+        System.assert(hasSupplierContact, 'Expected operational supplier contacts on B2C bookings');
         System.assertNotEquals(null, loaded);
         System.assertNotEquals(null, preview.subject, 'Preview should return rendered subject');
         System.assertNotEquals(null, preview.bodyHtml, 'Preview should return rendered HTML from legacy template load');
@@ -144,12 +153,15 @@ private class SugatiCommunicationHubControllerTest {
             opp.Id,
             req.resolvedSubject,
             req.resolvedBodyHtml,
+            null,
+            null,
+            null,
             req
         );
         Test.stopTest();
 
         System.assertNotEquals(null, res.commLogId);
-        System.assertEquals('Delivered', res.status);
+        System.assertEquals('Sent', res.status);
 
         Comm_Log__c log = [
             SELECT Id, Status__c, Opportunity__c, Subject__c, Body_HTML__c, Sent_By__c, Sent_By__r.Email
@@ -157,12 +169,18 @@ private class SugatiCommunicationHubControllerTest {
             WHERE Id = :res.commLogId
             LIMIT 1
         ];
-        System.assertEquals('Delivered', log.Status__c);
+        System.assertEquals('Sent', log.Status__c);
         System.assertEquals(opp.Id, log.Opportunity__c);
         System.assertEquals('Trip Test', log.Subject__c);
         System.assert(log.Body_HTML__c != null && log.Body_HTML__c.contains('Body'), 'Body should be saved on Comm_Log__c');
         System.assertEquals(UserInfo.getUserId(), log.Sent_By__c, 'Sent_By should be the running user');
-        System.assertEquals(UserInfo.getUserEmail(), log.Sent_By__r.Email, 'From address comes from Sent_By user email');
+        log = [
+            SELECT From_Address__c
+            FROM Comm_Log__c
+            WHERE Id = :res.commLogId
+            LIMIT 1
+        ];
+        System.assertNotEquals(null, log.From_Address__c, 'From_Address__c should be set on send');
 
         Integer recCount = [SELECT COUNT() FROM Comm_Recipient__c WHERE Comm_Log__c = :log.Id];
         System.assertEquals(3, recCount, 'Expected To, Cc, and Bcc recipient rows');
@@ -190,6 +208,8 @@ private class SugatiCommunicationHubControllerTest {
             'Email',
             null,
             null,
+            null,
+            null,
             null
         );
         Test.stopTest();
@@ -198,11 +218,12 @@ private class SugatiCommunicationHubControllerTest {
         System.assertEquals('Draft', res.status);
 
         Comm_Log__c log = [
-            SELECT Id, Status__c, Subject__c, Body_HTML__c, Sent_At__c, Last_Modified_At__c
+            SELECT Id, Status__c, Subject__c, Body_HTML__c, Sent_At__c, Last_Modified_At__c, From_Address__c
             FROM Comm_Log__c
             WHERE Id = :res.commLogId
             LIMIT 1
         ];
+        System.assertNotEquals(null, log.From_Address__c);
         System.assertEquals('Draft', log.Status__c);
         System.assertEquals('Draft subject {{Opportunity.Name}}', log.Subject__c);
         System.assertEquals(null, log.Sent_At__c);
@@ -212,6 +233,7 @@ private class SugatiCommunicationHubControllerTest {
             SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null);
         System.assertEquals(1, history.size());
         System.assertNotEquals(null, history[0].lastModifiedAt, 'History should expose last modified for drafts');
+        System.assertNotEquals(null, history[0].fromDisplay, 'History should expose from display for drafts');
     }
 
     @IsTest
@@ -233,6 +255,8 @@ private class SugatiCommunicationHubControllerTest {
             '<p>Body</p>',
             'postmark',
             'Email',
+            null,
+            null,
             null,
             null,
             null
@@ -262,12 +286,14 @@ private class SugatiCommunicationHubControllerTest {
             'Email',
             null,
             null,
+            null,
+            null,
             null
         );
         Test.stopTest();
 
         Comm_Log__c log = [
-            SELECT Subject__c, Delivery_Mode__c, Last_Modified_At__c
+            SELECT Subject__c, Delivery_Mode__c, Last_Modified_At__c, From_Address__c
             FROM Comm_Log__c
             WHERE Id = :created.commLogId
             LIMIT 1
@@ -295,6 +321,68 @@ private class SugatiCommunicationHubControllerTest {
     }
 
     @IsTest
+    static void testSendUsesComposerContentWhenTemplateConfigPresent() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        List<Contact> contacts = [SELECT Id, Email FROM Contact ORDER BY CreatedDate ASC];
+
+        SugatiCommunicationHubController.SendRequest req = new SugatiCommunicationHubController.SendRequest();
+        req.opportunityId = opp.Id;
+        req.toEmails = new List<String>{ contacts[0].Email };
+        req.subjectTemplate = 'Edited subject line';
+        req.bodyTemplate = '<p>Edited body only for this send</p>';
+        req.resolvedSubject = 'Edited subject line';
+        req.resolvedBodyHtml = '<p>Edited body only for this send</p>';
+        req.deliveryMode = 'native';
+        req.channel = 'Email';
+        req.sugatiEmailTemplateConfigId = (Id) 'a00000000000001AAA';
+
+        Test.startTest();
+        SugatiCommunicationHubController.SendResponse res = SugatiCommunicationHubController.sendMessage(
+            opp.Id,
+            req.toEmails,
+            new List<String>(),
+            new List<String>(),
+            JSON.serialize(req.toEmails),
+            null,
+            null,
+            JSON.serialize(
+                new List<Object>{
+                    new Map<String, Object>{ 'email' => contacts[0].Email, 'contactId' => contacts[0].Id }
+                }
+            ),
+            req.deliveryMode,
+            null,
+            req.sugatiEmailTemplateConfigId,
+            opp.Id,
+            req.resolvedSubject,
+            req.resolvedBodyHtml,
+            null,
+            null,
+            null,
+            req
+        );
+        Test.stopTest();
+
+        Comm_Log__c log = [
+            SELECT Subject__c, Body_HTML__c
+            FROM Comm_Log__c
+            WHERE Id = :res.commLogId
+            LIMIT 1
+        ];
+        System.assertEquals('Edited subject line', log.Subject__c);
+        System.assertEquals('<p>Edited body only for this send</p>', log.Body_HTML__c);
+
+        Comm_Recipient__c recipient = [
+            SELECT Contact__c, Email_Address__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c = :res.commLogId
+            LIMIT 1
+        ];
+        System.assertEquals(contacts[0].Id, recipient.Contact__c);
+        System.assertEquals(contacts[0].Email, recipient.Email_Address__c);
+    }
+
+    @IsTest
     static void testDiscardDraftDirectDeletesDraft() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
         List<Contact> contacts = [SELECT Id, Email, Name FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
@@ -315,6 +403,8 @@ private class SugatiCommunicationHubControllerTest {
             'Email',
             null,
             null,
+            null,
+            null,
             null
         );
 
@@ -331,6 +421,127 @@ private class SugatiCommunicationHubControllerTest {
             0,
             [SELECT COUNT() FROM Comm_Recipient__c WHERE Comm_Log__c = :created.commLogId],
             'Draft recipients should be deleted'
+        );
+    }
+
+    @IsTest
+    static void testSendMessageWithAttachments() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        List<Contact> contacts = [SELECT Id, Email FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
+
+        SugatiCommunicationHubController.SendRequest req = new SugatiCommunicationHubController.SendRequest();
+        req.opportunityId = opp.Id;
+        req.toEmails = new List<String>{ contacts[0].Email };
+        req.subjectTemplate = 'With attachment';
+        req.bodyTemplate = '<p>See attached</p>';
+        req.resolvedSubject = 'With attachment';
+        req.resolvedBodyHtml = '<p>See attached</p>';
+        req.deliveryMode = 'native';
+        req.channel = 'Email';
+        req.newAttachmentFileNames = new List<String>{ 'notes.txt' };
+        req.newAttachmentFileData = new List<String>{
+            EncodingUtil.base64Encode(Blob.valueOf('Attachment body'))
+        };
+
+        Test.startTest();
+        SugatiCommunicationHubController.SendResponse res = SugatiCommunicationHubController.sendMessage(
+            opp.Id,
+            req.toEmails,
+            null,
+            null,
+            JSON.serialize(req.toEmails),
+            '[]',
+            '[]',
+            JSON.serialize(
+                new List<Object>{
+                    new Map<String, Object>{ 'email' => contacts[0].Email, 'contactId' => contacts[0].Id }
+                }
+            ),
+            req.deliveryMode,
+            null,
+            null,
+            opp.Id,
+            req.resolvedSubject,
+            req.resolvedBodyHtml,
+            null,
+            req.newAttachmentFileNames,
+            req.newAttachmentFileData,
+            req
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, res.commLogId);
+        List<ContentDocumentLink> links = [
+            SELECT ContentDocumentId
+            FROM ContentDocumentLink
+            WHERE LinkedEntityId = :res.commLogId
+        ];
+        System.assertEquals(1, links.size(), 'Uploaded file should be linked to the sent Comm_Log__c');
+        System.assertEquals(
+            1,
+            [
+                SELECT COUNT()
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId = :opp.Id AND ContentDocumentId = :links[0].ContentDocumentId
+            ],
+            'Uploaded file should also be linked to the Opportunity'
+        );
+    }
+
+    @IsTest
+    static void testGetRecordAttachmentsIncludesFilesAndLegacyAttachments() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+
+        ContentVersion cv = new ContentVersion(
+            Title = 'Invoice Pack',
+            PathOnClient = 'invoice.pdf',
+            VersionData = Blob.valueOf('invoice')
+        );
+        insert cv;
+        Id docId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :cv.Id].ContentDocumentId;
+        insert new ContentDocumentLink(
+            LinkedEntityId = opp.Id,
+            ContentDocumentId = docId,
+            ShareType = 'V',
+            Visibility = 'AllUsers'
+        );
+
+        Attachment legacy = new Attachment(
+            ParentId = opp.Id,
+            Name = 'ATOL.pdf',
+            Body = Blob.valueOf('atol'),
+            ContentType = 'application/pdf'
+        );
+        insert legacy;
+
+        List<SugatiCommunicationHubController.AttachmentDTO> rows = SugatiCommunicationHubController.getRecordAttachments(
+            opp.Id,
+            opp.Id
+        );
+        System.assert(rows.size() >= 2, 'Expected both Salesforce Files and legacy attachments');
+    }
+
+    @IsTest
+    static void testUploadOpportunityFileLinksToOpportunity() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+
+        Test.startTest();
+        SugatiCommunicationHubController.AttachmentDTO uploaded = SugatiCommunicationHubController.uploadOpportunityFile(
+            opp.Id,
+            'proposal.pdf',
+            EncodingUtil.base64Encode(Blob.valueOf('Sample PDF bytes'))
+        );
+        Test.stopTest();
+
+        System.assertNotEquals(null, uploaded.contentDocumentId);
+        System.assertEquals(
+            1,
+            [
+                SELECT COUNT()
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId = :opp.Id AND ContentDocumentId = :uploaded.contentDocumentId
+            ],
+            'Uploaded file should be linked to the Opportunity immediately'
         );
     }
 
@@ -369,8 +580,10 @@ private class SugatiCommunicationHubControllerTest {
             'postmark',
             'Email',
             new List<Id>{ oppDocId },
+            new List<String>{ String.valueOf(oppDocId) },
             new List<String>{ 'welcome.txt' },
-            new List<String>{ EncodingUtil.base64Encode(Blob.valueOf('Hello attachment')) }
+            new List<String>{ EncodingUtil.base64Encode(Blob.valueOf('Hello attachment')) },
+            null
         );
         Test.stopTest();
 
@@ -380,6 +593,15 @@ private class SugatiCommunicationHubControllerTest {
             WHERE LinkedEntityId = :res.commLogId
         ];
         System.assertEquals(2, links.size(), 'Expected opportunity file and uploaded file on draft');
+        System.assertEquals(
+            0,
+            [
+                SELECT COUNT()
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId = :opp.Id AND ContentDocument.Title = 'welcome'
+            ],
+            'New uploads should be linked to Comm Log only, not Opportunity'
+        );
 
         List<SugatiCommunicationHubController.HistoryItemDTO> history =
             SugatiCommunicationHubController.getHistory(opp.Id, null, null, null, null);

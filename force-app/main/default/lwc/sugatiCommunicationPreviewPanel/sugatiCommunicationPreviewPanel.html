@@ -34,9 +34,11 @@
                         <div class="ec-meta">
                             <div><b>From</b> {fromLine}</div>
                             <div><b>To</b> {toLine}</div>
+                            <!-- Preview as (disabled for now)
                             <template lwc:if={showPreviewAsHint}>
                                 <div><b>Preview as</b> {previewAsLabel}</div>
                             </template>
+                            -->
                             <div><b>Re</b> {displaySubject}</div>
                         </div>
                     </div>
@@ -60,7 +62,6 @@
                         <h1 class="ec-h1">{displaySubject}</h1>
                         <p class="ec-p">Preview shows your composed message as it will be sent.</p>
                         <div class="ec-p ec-body-content" lwc:dom="manual"></div>
-                        <a href="#" class="ec-cta">View Full Itinerary Online</a>
                         <p class="ec-p ec-sign">Warm regards,<br />Sugati Communication Hub</p>
                     </div>
                 </div>
@@ -99,6 +100,7 @@
                     <div class="pp-opt-s">Sent · Failed only</div>
                 </div>
             </div>
+            <!-- Schedule (hidden for now)
             <div class="pp-s">
                 <div class="pp-l">Schedule</div>
                 <div class={scheduleNowClass} onclick={handleScheduleNow}>
@@ -120,6 +122,8 @@
                     </div>
                 </template>
             </div>
+            -->
+            <!-- Preview as section (disabled for now)
             <div class="pp-s">
                 <div class="pp-l">Preview as</div>
                 <template for:each={previewAsOptions} for:item="person">
@@ -133,9 +137,10 @@
                     </div>
                 </template>
                 <template lwc:if={showPreviewAsEmpty}>
-                    <div class="pp-opt-s">Add To recipients with contacts to preview merge fields per traveller.</div>
+                    <div class="pp-opt-s">Preview shows your composed subject and body as sent to all recipients.</div>
                 </template>
             </div>
+            -->
             <div class="prev-send-zone">
                 <button type="button" class={sendBtnClass} disabled={sendButtonDisabled} onclick={handleSendNow}>
                     <span>{sendButtonLabel}</span><span class="send-arr">→</span>

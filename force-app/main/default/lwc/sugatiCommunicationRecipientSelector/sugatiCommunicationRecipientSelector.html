@@ -1,8 +1,18 @@
 <template>
-    <div class="rec-page">
-        <div class="rec-ey">Step 2 of 5 · Recipient Selection</div>
-        <h2 class="rec-title">Who are you writing to?</h2>
-        <p class="rec-sub">Select travellers, suppliers, or contacts, then click Apply. Selections are added to the To, CC, or BCC line you opened from the composer.</p>
+    <div class={rootClass}>
+        <template lwc:if={showPageHeader}>
+            <div class="rec-ey">Step 2 of 5 · Recipient Selection</div>
+            <h2 class="rec-title">Who are you writing to?</h2>
+            <p class="rec-sub">{pageSubtitle}</p>
+        </template>
+        <template lwc:else>
+            <div class="rec-modal-hdr">
+                <div>
+                    <div class="rec-modal-title">Add recipients</div>
+                    <div class="rec-modal-sub">{pageSubtitle}</div>
+                </div>
+            </div>
+        </template>
 
         <div class="rec-aud-tabs">
             <template for:each={tabs} for:item="tab">
@@ -139,8 +149,8 @@
         <div class="rec-footer">
             <div class="rec-count">{selectedCountLabel}</div>
             <div class="rec-footer-actions">
-                <button type="button" class="btn-sec" onclick={handleBack}>← Back</button>
-                <button type="button" class="btn-primary" onclick={handleApply}>Apply to Composer →</button>
+                <button type="button" class="btn-sec" onclick={handleBack}>{backButtonLabel}</button>
+                <button type="button" class="btn-primary" onclick={handleApply}>{applyButtonLabel}</button>
             </div>
         </div>
     </div>

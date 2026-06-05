@@ -1,14 +1,19 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getTemplates from '@salesforce/apex/SugatiCommunicationHubController.getTemplates';
-import getOpportunityAttachments from '@salesforce/apex/SugatiCommunicationHubController.getOpportunityAttachments';
+import getSendEmailTemplateCatalog from '@salesforce/apex/SugatiCommunicationHubController.getSendEmailTemplateCatalog';
+import getRecordAttachments from '@salesforce/apex/SugatiCommunicationHubController.getRecordAttachments';
 import getOrgWideFromAddresses from '@salesforce/apex/SugatiCommunicationHubController.getOrgWideFromAddresses';
+import getSendEmailBccDefaults from '@salesforce/apex/SugatiCommunicationHubController.getSendEmailBccDefaults';
+import getRecipients from '@salesforce/apex/SugatiCommunicationHubController.getRecipients';
 import loadDefaultSendEmailTemplate from '@salesforce/apex/SugatiCommunicationHubController.loadDefaultSendEmailTemplate';
 import loadSendEmailTemplate from '@salesforce/apex/SugatiCommunicationHubController.loadSendEmailTemplate';
 import saveDraftDirect from '@salesforce/apex/SugatiCommunicationHubController.saveDraftDirect';
 import discardDraftDirect from '@salesforce/apex/SugatiCommunicationHubController.discardDraftDirect';
+import resolveAutoAttachmentIds from '@salesforce/apex/SugatiCommunicationHubController.resolveAutoAttachmentIds';
+import { refreshApex } from '@salesforce/apex';
 
 const MAX_ATTACHMENT_BYTES = 4.5 * 1024 * 1024;
+const ALL_STAGES = '__all__';
 import USER_ID from '@salesforce/user/Id';
 import { getRecord } from 'lightning/uiRecordApi';
 import USER_NAME from '@salesforce/schema/User.Name';
@@ -20,7 +25,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     @api opportunityId;
     @api tripName = '';
     @api stageLabel = '';
-    @api openWithTemplatePicker = false;
 
     toChips = [];
     ccChips = [];
@@ -31,6 +35,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     _fromUserPicked = false;
     _fromRestoredFromDraft = false;
     relatedRecordId = null;
+    attachmentParentLabel = '';
     sugatiEmailTemplateConfigId = null;
     _fromOptions = [];
     subject = '';
@@ -38,11 +43,24 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     activeTemplateMeta = '';
     activeTemplateId = null;
     templateSearch = '';
-    activeFolder = 'all';
+    selectedStageFilter = ALL_STAGES;
+    templateSidebarStep = 'list';
+    _pendingComposerTemplate = null;
+    pendingComposerRecordId = '';
+    composerRecordSearch = '';
+    _templateCatalog = {
+        templates: [],
+        relatedRecords: [],
+        opportunityStage: null,
+        opportunityStageOrder: []
+    };
     deliveryMode = 'native';
     showAiAssist = false;
+    _activeAddrDropdown = null;
+    _addrSearchTerm = '';
+    _recipientRows = [];
+    _focusAddrSearch = false;
     attCount = 0;
-    _pickerOpenRequested = false;
     isSavingDraft = false;
     isDiscarding = false;
     editingCommLogId = null;
@@ -55,14 +73,21 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     _bodySelectionRange = null;
     _editorSyncedHtml = null;
 
-    _templates = [];
     _attachments = [];
     _opportunityFiles = [];
     _pendingUploads = [];
     _draftSelectedDocIds = null;
+    _draftSelectedRecordIds = null;
     _draftAttachmentRows = [];
     _draftForEditPayload = null;
+    _isBlankCompose = false;
     isUploadingAttachments = false;
+    _boundDocClick = null;
+
+    @wire(getRecipients, { opportunityId: '$opportunityId' })
+    wiredRecipients({ data }) {
+        this._recipientRows = data || [];
+    }
 
     @api
     get draftForEdit() {
@@ -85,117 +110,107 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.ensureFromSelected();
     }
 
-    @wire(getOpportunityAttachments, { opportunityId: '$opportunityId' })
-    wiredOpportunityAttachments({ data, error }) {
+    _wiredRecordAttachmentsResult;
+
+    get attachmentParentId() {
+        return this.relatedRecordId || this.opportunityId || null;
+    }
+
+    get attachmentSectionLabel() {
+        const label = (this.attachmentParentLabel || '').trim();
+        return label ? `${label} files` : 'Related record files';
+    }
+
+    get attachmentUploadHint() {
+        return 'Add files for this email — kept in the browser until you save draft or send, then stored on the communication log';
+    }
+
+    @wire(getRecordAttachments, { parentRecordId: '$attachmentParentId', opportunityId: '$opportunityId' })
+    wiredRecordAttachments(result) {
+        this._wiredRecordAttachmentsResult = result;
+        const data = result?.data;
+        const error = result?.error;
         if (data) {
             this._opportunityFiles = data;
             this.rebuildAttachmentList();
             if (this._draftSelectedDocIds || (this._draftAttachmentRows || []).length) {
-                this.applySelectedAttachmentIds([...(this._draftSelectedDocIds || [])]);
+                this.applySelectedAttachmentRecordIds([...(this._draftSelectedRecordIds || [])]);
             }
         } else if (error) {
             // eslint-disable-next-line no-console
-            console.error('Failed to load opportunity attachments', error);
+            console.error('Failed to load record attachments', error);
+        }
+    }
+
+    async refreshRecordAttachments() {
+        if (this._wiredRecordAttachmentsResult) {
+            await refreshApex(this._wiredRecordAttachmentsResult);
         }
     }
 
     connectedCallback() {
-        const isNewMessageFromChannel = this.openWithTemplatePicker && !this._draftForEditPayload;
-        if (!this._draftForEditPayload && !isNewMessageFromChannel) {
-            this.restoreDraft();
-        }
-        if (this.openWithTemplatePicker && !this._pickerOpenRequested) {
-            this._pickerOpenRequested = true;
-            this.dispatchEvent(
-                new CustomEvent('opentemplates', {
-                    bubbles: true,
-                    composed: true
-                })
-            );
-        }
+        this._boundDocClick = this.handleDocumentClick.bind(this);
+        document.addEventListener('click', this._boundDocClick);
         this.loadTemplates();
         this.loadFromAddresses();
     }
 
+    disconnectedCallback() {
+        if (this._boundDocClick) {
+            document.removeEventListener('click', this._boundDocClick);
+        }
+    }
+
     @api
     persistComposerState() {
-        this.persistDraft();
+        // Composer state is no longer persisted in browser storage.
     }
 
     renderedCallback() {
+        if (this._focusAddrSearch && this._activeAddrDropdown) {
+            this._focusAddrSearch = false;
+            const input = this.template.querySelector(`.addr-search[data-field="${this._activeAddrDropdown}"]`);
+            if (input) {
+                input.focus();
+            }
+        }
         this.syncBodyEditorFromState();
     }
 
-    get draftStorageKey() {
-        return `sugati.email.draft.${this.opportunityId || 'default'}`;
-    }
-
     persistDraft() {
-        try {
-            const payload = {
-                toChips: this.toChips || [],
-                ccChips: this.ccChips || [],
-                bccChips: this.bccChips || [],
-                orgWideEmailAddressId: this.orgWideEmailAddressId || null,
-                relatedRecordId: this.relatedRecordId || null,
-                sugatiEmailTemplateConfigId: this.sugatiEmailTemplateConfigId || null,
-                subject: this.subject || '',
-                bodyTemplate: this.bodyTemplate || '',
-                activeTemplateName: this.activeTemplateName || '',
-                activeTemplateMeta: this.activeTemplateMeta || '',
-                activeTemplateId: this.activeTemplateId || null,
-                editingCommLogId: this.editingCommLogId || null,
-                deliveryMode: this.deliveryMode || 'postmark',
-                lastFocusedField: this._lastFocusedField || 'body',
-                subjectCursorPos: this._subjectCursorPos || 0,
-                bodyCursorPos: this._bodyCursorPos || 0,
-                selectedAttachmentIds: this.getSelectedContentDocumentIds(),
-                pendingAttachmentNames: (this._pendingUploads || []).map((p) => p.name)
-            };
-            window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
-        } catch (e) {
-            // ignore storage errors
-        }
+        // Intentionally no-op: email composer no longer uses browser storage.
     }
 
     clearDraftStorage() {
-        try {
-            window.localStorage.removeItem(this.draftStorageKey);
-        } catch (e) {
-            // ignore storage errors
-        }
+        // Intentionally no-op: email composer no longer uses browser storage.
     }
 
-    restoreDraft() {
-        try {
-            const raw = window.localStorage.getItem(this.draftStorageKey);
-            if (!raw) return;
-            const payload = JSON.parse(raw);
-            this.toChips = Array.isArray(payload.toChips) ? payload.toChips : [];
-            this.ccChips = Array.isArray(payload.ccChips) ? payload.ccChips : [];
-            this.bccChips = Array.isArray(payload.bccChips) ? payload.bccChips : [];
-            if (payload.orgWideEmailAddressId) {
-                this.orgWideEmailAddressId = payload.orgWideEmailAddressId;
-                this._fromRestoredFromDraft = true;
-            }
-            this.relatedRecordId = payload.relatedRecordId || null;
-            this.sugatiEmailTemplateConfigId = payload.sugatiEmailTemplateConfigId || null;
-            this.subject = payload.subject || '';
-            this.bodyTemplate = payload.bodyTemplate || '';
-            this.activeTemplateName = payload.activeTemplateName || '';
-            this.activeTemplateMeta = payload.activeTemplateMeta || '';
-            this.activeTemplateId = payload.activeTemplateId || null;
-            this.editingCommLogId = payload.editingCommLogId || null;
-            this.deliveryMode = payload.deliveryMode || 'postmark';
-            this._lastFocusedField = payload.lastFocusedField || 'body';
-            this._subjectCursorPos = payload.subjectCursorPos || 0;
-            this._bodyCursorPos = payload.bodyCursorPos || 0;
-            if (Array.isArray(payload.selectedAttachmentIds)) {
-                this.applySelectedAttachmentIds(payload.selectedAttachmentIds);
-            }
-        } catch (e) {
-            // ignore parse errors
-        }
+    get addrSearchTerm() {
+        return this._addrSearchTerm;
+    }
+
+    get toDropdownClass() {
+        return this._activeAddrDropdown === 'to' ? 'addr-dropdown open' : 'addr-dropdown';
+    }
+
+    get ccDropdownClass() {
+        return this._activeAddrDropdown === 'cc' ? 'addr-dropdown open' : 'addr-dropdown';
+    }
+
+    get bccDropdownClass() {
+        return this._activeAddrDropdown === 'bcc' ? 'addr-dropdown open' : 'addr-dropdown';
+    }
+
+    get toAddrDropdownEntries() {
+        return this.buildAddrDropdownEntries('to');
+    }
+
+    get ccAddrDropdownEntries() {
+        return this.buildAddrDropdownEntries('cc');
+    }
+
+    get bccAddrDropdownEntries() {
+        return this.buildAddrDropdownEntries('bcc');
     }
 
     get railRecipients() {
@@ -205,26 +220,152 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }));
     }
 
-    get folderTabs() {
-        const folders = ['all', 'traveller', 'supplier', 'ops', 'compliance', 'finance'];
-        const labels = { all: 'All', traveller: 'Traveller', supplier: 'Supplier', ops: 'Ops', compliance: 'Compliance', finance: 'Finance' };
-        return folders.map((f) => ({
-            id: f,
-            label: labels[f],
-            className: f === this.activeFolder ? 'tmpl-ftab on' : 'tmpl-ftab'
-        }));
+    get isComposerRecordStep() {
+        return this.templateSidebarStep === 'record';
+    }
+
+    get effectiveOpportunityStage() {
+        return (
+            this._templateCatalog.templateStageForOpportunity ||
+            this._templateCatalog.opportunityStage ||
+            this.stageLabel ||
+            ''
+        );
+    }
+
+    get orderedTemplateStages() {
+        return (this._templateCatalog.opportunityStageOrder || [])
+            .map((stage) => (stage || '').trim())
+            .filter((stage) => stage.length > 0);
+    }
+
+    get showComposerStageFilters() {
+        return !this.isComposerRecordStep && this.orderedTemplateStages.length > 0;
+    }
+
+    get composerStageFilters() {
+        const oppStage = this.effectiveOpportunityStage;
+        const filters = [
+            {
+                id: ALL_STAGES,
+                label: 'All stages',
+                className: this.composerStageFilterClass(ALL_STAGES, false)
+            }
+        ];
+        this.orderedTemplateStages.forEach((stage) => {
+            const isOppStage =
+                !!oppStage && this.normalizeStageKey(oppStage) === this.normalizeStageKey(stage);
+            filters.push({
+                id: stage,
+                label: isOppStage ? `${stage} ●` : stage,
+                className: this.composerStageFilterClass(stage, isOppStage)
+            });
+        });
+        return filters;
     }
 
     get filteredTemplates() {
-        const q = (this.templateSearch || '').toLowerCase();
-        return this._templates
-            .filter((t) => this.activeFolder === 'all' || t.folder === this.activeFolder)
-            .filter((t) => !q || t.name.toLowerCase().includes(q))
-            .map((t) => ({
-                ...t,
-                itemClass: t.active ? 'tmpl-item on' : 'tmpl-item',
-                stageClass: `tmpl-stage-badge ${t.stage}`
-            }));
+        const q = (this.templateSearch || '').trim().toLowerCase();
+        const filterKey =
+            this.selectedStageFilter === ALL_STAGES
+                ? null
+                : this.normalizeStageKey(this.selectedStageFilter);
+        const filtered = (this._templateCatalog.templates || []).filter((t) => {
+            if (filterKey) {
+                if (!t.templateStage) {
+                    return false;
+                }
+                if (this.normalizeStageKey(t.templateStage) !== filterKey) {
+                    return false;
+                }
+            }
+            if (!q) {
+                return true;
+            }
+            const haystack = [
+                t.name,
+                t.templateName,
+                t.meta,
+                t.relatedToRecord,
+                t.templateStage,
+                this.formatObjectLabel(t.relatedToRecord)
+            ]
+                .filter(Boolean)
+                .join(' ')
+                .toLowerCase();
+            return haystack.includes(q);
+        });
+        const sorted = this.sortTemplatesByOpportunityStage(filtered);
+        const oppStage = this.effectiveOpportunityStage;
+        return sorted.map((t) => {
+            const isSuggested = this.isTemplateSuggested(t, oppStage);
+            const isActive = this.activeTemplateId === t.id;
+            const stagePill = this.buildTemplateStagePillLabel(t);
+            return {
+                id: t.id,
+                displayName: t.templateName || t.name || 'Template',
+                stagePill,
+                showStagePill: !!stagePill,
+                stagePillClass: this.buildTemplateStagePillClass(isSuggested),
+                relatedBadge: this.formatObjectLabel(t.relatedToRecord || 'Opportunity'),
+                relatedBadgeClass: this.buildRelatedBadgeClass(t.relatedToRecord),
+                showRelatedPill: true,
+                isSuggested,
+                itemClass:
+                    'tmpl-item' +
+                    (isActive ? ' on' : '') +
+                    (isSuggested ? ' suggested' : '')
+            };
+        });
+    }
+
+    get pendingComposerTemplateName() {
+        return (
+            this._pendingComposerTemplate?.templateName ||
+            this._pendingComposerTemplate?.name ||
+            'Template'
+        );
+    }
+
+    get pendingComposerRelatedLabel() {
+        return this.formatObjectLabel(this._pendingComposerTemplate?.relatedToRecord || 'Record');
+    }
+
+    get composerFilteredRecordRows() {
+        const term = (this.composerRecordSearch || '').trim().toLowerCase();
+        const relatedType = this._pendingComposerTemplate?.relatedToRecord || 'Opportunity';
+        const rows = this.filterRelatedRecords(relatedType).map((row) => ({
+            recordId: row.recordId,
+            label: row.label,
+            objectTypeLabel: this.formatObjectLabel(row.objectType),
+            isSelected: row.recordId === this.pendingComposerRecordId,
+            rowClass:
+                'composer-record-row' +
+                (row.recordId === this.pendingComposerRecordId ? ' selected' : '')
+        }));
+        if (!term) {
+            return rows;
+        }
+        return rows.filter((row) => (row.label || '').toLowerCase().includes(term));
+    }
+
+    get composerConfirmRecordDisabled() {
+        return !this.pendingComposerRecordId;
+    }
+
+    get composerHasRelatedRecordOptions() {
+        return (
+            this.filterRelatedRecords(this._pendingComposerTemplate?.relatedToRecord || '').length > 0
+        );
+    }
+
+    get composerHasNoFilteredRecords() {
+        return this.composerHasRelatedRecordOptions && this.composerFilteredRecordRows.length === 0;
+    }
+
+    get composerRelatedRecordEmptyMessage() {
+        const type = this.formatObjectLabel(this._pendingComposerTemplate?.relatedToRecord || 'record');
+        return `No ${type} records found on this Opportunity. Add one on the trip or choose a different template.`;
     }
 
     @api
@@ -377,13 +518,9 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     @api
-    async applyLegacyTemplateSelection(detail) {
+    async applyTemplateSelection(detail) {
         if (detail?.blank) {
-            this.sugatiEmailTemplateConfigId = null;
-            this.relatedRecordId = null;
-            this.activeTemplateId = null;
-            this.activeTemplateName = '';
-            this.activeTemplateMeta = '';
+            await this.applyBlankCompose();
             return;
         }
         if (!detail?.configId || !this.opportunityId) {
@@ -403,12 +540,68 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
     }
 
+    async applyBlankCompose() {
+        this._isBlankCompose = true;
+        this.sugatiEmailTemplateConfigId = null;
+        this.relatedRecordId = this.opportunityId || null;
+        this.attachmentParentLabel = '';
+        this.activeTemplateId = null;
+        this.activeTemplateName = 'Blank';
+        this.activeTemplateMeta = 'No template — compose from scratch';
+        this.subject = '';
+        this.bodyTemplate = '';
+        this.toChips = [];
+        this.ccChips = [];
+        this.bccChips = [];
+        this._fromUserPicked = false;
+        this._fromRestoredFromDraft = false;
+        this._bodyCursorPos = 0;
+        this._bodySelectionRange = null;
+        this._editorSyncedHtml = null;
+        this._attachments = (this._attachments || []).map((row) => ({
+            ...row,
+            checked: false,
+            autoSuggested: false
+        }));
+        this._pendingUploads = [];
+        this._draftSelectedDocIds = null;
+        this._draftSelectedRecordIds = null;
+        this._draftAttachmentRows = [];
+        this.attCount = 0;
+        this.rebuildAttachmentList();
+        this.ensureFromSelected();
+        try {
+            const bccDefaults = await getSendEmailBccDefaults();
+            this.bccChips = this.mapLegacyAddressesToChips(bccDefaults || [], 'bcc');
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('Send Email BCC defaults not loaded', e);
+        }
+        this.persistDraft();
+        this.notifyRecipientsUpdated();
+        this.refreshRecordAttachments();
+        requestAnimationFrame(() => {
+            const editor = this.template?.querySelector('.editor-body');
+            if (editor) {
+                editor.innerHTML = '';
+            }
+            this.syncBodyEditorFromState();
+            this.focusBodyAtCursor();
+        });
+    }
+
     applyLegacyLoad(loaded, meta) {
         if (!loaded) {
             return;
         }
+        this._isBlankCompose = false;
         this.sugatiEmailTemplateConfigId = loaded.sugatiEmailTemplateConfigId || meta?.configId || null;
         this.relatedRecordId = loaded.relatedRecordId || meta?.relatedRecordId || this.opportunityId;
+        this.attachmentParentLabel =
+            meta?.attachmentParentLabel ||
+            loaded.attachmentParentLabel ||
+            this.attachmentParentLabel ||
+            '';
         this.activeTemplateId = this.sugatiEmailTemplateConfigId;
         this.activeTemplateName = meta?.name || loaded.sfEmailTemplateName || 'Send Email';
         this.activeTemplateMeta = meta?.meta || loaded.sfEmailTemplateName || '';
@@ -429,7 +622,30 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._bodyCursorPos = this.plainTextFromHtml(this.bodyTemplate).length;
         this._editorSyncedHtml = null;
         requestAnimationFrame(() => this.syncBodyEditorFromState());
+        this.applyAutoAttachmentsFromTemplate(loaded);
         this.persistDraft();
+        this.refreshRecordAttachments();
+    }
+
+    async applyAutoAttachmentsFromTemplate(loaded) {
+        const docTypes = loaded?.autoAttachmentDocTypes || [];
+        const preselected = loaded?.autoSelectedAttachmentIds || [];
+        let recordIds = [...preselected];
+        if (!recordIds.length && docTypes.length && this.attachmentParentId) {
+            try {
+                recordIds = await resolveAutoAttachmentIds({
+                    parentRecordId: this.attachmentParentId,
+                    opportunityId: this.opportunityId,
+                    docTypes
+                });
+            } catch (e) {
+                // eslint-disable-next-line no-console
+                console.warn('Auto-attachment resolution failed', e);
+            }
+        }
+        if (recordIds.length) {
+            this.applySelectedAttachmentRecordIds(recordIds, { autoSuggested: true });
+        }
     }
 
     mapLegacyAddressesToChips(addresses, prefix) {
@@ -446,14 +662,27 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return {
                 id: contactId || `${prefix}-${index}-${opt.email}`,
                 contactId,
-                audience: contactId ? 'travellers' : opt.supplierId ? 'suppliers' : 'contacts',
+                audience: this.resolveLegacyChipAudience(opt, contactId),
                 name: name || opt.email,
                 email: opt.email,
                 initials: this.buildInitialsFromName(name || opt.email),
-                role: contactId ? 'Traveller' : 'Contact',
+                role: contactId ? 'Traveller' : opt.supplierContactTypes?.length ? 'Contact' : opt.supplierId ? 'Supplier' : 'Contact',
                 emailSendType: prefix === 'bcc' ? 'BCC' : prefix === 'cc' ? 'CC' : 'TO'
             };
         });
+    }
+
+    resolveLegacyChipAudience(opt, contactId) {
+        if (contactId) {
+            return 'travellers';
+        }
+        if (opt.supplierContactTypes?.length) {
+            return 'contacts';
+        }
+        if (opt.supplierId) {
+            return 'suppliers';
+        }
+        return 'contacts';
     }
 
     async loadFromAddresses() {
@@ -583,6 +812,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         if (!draft) {
             return;
         }
+        this._isBlankCompose = false;
         this.editingCommLogId = draft.commLogId || null;
         this.subject = draft.subject || '';
         this.bodyTemplate = draft.bodyHtml || '';
@@ -601,21 +831,14 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.activeTemplateName = '';
         this.activeTemplateMeta = '';
         this.templateSearch = '';
-        this._templates = (this._templates || []).map((t) => ({ ...t, active: false }));
         this._editorSyncedHtml = null;
         this._bodySelectionRange = null;
         this._bodyCursorPos = this.plainTextFromHtml(this.bodyTemplate).length;
         this.applyDraftAttachments(draft.attachments || []);
-        try {
-            window.localStorage.removeItem(this.draftStorageKey);
-        } catch (e) {
-            // ignore storage errors
-        }
         requestAnimationFrame(() => {
             this.syncBodyEditorFromState();
             this.focusBodyAtCursor();
         });
-        this.persistDraft();
         this.dispatchEvent(
             new CustomEvent('recipientsloaded', {
                 bubbles: true,
@@ -626,23 +849,47 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     applyDraftAttachments(attachmentRows) {
         const rows = attachmentRows || [];
-        this._draftAttachmentRows = rows.filter((row) => row.contentDocumentId);
-        this._draftSelectedDocIds = new Set(
-            rows.filter((row) => row.selected && row.contentDocumentId).map((row) => row.contentDocumentId)
+        this._draftAttachmentRows = rows.filter(
+            (row) => row.attachmentRecordId || row.contentDocumentId
         );
+        this._draftSelectedRecordIds = new Set(
+            rows
+                .filter((row) => row.selected)
+                .map((row) => row.attachmentRecordId || row.contentDocumentId)
+                .filter(Boolean)
+        );
+        this._draftSelectedDocIds = this._draftSelectedRecordIds;
         this.rebuildAttachmentList();
     }
 
-    applySelectedAttachmentIds(selectedIds) {
-        const selectedSet = new Set(selectedIds || []);
+    applySelectedAttachmentRecordIds(selectedIds, options = {}) {
+        const selectedSet = new Set((selectedIds || []).map((id) => String(id)));
         if (selectedIds && selectedIds.length) {
+            this._draftSelectedRecordIds = selectedSet;
             this._draftSelectedDocIds = selectedSet;
         }
-        this._attachments = (this._attachments || []).map((row) => ({
-            ...row,
-            checked: row.contentDocumentId ? selectedSet.has(row.contentDocumentId) : row.checked
-        }));
+        const autoSuggested = !!options.autoSuggested;
+        this._attachments = (this._attachments || []).map((row) => {
+            const recordId = row.attachmentRecordId || row.contentDocumentId || row.id;
+            const checked = recordId ? selectedSet.has(String(recordId)) : row.checked;
+            return {
+                ...row,
+                checked: checked || row.checked,
+                ai: autoSuggested && checked ? true : row.ai
+            };
+        });
         this.updateAttCount();
+    }
+
+    applySelectedAttachmentIds(selectedIds) {
+        this.applySelectedAttachmentRecordIds(selectedIds);
+    }
+
+    getSelectedAttachmentRecordIds() {
+        return (this._attachments || [])
+            .filter((row) => row.checked)
+            .map((row) => row.attachmentRecordId || row.contentDocumentId || row.id)
+            .filter(Boolean);
     }
 
     getSelectedContentDocumentIds() {
@@ -662,22 +909,27 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         });
 
         (this._opportunityFiles || []).forEach((fileRow) => {
-            const docId = fileRow.contentDocumentId;
-            if (!docId || seen.has(docId)) {
+            const recordId = fileRow.attachmentRecordId || fileRow.contentDocumentId;
+            if (!recordId || seen.has(recordId)) {
                 return;
             }
-            const existing = (this._attachments || []).find((row) => row.contentDocumentId === docId);
-            const checkedFromDraft = selectedSet.has(docId);
+            const existing = (this._attachments || []).find(
+                (row) => (row.attachmentRecordId || row.contentDocumentId || row.id) === recordId
+            );
+            const checkedFromDraft = selectedSet.has(recordId);
             rows.push({
-                id: docId,
-                contentDocumentId: docId,
+                id: recordId,
+                attachmentRecordId: recordId,
+                contentDocumentId: fileRow.contentDocumentId || null,
+                storageKind: fileRow.storageKind || (fileRow.contentDocumentId ? 'ContentDocument' : 'Attachment'),
                 name: fileRow.name,
                 meta: fileRow.meta || 'File',
                 type: fileRow.fileType === 'pdf' ? 'pdf' : 'gen',
                 checked: existing ? !!existing.checked : checkedFromDraft || !!fileRow.selected,
-                pending: false
+                pending: false,
+                ai: existing ? !!existing.ai : !!fileRow.autoSuggested
             });
-            seen.add(docId);
+            seen.add(recordId);
         });
 
         (this._draftAttachmentRows || []).forEach((fileRow) => {
@@ -705,21 +957,29 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.attCount = (this._attachments || []).filter((row) => row.checked).length;
     }
 
+    @api
     buildDraftAttachmentArrays() {
         const selected = (this._attachments || []).filter((row) => row.checked);
+        const existing = selected.filter((row) => !row.pending);
+        const pending = selected.filter((row) => row.pending && row.base64Data);
         return {
-            attachmentContentDocumentIds: selected
+            attachmentContentDocumentIds: existing
                 .filter((row) => row.contentDocumentId)
                 .map((row) => row.contentDocumentId),
-            newAttachmentFileNames: selected.filter((row) => row.pending).map((row) => row.name),
-            newAttachmentFileData: selected.filter((row) => row.pending).map((row) => row.base64Data)
+            attachmentRecordIds: existing
+                .map((row) => row.attachmentRecordId || row.contentDocumentId || row.id)
+                .filter(Boolean),
+            newAttachmentFileNames: pending.map((row) => row.name),
+            newAttachmentFileData: pending.map((row) => row.base64Data)
         };
     }
 
+    @api
     getSelectedAttachmentsForPayload() {
         return (this._attachments || [])
             .filter((row) => row.checked)
             .map((row) => ({
+                attachmentRecordId: row.attachmentRecordId || row.contentDocumentId || row.id || null,
                 contentDocumentId: row.contentDocumentId || null,
                 name: row.name,
                 type: row.type,
@@ -736,34 +996,44 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         if (!files.length) {
             return;
         }
+        if (!this.opportunityId) {
+            this.showToast('Upload failed', 'Open the Communication Hub from an Opportunity first.', 'error');
+            return;
+        }
         this.isUploadingAttachments = true;
         try {
-            const additions = [];
+            const stagedRows = [];
             for (const file of files) {
                 if (file.size > MAX_ATTACHMENT_BYTES) {
                     this.showToast('File too large', `"${file.name}" exceeds the 4.5 MB limit.`, 'error');
                     continue;
                 }
                 const base64Data = await this.readFileAsBase64(file);
-                additions.push({
-                    id: `pending-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                const clientId = `pending-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+                stagedRows.push({
+                    id: clientId,
+                    attachmentRecordId: clientId,
                     contentDocumentId: null,
                     name: file.name,
-                    meta: this.formatFileSize(file.size),
-                    type: this.inferFileType(file.name),
+                    meta: `${this.formatFileSize(file.size)} · not saved yet`,
+                    type: file.name.toLowerCase().endsWith('.pdf') ? 'pdf' : 'gen',
                     checked: true,
                     pending: true,
                     base64Data
                 });
             }
-            if (additions.length) {
-                this._pendingUploads = [...(this._pendingUploads || []), ...additions];
+            if (stagedRows.length) {
+                this._pendingUploads = [...(this._pendingUploads || []), ...stagedRows];
                 this.rebuildAttachmentList();
                 this.persistDraft();
-                this.showToast('Files added', `${additions.length} file(s) ready to include with this message.`, 'success');
+                this.showToast(
+                    'Files added',
+                    `${stagedRows.length} file(s) will be saved to the communication log when you save draft or send.`,
+                    'success'
+                );
             }
         } catch (e) {
-            this.showToast('Upload failed', e?.message || 'Unable to read selected file(s).', 'error');
+            this.showToast('Upload failed', e?.body?.message || e?.message || 'Unable to read selected file(s).', 'error');
         } finally {
             this.isUploadingAttachments = false;
         }
@@ -844,19 +1114,28 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     @api
-    async startNewCompose() {
-        this._pickerOpenRequested = false;
-        this.resetComposer();
-        if (this.opportunityId) {
-            await this.loadDefaultTemplate();
+    hasActiveTemplateSelection() {
+        if (this.editingCommLogId) {
+            return true;
         }
+        if (this.sugatiEmailTemplateConfigId) {
+            return true;
+        }
+        return this._isBlankCompose;
+    }
+
+    @api
+    async startNewCompose() {
+        this.resetComposer();
     }
 
     @api
     resetComposer() {
         this.editingCommLogId = null;
+        this._isBlankCompose = false;
         this.sugatiEmailTemplateConfigId = null;
         this.relatedRecordId = null;
+        this.attachmentParentLabel = '';
         this.toChips = [];
         this.ccChips = [];
         this.bccChips = [];
@@ -866,6 +1145,8 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.activeTemplateMeta = '';
         this.activeTemplateId = null;
         this.templateSearch = '';
+        this.resetComposerTemplateStep();
+        this.selectedStageFilter = ALL_STAGES;
         this.deliveryMode = 'postmark';
         this.orgWideEmailAddressId = '';
         this._fromUserPicked = false;
@@ -875,16 +1156,16 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._bodyCursorPos = 0;
         this._bodySelectionRange = null;
         this._editorSyncedHtml = '';
-        this._templates = (this._templates || []).map((t) => ({ ...t, active: false }));
         this._attachments = [];
         this._pendingUploads = [];
         this._draftSelectedDocIds = null;
+        this._draftSelectedRecordIds = null;
         this._draftAttachmentRows = [];
         this._draftForEditPayload = null;
         this.attCount = 0;
         this.rebuildAttachmentList();
-        this.clearDraftStorage();
         this.ensureFromSelected();
+        this.refreshRecordAttachments();
         requestAnimationFrame(() => {
             const editor = this.template?.querySelector('.editor-body');
             if (editor) {
@@ -894,7 +1175,17 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     @api
+    syncBodyFromEditor() {
+        const editor = this.template?.querySelector('.editor-body');
+        if (editor) {
+            this.bodyTemplate = editor.innerHTML || '';
+            this._editorSyncedHtml = this.bodyTemplate;
+        }
+    }
+
+    @api
     getComposeState() {
+        this.syncBodyFromEditor();
         return {
             subject: this.subject || '',
             bodyTemplate: this.bodyTemplate || '',
@@ -920,7 +1211,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._bodyCursorPos = state.bodyCursorPos || 0;
         this._bodySelectionRange = null;
         this._editorSyncedHtml = null;
-        this._templates = this._templates.map((t) => ({ ...t, active: t.id === this.activeTemplateId }));
         requestAnimationFrame(() => {
             this.syncBodyEditorFromState();
             this.focusBodyAtCursor();
@@ -947,13 +1237,272 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     handleBccNav() {
-        this.persistDraft();
-        this.dispatchEvent(new CustomEvent('navigaterecipients', { detail: { target: 'bcc' } }));
+        this.openAddrDropdown('bcc');
     }
 
-    handleFolderTab(event) {
-        this.activeFolder = event.currentTarget.dataset.folder;
-        this.templateSearch = '';
+    @api
+    openRecipientPicker(target) {
+        this.openAddrDropdown(target);
+    }
+
+    openAddrDropdown(target) {
+        const field = target === 'cc' || target === 'bcc' ? target : 'to';
+        if (this._activeAddrDropdown === field) {
+            this.closeAddrDropdown();
+            return;
+        }
+        this._activeAddrDropdown = field;
+        this._addrSearchTerm = '';
+        this._focusAddrSearch = true;
+    }
+
+    closeAddrDropdown() {
+        this._activeAddrDropdown = null;
+        this._addrSearchTerm = '';
+    }
+
+    stopAddrWrapPropagation(event) {
+        event.stopPropagation();
+    }
+
+    handleDocumentClick(event) {
+        if (!this._activeAddrDropdown) {
+            return;
+        }
+        const wrap = this.template.querySelector(`.r-add-wrap[data-field="${this._activeAddrDropdown}"]`);
+        if (wrap && !wrap.contains(event.target)) {
+            this.closeAddrDropdown();
+        }
+    }
+
+    handleOpenAddrDropdown(event) {
+        event.stopPropagation();
+        const field = event.currentTarget.dataset.field || 'to';
+        this.openAddrDropdown(field);
+    }
+
+    handleAddrSearch(event) {
+        this._addrSearchTerm = event.target.value || '';
+    }
+
+    handleAddrSearchKey(event) {
+        const field = event.currentTarget.dataset.field || 'to';
+        if (event.key === 'Escape') {
+            this.closeAddrDropdown();
+            return;
+        }
+        if (event.key === 'Enter') {
+            const value = (event.target.value || '').trim();
+            if (value.includes('@')) {
+                const localPart = value.split('@')[0] || value;
+                const initials = localPart.slice(0, 2).toUpperCase();
+                this.addRecipients(
+                    [
+                        {
+                            name: value,
+                            email: value,
+                            initials,
+                            audience: 'contacts',
+                            role: 'Contact'
+                        }
+                    ],
+                    field
+                );
+                this.closeAddrDropdown();
+            }
+        }
+    }
+
+    handleAddrItemClick(event) {
+        event.stopPropagation();
+        const el = event.currentTarget;
+        const field = el.dataset.field || 'to';
+        const email = (el.dataset.email || '').trim();
+        if (!email) {
+            return;
+        }
+        this.addRecipients(
+            [
+                {
+                    id: el.dataset.rowId || email,
+                    contactId: el.dataset.contactId || null,
+                    audience: el.dataset.audience || 'travellers',
+                    name: el.dataset.name || email,
+                    email,
+                    initials: el.dataset.initials || this.buildInitialsFromName(el.dataset.name || email),
+                    role: el.dataset.role || 'Traveller'
+                }
+            ],
+            field
+        );
+        this.closeAddrDropdown();
+    }
+
+    buildAddrDropdownEntries(field) {
+        if (this._activeAddrDropdown !== field) {
+            return [];
+        }
+        const term = (this._addrSearchTerm || '').trim().toLowerCase();
+        const existing = new Set(
+            this.getChipsForField(field)
+                .map((chip) => (chip.email || '').trim().toLowerCase())
+                .filter(Boolean)
+        );
+        const entries = [];
+        let isFirstGroup = true;
+
+        this.getContactGroups().forEach((group) => {
+            const visible = group.contacts.filter((contact) => {
+                const email = (contact.email || '').trim().toLowerCase();
+                if (!email || existing.has(email)) {
+                    return false;
+                }
+                if (!term) {
+                    return true;
+                }
+                return (
+                    (contact.name || '').toLowerCase().includes(term) ||
+                    email.includes(term) ||
+                    (contact.subrole || '').toLowerCase().includes(term) ||
+                    (contact.role || '').toLowerCase().includes(term)
+                );
+            });
+            if (!visible.length) {
+                return;
+            }
+            entries.push({
+                key: `hdr-${group.key}`,
+                isGroupHeader: true,
+                headerClass: `addr-dd-group-hdr ${isFirstGroup ? 'first' : ''} ${group.headerClass}`,
+                icon: group.icon,
+                label: group.label,
+                count: visible.length
+            });
+            isFirstGroup = false;
+            visible.forEach((contact) => {
+                entries.push({
+                    key: `item-${group.key}-${contact.email}`,
+                    isGroupHeader: false,
+                    field,
+                    name: contact.name,
+                    email: contact.email,
+                    initials: contact.initials,
+                    subrole: contact.subrole,
+                    status: contact.status,
+                    badgeLabel: contact.badgeLabel,
+                    badgeClass: contact.badgeClass,
+                    avClass: contact.avClass,
+                    contactId: contact.contactId,
+                    id: contact.id,
+                    audience: contact.audience,
+                    role: contact.role
+                });
+            });
+        });
+
+        if (!entries.length) {
+            entries.push({ key: 'empty', isEmpty: true });
+        }
+        return entries;
+    }
+
+    getContactGroups() {
+        const buckets = {
+            travellers: [],
+            suppliers: [],
+            contacts: [],
+            agents: []
+        };
+        (this._recipientRows || []).forEach((row) => {
+            const email = (row.email || '').trim();
+            if (!email) {
+                return;
+            }
+            const audience = row.audience || 'travellers';
+            const bucket = buckets[audience] || buckets.travellers;
+            bucket.push(this.mapRecipientToDdContact(row));
+        });
+        return [
+            {
+                key: 'travellers',
+                label: 'Travellers',
+                icon: '🧳',
+                headerClass: 'group-travellers',
+                contacts: buckets.travellers
+            },
+            {
+                key: 'suppliers',
+                label: 'Suppliers',
+                icon: '🏨',
+                headerClass: 'group-suppliers',
+                contacts: buckets.suppliers
+            },
+            {
+                key: 'contacts',
+                label: 'Supplier Contacts',
+                icon: '📋',
+                headerClass: 'group-contacts',
+                contacts: buckets.contacts
+            },
+            {
+                key: 'agents',
+                label: 'Agency & Agents',
+                icon: '🏢',
+                headerClass: 'group-agency',
+                contacts: buckets.agents
+            }
+        ].filter((group) => group.contacts.length);
+    }
+
+    mapRecipientToDdContact(row) {
+        const roleKey = row.roleKey || 'traveller';
+        const subrole = row.linkedToLabel || row.role || '';
+        return {
+            id: row.id,
+            contactId: row.contactId || null,
+            audience: row.audience || 'travellers',
+            name: row.name,
+            email: row.email,
+            initials: row.initials || this.buildInitialsFromName(row.name || row.email),
+            role: row.role || 'Traveller',
+            subrole,
+            status:
+                row.audience === 'travellers' || row.audience === 'suppliers'
+                    ? row.status || ''
+                    : '',
+            badgeLabel: this.resolveAddrBadgeLabel(roleKey, row.role),
+            badgeClass: `addr-dd-role ${roleKey}`,
+            avClass: `addr-dd-av ${roleKey}`
+        };
+    }
+
+    resolveAddrBadgeLabel(roleKey, role) {
+        if (roleKey === 'lead') {
+            return 'Lead Booker';
+        }
+        if (roleKey === 'traveller') {
+            return 'Traveller';
+        }
+        if (roleKey === 'supplier') {
+            return 'Supplier';
+        }
+        if (roleKey === 'contact') {
+            return 'Sup. Contact';
+        }
+        if (roleKey === 'agent' || roleKey === 'agency') {
+            return role === 'Agency' ? 'Agency' : 'Agency';
+        }
+        return role || 'Contact';
+    }
+
+    getChipsForField(field) {
+        if (field === 'cc') {
+            return this.ccChips || [];
+        }
+        if (field === 'bcc') {
+            return this.bccChips || [];
+        }
+        return this.toChips || [];
     }
 
     handleTemplateSearch(event) {
@@ -962,24 +1511,80 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     handleTemplateActivate(event) {
         const id = event.currentTarget.dataset.id;
-        const name = event.currentTarget.dataset.name;
-        const active = this._templates.find((t) => t.id === id || t.name === name);
-        if (!active) {
+        if (id) {
+            this.selectComposerTemplateById(id);
+        }
+    }
+
+    handleComposerStageFilter(event) {
+        this.selectedStageFilter = event.currentTarget.dataset.stage || ALL_STAGES;
+    }
+
+    handleComposerRecordSearch(event) {
+        this.composerRecordSearch = event.detail.value || '';
+    }
+
+    handleComposerRecordRadioChange(event) {
+        this.pendingComposerRecordId = event.target.value;
+    }
+
+    handleComposerCancelRecord() {
+        this.resetComposerTemplateStep();
+    }
+
+    handleComposerConfirmRecord() {
+        if (!this._pendingComposerTemplate || !this.pendingComposerRecordId) {
             return;
         }
-        this._templates = this._templates.map((t) => ({ ...t, active: t.id === id || t.name === name }));
-        this.activeTemplateName = name;
-        this.activeTemplateId = active.id || null;
-        this.activeTemplateMeta = active.meta || '';
-        if (id && this.opportunityId) {
-            this.applyLegacyTemplateSelection({
-                configId: id,
-                name,
-                meta: active.meta,
-                relatedRecordId: this.relatedRecordId || this.opportunityId
-            });
-        }
+        const selected = this._pendingComposerTemplate;
+        const match = (this._templateCatalog.relatedRecords || []).find(
+            (row) => row.recordId === this.pendingComposerRecordId
+        );
+        this.activeTemplateId = selected.id;
+        this.activeTemplateName = selected.name;
+        this.activeTemplateMeta = selected.meta || '';
+        this.applyTemplateSelection({
+            configId: selected.id,
+            name: selected.name,
+            meta: selected.meta,
+            relatedRecordId: this.pendingComposerRecordId,
+            attachmentParentLabel: match?.label || this.tripName || ''
+        });
+        this.resetComposerTemplateStep();
         this.persistDraft();
+    }
+
+    selectComposerTemplateById(id) {
+        const selected = (this._templateCatalog.templates || []).find((t) => t.id === id);
+        if (!selected) {
+            return;
+        }
+        const relatedType = selected.relatedToRecord || 'Opportunity';
+        if (this.normalizeRelatedObjectKey(relatedType) === 'opportunity') {
+            this.activeTemplateId = selected.id;
+            this.activeTemplateName = selected.name;
+            this.activeTemplateMeta = selected.meta || '';
+            this.applyTemplateSelection({
+                configId: selected.id,
+                name: selected.name,
+                meta: selected.meta,
+                relatedRecordId: this.opportunityId
+            });
+            this.persistDraft();
+            return;
+        }
+        const matches = this.filterRelatedRecords(relatedType);
+        this._pendingComposerTemplate = selected;
+        this.composerRecordSearch = '';
+        this.templateSidebarStep = 'record';
+        this.pendingComposerRecordId = matches.length ? matches[0].recordId : '';
+    }
+
+    resetComposerTemplateStep() {
+        this._pendingComposerTemplate = null;
+        this.pendingComposerRecordId = '';
+        this.composerRecordSearch = '';
+        this.templateSidebarStep = 'list';
     }
 
     handleAttachmentToggle(event) {
@@ -1008,6 +1613,11 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.persistDraft();
     }
 
+    @api
+    getDeliveryMode() {
+        return this.deliveryMode === 'native' ? 'native' : 'postmark';
+    }
+
     handleOpenTemplates() {
         this.dispatchEvent(
             new CustomEvent('opentemplates', {
@@ -1015,31 +1625,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
                 composed: true
             })
         );
-    }
-
-    @api
-    applyTemplateSelection(detail) {
-        if (detail?.configId) {
-            this.applyLegacyTemplateSelection(detail);
-            return;
-        }
-        const { name } = detail || {};
-        if (name) {
-            const selected = this._templates.find((t) => t.name === name);
-            if (selected) {
-                this.handleTemplateActivate({ currentTarget: { dataset: { name: selected.name, id: selected.id } } });
-            }
-        } else {
-            this._templates = this._templates.map((t) => ({ ...t, active: false }));
-            this.activeTemplateId = null;
-            this.activeTemplateName = '';
-            this.activeTemplateMeta = '';
-            this.sugatiEmailTemplateConfigId = null;
-            this.subject = '';
-            this.bodyTemplate = '';
-            this._bodyCursorPos = 0;
-        }
-        this.persistDraft();
     }
 
     handleFormatMouseDown(event) {
@@ -1257,7 +1842,8 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             subjectTemplate: this.subject || '',
             bodyTemplate: this.bodyTemplate || '',
             deliveryMode: this.deliveryMode || 'postmark',
-            channel: 'Email'
+            channel: 'Email',
+            orgWideEmailAddressId: this.orgWideEmailAddressId || null
         };
     }
 
@@ -1365,6 +1951,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     handlePreview() {
+        this.syncBodyFromEditor();
         this.persistDraft();
         const detail = {
             channel: 'email',
@@ -1400,13 +1987,11 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     handleRecipientsNav() {
-        this.persistDraft();
-        this.dispatchEvent(new CustomEvent('navigaterecipients', { detail: { target: 'to' } }));
+        this.openAddrDropdown('to');
     }
 
     handleCcNav() {
-        this.persistDraft();
-        this.dispatchEvent(new CustomEvent('navigaterecipients', { detail: { target: 'cc' } }));
+        this.openAddrDropdown('cc');
     }
 
     async loadTemplates() {
@@ -1414,50 +1999,144 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return;
         }
         try {
-            const rows = await getTemplates({
-                opportunityId: this.opportunityId,
-                stage: null,
-                recipientType: null,
-                channel: 'Email'
-            });
-            if (!rows?.length) {
-                return;
+            const catalog = await getSendEmailTemplateCatalog({ opportunityId: this.opportunityId });
+            this._templateCatalog = catalog || {
+                templates: [],
+                relatedRecords: [],
+                opportunityStage: null,
+                opportunityStageOrder: []
+            };
+            if (!this._templateCatalog.opportunityStageOrder) {
+                this._templateCatalog.opportunityStageOrder = [];
             }
-            this._templates = rows.map((t, idx) => ({
-                // Keep all templates unselected until user explicitly chooses one.
-                id: t.id,
-                name: t.name,
-                meta: t.meta,
-                folder: this.mapFolder(t.type),
-                stage: this.mapStage(t.stage),
-                suggested: idx < 2,
-                active: false,
-                subject: t.subject,
-                body: t.body
-            }));
-            if (this.activeTemplateId) {
-                this._templates = this._templates.map((t) => ({ ...t, active: t.id === this.activeTemplateId }));
-            }
-        } catch (e) { }
+            this.selectedStageFilter = ALL_STAGES;
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('Template catalog not loaded', e);
+        }
     }
 
-    mapFolder(type) {
-        const key = (type || '').toLowerCase();
-        if (key.includes('supplier')) return 'supplier';
-        if (key.includes('ops')) return 'ops';
-        if (key.includes('compliance')) return 'compliance';
-        if (key.includes('finance')) return 'finance';
-        return 'traveller';
+    normalizeStageKey(stage) {
+        return (stage || '').trim().toLowerCase();
     }
 
-    mapStage(stage) {
-        const val = (stage || '').toLowerCase();
-        if (val.includes('pre')) return 'pre-dep';
-        if (val.includes('book')) return 'booked';
-        if (val.includes('proposal')) return 'proposal';
-        if (val.includes('travelling')) return 'travelling';
-        if (val.includes('post')) return 'post';
-        return 'enquiry';
+    normalizeRelatedObjectKey(value) {
+        let key = (value || '').trim().toLowerCase();
+        if (key.startsWith('sugati__')) {
+            key = key.substring('sugati__'.length);
+        }
+        return key.endsWith('__c') ? key.slice(0, -3) : key;
+    }
+
+    formatObjectLabel(raw) {
+        const key = this.normalizeRelatedObjectKey(raw);
+        if (key === 'opportunity') {
+            return 'Opportunity';
+        }
+        if (key === 'supplier_booking') {
+            return 'Supplier booking';
+        }
+        if (key === 'supplier_cost_payment') {
+            return 'Supplier cost / payment';
+        }
+        if (key === 'group_member') {
+            return 'Traveller';
+        }
+        if (key === 'contact') {
+            return 'Contact';
+        }
+        if (key === 'client_group') {
+            return 'Client group';
+        }
+        return (raw || 'Record').replace(/__c$/i, '').replace(/_/g, ' ');
+    }
+
+    buildRelatedBadgeClass(relatedRaw) {
+        const key = this.normalizeRelatedObjectKey(relatedRaw);
+        return key === 'opportunity' ? 'tmpl-rel-badge opp' : 'tmpl-rel-badge custom';
+    }
+
+    buildTemplateStagePillLabel(t) {
+        if (!t.templateStage) {
+            return '';
+        }
+        return this.stripStageSuffix(t.templateStage);
+    }
+
+    buildTemplateStagePillClass(isSuggested) {
+        let cls = 'tmpl-stage-pill';
+        if (isSuggested) {
+            cls += ' suggested';
+        }
+        return cls;
+    }
+
+    stripStageSuffix(stage) {
+        if (!stage) {
+            return '';
+        }
+        return String(stage)
+            .replace(/\s*stage\s*$/i, '')
+            .trim();
+    }
+
+    composerStageFilterClass(stageId, isOppStage) {
+        let cls = 'tmpl-sf';
+        if (stageId === ALL_STAGES) {
+            if (this.selectedStageFilter === ALL_STAGES) {
+                cls += ' on';
+            }
+            return cls;
+        }
+        if (this.normalizeStageKey(this.selectedStageFilter) === this.normalizeStageKey(stageId)) {
+            cls += ' on';
+        } else if (isOppStage) {
+            cls += ' active-stage';
+        }
+        return cls;
+    }
+
+    filterRelatedRecords(relatedObjectType) {
+        const needle = this.normalizeRelatedObjectKey(relatedObjectType);
+        return (this._templateCatalog.relatedRecords || []).filter((row) => {
+            return this.normalizeRelatedObjectKey(row.objectType) === needle;
+        });
+    }
+
+    getStageOrderIndex(stage) {
+        const key = this.normalizeStageKey(stage);
+        if (!key) {
+            return 9999;
+        }
+        const order = this._templateCatalog.opportunityStageOrder || [];
+        const index = order.findIndex((s) => this.normalizeStageKey(s) === key);
+        return index >= 0 ? index : 9998;
+    }
+
+    isTemplateSuggested(t, oppStage) {
+        if (!oppStage || !t.templateStage) {
+            return false;
+        }
+        return this.normalizeStageKey(t.templateStage) === this.normalizeStageKey(oppStage);
+    }
+
+    sortTemplatesByOpportunityStage(templates) {
+        const oppStage = this.effectiveOpportunityStage;
+        return [...templates].sort((a, b) => {
+            const aSuggested = this.isTemplateSuggested(a, oppStage);
+            const bSuggested = this.isTemplateSuggested(b, oppStage);
+            if (aSuggested !== bSuggested) {
+                return aSuggested ? -1 : 1;
+            }
+            const stageDiff =
+                this.getStageOrderIndex(a.templateStage) - this.getStageOrderIndex(b.templateStage);
+            if (stageDiff !== 0) {
+                return stageDiff;
+            }
+            const aName = a.templateName || a.name || '';
+            const bName = b.templateName || b.name || '';
+            return aName.localeCompare(bName, undefined, { sensitivity: 'base' });
+        });
     }
 
     plainTextFromHtml(html) {

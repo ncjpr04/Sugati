@@ -1,78 +1,255 @@
 <template>
-    <div class="tmpl-overlay" onclick={handleBackdropClick} role="dialog" aria-modal="true" aria-label="Choose a template">
-        <div class="tmpl-picker" onclick={stopPropagation} role="document">
+    <div class="tmpl-overlay" role="dialog" aria-modal="true" aria-label="Choose a template">
+        <div class="tmpl-picker" role="document">
             <div class="tmpl-picker-hdr">
-                <div>
-                    <div class="tmpl-picker-title">Choose a Template</div>
-                    <div class="tmpl-picker-sub">
-                        Suggested for <strong>Stage: {stageDisplay}</strong> · {tripDisplay}
-                    </div>
+                <div class="tmpl-picker-hdr-text">
+                    <div class="tmpl-picker-eyebrow">{pickerEyebrow}</div>
+                    <div class="tmpl-picker-title">{headerTitle}</div>
+                    <div class="tmpl-picker-sub">{headerSubtitle}</div>
                 </div>
-                <button type="button" class="tmpl-picker-close" onclick={handleClose} aria-label="Close" title="Close">
+                <button type="button" class="tmpl-picker-close" onclick={handleClose} aria-label="Close" title="Back to channels">
                     ✕
                 </button>
             </div>
 
-            <template lwc:if={showStageFilters}>
-                <div class="tmpl-stage-filters" role="tablist" aria-label="Filter by stage">
-                    <template for:each={stageFilters} for:item="sf">
+            <div class="tmpl-progress" aria-hidden="true">
+                <div class={stepOneClass}>
+                    <span class="tmpl-progress-dot">1</span>
+                    <span class="tmpl-progress-label">Template</span>
+                </div>
+                <span class="tmpl-progress-line"></span>
+                <div class={stepTwoClass}>
+                    <span class="tmpl-progress-dot">2</span>
+                    <span class="tmpl-progress-label">Merge record</span>
+                </div>
+            </div>
+
+            <template lwc:if={isRecordStep}>
+                <div class="tmpl-record-step">
+                    <div class="tmpl-record-scroll">
+                        <div class="tmpl-selected-card">
+                            <div class="tmpl-selected-top">
+                                <div>
+                                    <div class="tmpl-selected-label">Selected template</div>
+                                    <div class="tmpl-selected-name">{pendingTemplateName}</div>
+                                </div>
+                                <span class={pendingRelatedBadgeClass}>{pendingRelatedTypeLabel}</span>
+                            </div>
+                            <div class="tmpl-selected-meta">
+                                Choose which <strong>{pendingRelatedTypeLabel}</strong> record to merge
+                            </div>
+                        </div>
+
+                        <div class="tmpl-record-panel">
+                            <template lwc:if={hasRelatedRecordOptions}>
+                                <div class="tmpl-record-toolbar">
+                                    <div class="tmpl-search-wrap">
+                                        <span class="tmpl-search-ic" aria-hidden="true">⌕</span>
+                                        <input
+                                            class="tmpl-search-input"
+                                            type="search"
+                                            placeholder="Search records…"
+                                            value={recordSearchTerm}
+                                            oninput={handleRecordSearchInput}
+                                            aria-label="Search merge records"
+                                        />
+                                    </div>
+                                    <span class="tmpl-list-count">{recordListSummary}</span>
+                                </div>
+                                <div class="tmpl-record-list" role="radiogroup" aria-label="Select merge record">
+                                    <template for:each={filteredRecordRows} for:item="row">
+                                        <label key={row.recordId} class={row.rowClass}>
+                                            <input
+                                                type="radio"
+                                                name="mergeRecord"
+                                                value={row.recordId}
+                                                checked={row.isSelected}
+                                                onchange={handleRecordRadioChange}
+                                            />
+                                            <span class="tmpl-record-body">
+                                                <span class="tmpl-record-name">{row.label}</span>
+                                                <span class="tmpl-record-type">{row.objectTypeLabel}</span>
+                                            </span>
+                                        </label>
+                                    </template>
+                                    <template lwc:if={hasNoFilteredRecords}>
+                                        <div class="tmpl-empty-state tmpl-empty-state--compact">
+                                            <div class="tmpl-empty-title">No records match</div>
+                                            <div class="tmpl-empty">Try another search term.</div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="tmpl-empty-state tmpl-empty-state--compact">
+                                    <div class="tmpl-empty-icon">📋</div>
+                                    <div class="tmpl-empty-title">No records found</div>
+                                    <div class="tmpl-empty">{relatedRecordEmptyMessage}</div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="tmpl-step-footer">
+                        <button type="button" class="btn btn-sec" onclick={handleCancelRelatedRecord}>← Templates</button>
                         <button
-                            key={sf.id}
                             type="button"
-                            role="tab"
-                            aria-selected={sf.isSelected}
-                            class={sf.className}
-                            data-stage={sf.id}
-                            onclick={handleStageFilter}
+                            class="btn btn-pri"
+                            onclick={handleConfirmRelatedRecord}
+                            disabled={confirmRelatedDisabled}
                         >
-                            {sf.label}
+                            Load template →
                         </button>
-                    </template>
+                    </div>
                 </div>
             </template>
 
-            <div class="tmpl-picker-list">
-                <template lwc:if={isLoading}>
-                    <div class="tmpl-empty">Loading templates…</div>
+            <template lwc:else>
+                <div class="tmpl-toolbar">
+                    <div class="tmpl-search-wrap">
+                        <span class="tmpl-search-ic" aria-hidden="true">⌕</span>
+                        <input
+                            data-id="template-search"
+                            class="tmpl-search-input"
+                            type="search"
+                            placeholder="Search by name, stage, or merge type…"
+                            value={templateSearchTerm}
+                            oninput={handleTemplateSearch}
+                            aria-label="Search templates"
+                        />
+                        <template lwc:if={showTemplateSearchClear}>
+                            <button
+                                type="button"
+                                class="tmpl-search-clear"
+                                onclick={handleClearTemplateSearch}
+                                aria-label="Clear search"
+                                title="Clear search"
+                            >
+                                ✕
+                            </button>
+                        </template>
+                    </div>
+                    <template lwc:if={templateListSummary}>
+                        <span class="tmpl-list-count">{templateListSummary}</span>
+                    </template>
+                </div>
+
+                <template lwc:if={showStageFilters}>
+                    <div class="tmpl-stage-filters" role="tablist" aria-label="Filter by stage">
+                        <template for:each={stageFilters} for:item="sf">
+                            <button
+                                key={sf.id}
+                                type="button"
+                                role="tab"
+                                aria-selected={sf.isSelected}
+                                class={sf.className}
+                                data-stage={sf.id}
+                                onclick={handleStageFilter}
+                            >
+                                {sf.label}
+                            </button>
+                        </template>
+                    </div>
                 </template>
-                <template lwc:elseif={loadError}>
-                    <div class="tmpl-empty">{loadError}</div>
-                </template>
-                <template lwc:elseif={hasNoTemplates}>
-                    <div class="tmpl-empty">No templates match this stage. Start blank or try another filter.</div>
-                </template>
-                <template lwc:else>
-                    <template for:each={visibleTemplates} for:item="tmpl">
-                        <div
-                            key={tmpl.id}
-                            class={tmpl.pickClass}
-                            data-id={tmpl.id}
-                            tabindex="0"
-                            role="button"
-                            onclick={handleTemplatePick}
-                            onkeydown={handleTemplateKeydown}
-                            aria-label={tmpl.ariaLabel}
-                        >
-                            <div class="tmpl-pick-left">
-                                <div class="tmpl-pick-name">{tmpl.name}</div>
-                                <div class="tmpl-pick-meta">{tmpl.pickMeta}</div>
-                                <div class="tmpl-pick-preview">{tmpl.pickPreview}</div>
-                            </div>
-                            <div class="tmpl-pick-right">
-                                <template lwc:if={tmpl.isSuggested}>
-                                    <span class="tmpl-pick-badge">✦ Suggested</span>
-                                </template>
-                                <div class="tmpl-pick-use">{tmpl.pickUse}</div>
-                            </div>
+
+                <div class="tmpl-picker-list">
+                    <template lwc:if={isLoading}>
+                        <div class="tmpl-loading">
+                            <lightning-spinner alternative-text="Loading templates" size="small"></lightning-spinner>
+                            <span>Loading templates…</span>
                         </div>
                     </template>
-                </template>
-            </div>
+                    <template lwc:elseif={loadError}>
+                        <div class="tmpl-empty-state">
+                            <div class="tmpl-empty-icon">⚠</div>
+                            <div class="tmpl-empty-title">Could not load templates</div>
+                            <div class="tmpl-empty">{loadError}</div>
+                        </div>
+                    </template>
+                    <template lwc:elseif={hasNoTemplates}>
+                        <div class="tmpl-empty-state">
+                            <div class="tmpl-empty-icon">✉</div>
+                            <div class="tmpl-empty-title">{emptyStateTitle}</div>
+                            <div class="tmpl-empty">{emptyStateMessage}</div>
+                            <button type="button" class="btn btn-sec tmpl-empty-action" onclick={handleBlank}>Start blank instead</button>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <template lwc:if={showSuggestedSection}>
+                            <div class="tmpl-section-label">✦ Suggested for this stage</div>
+                            <template for:each={suggestedVisibleTemplates} for:item="tmpl">
+                                <div
+                                    key={tmpl.id}
+                                    class={tmpl.pickClass}
+                                    data-id={tmpl.id}
+                                    tabindex="0"
+                                    role="button"
+                                    onclick={handleTemplatePick}
+                                    onkeydown={handleTemplateKeydown}
+                                    aria-label={tmpl.ariaLabel}
+                                >
+                                    <div class="tmpl-pick-left">
+                                        <div class="tmpl-pick-name-row">
+                                            <span class="tmpl-pick-name">{tmpl.displayName}</span>
+                                            <template lwc:if={tmpl.showStagePill}>
+                                                <span class={tmpl.stagePillClass}>{tmpl.stagePill}</span>
+                                            </template>
+                                        </div>
+                                        <template lwc:if={tmpl.showPickPreview}>
+                                            <div class="tmpl-pick-preview">{tmpl.pickPreview}</div>
+                                        </template>
+                                    </div>
+                                    <div class="tmpl-pick-right">
+                                        <template lwc:if={tmpl.showRelatedPill}>
+                                            <span class={tmpl.relatedBadgeClass}>{tmpl.relatedBadge}</span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <template lwc:if={showOtherSectionLabel}>
+                            <div class="tmpl-section-label">All templates</div>
+                        </template>
+                        <template for:each={otherVisibleTemplates} for:item="tmpl">
+                            <div
+                                key={tmpl.id}
+                                class={tmpl.pickClass}
+                                data-id={tmpl.id}
+                                tabindex="0"
+                                role="button"
+                                onclick={handleTemplatePick}
+                                onkeydown={handleTemplateKeydown}
+                                aria-label={tmpl.ariaLabel}
+                            >
+                                <div class="tmpl-pick-left">
+                                    <div class="tmpl-pick-name-row">
+                                        <span class="tmpl-pick-name">{tmpl.displayName}</span>
+                                        <template lwc:if={tmpl.showStagePill}>
+                                            <span class={tmpl.stagePillClass}>{tmpl.stagePill}</span>
+                                        </template>
+                                    </div>
+                                    <template lwc:if={tmpl.showPickPreview}>
+                                        <div class="tmpl-pick-preview">{tmpl.pickPreview}</div>
+                                    </template>
+                                </div>
+                                <div class="tmpl-pick-right">
+                                    <template lwc:if={tmpl.isSuggested}>
+                                        <span class="tmpl-pick-badge">✦ Suggested</span>
+                                    </template>
+                                    <template lwc:if={tmpl.showRelatedPill}>
+                                        <span class={tmpl.relatedBadgeClass}>{tmpl.relatedBadge}</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                </div>
 
-            <div class="tmpl-picker-footer">
-                <button type="button" class="btn btn-sec" onclick={handleBlank}>Start blank — no template</button>
-                <div class="tmpl-picker-foot-hint">Or pick a template above to pre-fill subject &amp; body</div>
-            </div>
+                <div class="tmpl-picker-footer">
+                    <button type="button" class="btn btn-sec" onclick={handleBlank}>Start blank</button>
+                    <span class="tmpl-picker-foot-hint">Press Enter to select · Esc to close</span>
+                </div>
+            </template>
         </div>
     </div>
 </template>

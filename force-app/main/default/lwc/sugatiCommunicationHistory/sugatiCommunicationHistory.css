@@ -165,8 +165,11 @@
 .wa-pip    { background: var(--ch-wa); }
 .ia-pip    { background: var(--ch-ia); }
 
-.status-ok  { color: var(--ok);  font-size: 8px; margin-right: 3px; }
-.status-err { color: var(--err); font-size: 8px; margin-right: 3px; }
+.status-sent       { color: var(--ok); font-size: 8px; margin-right: 3px; }
+.status-delivered  { color: var(--go); font-size: 8px; margin-right: 2px; }
+.status-opened     { color: var(--info); font-size: 8px; margin-right: 3px; }
+.status-draft      { color: var(--t4); font-size: 8px; margin-right: 3px; }
+.status-err        { color: var(--err); font-size: 8px; margin-right: 3px; }
 
 /* ── Main area ── */
 .hub-main {
@@ -393,6 +396,15 @@
 .p-ia   { background: var(--ch-ia-s); color: var(--ch-ia-t); }
 .p-grey { background: var(--s3); color: var(--t3); }
 .p-info { background: var(--info-s); color: var(--info); }
+
+.p-draft     { background: var(--s3); color: var(--t4); }
+.p-sent      { background: var(--ok-s); color: var(--ok); }
+.p-delivered { background: var(--go-s); color: var(--go); }
+.p-opened    { background: var(--info-s); color: var(--info); }
+.p-bounced   { background: var(--err-s); color: var(--err); }
+.p-spam      { background: rgba(180, 83, 9, 0.12); color: var(--warn); }
+.p-received  { background: var(--ok-s); color: var(--ok); }
+.p-failed    { background: var(--err-s); color: var(--err); }
 
 .tl-act {
     font-size: 11px;
@@ -753,9 +765,15 @@
     white-space: pre-line;
 }
 
-.tl-dm-status.opened   { color: var(--go); }
-.tl-dm-status.delivered { color: var(--ok); }
-.tl-dm-status.draft    { color: var(--t3); }
+.tl-dm-status.draft          { color: var(--t4); }
+.tl-dm-status.sent           { color: var(--ok); }
+.tl-dm-status.delivered      { color: var(--go); }
+.tl-dm-status.opened         { color: var(--info); }
+.tl-dm-status.bounced        { color: var(--err); }
+.tl-dm-status.spam-complaint { color: var(--warn); }
+.tl-dm-status.received       { color: var(--ok); }
+.tl-dm-status.failed         { color: var(--err); }
+.tl-dm-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; word-break: break-all; }
 
 .tl-dm-row-btn {
     margin-top: 4px;

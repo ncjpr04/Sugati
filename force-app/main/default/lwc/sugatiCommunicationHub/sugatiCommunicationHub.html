@@ -16,7 +16,7 @@
             <div class="ctx-trip">{tripName} — <em>{tripSubtitle}</em></div>
             <div class="ctx-tags">
                 <span class="tag tag-green">● Active</span>
-                <span class="tag tag-sand">B2C</span>
+                <span class="tag tag-sand">{bookingChannelLabel}</span>
             </div>
             <div class="ctx-sep"></div>
             <span class="ctx-date">{contextSummary}</span>
@@ -49,6 +49,10 @@
                     display-mode="hub"
                     opportunity-id={effectiveOpportunityId}
                     draft-count={stats.draft}
+                    summary-email-count={channelSummary.email}
+                    summary-wa-count={channelSummary.wa}
+                    summary-ia-count={channelSummary.ia}
+                    summary-total-count={channelSummary.total}
                     refresh-key={historyRefreshKey}
                     trip-title={tripName}
                     trip-subtitle={tripSubtitle}
@@ -65,35 +69,22 @@
                 </div>
             </template>
 
-            <template lwc:if={showEmailComposerShell}>
-                <div class="page on email-compose-shell">
-                    <template lwc:if={showRecipients}>
-                        <c-sugati-communication-recipient-selector
-                            opportunity-id={effectiveOpportunityId}
-                            selected-ids={selectedRecipientIds}
-                            selected-emails={selectedRecipientEmails}
-                            onapply={handleRecipientsApply}
-                            onback={handleRecipientsBack}
-                        ></c-sugati-communication-recipient-selector>
-                    </template>
-                    <div class={composerHostClass}>
-                        <c-sugati-communication-email-composer
-                            opportunity-id={effectiveOpportunityId}
-                            draft-for-edit={draftForEdit}
-                            trip-name={tripName}
-                            stage-label={stageLabel}
-                            open-with-template-picker={emailOpenWithTemplatePicker}
-                            onnavigaterecipients={handleNavigateRecipients}
-                            onnavigatepreview={handleNavigatePreview}
-                            onopentemplates={handleOpenTemplatePicker}
-                            ondraftsaved={handleDraftSaved}
-                            ondraftdiscarded={handleDraftDiscarded}
-                            onrecipientsloaded={syncRecipientStateFromComposer}
-                            onrecipientsupdated={syncRecipientStateFromComposer}
-                        ></c-sugati-communication-email-composer>
-                    </div>
+            <div class={emailComposePageClass}>
+                <div class="composer-host">
+                    <c-sugati-communication-email-composer
+                        opportunity-id={effectiveOpportunityId}
+                        draft-for-edit={draftForEdit}
+                        trip-name={tripName}
+                        stage-label={stageLabel}
+                        onnavigatepreview={handleNavigatePreview}
+                        onopentemplates={handleOpenTemplatePicker}
+                        ondraftsaved={handleDraftSaved}
+                        ondraftdiscarded={handleDraftDiscarded}
+                        onrecipientsloaded={syncRecipientStateFromComposer}
+                        onrecipientsupdated={syncRecipientStateFromComposer}
+                    ></c-sugati-communication-email-composer>
                 </div>
-            </template>
+            </div>
 
             <template lwc:if={showWa}>
                 <div class="page on">

@@ -9,11 +9,20 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Integer deliveredCount;
         @AuraEnabled public Integer openedCount;
         @AuraEnabled public Integer draftCount;
+        @AuraEnabled public Integer totalCount;
+        @AuraEnabled public Integer emailCount;
+        @AuraEnabled public Integer whatsAppCount;
+        @AuraEnabled public Integer inAppCount;
+        @AuraEnabled public Boolean isAgencyBooking;
+        @AuraEnabled public String documentCommunication;
+        @AuraEnabled public String bookingChannelLabel;
+        @AuraEnabled public String suggestedRecipientTab;
     }
 
     public class RecipientDTO {
         @AuraEnabled public Id id;
         @AuraEnabled public Id contactId;
+        @AuraEnabled public Id supplierId;
         @AuraEnabled public String initials;
         @AuraEnabled public String name;
         @AuraEnabled public String email;
@@ -24,6 +33,8 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Boolean selected;
         @AuraEnabled public String audience;
         @AuraEnabled public String linkedToLabel;
+        @AuraEnabled public List<String> supplierContactTypes;
+        @AuraEnabled public Boolean isAgencyLinked;
     }
 
     public class TemplateDTO {
@@ -46,6 +57,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Datetime sentAt;
         @AuraEnabled public String sentBy;
         @AuraEnabled public String fromEmail;
+        @AuraEnabled public String fromDisplay;
         @AuraEnabled public Integer recipientCount;
         @AuraEnabled public Integer deliveredCount;
         @AuraEnabled public Integer openedCount;
@@ -54,16 +66,35 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Integer attachmentCount;
         @AuraEnabled public String attachmentSummary;
         @AuraEnabled public Datetime lastModifiedAt;
+        @AuraEnabled public Integer logOpenCount;
+        @AuraEnabled public Integer logClickCount;
+        @AuraEnabled public Datetime deliveredAt;
+        @AuraEnabled public Datetime firstOpenedAt;
+        @AuraEnabled public Datetime lastOpenedAt;
+        @AuraEnabled public Datetime bouncedAt;
+        @AuraEnabled public String bounceType;
+        @AuraEnabled public String bounceDescription;
+        @AuraEnabled public String postmarkMessageId;
+        @AuraEnabled public String trackingSummary;
     }
 
     public class AttachmentDTO {
         @AuraEnabled public Id contentDocumentId;
+        @AuraEnabled public String attachmentRecordId;
+        @AuraEnabled public String storageKind;
         @AuraEnabled public String name;
         @AuraEnabled public String meta;
         @AuraEnabled public String fileType;
         @AuraEnabled public Integer sizeBytes;
         @AuraEnabled public Boolean selected;
         @AuraEnabled public Boolean isPendingUpload;
+        @AuraEnabled public Boolean autoSuggested;
+    }
+
+    public class AttachmentSendBundle {
+        public Set<Id> contentDocumentIds = new Set<Id>();
+        public List<Attachment> legacyAttachments = new List<Attachment>();
+        public List<ContentVersion> contentVersions = new List<ContentVersion>();
     }
 
     public class PreviewRequest {
@@ -97,6 +128,8 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public List<String> ccEmails;
         @AuraEnabled public List<String> bccEmails;
         @AuraEnabled public String toRecipientsJson;
+        @AuraEnabled public String ccRecipientsJson;
+        @AuraEnabled public String bccRecipientsJson;
         @AuraEnabled public String subjectTemplate;
         @AuraEnabled public String bodyTemplate;
         @AuraEnabled public String resolvedSubject;
@@ -104,6 +137,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String deliveryMode;
         @AuraEnabled public String channel;
         @AuraEnabled public List<Id> attachmentContentDocumentIds;
+        @AuraEnabled public List<String> attachmentRecordIds;
         @AuraEnabled public List<String> newAttachmentFileNames;
         @AuraEnabled public List<String> newAttachmentFileData;
     }
@@ -136,16 +170,126 @@ public with sharing class SugatiCommunicationHubController {
 
     @AuraEnabled(cacheable=true)
     public static List<AttachmentDTO> getOpportunityAttachments(Id opportunityId) {
-        if (opportunityId == null) {
-            return new List<AttachmentDTO>();
+        return getRecordAttachments(opportunityId, opportunityId);
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<AttachmentDTO> getRecordAttachments(Id parentRecordId, Id opportunityId) {
+        Set<Id> parentIds = new Set<Id>();
+        if (parentRecordId != null) {
+            parentIds.add(parentRecordId);
         }
-        return queryAttachmentLinks(new Set<Id>{ opportunityId }, null);
+        if (opportunityId != null) {
+            parentIds.add(opportunityId);
+        }
+        return queryAttachmentLinks(parentIds, null);
+    }
+
+    @AuraEnabled
+    public static List<String> resolveAutoAttachmentIds(
+        Id parentRecordId,
+        Id opportunityId,
+        List<String> docTypes
+    ) {
+        return resolveAutoAttachmentRecordIds(parentRecordId, opportunityId, docTypes);
+    }
+
+    public static List<String> resolveAutoAttachmentRecordIds(
+        Id parentRecordId,
+        Id opportunityId,
+        List<String> docTypes
+    ) {
+        Set<Id> parentIds = new Set<Id>();
+        if (parentRecordId != null) {
+            parentIds.add(parentRecordId);
+        }
+        if (opportunityId != null) {
+            parentIds.add(opportunityId);
+        }
+        if (parentIds.isEmpty()) {
+            return new List<String>();
+        }
+        List<String> filters = normalizeDocTypeFilters(docTypes);
+        List<String> ids = new List<String>();
+        for (AttachmentDTO row : queryAttachmentLinks(parentIds, null)) {
+            if (row == null || String.isBlank(row.attachmentRecordId)) {
+                continue;
+            }
+            if (!filters.isEmpty() && !matchesAutoAttachmentFilter(row, filters)) {
+                continue;
+            }
+            ids.add(row.attachmentRecordId);
+        }
+        return ids;
+    }
+
+    public static String resolveParentLabel(Id parentRecordId, Id opportunityId) {
+        if (parentRecordId == null || parentRecordId == opportunityId) {
+            return 'Opportunity';
+        }
+        try {
+            SObjectType sobjectType = parentRecordId.getSObjectType();
+            if (sobjectType != null) {
+                return sobjectType.getDescribe().getLabel();
+            }
+        } catch (Exception ex) {
+            // fall through to generic label
+        }
+        return 'Related Record';
+    }
+
+    @AuraEnabled
+    public static AttachmentDTO uploadOpportunityFile(Id opportunityId, String fileName, String fileDataBase64) {
+        return uploadRecordFile(opportunityId, opportunityId, fileName, fileDataBase64);
+    }
+
+    @AuraEnabled
+    public static AttachmentDTO uploadRecordFile(
+        Id parentRecordId,
+        Id opportunityId,
+        String fileName,
+        String fileDataBase64
+    ) {
+        Id publishParentId = parentRecordId != null ? parentRecordId : opportunityId;
+        if (publishParentId == null) {
+            throw new AuraHandledException('A related record or Opportunity is required to upload a file.');
+        }
+        if (String.isBlank(fileName)) {
+            throw new AuraHandledException('File name is required.');
+        }
+        Set<Id> additionalParents = new Set<Id>();
+        if (opportunityId != null && opportunityId != publishParentId) {
+            additionalParents.add(opportunityId);
+        }
+        ContentFileService fileService = new ContentFileService();
+        Set<Id> docIds = fileService.createFiles(
+            new List<String>{ fileName },
+            new List<String>{ fileDataBase64 },
+            publishParentId,
+            additionalParents
+        );
+        if (docIds.isEmpty()) {
+            throw new AuraHandledException('Unable to upload file to the selected record.');
+        }
+        Id docId = new List<Id>(docIds)[0];
+        List<ContentVersion> versions = fileService.loadLatestByDocumentIds(new Set<Id>{ docId });
+        if (versions.isEmpty()) {
+            throw new AuraHandledException('Uploaded file could not be read back from Salesforce Files.');
+        }
+        ContentVersion latest = versions[0];
+        AttachmentDTO dto = mapContentVersionToAttachment(latest, true);
+        dto.isPendingUpload = false;
+        return dto;
     }
 
     @AuraEnabled(cacheable=true)
     public static HubContextDTO getHubContext(Id opportunityId) {
         Opportunity opp = [
-            SELECT Id, Name, StageName, Owner.Name
+            SELECT Id,
+                Name,
+                StageName,
+                Owner.Name,
+                sugati__O_Agent__c
             FROM Opportunity
             WHERE Id = :opportunityId
             LIMIT 1
@@ -157,6 +301,12 @@ public with sharing class SugatiCommunicationHubController {
             WHERE Opportunity__c = :opportunityId
             GROUP BY Status__c
         ];
+        List<AggregateResult> channelStats = [
+            SELECT Channel__c channel, COUNT(Id) countRows
+            FROM Comm_Log__c
+            WHERE Opportunity__c = :opportunityId
+            GROUP BY Channel__c
+        ];
 
         HubContextDTO dto = new HubContextDTO();
         dto.opportunityId = opp.Id;
@@ -167,18 +317,43 @@ public with sharing class SugatiCommunicationHubController {
         dto.deliveredCount = 0;
         dto.openedCount = 0;
         dto.draftCount = 0;
+        dto.totalCount = 0;
+        dto.emailCount = 0;
+        dto.whatsAppCount = 0;
+        dto.inAppCount = 0;
+        dto.isAgencyBooking = opp.sugati__O_Agent__c != null;
+        dto.bookingChannelLabel = dto.isAgencyBooking ? 'B2B' : 'B2C';
+        dto.suggestedRecipientTab = resolveSuggestedRecipientTab(opp);
 
         for (AggregateResult row : stats) {
             String status = (String) row.get('status');
             Integer countValue = Integer.valueOf((Decimal) row.get('countRows'));
+            dto.totalCount += countValue;
             if (status == 'Draft') {
                 dto.draftCount += countValue;
-            } else if (status == 'Sent') {
-                dto.sentCount += countValue;
-            } else if (status == 'Delivered') {
-                dto.deliveredCount += countValue;
             } else if (status == 'Opened') {
                 dto.openedCount += countValue;
+            } else if (status == 'Delivered') {
+                dto.deliveredCount += countValue;
+            } else if (status == 'Sent') {
+                dto.sentCount += countValue;
+            } else {
+                // Bounced, Spam Complaint, Received, Failed, blank — still one log each
+                dto.sentCount += countValue;
+            }
+        }
+
+        for (AggregateResult row : channelStats) {
+            String channel = (String) row.get('channel');
+            Integer countValue = Integer.valueOf((Decimal) row.get('countRows'));
+            if (channel == EMAIL_CHANNEL) {
+                dto.emailCount += countValue;
+            } else if (channel == 'WhatsApp') {
+                dto.whatsAppCount += countValue;
+            } else if (channel == 'In-App') {
+                dto.inAppCount += countValue;
+            } else {
+                dto.emailCount += countValue;
             }
         }
         return dto;
@@ -192,6 +367,8 @@ public with sharing class SugatiCommunicationHubController {
                 sugati__O_Lead_CG__c,
                 sugati__O_Booking_Contact__c,
                 sugati__O_Agent__c,
+                sugati__O_Agent__r.Name,
+                sugati__O_Agent__r.sugati__S_Email__c,
                 sugati__O_Agent_SC__c,
                 sugati__O_Agent_SC__r.Id,
                 sugati__O_Agent_SC__r.Name,
@@ -205,19 +382,56 @@ public with sharing class SugatiCommunicationHubController {
             LIMIT 1
         ];
 
-        Id leadGroupMemberId;
-        if (opp.sugati__O_Lead_CG__c != null) {
-            List<sugati__Client_Group__c> cgs = [
-                SELECT Id, sugati__CG_Lead_Group_Member__c
-                FROM sugati__Client_Group__c
-                WHERE Id = :opp.sugati__O_Lead_CG__c
-                LIMIT 1
-            ];
-            if (!cgs.isEmpty()) {
-                leadGroupMemberId = cgs[0].sugati__CG_Lead_Group_Member__c;
-            }
+        Id agentSupplierId = opp.sugati__O_Agent__c;
+        Id leadGroupMemberId = resolveLeadGroupMemberId(opp.sugati__O_Lead_CG__c);
+
+        if (agentSupplierId == null) {
+            // B2C — Individual: travellers + operational suppliers + their contacts
+            rows.addAll(buildTravellerRecipients(opportunityId, leadGroupMemberId, false));
+
+            Set<Id> supplierIds = new Set<Id>();
+            Set<Id> supplierRowIds = new Set<Id>();
+            Set<Id> supplierContactRowIds = new Set<Id>();
+            collectOperationalSupplierIds(opportunityId, null, supplierIds, supplierRowIds, rows);
+            rows.addAll(
+                buildSupplierContactRecipientsForSuppliers(supplierIds, new Set<Id>(), supplierContactRowIds, null)
+            );
+        } else {
+            // B2B — Agency: agency email + agent contact + remaining agency contacts only
+            Set<Id> supplierContactRowIds = new Set<Id>();
+            rows.addAll(buildAgencyRecipients(opp, supplierContactRowIds));
+            rows.addAll(buildSupplierContactRecipients(agentSupplierId, opp.sugati__O_Agent_SC__c, supplierContactRowIds));
         }
 
+        return rows;
+    }
+
+    private static String resolveSuggestedRecipientTab(Opportunity opp) {
+        if (opp != null && opp.sugati__O_Agent__c != null) {
+            return 'agents';
+        }
+        return 'travellers';
+    }
+
+    private static Boolean isAgencyBooking(Id agentSupplierId) {
+        return agentSupplierId != null;
+    }
+
+    private static Id resolveLeadGroupMemberId(Id leadClientGroupId) {
+        if (leadClientGroupId == null) {
+            return null;
+        }
+        List<sugati__Client_Group__c> cgs = [
+            SELECT Id, sugati__CG_Lead_Group_Member__c
+            FROM sugati__Client_Group__c
+            WHERE Id = :leadClientGroupId
+            LIMIT 1
+        ];
+        return cgs.isEmpty() ? null : cgs[0].sugati__CG_Lead_Group_Member__c;
+    }
+
+    private static List<RecipientDTO> buildTravellerRecipients(Id opportunityId, Id leadGroupMemberId, Boolean routeToAgency) {
+        List<RecipientDTO> rows = new List<RecipientDTO>();
         List<sugati__Group_Member__c> travellers = [
             SELECT Id, Name, sugati__GM_Contact__c, sugati__GM_Contact__r.Name, sugati__GM_Contact__r.Email,
                 sugati__GM_Email__c, sugati__GM_Phone__c, sugati__S_GM_Client_Group_Booking_Status__c,
@@ -229,7 +443,12 @@ public with sharing class SugatiCommunicationHubController {
         for (sugati__Group_Member__c gm : travellers) {
             String displayName = gm.sugati__GM_Contact__r != null ? gm.sugati__GM_Contact__r.Name : gm.Name;
             String email = resolveTravellerEmail(gm);
-            String primaryStatus = gm.sugati__GM_Client_Group__r != null ? gm.sugati__GM_Client_Group__r.sugati__S_CG_Booking_Status__c : null;
+            if (String.isBlank(email)) {
+                continue;
+            }
+            String primaryStatus = gm.sugati__GM_Client_Group__r != null
+                ? gm.sugati__GM_Client_Group__r.sugati__S_CG_Booking_Status__c
+                : null;
             String secondaryStatus = gm.sugati__S_GM_Client_Group_Booking_Status__c;
             String statusLabel = normalizeStatusLabel(primaryStatus, secondaryStatus);
             RecipientDTO dto = new RecipientDTO();
@@ -238,131 +457,207 @@ public with sharing class SugatiCommunicationHubController {
             dto.name = displayName;
             dto.email = email;
             dto.initials = buildInitials(displayName);
-            dto.role = (gm.Id == leadGroupMemberId || gm.sugati__GM_Non_Travelling_Lead_Booker__c) ? 'Lead Booker' : 'Traveller';
+            dto.role = (gm.Id == leadGroupMemberId || gm.sugati__GM_Non_Travelling_Lead_Booker__c)
+                ? 'Lead Booker'
+                : 'Traveller';
             dto.roleKey = dto.role == 'Lead Booker' ? 'lead' : 'traveller';
             dto.status = statusLabel;
             dto.statusKey = mapStatusKey(statusLabel);
-            dto.selected = dto.roleKey == 'lead';
+            dto.selected = !routeToAgency && dto.roleKey == 'lead';
             dto.audience = 'travellers';
+            dto.isAgencyLinked = false;
             rows.add(dto);
         }
+        return rows;
+    }
 
-        Id agentSupplierId = opp.sugati__O_Agent__c;
-        Set<Id> supplierIds = new Set<Id>();
-        Set<Id> supplierRowIds = new Set<Id>();
-        Set<Id> supplierContactRowIds = new Set<Id>();
-
-        if (Schema.sObjectType.sugati__Supplier_Booking__c.isAccessible()) {
-            for (sugati__Supplier_Booking__c sb : [
-                SELECT
-                    sugati__SB_Supplier__c,
-                    sugati__SB_Supplier__r.Name,
-                    sugati__SB_Supplier__r.sugati__S_Email__c
-                FROM sugati__Supplier_Booking__c
-                WHERE sugati__SB_Opportunity__c = :opportunityId
-                AND sugati__SB_Supplier__c != null
+    private static void collectOperationalSupplierIds(
+        Id opportunityId,
+        Id agentSupplierId,
+        Set<Id> supplierIds,
+        Set<Id> supplierRowIds,
+        List<RecipientDTO> rows
+    ) {
+        if (Schema.sObjectType.sugati__Supplier_Cost_Payment__c.isAccessible()) {
+            for (sugati__Supplier_Cost_Payment__c scp : [
+                SELECT Id,
+                    sugati__SCP_Supplier__c,
+                    sugati__SCP_Supplier__r.Name,
+                    sugati__SCP_Supplier__r.sugati__S_Email__c
+                FROM sugati__Supplier_Cost_Payment__c
+                WHERE sugati__SCP_Opportunity__c = :opportunityId
+                AND   sugati__SCP_Supplier__c    != null
             ]) {
-                supplierIds.add(sb.sugati__SB_Supplier__c);
-                if (sb.sugati__SB_Supplier__c == agentSupplierId) {
-                    continue;
-                }
-                if (
-                    !supplierRowIds.contains(sb.sugati__SB_Supplier__c) &&
-                    sb.sugati__SB_Supplier__r != null &&
-                    String.isNotBlank(sb.sugati__SB_Supplier__r.sugati__S_Email__c)
-                ) {
-                    supplierRowIds.add(sb.sugati__SB_Supplier__c);
-                    rows.add(
-                        buildSupplierRecipient(
-                            sb.sugati__SB_Supplier__c,
-                            sb.sugati__SB_Supplier__r.Name,
-                            sb.sugati__SB_Supplier__r.sugati__S_Email__c,
-                            'suppliers'
-                        )
-                    );
-                }
-            }
-        }
-
-        if (Schema.sObjectType.sugati__Opportunity_Supplier__c.isAccessible()) {
-            for (sugati__Opportunity_Supplier__c os : [
-                SELECT Id, sugati__OS_Supplier__c, sugati__OS_Supplier__r.Name, sugati__OS_Supplier__r.sugati__S_Email__c
-                FROM sugati__Opportunity_Supplier__c
-                WHERE sugati__OS_Opportunity__c = :opportunityId
-                AND sugati__OS_Supplier__c != null
-            ]) {
-                supplierIds.add(os.sugati__OS_Supplier__c);
-                if (os.sugati__OS_Supplier__c == agentSupplierId) {
-                    continue;
-                }
-                if (
-                    !supplierRowIds.contains(os.sugati__OS_Supplier__c) &&
-                    os.sugati__OS_Supplier__r != null &&
-                    String.isNotBlank(os.sugati__OS_Supplier__r.sugati__S_Email__c)
-                ) {
-                    supplierRowIds.add(os.sugati__OS_Supplier__c);
-                    rows.add(
-                        buildSupplierRecipient(
-                            os.sugati__OS_Supplier__c,
-                            os.sugati__OS_Supplier__r.Name,
-                            os.sugati__OS_Supplier__r.sugati__S_Email__c,
-                            'suppliers'
-                        )
-                    );
-                }
-            }
-        }
-
-        if (agentSupplierId != null) {
-            supplierIds.add(agentSupplierId);
-            List<sugati__Supplier__c> agents = [
-                SELECT Id, Name, sugati__S_Email__c
-                FROM sugati__Supplier__c
-                WHERE Id = :agentSupplierId
-                LIMIT 1
-            ];
-            if (!agents.isEmpty() && String.isNotBlank(agents[0].sugati__S_Email__c)) {
-                rows.add(buildSupplierRecipient(agents[0].Id, agents[0].Name, agents[0].sugati__S_Email__c, 'agents', 'Agency', 'agent'));
-            }
-        }
-
-        if (!supplierIds.isEmpty() && Schema.sObjectType.sugati__Supplier_Contact__c.isAccessible()) {
-            for (sugati__Supplier_Contact__c sc : [
-                SELECT
-                    Id,
-                    Name,
-                    sugati__SC_Name__c,
-                    sugati__SC_First_Name__c,
-                    sugati__SC_Last_Name__c,
-                    sugati__SC_Email__c,
-                    sugati__SC_Supplier__c,
-                    sugati__SC_Supplier__r.Name,
-                    sugati__Type__c
-                FROM sugati__Supplier_Contact__c
-                WHERE sugati__SC_Supplier__c IN :supplierIds
-                AND sugati__SC_Email__c != null
-                ORDER BY sugati__SC_Supplier__r.Name, Name
-            ]) {
-                if (supplierContactRowIds.contains(sc.Id)) {
-                    continue;
-                }
-                supplierContactRowIds.add(sc.Id);
-                String displayName = formatSupplierContactName(sc);
-                Boolean isAgency = sc.sugati__SC_Supplier__c == agentSupplierId;
-                String supplierName = sc.sugati__SC_Supplier__r != null ? sc.sugati__SC_Supplier__r.Name : null;
-                String roleLabel = String.isBlank(sc.sugati__Type__c) ? 'Contact' : sc.sugati__Type__c;
-                rows.add(
-                    buildSupplierContactRecipient(
-                        sc.Id,
-                        displayName,
-                        sc.sugati__SC_Email__c,
-                        roleLabel,
-                        buildSupplierContactLinkedLabel(supplierName, isAgency)
-                    )
+                addOperationalSupplierRow(
+                    scp.sugati__SCP_Supplier__c,
+                    scp.sugati__SCP_Supplier__r != null ? scp.sugati__SCP_Supplier__r.Name : null,
+                    scp.sugati__SCP_Supplier__r != null ? scp.sugati__SCP_Supplier__r.sugati__S_Email__c : null,
+                    agentSupplierId,
+                    supplierIds,
+                    supplierRowIds,
+                    rows
                 );
             }
         }
+    }
+
+    private static void addOperationalSupplierRow(
+        Id supplierId,
+        String supplierName,
+        String supplierEmail,
+        Id agentSupplierId,
+        Set<Id> supplierIds,
+        Set<Id> supplierRowIds,
+        List<RecipientDTO> rows
+    ) {
+        if (supplierId == null) {
+            return;
+        }
+        supplierIds.add(supplierId);
+        if (supplierId == agentSupplierId) {
+            return;
+        }
+        if (!supplierRowIds.contains(supplierId) && String.isNotBlank(supplierEmail)) {
+            supplierRowIds.add(supplierId);
+            rows.add(buildSupplierRecipient(supplierId, supplierName, supplierEmail, 'suppliers'));
+        }
+    }
+
+    private static List<RecipientDTO> buildAgencyRecipients(
+        Opportunity opp,
+        Set<Id> supplierContactRowIds
+    ) {
+        List<RecipientDTO> rows = new List<RecipientDTO>();
+        Id agentSupplierId = opp.sugati__O_Agent__c;
+        String agencyName = opp.sugati__O_Agent__r != null ? opp.sugati__O_Agent__r.Name : 'Agency';
+        String agencyEmail = opp.sugati__O_Agent__r != null ? opp.sugati__O_Agent__r.sugati__S_Email__c : null;
+
+        if (String.isNotBlank(agencyEmail)) {
+            RecipientDTO agencyRow = buildSupplierRecipient(
+                agentSupplierId,
+                agencyName,
+                agencyEmail,
+                'agents',
+                'Agency',
+                'agent'
+            );
+            agencyRow.selected = true;
+            rows.add(agencyRow);
+        }
+
+        sugati__Supplier_Contact__c agentContact = opp.sugati__O_Agent_SC__r;
+        if (opp.sugati__O_Agent_SC__c != null && agentContact != null && String.isNotBlank(agentContact.sugati__SC_Email__c)) {
+            supplierContactRowIds.add(agentContact.Id);
+            RecipientDTO agentRow = buildSupplierContactRecipient(
+                agentContact.Id,
+                formatSupplierContactName(agentContact),
+                agentContact.sugati__SC_Email__c,
+                'Agent Contact',
+                buildSupplierContactLinkedLabel(agencyName, true),
+                agentSupplierId,
+                splitSupplierContactTypes(agentContact.sugati__Type__c),
+                true,
+                'agents',
+                'agent'
+            );
+            agentRow.selected = true;
+            rows.add(agentRow);
+        }
+
         return rows;
+    }
+
+    private static List<RecipientDTO> buildSupplierContactRecipients(
+        Id agentSupplierId,
+        Id agentContactId,
+        Set<Id> supplierContactRowIds
+    ) {
+        Set<Id> exclude = new Set<Id>();
+        if (agentContactId != null) {
+            exclude.add(agentContactId);
+        }
+        return buildSupplierContactRecipientsForSuppliers(
+            new Set<Id>{ agentSupplierId },
+            exclude,
+            supplierContactRowIds,
+            agentSupplierId
+        );
+    }
+
+    private static List<RecipientDTO> buildSupplierContactRecipientsForSuppliers(
+        Set<Id> supplierIds,
+        Set<Id> excludeContactIds,
+        Set<Id> supplierContactRowIds,
+        Id agencySupplierIdForLinkage
+    ) {
+        List<RecipientDTO> rows = new List<RecipientDTO>();
+        if (
+            supplierIds == null ||
+            supplierIds.isEmpty() ||
+            !Schema.sObjectType.sugati__Supplier_Contact__c.isAccessible()
+        ) {
+            return rows;
+        }
+
+        for (sugati__Supplier_Contact__c sc : [
+            SELECT
+                Id,
+                Name,
+                sugati__SC_Name__c,
+                sugati__SC_First_Name__c,
+                sugati__SC_Last_Name__c,
+                sugati__SC_Email__c,
+                sugati__SC_Supplier__c,
+                sugati__SC_Supplier__r.Name,
+                sugati__Type__c
+            FROM sugati__Supplier_Contact__c
+            WHERE sugati__SC_Supplier__c IN :supplierIds
+            AND sugati__SC_Email__c != null
+            ORDER BY sugati__SC_Supplier__r.Name, Name
+        ]) {
+            if (
+                (excludeContactIds != null && excludeContactIds.contains(sc.Id)) ||
+                (supplierContactRowIds != null && supplierContactRowIds.contains(sc.Id))
+            ) {
+                continue;
+            }
+            if (supplierContactRowIds != null) {
+                supplierContactRowIds.add(sc.Id);
+            }
+            Boolean isAgency =
+                agencySupplierIdForLinkage != null && sc.sugati__SC_Supplier__c == agencySupplierIdForLinkage;
+            String supplierName = sc.sugati__SC_Supplier__r != null ? sc.sugati__SC_Supplier__r.Name : null;
+            List<String> contactTypes = splitSupplierContactTypes(sc.sugati__Type__c);
+            String roleLabel = contactTypes.isEmpty() ? 'Contact' : String.join(contactTypes, ', ');
+            rows.add(
+                buildSupplierContactRecipient(
+                    sc.Id,
+                    formatSupplierContactName(sc),
+                    sc.sugati__SC_Email__c,
+                    roleLabel,
+                    buildSupplierContactLinkedLabel(supplierName, isAgency, contactTypes),
+                    sc.sugati__SC_Supplier__c,
+                    contactTypes,
+                    isAgency,
+                    'contacts',
+                    'contact'
+                )
+            );
+        }
+        return rows;
+    }
+
+    private static List<String> splitSupplierContactTypes(String rawTypes) {
+        List<String> out = new List<String>();
+        if (String.isBlank(rawTypes)) {
+            return out;
+        }
+        for (String part : rawTypes.split(';')) {
+            if (!String.isBlank(part)) {
+                out.add(part.trim());
+            }
+        }
+        return out;
     }
 
     private static RecipientDTO buildSupplierRecipient(Id supplierId, String supplierName, String email, String audience) {
@@ -379,6 +674,7 @@ public with sharing class SugatiCommunicationHubController {
     ) {
         RecipientDTO dto = new RecipientDTO();
         dto.id = supplierId;
+        dto.supplierId = supplierId;
         dto.name = String.isBlank(supplierName) ? 'Supplier' : supplierName;
         dto.email = email;
         dto.initials = buildInitials(dto.name);
@@ -398,25 +694,66 @@ public with sharing class SugatiCommunicationHubController {
         String role,
         String linkedToLabel
     ) {
+        return buildSupplierContactRecipient(
+            supplierContactId,
+            displayName,
+            email,
+            role,
+            linkedToLabel,
+            null,
+            new List<String>(),
+            false,
+            'contacts',
+            'supplier'
+        );
+    }
+
+    private static RecipientDTO buildSupplierContactRecipient(
+        Id supplierContactId,
+        String displayName,
+        String email,
+        String role,
+        String linkedToLabel,
+        Id supplierId,
+        List<String> supplierContactTypes,
+        Boolean isAgencyLinked,
+        String audience,
+        String roleKey
+    ) {
         RecipientDTO dto = new RecipientDTO();
         dto.id = supplierContactId;
+        dto.supplierId = supplierId;
         dto.name = displayName;
         dto.email = email;
         dto.initials = buildInitials(displayName);
         dto.role = role;
-        dto.roleKey = 'supplier';
+        dto.roleKey = roleKey;
         dto.status = 'Confirmed';
         dto.statusKey = 'booked';
         dto.selected = false;
-        dto.audience = 'contacts';
+        dto.audience = audience;
         dto.linkedToLabel = linkedToLabel;
+        dto.supplierContactTypes = supplierContactTypes == null ? new List<String>() : supplierContactTypes;
+        dto.isAgencyLinked = isAgencyLinked;
         return dto;
     }
 
     private static String buildSupplierContactLinkedLabel(String supplierName, Boolean isAgency) {
+        return buildSupplierContactLinkedLabel(supplierName, isAgency, new List<String>());
+    }
+
+    private static String buildSupplierContactLinkedLabel(
+        String supplierName,
+        Boolean isAgency,
+        List<String> contactTypes
+    ) {
         String entity = isAgency ? 'Agency' : 'Supplier';
         String name = String.isBlank(supplierName) ? 'Unknown' : supplierName;
-        return entity + ': ' + name;
+        String label = entity + ': ' + name;
+        if (contactTypes != null && !contactTypes.isEmpty()) {
+            label = String.join(contactTypes, ', ') + ' · ' + label;
+        }
+        return label;
     }
 
     private static String resolveTravellerEmail(sugati__Group_Member__c gm) {
@@ -448,13 +785,13 @@ public with sharing class SugatiCommunicationHubController {
     @AuraEnabled(cacheable=true)
     public static List<TemplateDTO> getTemplates(Id opportunityId, String stage, String recipientType, String channel) {
         List<TemplateDTO> out = new List<TemplateDTO>();
-        SugatiLegacyEmailService.LegacyTemplateCatalogDTO catalog = SugatiLegacyEmailService.getSendEmailTemplateCatalog(
+        SugatiCommunicationHubEmailService.LegacyTemplateCatalogDTO catalog = SugatiCommunicationHubEmailService.getSendEmailTemplateCatalog(
             opportunityId
         );
         if (catalog == null || catalog.templates == null) {
             return out;
         }
-        for (SugatiLegacyEmailService.LegacyTemplateRowDTO row : catalog.templates) {
+        for (SugatiCommunicationHubEmailService.LegacyTemplateRowDTO row : catalog.templates) {
             if (!String.isBlank(stage) && !stageMatches(row.templateStage, stage)) {
                 continue;
             }
@@ -473,34 +810,34 @@ public with sharing class SugatiCommunicationHubController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<SugatiLegacyEmailService.EmailAddressOptionDTO> getEmailAddressBook(Id opportunityId) {
-        return SugatiLegacyEmailService.getEmailAddressBook(opportunityId);
+    public static List<SugatiCommunicationHubEmailService.EmailAddressOptionDTO> getSendEmailBccDefaults() {
+        return SugatiCommunicationHubEmailService.getSendEmailBccDefaults();
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<SugatiLegacyEmailService.EmailAddressOptionDTO> getOrgWideFromAddresses() {
-        return SugatiLegacyEmailService.getOrgWideFromAddresses();
+    public static List<SugatiCommunicationHubEmailService.EmailAddressOptionDTO> getOrgWideFromAddresses() {
+        return SugatiCommunicationHubEmailService.getOrgWideFromAddresses();
     }
 
     @AuraEnabled(cacheable=true)
-    public static SugatiLegacyEmailService.LegacyTemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
-        return SugatiLegacyEmailService.getSendEmailTemplateCatalog(opportunityId);
+    public static SugatiCommunicationHubEmailService.LegacyTemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
+        return SugatiCommunicationHubEmailService.getSendEmailTemplateCatalog(opportunityId);
     }
 
     @AuraEnabled
-    public static SugatiLegacyEmailService.LegacyEmailLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
-        return SugatiLegacyEmailService.loadDefaultSendEmailTemplate(opportunityId);
+    public static SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
+        return SugatiCommunicationHubEmailService.loadDefaultSendEmailTemplate(opportunityId);
     }
 
     @AuraEnabled
-    public static SugatiLegacyEmailService.LegacyEmailLoadDTO loadSendEmailTemplate(
+    public static SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loadSendEmailTemplate(
         Id opportunityId,
         Id configId,
         Id relatedRecordId,
         Id clientGroupId,
         Id previewAsContactId
     ) {
-        return SugatiLegacyEmailService.loadSendEmailTemplate(
+        return SugatiCommunicationHubEmailService.loadSendEmailTemplate(
             opportunityId,
             configId,
             relatedRecordId,
@@ -529,7 +866,9 @@ public with sharing class SugatiCommunicationHubController {
 
         String soql =
             'SELECT Id, Channel__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
-            'Body_HTML__c, Delivery_Mode__c, Sent_By__r.Name, Sent_By__r.Email ' +
+            'Body_HTML__c, Delivery_Mode__c, From_Address__c, Sent_By__r.Name, Sent_By__r.Email, ' +
+            'Open_Count__c, Click_Count__c, First_Opened_At__c, Last_Opened_At__c, Delivered_At__c, ' +
+            'Bounced_At__c, Bounce_Type__c, Bounce_Description__c, Spam_Reported_At__c, Postmark_Message_Id__c ' +
             'FROM Comm_Log__c WHERE Opportunity__c = :opportunityId';
         if (!String.isBlank(channelFilter)) {
             soql += ' AND Channel__c = :channelFilter';
@@ -591,6 +930,22 @@ public with sharing class SugatiCommunicationHubController {
                 }
             }
 
+            Integer logOpenCount = row.Open_Count__c == null ? 0 : Integer.valueOf(row.Open_Count__c);
+            Integer logClickCount = row.Click_Count__c == null ? 0 : Integer.valueOf(row.Click_Count__c);
+            if (
+                delivered == 0 &&
+                (row.Delivered_At__c != null ||
+                row.Status__c == 'Delivered' ||
+                row.Status__c == 'Opened')
+            ) {
+                delivered = Math.max(1, recs.size());
+            }
+            if (logOpenCount > opened) {
+                opened = logOpenCount;
+            } else if (row.Status__c == 'Opened' && opened == 0) {
+                opened = Math.max(1, logOpenCount);
+            }
+
             HistoryItemDTO dto = new HistoryItemDTO();
             dto.id = row.Id;
             dto.channel = row.Channel__c;
@@ -600,6 +955,7 @@ public with sharing class SugatiCommunicationHubController {
             dto.lastModifiedAt = row.Last_Modified_At__c != null ? row.Last_Modified_At__c : row.CreatedDate;
             dto.sentBy = row.Sent_By__r != null ? row.Sent_By__r.Name : null;
             dto.fromEmail = row.Sent_By__r != null ? row.Sent_By__r.Email : null;
+            dto.fromDisplay = resolveHistoryFromDisplay(row.From_Address__c, row.Sent_By__r);
             dto.bodyHtml = row.Body_HTML__c;
             dto.deliveryMode = row.Delivery_Mode__c;
             dto.recipientCount = recs.size();
@@ -611,9 +967,69 @@ public with sharing class SugatiCommunicationHubController {
                 : new List<AttachmentDTO>();
             dto.attachmentCount = attachments.size();
             dto.attachmentSummary = summarizeAttachmentNames(attachments);
+            dto.logOpenCount = logOpenCount;
+            dto.logClickCount = logClickCount;
+            dto.deliveredAt = row.Delivered_At__c;
+            dto.firstOpenedAt = row.First_Opened_At__c;
+            dto.lastOpenedAt = row.Last_Opened_At__c;
+            dto.bouncedAt = row.Bounced_At__c;
+            dto.bounceType = row.Bounce_Type__c;
+            dto.bounceDescription = row.Bounce_Description__c;
+            dto.postmarkMessageId = row.Postmark_Message_Id__c;
+            dto.trackingSummary = buildTrackingSummary(
+                row.Status__c,
+                row.Delivered_At__c,
+                row.First_Opened_At__c,
+                row.Last_Opened_At__c,
+                logOpenCount,
+                logClickCount,
+                row.Bounced_At__c,
+                row.Bounce_Type__c,
+                row.Spam_Reported_At__c
+            );
             out.add(dto);
         }
         return out;
+    }
+
+    private static String buildTrackingSummary(
+        String status,
+        Datetime deliveredAt,
+        Datetime firstOpenedAt,
+        Datetime lastOpenedAt,
+        Integer openCount,
+        Integer clickCount,
+        Datetime bouncedAt,
+        String bounceType,
+        Datetime spamReportedAt
+    ) {
+        List<String> parts = new List<String>();
+        if (deliveredAt != null) {
+            parts.add('Delivered ' + deliveredAt.format('dd MMM yyyy HH:mm'));
+        }
+        if (openCount != null && openCount > 0) {
+            parts.add(openCount + (openCount == 1 ? ' open' : ' opens'));
+        } else if (firstOpenedAt != null) {
+            parts.add('Opened ' + firstOpenedAt.format('dd MMM yyyy HH:mm'));
+        }
+        if (lastOpenedAt != null && firstOpenedAt != null && lastOpenedAt != firstOpenedAt) {
+            parts.add('Last open ' + lastOpenedAt.format('dd MMM yyyy HH:mm'));
+        }
+        if (clickCount != null && clickCount > 0) {
+            parts.add(clickCount + (clickCount == 1 ? ' click' : ' clicks'));
+        }
+        if (bouncedAt != null) {
+            String bounceLabel = String.isBlank(bounceType) ? 'Bounced' : 'Bounced (' + bounceType + ')';
+            parts.add(bounceLabel + ' ' + bouncedAt.format('dd MMM yyyy HH:mm'));
+        } else if (status == 'Bounced') {
+            parts.add(String.isBlank(bounceType) ? 'Bounced' : 'Bounced (' + bounceType + ')');
+        }
+        if (spamReportedAt != null) {
+            parts.add('Spam reported ' + spamReportedAt.format('dd MMM yyyy HH:mm'));
+        } else if (status == 'Spam Complaint') {
+            parts.add('Spam complaint');
+        }
+        return parts.isEmpty() ? null : String.join(parts, ' · ');
     }
 
     private static Set<Id> resolveAudienceLogIds(Id opportunityId, String audienceFilter) {
@@ -645,6 +1061,13 @@ public with sharing class SugatiCommunicationHubController {
             return null;
         }
         Set<Id> logIds = new Set<Id>();
+        for (Comm_Log__c log : [
+            SELECT Id
+            FROM Comm_Log__c
+            WHERE Opportunity__c = :opportunityId AND Status__c IN ('Failed', 'Bounced', 'Spam Complaint')
+        ]) {
+            logIds.add(log.Id);
+        }
         for (Comm_Recipient__c rec : [
             SELECT Comm_Log__c
             FROM Comm_Recipient__c
@@ -661,11 +1084,19 @@ public with sharing class SugatiCommunicationHubController {
         PreviewResponse response = new PreviewResponse();
         response.recipients = recipientsByInputs(request.recipientIds, request.recipientEmails, request.recipientNames);
 
+        String composedSubject = blankSafe(request.subjectTemplate);
+        String composedBody = blankSafe(request.bodyTemplate);
+        if (String.isNotBlank(composedSubject) && String.isNotBlank(composedBody)) {
+            response.subject = composedSubject;
+            response.bodyHtml = composedBody;
+            return response;
+        }
+
         Id configId = request.sugatiEmailTemplateConfigId != null
             ? request.sugatiEmailTemplateConfigId
             : request.templateId;
         Id relatedId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
-        SugatiLegacyEmailService.LegacyEmailLoadDTO loaded = SugatiLegacyEmailService.loadSendEmailTemplate(
+        SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loaded = SugatiCommunicationHubEmailService.loadSendEmailTemplate(
             request.opportunityId,
             configId,
             relatedId,
@@ -718,6 +1149,9 @@ public with sharing class SugatiCommunicationHubController {
         Id relatedRecordId,
         String resolvedSubject,
         String resolvedBodyHtml,
+        List<Id> attachmentContentDocumentIds,
+        List<String> newAttachmentFileNames,
+        List<String> newAttachmentFileData,
         SendRequest request
     ) {
         try {
@@ -736,6 +1170,9 @@ public with sharing class SugatiCommunicationHubController {
                 relatedRecordId,
                 resolvedSubject,
                 resolvedBodyHtml,
+                attachmentContentDocumentIds,
+                newAttachmentFileNames,
+                newAttachmentFileData,
                 request
             );
         } catch (AuraHandledException ex) {
@@ -760,9 +1197,13 @@ public with sharing class SugatiCommunicationHubController {
         Id relatedRecordId,
         String resolvedSubject,
         String resolvedBodyHtml,
+        List<Id> attachmentContentDocumentIds,
+        List<String> newAttachmentFileNames,
+        List<String> newAttachmentFileData,
         SendRequest request
     ) {
         request = request != null ? request : new SendRequest();
+        mergeAttachmentParams(request, attachmentContentDocumentIds, newAttachmentFileNames, newAttachmentFileData);
         if (String.isNotBlank(toRecipientsJson)) {
             request.toRecipientsJson = toRecipientsJson;
         }
@@ -781,9 +1222,9 @@ public with sharing class SugatiCommunicationHubController {
         if (relatedRecordId != null) {
             request.relatedRecordId = relatedRecordId;
         }
-        if (String.isBlank(request.deliveryMode)) {
-            request.deliveryMode = 'native';
-        }
+        request.deliveryMode = normalizeDeliveryMode(
+            String.isNotBlank(deliveryMode) ? deliveryMode : request.deliveryMode
+        );
         mergeSendContent(request, resolvedSubject, resolvedBodyHtml);
         mergeSendEmailLists(request, toEmails, ccEmails, bccEmails, toEmailsJson, ccEmailsJson, bccEmailsJson);
         applySendRequestOpportunityFallbacks(request);
@@ -801,26 +1242,8 @@ public with sharing class SugatiCommunicationHubController {
             throw new AuraHandledException('Email body is required.');
         }
 
-        Id templateConfigId = request.sugatiEmailTemplateConfigId != null
-            ? request.sugatiEmailTemplateConfigId
-            : request.templateId;
-        Id renderRelatedRecordId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
-        if (templateConfigId != null) {
-            Id generalWhoId = SugatiLegacyEmailService.resolveLeadContactIdForSend(request.opportunityId);
-            SugatiLegacyEmailService.RenderedEmailDTO generalRendered = SugatiLegacyEmailService.renderSendEmailContent(
-                request.opportunityId,
-                templateConfigId,
-                renderRelatedRecordId,
-                generalWhoId,
-                renderRelatedRecordId == request.opportunityId
-            );
-            if (!String.isBlank(generalRendered.subject)) {
-                outboundSubject = generalRendered.subject;
-            }
-            if (!String.isBlank(generalRendered.bodyHtml)) {
-                outboundBodyHtml = generalRendered.bodyHtml;
-            }
-        }
+        request.resolvedSubject = outboundSubject;
+        request.resolvedBodyHtml = outboundBodyHtml;
 
         Comm_Log__c log = new Comm_Log__c();
         log.Opportunity__c = request.opportunityId;
@@ -830,61 +1253,103 @@ public with sharing class SugatiCommunicationHubController {
         log.Body_HTML__c = outboundBodyHtml;
         log.Sent_At__c = System.now();
         log.Sent_By__c = UserInfo.getUserId();
+        log.From_Address__c = resolveFromAddressDisplay(request.orgWideEmailAddressId);
         log.Delivery_Mode__c = request.deliveryMode;
+        log.Send_Method__c = request.deliveryMode == 'postmark' ? 'Postmark' : 'Native Salesforce';
         log.Status__c = 'Sent';
-        Savepoint sendSavepoint = Database.setSavepoint();
+        Savepoint sendSavepoint;
         try {
-            insert log;
-
-            List<Comm_Recipient__c> recRows = buildCommRecipientsFromSendRequest(log.Id, request);
-            if (!recRows.isEmpty()) {
-                insert recRows;
-            }
-
-            Set<Id> attachmentDocIds = buildAttachmentDocumentIdSet(
-                request.attachmentContentDocumentIds,
-                request.newAttachmentFileNames,
-                request.newAttachmentFileData,
-                log.Id,
-                request.opportunityId
-            );
-            syncCommLogAttachments(log.Id, attachmentDocIds);
-
             String providerMessageId;
-            if (request.deliveryMode == 'native') {
-                providerMessageId = sendViaNativeSalesforce(request, attachmentDocIds);
-            } else {
-                try {
-                    providerMessageId = sendViaPostmark(request, attachmentDocIds);
-                } catch (Exception postmarkEx) {
-                    if (!isPostmarkInfrastructureError(postmarkEx)) {
-                        throw postmarkEx;
-                    }
-                    providerMessageId = sendViaNativeSalesforce(request, attachmentDocIds);
-                    log.Delivery_Mode__c = 'native';
-                    request.deliveryMode = 'native';
+            Set<Id> attachmentDocIds;
+            if (request.deliveryMode == 'postmark') {
+                // Postmark requires callout before any DML in the transaction.
+                attachmentDocIds = buildAttachmentDocumentIdSet(
+                    request.attachmentContentDocumentIds,
+                    request.attachmentRecordIds,
+                    null,
+                    null,
+                    null,
+                    null
+                );
+                AttachmentSendBundle postmarkBundle = buildAttachmentSendBundle(
+                    request.attachmentRecordIds,
+                    attachmentDocIds
+                );
+                providerMessageId = sendViaPostmark(request, postmarkBundle);
+                sendSavepoint = Database.setSavepoint();
+            } else if (request.deliveryMode == 'native') {
+                sendSavepoint = Database.setSavepoint();
+                insert log;
+                List<Comm_Recipient__c> nativeRecRows = buildCommRecipientsFromSendRequest(log.Id, request);
+                if (!nativeRecRows.isEmpty()) {
+                    insert nativeRecRows;
                 }
+                attachmentDocIds = buildAttachmentDocumentIdSet(
+                    request.attachmentContentDocumentIds,
+                    request.attachmentRecordIds,
+                    request.newAttachmentFileNames,
+                    request.newAttachmentFileData,
+                    log.Id,
+                    null
+                );
+                syncCommLogAttachments(log.Id, attachmentDocIds);
+                AttachmentSendBundle nativeBundle = buildAttachmentSendBundle(
+                    request.attachmentRecordIds,
+                    attachmentDocIds
+                );
+                providerMessageId = sendViaNativeSalesforce(request, nativeBundle);
+                for (Comm_Recipient__c rec : nativeRecRows) {
+                    rec.Status__c = 'Sent';
+                    rec.Delivered_At__c = null;
+                    rec.Postmark_Id__c = providerMessageId;
+                }
+                if (!nativeRecRows.isEmpty()) {
+                    update nativeRecRows;
+                }
+                log.Status__c = 'Sent';
+                update log;
+            } else {
+                throw new AuraHandledException('Unsupported delivery mode: ' + request.deliveryMode);
             }
 
-            for (Comm_Recipient__c rec : recRows) {
-                rec.Status__c = 'Delivered';
-                rec.Delivered_At__c = System.now();
-                rec.Postmark_Id__c = providerMessageId;
+            if (request.deliveryMode == 'postmark') {
+                insert log;
+                List<Comm_Recipient__c> recRows = buildCommRecipientsFromSendRequest(log.Id, request);
+                for (Comm_Recipient__c rec : recRows) {
+                    rec.Status__c = 'Sent';
+                    rec.Delivered_At__c = null;
+                    rec.Postmark_Id__c = providerMessageId;
+                }
+                if (!recRows.isEmpty()) {
+                    insert recRows;
+                }
+                log.Postmark_Message_Id__c = providerMessageId;
+                attachmentDocIds.addAll(
+                    createUploadedContentDocuments(
+                        request.newAttachmentFileNames,
+                        request.newAttachmentFileData,
+                        log.Id,
+                        null
+                    )
+                );
+                syncCommLogAttachments(log.Id, attachmentDocIds);
+                log.Status__c = 'Sent';
+                update log;
             }
-            if (!recRows.isEmpty()) {
-                update recRows;
-            }
-            log.Status__c = 'Delivered';
-            update log;
 
             SendResponse response = new SendResponse();
             response.commLogId = log.Id;
             response.status = log.Status__c;
             response.providerMessageId = providerMessageId;
-            response.message = 'Message logged and sent';
+            response.message =
+                'Message sent via ' +
+                (request.deliveryMode == 'postmark' ? 'Postmark' : 'Salesforce Email') +
+                (String.isNotBlank(providerMessageId) ? ' (' + providerMessageId + ')' : '');
             return response;
         } catch (Exception ex) {
-            Database.rollback(sendSavepoint);
+            if (sendSavepoint != null) {
+                Database.rollback(sendSavepoint);
+            }
             throw new AuraHandledException(toUserFacingExceptionMessage(ex));
         }
     }
@@ -1009,8 +1474,10 @@ public with sharing class SugatiCommunicationHubController {
         String deliveryMode,
         String channel,
         List<Id> attachmentContentDocumentIds,
+        List<String> attachmentRecordIds,
         List<String> newAttachmentFileNames,
-        List<String> newAttachmentFileData
+        List<String> newAttachmentFileData,
+        Id orgWideEmailAddressId
     ) {
         if (opportunityId == null) {
             throw new AuraHandledException('Opportunity is required to save a draft.');
@@ -1040,6 +1507,7 @@ public with sharing class SugatiCommunicationHubController {
             log.Body_HTML__c = bodyTemplate;
             log.Delivery_Mode__c = deliveryMode;
             log.Sent_By__c = UserInfo.getUserId();
+            log.From_Address__c = resolveFromAddressDisplay(orgWideEmailAddressId);
             stampDraftLastModified(log);
             update log;
             syncDraftRecipients(log.Id, recipients == null ? new List<DraftRecipientInput>() : recipients);
@@ -1051,6 +1519,7 @@ public with sharing class SugatiCommunicationHubController {
             log.Subject__c = subjectTemplate;
             log.Body_HTML__c = bodyTemplate;
             log.Sent_By__c = UserInfo.getUserId();
+            log.From_Address__c = resolveFromAddressDisplay(orgWideEmailAddressId);
             log.Delivery_Mode__c = deliveryMode;
             log.Status__c = 'Draft';
             stampDraftLastModified(log);
@@ -1060,10 +1529,11 @@ public with sharing class SugatiCommunicationHubController {
 
         Set<Id> attachmentDocIds = buildAttachmentDocumentIdSet(
             attachmentContentDocumentIds,
+            attachmentRecordIds,
             newAttachmentFileNames,
             newAttachmentFileData,
             log.Id,
-            opportunityId
+            null
         );
         syncCommLogAttachments(log.Id, attachmentDocIds);
 
@@ -1254,38 +1724,154 @@ public with sharing class SugatiCommunicationHubController {
 
     private static List<Comm_Recipient__c> buildCommRecipientsFromSendRequest(Id commLogId, SendRequest request) {
         List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
-        rows.addAll(buildCommRecipientRows(commLogId, request.toEmails, 'TO'));
-        rows.addAll(buildCommRecipientRows(commLogId, request.ccEmails, 'CC'));
-        rows.addAll(buildCommRecipientRows(commLogId, request.bccEmails, 'BCC'));
+        rows.addAll(buildCommRecipientRowsFromJson(commLogId, request.toRecipientsJson, 'TO'));
+        rows.addAll(buildCommRecipientRowsFromJson(commLogId, request.ccRecipientsJson, 'CC'));
+        rows.addAll(buildCommRecipientRowsFromJson(commLogId, request.bccRecipientsJson, 'BCC'));
 
+        if (rows.isEmpty() && request != null) {
+            rows.addAll(buildCommRecipientRows(commLogId, request.toEmails, 'TO'));
+            rows.addAll(buildCommRecipientRows(commLogId, request.ccEmails, 'CC'));
+            rows.addAll(buildCommRecipientRows(commLogId, request.bccEmails, 'BCC'));
+        } else {
+            Set<String> coveredKeys = new Set<String>();
+            for (Comm_Recipient__c rec : rows) {
+                coveredKeys.add(recipientDedupeKey(rec.Email_Address__c, rec.Email_Send_Type__c));
+            }
+            rows.addAll(
+                buildCommRecipientRowsMissingFromJson(
+                    commLogId,
+                    request,
+                    coveredKeys
+                )
+            );
+        }
         return rows;
     }
 
-    private static List<Comm_Recipient__c> buildCommRecipientRows(Id commLogId, List<String> emails, String emailSendType) {
+    private static String recipientDedupeKey(String email, String emailSendType) {
+        String normalizedEmail = String.isBlank(email) ? '' : email.trim().toLowerCase();
+        return normalizedEmail + '|' + normalizeEmailSendType(emailSendType);
+    }
+
+    private static List<Comm_Recipient__c> buildCommRecipientRowsMissingFromJson(
+        Id commLogId,
+        SendRequest request,
+        Set<String> coveredKeys
+    ) {
+        List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
+        if (request == null) {
+            return rows;
+        }
+        rows.addAll(
+            buildCommRecipientRowsNotCovered(commLogId, request.toEmails, 'TO', coveredKeys)
+        );
+        rows.addAll(
+            buildCommRecipientRowsNotCovered(commLogId, request.ccEmails, 'CC', coveredKeys)
+        );
+        rows.addAll(
+            buildCommRecipientRowsNotCovered(commLogId, request.bccEmails, 'BCC', coveredKeys)
+        );
+        return rows;
+    }
+
+    private static List<Comm_Recipient__c> buildCommRecipientRowsNotCovered(
+        Id commLogId,
+        List<String> emails,
+        String emailSendType,
+        Set<String> coveredKeys
+    ) {
         List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
         if (emails == null) {
             return rows;
         }
-        Set<String> seen = new Set<String>();
+        String normalizedType = normalizeEmailSendType(emailSendType);
         for (String email : emails) {
             if (String.isBlank(email)) {
                 continue;
             }
-            String normalized = email.trim().toLowerCase();
-            if (seen.contains(normalized)) {
+            String key = recipientDedupeKey(email, normalizedType);
+            if (coveredKeys != null && coveredKeys.contains(key)) {
                 continue;
             }
-            seen.add(normalized);
             Comm_Recipient__c rec = new Comm_Recipient__c();
             rec.Comm_Log__c = commLogId;
             rec.Email_Address__c = email.trim();
             rec.Name = email.trim();
-            rec.Email_Send_Type__c = normalizeEmailSendType(emailSendType);
+            rec.Email_Send_Type__c = normalizedType;
             rec.Recipient_Type__c = 'Traveller';
             rec.Status__c = 'Sent';
             rows.add(rec);
+            if (coveredKeys != null) {
+                coveredKeys.add(key);
+            }
         }
         return rows;
+    }
+
+    private static List<Comm_Recipient__c> buildCommRecipientRowsFromJson(
+        Id commLogId,
+        String recipientsJson,
+        String emailSendType
+    ) {
+        List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
+        if (String.isBlank(recipientsJson)) {
+            return rows;
+        }
+        try {
+            List<Object> rawRows = (List<Object>) JSON.deserializeUntyped(recipientsJson);
+            Set<String> seen = new Set<String>();
+            String normalizedType = normalizeEmailSendType(emailSendType);
+            for (Object row : rawRows) {
+                if (!(row instanceof Map<String, Object>)) {
+                    continue;
+                }
+                Map<String, Object> mapped = (Map<String, Object>) row;
+                Object emailRaw = mapped.get('email');
+                if (emailRaw == null || String.isBlank(String.valueOf(emailRaw))) {
+                    continue;
+                }
+                String email = String.valueOf(emailRaw).trim();
+                String key = recipientDedupeKey(email, normalizedType);
+                if (seen.contains(key)) {
+                    continue;
+                }
+                seen.add(key);
+                Comm_Recipient__c rec = new Comm_Recipient__c();
+                rec.Comm_Log__c = commLogId;
+                rec.Email_Address__c = email;
+                rec.Contact__c = parseRecipientContactId(mapped.get('contactId'));
+                Object nameRaw = mapped.get('name');
+                rec.Name = resolveRecipientName(
+                    nameRaw != null ? String.valueOf(nameRaw) : null,
+                    email
+                );
+                Object roleRaw = mapped.get('role');
+                rec.Recipient_Type__c = normalizeRecipientType(
+                    roleRaw != null ? String.valueOf(roleRaw) : null
+                );
+                rec.Email_Send_Type__c = normalizedType;
+                rec.Status__c = 'Sent';
+                rows.add(rec);
+            }
+        } catch (Exception ex) {
+            return new List<Comm_Recipient__c>();
+        }
+        return rows;
+    }
+
+    private static Id parseRecipientContactId(Object contactRaw) {
+        if (contactRaw == null) {
+            return null;
+        }
+        String contactKey = String.valueOf(contactRaw).trim();
+        if (!contactKey.startsWith('003') || (contactKey.length() != 15 && contactKey.length() != 18)) {
+            return null;
+        }
+        return sanitizeContactId((Id) contactKey);
+    }
+
+    private static List<Comm_Recipient__c> buildCommRecipientRows(Id commLogId, List<String> emails, String emailSendType) {
+        return buildCommRecipientRowsNotCovered(commLogId, emails, emailSendType, new Set<String>());
     }
 
     private class TravellerSendTarget {
@@ -1294,16 +1880,41 @@ public with sharing class SugatiCommunicationHubController {
         private Id groupMemberId;
     }
 
-    private static String sendViaNativeSalesforce(SendRequest request, Set<Id> attachmentDocIds) {
+    private static String sendViaNativeSalesforce(
+        SendRequest request,
+        AttachmentSendBundle sendBundle
+    ) {
         List<TravellerSendTarget> toTargets = parseTravellerSendTargets(request);
         List<String> ccAddresses = cleanEmailList(request.ccEmails);
         List<String> bccAddresses = cleanEmailList(request.bccEmails);
-        if (toTargets.isEmpty() && ccAddresses.isEmpty() && bccAddresses.isEmpty()) {
+        List<String> toAddresses = new List<String>();
+        for (TravellerSendTarget target : toTargets) {
+            if (target != null && !String.isBlank(target.email)) {
+                toAddresses.add(target.email.trim());
+            }
+        }
+        toAddresses = cleanEmailList(toAddresses);
+        if (toAddresses.isEmpty() && ccAddresses.isEmpty() && bccAddresses.isEmpty()) {
             throw new AuraHandledException('At least one recipient is required.');
         }
 
-        List<ContentVersion> docuLinks = loadContentVersionsForSend(attachmentDocIds);
-        List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(request, toTargets, ccAddresses, bccAddresses, docuLinks);
+        if (
+            sendBundle != null &&
+            hasAttachmentPayload(sendBundle) &&
+            buildEmailFileAttachments(sendBundle).isEmpty()
+        ) {
+            throw new AuraHandledException(
+                'Selected attachments could not be read. Check file access on the related record or re-upload the files.'
+            );
+        }
+
+        List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(
+            request,
+            toTargets,
+            ccAddresses,
+            bccAddresses,
+            sendBundle
+        );
 
         if (Test.isRunningTest()) {
             return 'NATIVE-TEST';
@@ -1311,6 +1922,20 @@ public with sharing class SugatiCommunicationHubController {
 
         dispatchNativeEmailMessages(messages);
         return 'NATIVE-' + String.valueOf(Crypto.getRandomLong()).replace('-', '');
+    }
+
+    private static String normalizeDeliveryMode(String rawMode) {
+        if (String.isBlank(rawMode)) {
+            return 'postmark';
+        }
+        String normalized = rawMode.trim().toLowerCase();
+        if (normalized == 'native' || normalized == 'salesforce' || normalized == 'sf') {
+            return 'native';
+        }
+        if (normalized == 'postmark') {
+            return 'postmark';
+        }
+        return 'postmark';
     }
 
     private static List<TravellerSendTarget> parseTravellerSendTargets(SendRequest request) {
@@ -1380,207 +2005,54 @@ public with sharing class SugatiCommunicationHubController {
         return out;
     }
 
-    private static Map<String, Id> resolveTravellerContactIdsByEmail(Id opportunityId, Set<String> emails) {
-        Map<String, Id> out = new Map<String, Id>();
-        if (opportunityId == null || emails == null || emails.isEmpty()) {
-            return out;
-        }
-        for (sugati__Group_Member__c gm : [
-            SELECT sugati__GM_Contact__c, sugati__GM_Email__c, sugati__GM_Contact__r.Email
-            FROM sugati__Group_Member__c
-            WHERE sugati__GM_Opportunity__c = :opportunityId
-        ]) {
-            if (gm.sugati__GM_Contact__c != null) {
-                if (gm.sugati__GM_Contact__r != null && !String.isBlank(gm.sugati__GM_Contact__r.Email)) {
-                    out.put(gm.sugati__GM_Contact__r.Email.trim().toLowerCase(), gm.sugati__GM_Contact__c);
-                }
-            }
-            if (!String.isBlank(gm.sugati__GM_Email__c)) {
-                Id contactId = gm.sugati__GM_Contact__c;
-                if (contactId != null) {
-                    out.put(gm.sugati__GM_Email__c.trim().toLowerCase(), contactId);
-                }
-            }
-        }
-        return out;
-    }
-
-    private static Map<Id, Id> resolveTravellerContactIdsByGroupMemberIds(Set<Id> groupMemberIds) {
-        Map<Id, Id> out = new Map<Id, Id>();
-        if (groupMemberIds == null || groupMemberIds.isEmpty()) {
-            return out;
-        }
-        for (sugati__Group_Member__c gm : [
-            SELECT Id, sugati__GM_Contact__c
-            FROM sugati__Group_Member__c
-            WHERE Id IN :groupMemberIds
-        ]) {
-            if (gm.sugati__GM_Contact__c != null) {
-                out.put(gm.Id, gm.sugati__GM_Contact__c);
-            }
-        }
-        return out;
-    }
-
-    private static Id resolveTemplateConfigIdForSend(SendRequest request) {
-        if (request == null) {
-            return null;
-        }
-        if (request.sugatiEmailTemplateConfigId != null) {
-            return request.sugatiEmailTemplateConfigId;
-        }
-        return request.templateId;
-    }
-
-    private static Id resolveRenderContactIdForTarget(
-        TravellerSendTarget target,
-        Map<String, Id> contactByEmail,
-        Map<Id, Id> contactByGroupMemberId
-    ) {
-        if (target == null) {
-            return null;
-        }
-        if (target.contactId != null) {
-            return target.contactId;
-        }
-        if (!String.isBlank(target.email) && contactByEmail != null) {
-            Id byEmail = contactByEmail.get(target.email.trim().toLowerCase());
-            if (byEmail != null) {
-                return byEmail;
-            }
-        }
-        if (target.groupMemberId != null && contactByGroupMemberId != null) {
-            return contactByGroupMemberId.get(target.groupMemberId);
-        }
-        return null;
-    }
-
     private static List<Messaging.SingleEmailMessage> buildOutboundEmailMessages(
         SendRequest request,
         List<TravellerSendTarget> toTargets,
         List<String> ccAddresses,
         List<String> bccAddresses,
-        List<ContentVersion> docuLinks
+        AttachmentSendBundle sendBundle
     ) {
         List<Messaging.SingleEmailMessage> messages = new List<Messaging.SingleEmailMessage>();
+        String subjectText = !String.isBlank(request.resolvedSubject)
+            ? request.resolvedSubject
+            : blankSafe(request.subjectTemplate);
+        String bodyHtml = !String.isBlank(request.resolvedBodyHtml)
+            ? request.resolvedBodyHtml
+            : blankSafe(request.bodyTemplate);
 
-        Id templateConfigId = resolveTemplateConfigIdForSend(request);
-        Id relatedRecordId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
-        Boolean useOpportunityAsWhat = relatedRecordId == request.opportunityId;
-        Boolean hasAnyRecipients = !toTargets.isEmpty() || !ccAddresses.isEmpty() || !bccAddresses.isEmpty();
-
-        if (templateConfigId == null && hasAnyRecipients && !Test.isRunningTest()) {
-            throw new AuraHandledException(
-                'Email template configuration is required to send personalized emails to travellers.'
-            );
+        if (String.isBlank(subjectText)) {
+            throw new AuraHandledException('Subject is required.');
+        }
+        if (String.isBlank(bodyHtml)) {
+            throw new AuraHandledException('Email body is required.');
         }
 
-        if (templateConfigId == null && Test.isRunningTest()) {
-            String subjectText = !String.isBlank(request.resolvedSubject)
-                ? request.resolvedSubject
-                : blankSafe(request.subjectTemplate);
-            String bodyHtml = !String.isBlank(request.resolvedBodyHtml)
-                ? request.resolvedBodyHtml
-                : blankSafe(request.bodyTemplate);
-            for (TravellerSendTarget target : toTargets) {
-                messages.add(
-                    buildNativeEmailMessage(
-                        new List<String>{ target.email },
-                        new List<String>(),
-                        new List<String>(),
-                        subjectText,
-                        bodyHtml,
-                        request.opportunityId,
-                        request.orgWideEmailAddressId,
-                        docuLinks
-                    )
-                );
-            }
-            if (!ccAddresses.isEmpty() || !bccAddresses.isEmpty()) {
-                messages.add(
-                    buildNativeEmailMessage(
-                        ccAddresses,
-                        new List<String>(),
-                        bccAddresses,
-                        subjectText,
-                        bodyHtml,
-                        request.opportunityId,
-                        request.orgWideEmailAddressId,
-                        docuLinks
-                    )
-                );
-            }
-            return messages;
-        }
-
-        SugatiLegacyEmailService.RenderedEmailDTO generalRendered;
-        Id generalWhoId = SugatiLegacyEmailService.resolveLeadContactIdForSend(request.opportunityId);
-        generalRendered = SugatiLegacyEmailService.renderSendEmailContent(
-            request.opportunityId,
-            templateConfigId,
-            relatedRecordId,
-            generalWhoId,
-            useOpportunityAsWhat
-        );
-
-        Set<String> emailLookupKeys = new Set<String>();
-        Set<Id> groupMemberIds = new Set<Id>();
+        List<String> toAddresses = new List<String>();
         for (TravellerSendTarget target : toTargets) {
-            emailLookupKeys.add(target.email.trim().toLowerCase());
-            if (target.groupMemberId != null) {
-                groupMemberIds.add(target.groupMemberId);
+            if (target != null && !String.isBlank(target.email)) {
+                toAddresses.add(target.email.trim());
             }
         }
-        Map<String, Id> contactByEmail = resolveTravellerContactIdsByEmail(request.opportunityId, emailLookupKeys);
-        Map<Id, Id> contactByGroupMemberId = resolveTravellerContactIdsByGroupMemberIds(groupMemberIds);
+        toAddresses = cleanEmailList(toAddresses);
 
-        for (TravellerSendTarget target : toTargets) {
-            Id renderWhoId = resolveRenderContactIdForTarget(target, contactByEmail, contactByGroupMemberId);
-            if (renderWhoId == null) {
-                throw new AuraHandledException(
-                    'Could not resolve a Contact for To recipient ' +
-                        target.email +
-                        '. Link the traveller to a Contact with a valid email.'
-                );
-            }
-            SugatiLegacyEmailService.RenderedEmailDTO personalRendered = SugatiLegacyEmailService.renderSendEmailContent(
+        Boolean hasAnyRecipients =
+            !toAddresses.isEmpty() || !ccAddresses.isEmpty() || !bccAddresses.isEmpty();
+        if (!hasAnyRecipients) {
+            throw new AuraHandledException('At least one recipient is required.');
+        }
+
+        messages.add(
+            buildNativeEmailMessage(
+                toAddresses,
+                ccAddresses,
+                bccAddresses,
+                subjectText,
+                bodyHtml,
                 request.opportunityId,
-                templateConfigId,
-                relatedRecordId,
-                renderWhoId,
-                useOpportunityAsWhat
-            );
-            String subjectText = personalRendered.subject;
-            String bodyHtml = personalRendered.bodyHtml;
-            messages.add(
-                buildNativeEmailMessage(
-                    new List<String>{ target.email },
-                    new List<String>(),
-                    new List<String>(),
-                    subjectText,
-                    bodyHtml,
-                    request.opportunityId,
-                    request.orgWideEmailAddressId,
-                    docuLinks
-                )
-            );
-        }
-
-        if (!ccAddresses.isEmpty() || !bccAddresses.isEmpty()) {
-            messages.add(
-                buildNativeEmailMessage(
-                    ccAddresses,
-                    new List<String>(),
-                    bccAddresses,
-                    generalRendered.subject,
-                    generalRendered.bodyHtml,
-                    request.opportunityId,
-                    request.orgWideEmailAddressId,
-                    docuLinks
-                )
-            );
-        }
-
+                request.orgWideEmailAddressId,
+                sendBundle
+            )
+        );
         return messages;
     }
 
@@ -1592,7 +2064,7 @@ public with sharing class SugatiCommunicationHubController {
         String bodyHtml,
         Id opportunityId,
         Id orgWideEmailAddressId,
-        List<ContentVersion> docuLinks
+        AttachmentSendBundle sendBundle
     ) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setSubject(subject);
@@ -1610,19 +2082,99 @@ public with sharing class SugatiCommunicationHubController {
         if (opportunityId != null) {
             mail.setWhatId(opportunityId);
         }
-        mail.setSaveAsActivity(false);
+        mail.setSaveAsActivity(true);
 
-        List<Messaging.EmailFileAttachment> fileAttachments = new List<Messaging.EmailFileAttachment>();
-        for (ContentVersion cv : docuLinks) {
-            Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
-            efa.setFileName(cv.PathOnClient != null ? cv.PathOnClient : cv.Title);
-            efa.setBody(cv.VersionData);
-            fileAttachments.add(efa);
-        }
+        List<Messaging.EmailFileAttachment> fileAttachments = buildEmailFileAttachments(
+            sendBundle
+        );
         if (!fileAttachments.isEmpty()) {
             mail.setFileAttachments(fileAttachments);
         }
         return mail;
+    }
+
+    private static Boolean hasAttachmentPayload(AttachmentSendBundle sendBundle) {
+        if (sendBundle == null) {
+            return false;
+        }
+        return !sendBundle.contentDocumentIds.isEmpty() ||
+            (sendBundle.legacyAttachments != null && !sendBundle.legacyAttachments.isEmpty()) ||
+            (sendBundle.contentVersions != null && !sendBundle.contentVersions.isEmpty());
+    }
+
+    private static AttachmentSendBundle buildSendBundle(List<String> attachmentRecordIds) {
+        AttachmentSendBundle bundle = new AttachmentSendBundle();
+        if (attachmentRecordIds == null || attachmentRecordIds.isEmpty()) {
+            return bundle;
+        }
+        Set<Id> docIds = new Set<Id>();
+        Set<Id> legacyIds = new Set<Id>();
+        for (String rawId : attachmentRecordIds) {
+            if (String.isBlank(rawId)) {
+                continue;
+            }
+            String key = rawId.trim();
+            if (key.length() != 15 && key.length() != 18) {
+                continue;
+            }
+            if (key.startsWith('069')) {
+                docIds.add((Id) key);
+            } else if (key.startsWith('00P')) {
+                legacyIds.add((Id) key);
+            }
+        }
+        if (!docIds.isEmpty()) {
+            bundle.contentDocumentIds.addAll(docIds);
+            bundle.contentVersions = loadContentVersionsForSend(docIds);
+        }
+        if (!legacyIds.isEmpty() && Schema.sObjectType.Attachment.isAccessible()) {
+            bundle.legacyAttachments = [
+                SELECT Id, Name, Body, ContentType
+                FROM Attachment
+                WHERE Id IN :legacyIds
+            ];
+        }
+        return bundle;
+    }
+
+    private static List<Messaging.EmailFileAttachment> buildEmailFileAttachments(AttachmentSendBundle sendBundle) {
+        List<Messaging.EmailFileAttachment> out = new List<Messaging.EmailFileAttachment>();
+        if (sendBundle == null) {
+            return out;
+        }
+        if (sendBundle.contentVersions != null) {
+            for (ContentVersion cv : sendBundle.contentVersions) {
+                if (cv == null || cv.VersionData == null || cv.VersionData.size() == 0) {
+                    continue;
+                }
+                Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+                efa.setBody(cv.VersionData);
+                efa.setFileName(resolveAttachmentFileName(cv));
+                out.add(efa);
+            }
+        }
+        if (sendBundle.legacyAttachments != null) {
+            for (Attachment att : sendBundle.legacyAttachments) {
+                if (att == null || att.Body == null || att.Body.size() == 0) {
+                    continue;
+                }
+                Messaging.EmailFileAttachment efa = new Messaging.EmailFileAttachment();
+                efa.setBody(att.Body);
+                efa.setFileName(String.isNotBlank(att.Name) ? att.Name : 'attachment');
+                out.add(efa);
+            }
+        }
+        return out;
+    }
+
+    private static String resolveAttachmentFileName(ContentVersion cv) {
+        if (cv == null) {
+            return 'attachment';
+        }
+        if (String.isNotBlank(cv.PathOnClient)) {
+            return cv.PathOnClient;
+        }
+        return String.isNotBlank(cv.Title) ? cv.Title : 'attachment';
     }
 
     private static void dispatchNativeEmailMessages(List<Messaging.SingleEmailMessage> messages) {
@@ -1658,19 +2210,196 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
+    private static List<Map<String, Object>> buildPostmarkAttachments(
+        AttachmentSendBundle sendBundle
+    ) {
+        List<Map<String, Object>> out = new List<Map<String, Object>>();
+        if (sendBundle == null || sendBundle.contentVersions == null || sendBundle.contentVersions.isEmpty()) {
+            return out;
+        }
+        for (ContentVersion cv : sendBundle.contentVersions) {
+            if (cv == null || cv.VersionData == null || cv.VersionData.size() == 0) {
+                continue;
+            }
+            out.add(new Map<String, Object>{
+                'Name' => resolveAttachmentFileName(cv),
+                'Content' => EncodingUtil.base64Encode(cv.VersionData),
+                'ContentType' => mimeTypeForFileName(resolveAttachmentFileName(cv))
+            });
+        }
+        return out;
+    }
+
+    private static List<Map<String, Object>> buildPostmarkAttachmentsFromBase64(
+        List<String> fileNames,
+        List<String> fileDataBase64
+    ) {
+        List<Map<String, Object>> out = new List<Map<String, Object>>();
+        Integer count = fileNames == null ? 0 : fileNames.size();
+        for (Integer i = 0; i < count; i++) {
+            String fileName = listStringAt(fileNames, i);
+            String encoded = listStringAt(fileDataBase64, i);
+            if (String.isBlank(fileName) || String.isBlank(encoded)) {
+                continue;
+            }
+            Blob body = decodeBase64File(encoded);
+            if (body == null || body.size() == 0) {
+                continue;
+            }
+            if (body.size() > MAX_ATTACHMENT_BYTES) {
+                throw new AuraHandledException('Attachment "' + fileName + '" exceeds the 4.5 MB limit.');
+            }
+            out.add(new Map<String, Object>{
+                'Name' => fileName,
+                'Content' => EncodingUtil.base64Encode(body),
+                'ContentType' => mimeTypeForFileName(fileName)
+            });
+        }
+        return out;
+    }
+
+    private static String mimeTypeForFileName(String fileName) {
+        if (String.isBlank(fileName)) {
+            return 'application/octet-stream';
+        }
+        String lower = fileName.toLowerCase();
+        if (lower.endsWith('.pdf')) {
+            return 'application/pdf';
+        }
+        if (lower.endsWith('.png')) {
+            return 'image/png';
+        }
+        if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
+            return 'image/jpeg';
+        }
+        if (lower.endsWith('.gif')) {
+            return 'image/gif';
+        }
+        if (lower.endsWith('.doc')) {
+            return 'application/msword';
+        }
+        if (lower.endsWith('.docx')) {
+            return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        }
+        if (lower.endsWith('.xls')) {
+            return 'application/vnd.ms-excel';
+        }
+        if (lower.endsWith('.xlsx')) {
+            return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        }
+        if (lower.endsWith('.txt')) {
+            return 'text/plain';
+        }
+        if (lower.endsWith('.html') || lower.endsWith('.htm')) {
+            return 'text/html';
+        }
+        if (lower.endsWith('.csv')) {
+            return 'text/csv';
+        }
+        return 'application/octet-stream';
+    }
+
     private static List<ContentVersion> loadContentVersionsForSend(Set<Id> attachmentDocIds) {
-        List<ContentVersion> docuLinks = new List<ContentVersion>();
         if (attachmentDocIds == null || attachmentDocIds.isEmpty()) {
-            return docuLinks;
+            return new List<ContentVersion>();
         }
-        for (ContentVersion cv : [
-            SELECT Id, VersionData, Title, PathOnClient
-            FROM ContentVersion
-            WHERE ContentDocumentId IN :attachmentDocIds AND IsLatest = true
-        ]) {
-            docuLinks.add(cv);
+        return new ContentFileService().loadLatestByDocumentIds(attachmentDocIds);
+    }
+
+    private static List<String> normalizeDocTypeFilters(List<String> docTypes) {
+        List<String> out = new List<String>();
+        if (docTypes == null) {
+            return out;
         }
-        return docuLinks;
+        for (String raw : docTypes) {
+            if (String.isBlank(raw)) {
+                continue;
+            }
+            out.add(raw.trim().toLowerCase());
+        }
+        return out;
+    }
+
+    private static Boolean matchesAutoAttachmentFilter(AttachmentDTO row, List<String> filters) {
+        if (filters == null || filters.isEmpty()) {
+            return true;
+        }
+        String name = row == null || String.isBlank(row.name) ? '' : row.name.toLowerCase();
+        String fileType = row == null || String.isBlank(row.fileType) ? '' : row.fileType.toLowerCase();
+        for (String token : filters) {
+            if (String.isBlank(token)) {
+                continue;
+            }
+            if (name.contains(token) || fileType == token) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void mergeAttachmentParams(
+        SendRequest request,
+        List<Id> attachmentContentDocumentIds,
+        List<String> newAttachmentFileNames,
+        List<String> newAttachmentFileData
+    ) {
+        if (request == null) {
+            return;
+        }
+        Set<Id> docIds = normalizeContentDocumentIds(attachmentContentDocumentIds);
+        if (docIds.isEmpty()) {
+            docIds = normalizeContentDocumentIds(request.attachmentContentDocumentIds);
+        }
+        request.attachmentContentDocumentIds = new List<Id>(docIds);
+        if (request.attachmentRecordIds == null) {
+            request.attachmentRecordIds = new List<String>();
+        }
+        request.attachmentRecordIds = mergeAttachmentRecordIds(request.attachmentRecordIds, request.attachmentContentDocumentIds);
+
+        if (newAttachmentFileNames != null && !newAttachmentFileNames.isEmpty()) {
+            request.newAttachmentFileNames = newAttachmentFileNames;
+        }
+        if (newAttachmentFileData != null && !newAttachmentFileData.isEmpty()) {
+            request.newAttachmentFileData = newAttachmentFileData;
+        }
+    }
+
+    private static List<String> mergeAttachmentRecordIds(List<String> recordIds, List<Id> contentDocumentIds) {
+        Set<String> merged = new Set<String>();
+        if (recordIds != null) {
+            for (String recordId : recordIds) {
+                if (!String.isBlank(recordId)) {
+                    merged.add(recordId.trim());
+                }
+            }
+        }
+        if (contentDocumentIds != null) {
+            for (Id docId : contentDocumentIds) {
+                if (docId != null) {
+                    merged.add(String.valueOf(docId));
+                }
+            }
+        }
+        return new List<String>(merged);
+    }
+
+    private static AttachmentSendBundle buildAttachmentSendBundle(
+        List<String> attachmentRecordIds,
+        Set<Id> uploadedContentDocumentIds
+    ) {
+        List<String> mergedIds = mergeAttachmentRecordIds(attachmentRecordIds, new List<Id>(uploadedContentDocumentIds));
+        return buildSendBundle(mergedIds);
+    }
+
+    private static String extractExtension(String fileName) {
+        if (String.isBlank(fileName)) {
+            return '';
+        }
+        Integer dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex < 0 || dotIndex >= fileName.length() - 1) {
+            return '';
+        }
+        return fileName.substring(dotIndex + 1);
     }
 
     private static List<String> cleanEmailList(List<String> emails) {
@@ -1693,7 +2422,10 @@ public with sharing class SugatiCommunicationHubController {
         return out;
     }
 
-    private static String sendViaPostmark(SendRequest request, Set<Id> attachmentDocIds) {
+    private static String sendViaPostmark(
+        SendRequest request,
+        AttachmentSendBundle sendBundle
+    ) {
         if (Test.isRunningTest()) {
             return 'POSTMARK-TEST';
         }
@@ -1705,47 +2437,40 @@ public with sharing class SugatiCommunicationHubController {
             throw new AuraHandledException('At least one recipient is required.');
         }
 
-        List<ContentVersion> docuLinks = loadContentVersionsForSend(attachmentDocIds);
         List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(
             request,
             toTargets,
             ccAddresses,
             bccAddresses,
-            docuLinks
+            sendBundle
         );
         String lastMessageId = 'POSTMARK-SENT';
-        String fromAddress = SugatiLegacyEmailService.resolveFromEmailAddress(request.orgWideEmailAddressId);
+        String fromAddress = resolvePostmarkFromAddress(request.orgWideEmailAddressId);
+        List<Map<String, Object>> postmarkAttachments = buildPostmarkAttachments(sendBundle);
+        postmarkAttachments.addAll(
+            buildPostmarkAttachmentsFromBase64(request.newAttachmentFileNames, request.newAttachmentFileData)
+        );
         try {
             for (Messaging.SingleEmailMessage mail : messages) {
-                Map<String, Object> payload = new Map<String, Object>{
-                    'From' => fromAddress,
-                    'To' => String.join(mail.getToAddresses(), ','),
-                    'Subject' => mail.getSubject(),
-                    'HtmlBody' => mail.getHtmlBody()
-                };
+                PostmarkEmailService.PostmarkEmailRequest payload = new PostmarkEmailService.PostmarkEmailRequest();
+                payload.fromAddress = fromAddress;
+                payload.To = String.join(mail.getToAddresses(), ',');
+                payload.Subject = mail.getSubject();
+                payload.HtmlBody = mail.getHtmlBody();
                 List<String> ccList = mail.getCcAddresses();
                 if (ccList != null && !ccList.isEmpty()) {
-                    payload.put('Cc', String.join(ccList, ','));
+                    payload.Cc = String.join(ccList, ',');
                 }
                 List<String> bccList = mail.getBccAddresses();
                 if (bccList != null && !bccList.isEmpty()) {
-                    payload.put('Bcc', String.join(bccList, ','));
+                    payload.Bcc = String.join(bccList, ',');
                 }
-
-                HttpRequest req = new HttpRequest();
-                req.setEndpoint('callout:Postmark_NC/email');
-                req.setMethod('POST');
-                req.setHeader('Content-Type', 'application/json');
-                req.setBody(JSON.serialize(payload));
-
-                Http http = new Http();
-                HttpResponse res = http.send(req);
-                if (res.getStatusCode() < 200 || res.getStatusCode() > 299) {
-                    throw new AuraHandledException('Postmark send failed: ' + res.getStatusCode() + ' ' + res.getBody());
+                if (!postmarkAttachments.isEmpty()) {
+                    payload.Attachments = toPostmarkAttachmentPayload(postmarkAttachments);
                 }
-                Map<String, Object> body = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
-                if (body != null && body.containsKey('MessageID')) {
-                    lastMessageId = String.valueOf(body.get('MessageID'));
+                PostmarkEmailService.PostmarkEmailResponse response = PostmarkEmailService.sendEmail(payload);
+                if (response != null && String.isNotBlank(response.MessageID)) {
+                    lastMessageId = response.MessageID;
                 }
             }
             return lastMessageId;
@@ -1753,9 +2478,32 @@ public with sharing class SugatiCommunicationHubController {
             throw new AuraHandledException(
                 'Postmark is not available (' +
                     toUserFacingExceptionMessage(ex) +
-                    '). Configure the Postmark_NC named credential or choose Native Salesforce Email.'
+                    '). Configure the Postmark named credential or choose Native Salesforce Email.'
             );
         }
+    }
+
+    private static List<PostmarkEmailService.PostmarkAttachment> toPostmarkAttachmentPayload(
+        List<Map<String, Object>> rawAttachments
+    ) {
+        List<PostmarkEmailService.PostmarkAttachment> out = new List<PostmarkEmailService.PostmarkAttachment>();
+        if (rawAttachments == null || rawAttachments.isEmpty()) {
+            return out;
+        }
+        for (Map<String, Object> row : rawAttachments) {
+            if (row == null) {
+                continue;
+            }
+            PostmarkEmailService.PostmarkAttachment att = new PostmarkEmailService.PostmarkAttachment();
+            att.Name = row.containsKey('Name') ? String.valueOf(row.get('Name')) : null;
+            att.Content = row.containsKey('Content') ? String.valueOf(row.get('Content')) : null;
+            att.ContentType = row.containsKey('ContentType') ? String.valueOf(row.get('ContentType')) : null;
+            if (String.isBlank(att.Name) || String.isBlank(att.Content)) {
+                continue;
+            }
+            out.add(att);
+        }
+        return out;
     }
 
     private static Boolean isPostmarkInfrastructureError(Exception ex) {
@@ -1918,6 +2666,27 @@ public with sharing class SugatiCommunicationHubController {
             return out;
         }
         Set<Id> selected = selectedDocIds == null ? new Set<Id>() : selectedDocIds;
+        Set<String> seen = new Set<String>();
+        for (Id parentId : parentIds) {
+            for (AttachmentDTO row : queryRecordAttachments(parentId, selected)) {
+                String key = row.attachmentRecordId;
+                if (seen.contains(key)) {
+                    continue;
+                }
+                seen.add(key);
+                out.add(row);
+            }
+        }
+        return out;
+    }
+
+    private static List<AttachmentDTO> queryRecordAttachments(Id parentId, Set<Id> selectedDocIds) {
+        List<AttachmentDTO> out = new List<AttachmentDTO>();
+        if (parentId == null) {
+            return out;
+        }
+        Set<Id> selected = selectedDocIds == null ? new Set<Id>() : selectedDocIds;
+        Set<String> seen = new Set<String>();
         for (ContentDocumentLink link : [
             SELECT
                 ContentDocumentId,
@@ -1926,15 +2695,42 @@ public with sharing class SugatiCommunicationHubController {
                 ContentDocument.ContentSize,
                 ContentDocument.CreatedDate
             FROM ContentDocumentLink
-            WHERE LinkedEntityId IN :parentIds
+            WHERE LinkedEntityId = :parentId
             ORDER BY ContentDocument.CreatedDate DESC
         ]) {
             if (link.ContentDocumentId == null) {
                 continue;
             }
-            AttachmentDTO dto = mapContentDocumentToAttachment(link.ContentDocument, selected.contains(link.ContentDocumentId));
+            String recordKey = String.valueOf(link.ContentDocumentId);
+            if (seen.contains(recordKey)) {
+                continue;
+            }
+            seen.add(recordKey);
+            AttachmentDTO dto = mapContentDocumentToAttachment(
+                link.ContentDocument,
+                selected.contains(link.ContentDocumentId)
+            );
             if (dto != null) {
                 out.add(dto);
+            }
+        }
+
+        if (Schema.sObjectType.Attachment.isAccessible()) {
+            for (Attachment att : [
+                SELECT Id, Name, Body, ContentType
+                FROM Attachment
+                WHERE ParentId = :parentId
+                ORDER BY CreatedDate DESC
+            ]) {
+                String recordKey = String.valueOf(att.Id);
+                if (seen.contains(recordKey)) {
+                    continue;
+                }
+                seen.add(recordKey);
+                AttachmentDTO dto = mapLegacyAttachmentToDto(att, selected.contains(att.Id));
+                if (dto != null) {
+                    out.add(dto);
+                }
             }
         }
         return out;
@@ -1970,18 +2766,57 @@ public with sharing class SugatiCommunicationHubController {
         return out;
     }
 
+    private static AttachmentDTO mapContentVersionToAttachment(ContentVersion latest, Boolean selected) {
+        if (latest == null || latest.ContentDocumentId == null) {
+            return null;
+        }
+        String fileName = resolveAttachmentFileName(latest);
+        AttachmentDTO dto = new AttachmentDTO();
+        dto.contentDocumentId = latest.ContentDocumentId;
+        dto.attachmentRecordId = String.valueOf(latest.ContentDocumentId);
+        dto.storageKind = 'ContentDocument';
+        dto.name = fileName;
+        dto.meta = formatAttachmentMeta(latest.VersionData == null ? 0 : latest.VersionData.size());
+        dto.fileType = inferAttachmentFileType(extractExtension(fileName));
+        dto.sizeBytes = latest.VersionData == null ? 0 : latest.VersionData.size();
+        dto.selected = selected == true;
+        dto.isPendingUpload = false;
+        dto.autoSuggested = false;
+        return dto;
+    }
+
     private static AttachmentDTO mapContentDocumentToAttachment(ContentDocument doc, Boolean selected) {
         if (doc == null) {
             return null;
         }
         AttachmentDTO dto = new AttachmentDTO();
         dto.contentDocumentId = doc.Id;
+        dto.attachmentRecordId = String.valueOf(doc.Id);
+        dto.storageKind = 'ContentDocument';
         dto.name = buildFileDisplayName(doc.Title, doc.FileExtension);
         dto.meta = formatAttachmentMeta(doc.ContentSize);
         dto.fileType = inferAttachmentFileType(doc.FileExtension);
         dto.sizeBytes = doc.ContentSize == null ? 0 : Integer.valueOf(doc.ContentSize);
         dto.selected = selected == true;
         dto.isPendingUpload = false;
+        dto.autoSuggested = false;
+        return dto;
+    }
+
+    private static AttachmentDTO mapLegacyAttachmentToDto(Attachment att, Boolean selected) {
+        if (att == null) {
+            return null;
+        }
+        AttachmentDTO dto = new AttachmentDTO();
+        dto.attachmentRecordId = String.valueOf(att.Id);
+        dto.storageKind = 'Attachment';
+        dto.name = String.isNotBlank(att.Name) ? att.Name : 'Attachment';
+        dto.meta = formatAttachmentMeta(att.Body == null ? 0 : att.Body.size());
+        dto.fileType = inferAttachmentFileType(extractExtension(dto.name));
+        dto.sizeBytes = att.Body == null ? 0 : att.Body.size();
+        dto.selected = selected == true;
+        dto.isPendingUpload = false;
+        dto.autoSuggested = false;
         return dto;
     }
 
@@ -2034,21 +2869,202 @@ public with sharing class SugatiCommunicationHubController {
 
     private static Set<Id> buildAttachmentDocumentIdSet(
         List<Id> existingDocumentIds,
+        List<String> attachmentRecordIds,
         List<String> newFileNames,
         List<String> newFileDataBase64,
         Id commLogId,
         Id opportunityId
     ) {
+        Set<Id> docIds = normalizeContentDocumentIds(existingDocumentIds);
+        docIds.addAll(extractContentDocumentIdsFromRecordIds(attachmentRecordIds));
+        docIds.addAll(createUploadedContentDocuments(newFileNames, newFileDataBase64, commLogId, opportunityId));
+        docIds.addAll(copyLegacyAttachmentsToContentDocuments(attachmentRecordIds, commLogId, opportunityId));
+        return docIds;
+    }
+
+    private static Set<Id> extractContentDocumentIdsFromRecordIds(List<String> attachmentRecordIds) {
         Set<Id> docIds = new Set<Id>();
-        if (existingDocumentIds != null) {
-            for (Id docId : existingDocumentIds) {
-                if (docId != null) {
-                    docIds.add(docId);
+        if (attachmentRecordIds == null || attachmentRecordIds.isEmpty()) {
+            return docIds;
+        }
+        AttachmentSendBundle bundle = buildSendBundle(
+            attachmentRecordIds
+        );
+        docIds.addAll(bundle.contentDocumentIds);
+        return docIds;
+    }
+
+    private static Set<Id> copyLegacyAttachmentsToContentDocuments(
+        List<String> attachmentRecordIds,
+        Id publishParentId,
+        Id opportunityId
+    ) {
+        Set<Id> createdDocIds = new Set<Id>();
+        if (attachmentRecordIds == null || attachmentRecordIds.isEmpty() || publishParentId == null) {
+            return createdDocIds;
+        }
+        AttachmentSendBundle bundle = buildSendBundle(
+            attachmentRecordIds
+        );
+        if (bundle.legacyAttachments == null || bundle.legacyAttachments.isEmpty()) {
+            return createdDocIds;
+        }
+        ContentFileService fileService = new ContentFileService();
+        Set<Id> additionalParents = new Set<Id>();
+        for (Attachment att : bundle.legacyAttachments) {
+            if (att == null || att.Body == null || att.Body.size() == 0) {
+                continue;
+            }
+            String fileName = String.isNotBlank(att.Name) ? att.Name : 'attachment.bin';
+            createdDocIds.addAll(
+                fileService.createFiles(
+                    new List<String>{ fileName },
+                    new List<String>{ EncodingUtil.base64Encode(att.Body) },
+                    publishParentId,
+                    additionalParents
+                )
+            );
+        }
+        return createdDocIds;
+    }
+
+    private static Set<Id> normalizeContentDocumentIds(List<Id> existingDocumentIds) {
+        Set<Id> docIds = new Set<Id>();
+        if (existingDocumentIds == null) {
+            return docIds;
+        }
+        for (Id docId : existingDocumentIds) {
+            if (docId == null) {
+                continue;
+            }
+            String key = String.valueOf(docId);
+            if (!key.startsWith('069')) {
+                continue;
+            }
+            docIds.add(docId);
+        }
+        return docIds;
+    }
+
+    private without sharing class ContentFileService {
+        public Set<Id> createFiles(
+            List<String> fileNames,
+            List<String> fileDataBase64,
+            Id opportunityId,
+            Set<Id> additionalParentIds
+        ) {
+            Set<Id> createdDocIds = new Set<Id>();
+            Integer count = fileNames == null ? 0 : fileNames.size();
+            if (count == 0) {
+                return createdDocIds;
+            }
+            List<ContentVersion> versions = new List<ContentVersion>();
+            for (Integer i = 0; i < count; i++) {
+                String fileName = listStringAt(fileNames, i);
+                String encoded = listStringAt(fileDataBase64, i);
+                if (String.isBlank(fileName) || String.isBlank(encoded)) {
+                    continue;
+                }
+                Blob body = decodeBase64File(encoded);
+                if (body == null || body.size() == 0) {
+                    continue;
+                }
+                if (body.size() > MAX_ATTACHMENT_BYTES) {
+                    throw new AuraHandledException('Attachment "' + fileName + '" exceeds the 4.5 MB limit.');
+                }
+                ContentVersion version = new ContentVersion();
+                version.Title = stripFileExtension(fileName);
+                version.PathOnClient = fileName;
+                version.VersionData = body;
+                if (opportunityId != null) {
+                    version.FirstPublishLocationId = opportunityId;
+                }
+                versions.add(version);
+            }
+            if (versions.isEmpty()) {
+                return createdDocIds;
+            }
+            insert versions;
+
+            Set<Id> versionIds = new Set<Id>();
+            for (ContentVersion version : versions) {
+                versionIds.add(version.Id);
+            }
+            for (ContentVersion inserted : [
+                SELECT Id, ContentDocumentId
+                FROM ContentVersion
+                WHERE Id IN :versionIds
+            ]) {
+                if (inserted.ContentDocumentId != null) {
+                    createdDocIds.add(inserted.ContentDocumentId);
                 }
             }
+
+            Set<Id> parents = new Set<Id>();
+            if (opportunityId != null) {
+                parents.add(opportunityId);
+            }
+            if (additionalParentIds != null) {
+                parents.addAll(additionalParentIds);
+            }
+            linkDocumentsToParents(createdDocIds, parents);
+            return createdDocIds;
         }
-        docIds.addAll(createUploadedContentDocuments(newFileNames, newFileDataBase64, commLogId, opportunityId));
-        return docIds;
+
+        public List<ContentVersion> loadLatestByDocumentIds(Set<Id> attachmentDocIds) {
+            List<ContentVersion> docuLinks = new List<ContentVersion>();
+            if (attachmentDocIds == null || attachmentDocIds.isEmpty()) {
+                return docuLinks;
+            }
+            for (ContentVersion cv : [
+                SELECT Id, VersionData, Title, PathOnClient, ContentDocumentId
+                FROM ContentVersion
+                WHERE ContentDocumentId IN :attachmentDocIds AND IsLatest = true
+            ]) {
+                docuLinks.add(cv);
+            }
+            return docuLinks;
+        }
+
+        public void linkDocumentsToParents(Set<Id> contentDocumentIds, Set<Id> parentIds) {
+            if (contentDocumentIds == null || contentDocumentIds.isEmpty() || parentIds == null || parentIds.isEmpty()) {
+                return;
+            }
+            Set<Id> parents = new Set<Id>();
+            for (Id parentId : parentIds) {
+                if (parentId != null) {
+                    parents.add(parentId);
+                }
+            }
+            if (parents.isEmpty()) {
+                return;
+            }
+            Map<String, ContentDocumentLink> dedupe = new Map<String, ContentDocumentLink>();
+            for (ContentDocumentLink existing : [
+                SELECT LinkedEntityId, ContentDocumentId
+                FROM ContentDocumentLink
+                WHERE LinkedEntityId IN :parents AND ContentDocumentId IN :contentDocumentIds
+            ]) {
+                dedupe.put(existing.LinkedEntityId + ':' + existing.ContentDocumentId, existing);
+            }
+            List<ContentDocumentLink> toInsert = new List<ContentDocumentLink>();
+            for (Id parentId : parents) {
+                for (Id docId : contentDocumentIds) {
+                    String key = parentId + ':' + docId;
+                    if (!dedupe.containsKey(key)) {
+                        ContentDocumentLink link = new ContentDocumentLink();
+                        link.LinkedEntityId = parentId;
+                        link.ContentDocumentId = docId;
+                        link.ShareType = 'V';
+                        link.Visibility = 'AllUsers';
+                        toInsert.add(link);
+                    }
+                }
+            }
+            if (!toInsert.isEmpty()) {
+                Database.insert(toInsert, false);
+            }
+        }
     }
 
     private static Set<Id> createUploadedContentDocuments(
@@ -2057,51 +3073,10 @@ public with sharing class SugatiCommunicationHubController {
         Id commLogId,
         Id opportunityId
     ) {
-        Set<Id> createdDocIds = new Set<Id>();
-        Integer count = fileNames == null ? 0 : fileNames.size();
-        if (count == 0) {
-            return createdDocIds;
+        if (commLogId == null) {
+            return new Set<Id>();
         }
-        List<ContentVersion> versions = new List<ContentVersion>();
-        for (Integer i = 0; i < count; i++) {
-            String fileName = listStringAt(fileNames, i);
-            String encoded = listStringAt(fileDataBase64, i);
-            if (String.isBlank(fileName) || String.isBlank(encoded)) {
-                continue;
-            }
-            Blob body = decodeBase64File(encoded);
-            if (body == null || body.size() == 0) {
-                continue;
-            }
-            if (body.size() > MAX_ATTACHMENT_BYTES) {
-                throw new AuraHandledException('Attachment "' + fileName + '" exceeds the 4.5 MB limit.');
-            }
-            ContentVersion version = new ContentVersion();
-            version.Title = stripFileExtension(fileName);
-            version.PathOnClient = fileName;
-            version.VersionData = body;
-            versions.add(version);
-        }
-        if (versions.isEmpty()) {
-            return createdDocIds;
-        }
-        insert versions;
-
-        Set<Id> versionIds = new Set<Id>();
-        for (ContentVersion version : versions) {
-            versionIds.add(version.Id);
-        }
-        for (ContentVersion inserted : [
-            SELECT Id, ContentDocumentId
-            FROM ContentVersion
-            WHERE Id IN :versionIds
-        ]) {
-            if (inserted.ContentDocumentId != null) {
-                createdDocIds.add(inserted.ContentDocumentId);
-            }
-        }
-        linkContentDocumentsToParents(createdDocIds, new Set<Id>{ commLogId, opportunityId });
-        return createdDocIds;
+        return new ContentFileService().createFiles(fileNames, fileDataBase64, commLogId, null);
     }
 
     private static Blob decodeBase64File(String encoded) {
@@ -2165,47 +3140,11 @@ public with sharing class SugatiCommunicationHubController {
                 toLink.add(docId);
             }
         }
-        linkContentDocumentsToParents(toLink, new Set<Id>{ commLogId });
+        new ContentFileService().linkDocumentsToParents(toLink, new Set<Id>{ commLogId });
     }
 
     private static void linkContentDocumentsToParents(Set<Id> contentDocumentIds, Set<Id> parentIds) {
-        if (contentDocumentIds == null || contentDocumentIds.isEmpty() || parentIds == null || parentIds.isEmpty()) {
-            return;
-        }
-        Set<Id> parents = new Set<Id>();
-        for (Id parentId : parentIds) {
-            if (parentId != null) {
-                parents.add(parentId);
-            }
-        }
-        if (parents.isEmpty()) {
-            return;
-        }
-        Map<String, ContentDocumentLink> dedupe = new Map<String, ContentDocumentLink>();
-        for (ContentDocumentLink existing : [
-            SELECT LinkedEntityId, ContentDocumentId
-            FROM ContentDocumentLink
-            WHERE LinkedEntityId IN :parents AND ContentDocumentId IN :contentDocumentIds
-        ]) {
-            dedupe.put(existing.LinkedEntityId + ':' + existing.ContentDocumentId, existing);
-        }
-        List<ContentDocumentLink> toInsert = new List<ContentDocumentLink>();
-        for (Id parentId : parents) {
-            for (Id docId : contentDocumentIds) {
-                String key = parentId + ':' + docId;
-                if (!dedupe.containsKey(key)) {
-                    ContentDocumentLink link = new ContentDocumentLink();
-                    link.LinkedEntityId = parentId;
-                    link.ContentDocumentId = docId;
-                    link.ShareType = 'V';
-                    link.Visibility = 'AllUsers';
-                    toInsert.add(link);
-                }
-            }
-        }
-        if (!toInsert.isEmpty()) {
-            insert toInsert;
-        }
+        new ContentFileService().linkDocumentsToParents(contentDocumentIds, parentIds);
     }
 
     private static void deleteContentDocumentLinksForParents(Set<Id> parentIds) {
@@ -2386,5 +3325,78 @@ public with sharing class SugatiCommunicationHubController {
         if (!hasTo) {
             throw new AuraHandledException('At least one To recipient is required.');
         }
+    }
+
+    private static String resolveFromAddressDisplay(Id orgWideEmailAddressId) {
+        if (orgWideEmailAddressId != null) {
+            List<OrgWideEmailAddress> rows = [
+                SELECT Address, DisplayName
+                FROM OrgWideEmailAddress
+                WHERE Id = :orgWideEmailAddressId
+                LIMIT 1
+            ];
+            if (!rows.isEmpty() && !String.isBlank(rows[0].Address)) {
+                return formatUserFromDisplay(rows[0].DisplayName, rows[0].Address);
+            }
+        }
+        return formatUserFromDisplay(UserInfo.getName(), UserInfo.getUserEmail());
+    }
+
+    private static String resolvePostmarkFromAddress(Id orgWideEmailAddressId) {
+        if (orgWideEmailAddressId != null) {
+            List<OrgWideEmailAddress> rows = [
+                SELECT Address, DisplayName
+                FROM OrgWideEmailAddress
+                WHERE Id = :orgWideEmailAddressId
+                LIMIT 1
+            ];
+            if (!rows.isEmpty() && !String.isBlank(rows[0].Address)) {
+                return formatPostmarkFrom(rows[0].DisplayName, rows[0].Address);
+            }
+        }
+        String userEmail = UserInfo.getUserEmail();
+        if (String.isBlank(userEmail)) {
+            throw new AuraHandledException(
+                'A From address is required. Select an org-wide email in the composer or ensure your user profile has an email address.'
+            );
+        }
+        return formatPostmarkFrom(UserInfo.getName(), userEmail);
+    }
+
+    private static String formatPostmarkFrom(String displayName, String email) {
+        String trimmedEmail = String.isNotBlank(email) ? email.trim() : '';
+        if (String.isBlank(trimmedEmail)) {
+            throw new AuraHandledException('The selected From address is invalid.');
+        }
+        String trimmedName = String.isNotBlank(displayName) ? displayName.trim() : '';
+        if (String.isNotBlank(trimmedName)) {
+            return trimmedName + ' <' + trimmedEmail + '>';
+        }
+        return trimmedEmail;
+    }
+
+    private static String resolveHistoryFromDisplay(String fromAddress, User sentBy) {
+        if (!String.isBlank(fromAddress)) {
+            return fromAddress.trim();
+        }
+        if (sentBy == null) {
+            return 'Unknown sender';
+        }
+        return formatUserFromDisplay(sentBy.Name, sentBy.Email);
+    }
+
+    private static String formatUserFromDisplay(String name, String email) {
+        String trimmedName = String.isNotBlank(name) ? name.trim() : '';
+        String trimmedEmail = String.isNotBlank(email) ? email.trim() : '';
+        if (String.isNotBlank(trimmedName) && String.isNotBlank(trimmedEmail)) {
+            return trimmedName + ' <' + trimmedEmail + '>';
+        }
+        if (String.isNotBlank(trimmedEmail)) {
+            return trimmedEmail;
+        }
+        if (String.isNotBlank(trimmedName)) {
+            return trimmedName;
+        }
+        return 'Unknown sender';
     }
 }

@@ -1,11 +1,15 @@
 import { LightningElement, api, wire } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getRecipients from '@salesforce/apex/SugatiCommunicationHubController.getRecipients';
+import getHubContext from '@salesforce/apex/SugatiCommunicationHubController.getHubContext';
 
 export default class SugatiCommunicationRecipientSelector extends LightningElement {
     _selectedIds = [];
     _selectedEmails = [];
+    _suggestedTabApplied = false;
     @api opportunityId;
+    @api displayMode = 'page';
+    @api targetLine = 'to';
 
     activeTab = 'travellers';
     statusFilter = 'all';
@@ -44,6 +48,7 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
             id: r.id,
             rowKey: r.id,
             contactId: r.contactId || null,
+            supplierId: r.supplierId || null,
             audience: r.audience || 'travellers',
             initials: r.initials || this.computeInitials(r.name),
             name: r.name,
@@ -53,7 +58,9 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
             status: r.status || 'Booked',
             statusKey: r.statusKey || 'booked',
             linkedToLabel: r.linkedToLabel || '',
-            avClass: r.roleKey === 'lead' ? 'av-gold' : 'av-blue',
+            supplierContactTypes: r.supplierContactTypes || [],
+            isAgencyLinked: !!r.isAgencyLinked,
+            avClass: r.roleKey === 'lead' ? 'av-gold' : r.roleKey === 'agent' ? 'av-agency' : 'av-blue',
             selected: Boolean(r.selected)
         }));
         this._travellers = mapped.filter((r) => (r.audience || 'travellers') === 'travellers');
@@ -61,6 +68,18 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
         this._contacts = mapped.filter((r) => r.audience === 'contacts');
         this._agents = mapped.filter((r) => r.audience === 'agents');
         this.applyPreselection();
+    }
+
+    @wire(getHubContext, { opportunityId: '$opportunityId' })
+    wiredRecipientContext({ data }) {
+        if (!data || this._suggestedTabApplied) {
+            return;
+        }
+        const tab = data.suggestedRecipientTab;
+        if (tab === 'agents' || tab === 'travellers' || tab === 'suppliers' || tab === 'contacts') {
+            this.activeTab = tab;
+            this._suggestedTabApplied = true;
+        }
     }
 
     get tabs() {
@@ -81,6 +100,36 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
             { id: 'waiting',   label: 'Waiting List', count: counts.waiting,   countClass: 'rec-stab-n waiting',   className: this.statusFilter === 'waiting'   ? 'rec-stab on' : 'rec-stab' },
             { id: 'cancelled', label: 'Cancelled',    count: counts.cancelled, countClass: 'rec-stab-n cancelled', className: this.statusFilter === 'cancelled' ? 'rec-stab on' : 'rec-stab' }
         ];
+    }
+
+    get rootClass() {
+        return this.displayMode === 'modal' ? 'rec-page rec-page-modal' : 'rec-page';
+    }
+
+    get showPageHeader() {
+        return this.displayMode !== 'modal';
+    }
+
+    get pageSubtitle() {
+        if (this.displayMode === 'modal') {
+            const line =
+                this.targetLine === 'cc' ? 'CC' : this.targetLine === 'bcc' ? 'BCC' : 'To';
+            return `Select travellers, suppliers, or contacts to add to ${line}.`;
+        }
+        return 'Filter by booking status, select by role, then pick individual recipients. Selected contacts are added to the To field in the composer.';
+    }
+
+    get applyButtonLabel() {
+        if (this.displayMode === 'modal') {
+            const line =
+                this.targetLine === 'cc' ? 'CC' : this.targetLine === 'bcc' ? 'BCC' : 'To';
+            return `Add to ${line} →`;
+        }
+        return 'Apply to Composer →';
+    }
+
+    get backButtonLabel() {
+        return this.displayMode === 'modal' ? 'Cancel' : '← Back';
     }
 
     get showTravellers() { return this.activeTab === 'travellers'; }
@@ -112,7 +161,7 @@ export default class SugatiCommunicationRecipientSelector extends LightningEleme
                 cbClass: r.selected ? 'rec-cb on' : 'rec-cb',
                 roleClass: `rec-role-badge ${r.roleKey}`,
                 statusClass: `rec-status-badge ${r.statusKey}`,
-                showLinkedTo: this.activeTab === 'contacts' && Boolean(r.linkedToLabel)
+                showLinkedTo: (this.activeTab === 'contacts' || this.activeTab === 'agents') && Boolean(r.linkedToLabel)
             }));
     }
 

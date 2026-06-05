@@ -29,6 +29,27 @@
                 <default>false</default>
                 <label>Opened</label>
             </value>
+            <value>
+                <fullName>Bounced</fullName>
+                <default>false</default>
+                <label>Bounced</label>
+            </value>
+            <value>
+                <fullName>Spam Complaint</fullName>
+                <default>false</default>
+                <label>Spam Complaint</label>
+            </value>
+            <value>
+                <fullName>Received</fullName>
+                <default>false</default>
+                <label>Received</label>
+            </value>
+            <value>
+                <fullName>Failed</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Failed</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

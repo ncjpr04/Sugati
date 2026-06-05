@@ -28,7 +28,7 @@
                 <div class="sb-div"></div>
                 <div class="sb-ey">Status</div>
                 <div class={deliveredOpenedClass} data-key="delivered_opened" onclick={handleStatusGroupClick}>
-                    <span class="status-ok">●</span> Delivered · Opened
+                    <span class="status-delivered">●</span> Delivered · <span class="status-opened">●</span> Opened
                 </div>
                 <div class={failedBouncedClass} data-key="failed_bounced" onclick={handleStatusGroupClick}>
                     <span class="status-err">●</span> Failed · Bounced
@@ -115,7 +115,7 @@
                                                             <div class="draft-warn">⚠ Draft — not yet sent</div>
                                                         </template>
                                                         <template lwc:else>
-                                                            <div><b>From</b>&nbsp; Sarah Mitchell &lt;sarah@sugati.com&gt;</div>
+                                                            <div><b>From</b>&nbsp; {item.fromDisplay}</div>
                                                             <div><b>To</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {item.who}</div>
                                                             <div><b>Subject</b>&nbsp; {item.subject}</div>
                                                         </template>
@@ -136,9 +136,6 @@
                                                     <p>{item.emailBody}</p>
                                                     <template lwc:if={item.isDraft}>
                                                         <p class="draft-note">[ Draft — continue editing… ]</p>
-                                                    </template>
-                                                    <template lwc:else>
-                                                        <a class="tl-er-cta" href="#" onclick={stopProp}>{item.emailCta}</a>
                                                     </template>
                                                 </div>
                                             </div>
@@ -205,6 +202,21 @@
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Sent by</span><span class="tl-dm-val">{item.sentBy}</span></div>
                                                 <div class="tl-dm-row"><span class="tl-dm-label">{item.recipientLabel}</span><span class="tl-dm-val">{item.recipients}</span></div>
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Delivery</span><span class="tl-dm-val">{item.delivery}</span></div>
+                                                <template lwc:if={item.hasTracking}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">Tracking</span><span class="tl-dm-val">{item.trackingSummary}</span></div>
+                                                    <template lwc:if={item.openCountLabel}>
+                                                        <div class="tl-dm-row"><span class="tl-dm-label">Opens</span><span class="tl-dm-val">{item.openCountLabel}</span></div>
+                                                    </template>
+                                                    <template lwc:if={item.clickCountLabel}>
+                                                        <div class="tl-dm-row"><span class="tl-dm-label">Clicks</span><span class="tl-dm-val">{item.clickCountLabel}</span></div>
+                                                    </template>
+                                                    <template lwc:if={item.bounceLabel}>
+                                                        <div class="tl-dm-row"><span class="tl-dm-label">Bounce</span><span class="tl-dm-val">{item.bounceLabel}</span></div>
+                                                    </template>
+                                                    <template lwc:if={item.postmarkMessageId}>
+                                                        <div class="tl-dm-row"><span class="tl-dm-label">Message ID</span><span class="tl-dm-val tl-dm-mono">{item.postmarkMessageId}</span></div>
+                                                    </template>
+                                                </template>
                                                 <template lwc:if={item.template}>
                                                     <div class="tl-dm-row"><span class="tl-dm-label">Template</span><span class="tl-dm-val">{item.template}</span></div>
                                                 </template>

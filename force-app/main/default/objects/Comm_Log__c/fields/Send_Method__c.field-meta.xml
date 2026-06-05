@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Send_Method__c</fullName>
+    <label>Send Method</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Native Salesforce</fullName>
+                <default>false</default>
+                <label>Native Salesforce</label>
+            </value>
+            <value>
+                <fullName>Postmark</fullName>
+                <default>false</default>
+                <label>Postmark</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

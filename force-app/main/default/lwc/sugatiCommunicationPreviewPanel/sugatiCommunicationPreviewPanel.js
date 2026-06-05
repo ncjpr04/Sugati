@@ -64,9 +64,10 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
             });
         }
         this._travellerContactByEmail = map;
-        if (this._isConnected) {
-            this.syncPreviewAsFromPayload();
-        }
+        // Preview-as section disabled for now.
+        // if (this._isConnected) {
+        //     this.syncPreviewAsFromPayload();
+        // }
     }
 
     @api
@@ -81,7 +82,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         }
         this.fromLabel = this._previewPayload?.fromLabel || '';
         this.recipientLabel = (this._previewPayload?.recipients || []).map((r) => r.name || r.email).join(', ');
-        this.syncPreviewAsFromPayload();
+        // Preview-as section disabled for now.
+        // this.syncPreviewAsFromPayload();
         if (this._isConnected) {
             this.loadPreview();
         }
@@ -98,7 +100,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         }
         this.fromLabel = this._previewPayload?.fromLabel || '';
         this.recipientLabel = (this._previewPayload?.recipients || []).map((r) => r.name || r.email).join(', ');
-        this.syncPreviewAsFromPayload();
+        // Preview-as section disabled for now.
+        // this.syncPreviewAsFromPayload();
         this.initializePreview();
     }
 
@@ -231,25 +234,19 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     }
 
     get previewAsOptions() {
-        const selected = this.previewAsContactId;
-        return this.buildPreviewAsPersonas().map((person) => ({
-            key: person.contactId,
-            contactId: person.contactId,
-            name: person.name,
-            className: person.contactId === selected ? 'pp-opt on' : 'pp-opt'
-        }));
+        return []; // Preview-as section disabled for now.
     }
 
     get hasPreviewAsOptions() {
-        return this.previewAsOptions.length > 0;
+        return false; // Preview-as section disabled for now.
     }
 
     get showPreviewAsEmpty() {
-        return !this.hasPreviewAsOptions;
+        return false; // Preview-as section disabled for now.
     }
 
     get showPreviewAsHint() {
-        return Boolean(this.previewAsLabel);
+        return false; // Preview-as section disabled for now.
     }
 
     get sendBtnClass() {
@@ -259,17 +256,11 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     }
 
     get sendButtonLabel() {
-        return this.scheduleMode === 'later' ? 'Schedule Send' : 'Send Now';
+        return 'Send Now';
     }
 
     get sendButtonDisabled() {
-        if (this.isPreviewLoading) {
-            return true;
-        }
-        if (this.scheduleMode === 'later') {
-            return !this.scheduledAt;
-        }
-        return false;
+        return this.isPreviewLoading;
     }
 
     handleChannelTab(event) {
@@ -282,10 +273,16 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
 
     handleDeliveryPostmark() {
         this.deliveryMode = 'postmark';
+        if (this._previewPayload) {
+            this._previewPayload = { ...this._previewPayload, deliveryMode: 'postmark' };
+        }
     }
 
     handleDeliveryNative() {
         this.deliveryMode = 'native';
+        if (this._previewPayload) {
+            this._previewPayload = { ...this._previewPayload, deliveryMode: 'native' };
+        }
     }
 
     handleScheduleNow() {
@@ -309,22 +306,41 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         this.previewAsContactId = contactId;
         const active = this.buildPreviewAsPersonas().find((p) => p.contactId === contactId);
         this.previewAsLabel = active?.name || '';
-        this.loadPreview();
     }
 
     handleBack() {
         this.dispatchEvent(new CustomEvent('back', { detail: { channel: this.previewChannel } }));
     }
 
-    buildDraftAttachmentArraysFromPayload() {
-        const attachments = this._previewPayload?.attachments || [];
+    buildDraftAttachmentArraysFromPayload(payload = null) {
+        const source = payload || this._previewPayload || {};
+        const hasTopLevelArrays =
+            (source.attachmentContentDocumentIds || []).length > 0 ||
+            (source.attachmentRecordIds || []).length > 0 ||
+            (source.newAttachmentFileNames || []).length > 0;
+        if (hasTopLevelArrays) {
+            return {
+                attachmentContentDocumentIds: [...(source.attachmentContentDocumentIds || [])],
+                attachmentRecordIds: [...(source.attachmentRecordIds || [])],
+                newAttachmentFileNames: [...(source.newAttachmentFileNames || [])],
+                newAttachmentFileData: [...(source.newAttachmentFileData || [])]
+            };
+        }
+        const attachments = source.attachments || [];
         const selected = attachments.filter((row) => row.checked !== false);
         return {
             attachmentContentDocumentIds: selected
                 .filter((row) => row.contentDocumentId)
                 .map((row) => row.contentDocumentId),
-            newAttachmentFileNames: selected.filter((row) => row.pending && row.fileData).map((row) => row.name),
-            newAttachmentFileData: selected.filter((row) => row.pending && row.fileData).map((row) => row.fileData)
+            attachmentRecordIds: selected
+                .map((row) => row.attachmentRecordId || row.contentDocumentId || row.id)
+                .filter(Boolean),
+            newAttachmentFileNames: selected
+                .filter((row) => row.pending && (row.fileData || row.base64Data))
+                .map((row) => row.name),
+            newAttachmentFileData: selected
+                .filter((row) => row.pending && (row.fileData || row.base64Data))
+                .map((row) => row.fileData || row.base64Data)
         };
     }
 
@@ -380,9 +396,21 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     }
 
     buildToRecipientsJson(payload) {
+        return this.buildRecipientsJson(payload?.recipients);
+    }
+
+    buildCcRecipientsJson(payload) {
+        return this.buildRecipientsJson(payload?.ccRecipients);
+    }
+
+    buildBccRecipientsJson(payload) {
+        return this.buildRecipientsJson(payload?.bccRecipients);
+    }
+
+    buildRecipientsJson(chips) {
         const isSalesforceId = (value) => value && /^[a-zA-Z0-9]{15,18}$/.test(value);
         const isContactId = (value) => isSalesforceId(value) && value.substring(0, 3) === '003';
-        const rows = (payload?.recipients || [])
+        const rows = (chips || [])
             .map((chip) => {
                 const email = (chip?.email || '').trim();
                 if (!email) {
@@ -402,7 +430,13 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                 if (chip.id && isSalesforceId(chip.id) && !isContactId(chip.id)) {
                     groupMemberId = chip.id;
                 }
-                return { email, contactId, groupMemberId };
+                return {
+                    email,
+                    contactId,
+                    groupMemberId,
+                    name: chip.name || chip.email || email,
+                    role: chip.role || chip.audience || 'Traveller'
+                };
             })
             .filter(Boolean);
         return JSON.stringify(rows);
@@ -462,16 +496,18 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         }
         this.isSavingDraft = true;
         try {
+            const payload = this.resolveSendPayload();
             await saveDraftDirect({
-                commLogId: this._previewPayload?.editingCommLogId || null,
+                commLogId: payload?.editingCommLogId || this._previewPayload?.editingCommLogId || null,
                 opportunityId,
-                templateId: this._previewPayload?.templateId || null,
+                templateId: payload?.templateId || this._previewPayload?.templateId || null,
                 ...this.buildDraftRecipientArraysFromPayload(),
-                ...this.buildDraftAttachmentArraysFromPayload(),
-                subjectTemplate: this._previewPayload?.subjectTemplate || this.subject || '',
-                bodyTemplate: this._previewPayload?.bodyTemplate || this.resolvedBody || '',
+                ...this.buildDraftAttachmentArraysFromPayload(payload),
+                subjectTemplate: payload?.subjectTemplate || this._previewPayload?.subjectTemplate || this.subject || '',
+                bodyTemplate: payload?.bodyTemplate || this._previewPayload?.bodyTemplate || this.resolvedBody || '',
                 deliveryMode: this.deliveryMode,
-                channel: 'Email'
+                channel: 'Email',
+                orgWideEmailAddressId: this._previewPayload?.orgWideEmailAddressId || null
             });
             this.dispatchEvent(
                 new CustomEvent('draftsaved', {
@@ -532,8 +568,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         this.sendSubtitle = '';
         this.sendSucceeded = false;
         try {
-            const attachmentPayload = this.buildDraftAttachmentArraysFromPayload();
             const payload = this.resolveSendPayload();
+            const attachmentPayload = this.buildDraftAttachmentArraysFromPayload(payload);
             const opportunityId = this.resolveOpportunityId();
             if (!opportunityId) {
                 throw new Error(
@@ -546,7 +582,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
             if (!toEmails.length) {
                 throw new Error('At least one To recipient with an email address is required.');
             }
-            const deliveryMode = this.deliveryMode === 'postmark' ? 'postmark' : 'native';
+            const deliveryMode =
+                (this.deliveryMode || payload.deliveryMode) === 'postmark' ? 'postmark' : 'native';
             const resolvedSubject = (this.subject || payload.subjectTemplate || payload.subject || '').trim();
             const resolvedBodyHtml = (this.resolvedBody || payload.bodyTemplate || '').trim();
             if (!resolvedSubject) {
@@ -572,6 +609,9 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                 relatedRecordId,
                 resolvedSubject,
                 resolvedBodyHtml,
+                attachmentContentDocumentIds: attachmentPayload.attachmentContentDocumentIds,
+                newAttachmentFileNames: attachmentPayload.newAttachmentFileNames,
+                newAttachmentFileData: attachmentPayload.newAttachmentFileData,
                 request: {
                     opportunityId,
                     templateId: payload.sugatiEmailTemplateConfigId || payload.templateId || null,
@@ -582,6 +622,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                     ccEmails,
                     bccEmails,
                     toRecipientsJson: this.buildToRecipientsJson(payload),
+                    ccRecipientsJson: this.buildCcRecipientsJson(payload),
+                    bccRecipientsJson: this.buildBccRecipientsJson(payload),
                     subjectTemplate: resolvedSubject,
                     bodyTemplate: resolvedBodyHtml,
                     resolvedSubject,
@@ -589,6 +631,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                     deliveryMode,
                     channel: this.previewChannel === 'email' ? 'Email' : this.previewChannel,
                     attachmentContentDocumentIds: attachmentPayload.attachmentContentDocumentIds,
+                    attachmentRecordIds: attachmentPayload.attachmentRecordIds,
                     newAttachmentFileNames: attachmentPayload.newAttachmentFileNames,
                     newAttachmentFileData: attachmentPayload.newAttachmentFileData
                 }
@@ -645,8 +688,24 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         return null;
     }
 
+    applyComposerPreviewContent() {
+        const payload = this._previewPayload || {};
+        const subject = (payload.subjectTemplate || payload.subject || '').trim();
+        const body = (payload.bodyTemplate || '').trim();
+        if (!subject && !body) {
+            return false;
+        }
+        this.subject = subject;
+        this.resolvedBody = body;
+        this._pendingBodyHtml = body;
+        return Boolean(subject && body);
+    }
+
     async loadPreview() {
         if (this.previewChannel !== 'email') {
+            return;
+        }
+        if (this.applyComposerPreviewContent()) {
             return;
         }
         let opportunityId = this.resolveOpportunityId();
@@ -676,7 +735,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                 configId,
                 relatedRecordId,
                 clientGroupId: null,
-                previewAsContactId: this.previewAsContactId || null
+                previewAsContactId: null
             });
             this.subject = loaded?.subject || payload.subjectTemplate || payload.subject || '';
             this.resolvedBody = loaded?.bodyHtml || '';
