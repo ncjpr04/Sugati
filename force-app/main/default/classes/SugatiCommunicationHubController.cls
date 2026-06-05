@@ -14,7 +14,6 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Integer whatsAppCount;
         @AuraEnabled public Integer inAppCount;
         @AuraEnabled public Boolean isAgencyBooking;
-        @AuraEnabled public String documentCommunication;
         @AuraEnabled public String bookingChannelLabel;
         @AuraEnabled public String suggestedRecipientTab;
     }
@@ -35,17 +34,6 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String linkedToLabel;
         @AuraEnabled public List<String> supplierContactTypes;
         @AuraEnabled public Boolean isAgencyLinked;
-    }
-
-    public class TemplateDTO {
-        @AuraEnabled public Id id;
-        @AuraEnabled public String name;
-        @AuraEnabled public String subject;
-        @AuraEnabled public String body;
-        @AuraEnabled public String stage;
-        @AuraEnabled public String type;
-        @AuraEnabled public String channel;
-        @AuraEnabled public String meta;
     }
 
     public class HistoryItemDTO {
@@ -69,8 +57,6 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Integer logOpenCount;
         @AuraEnabled public Integer logClickCount;
         @AuraEnabled public Datetime deliveredAt;
-        @AuraEnabled public Datetime firstOpenedAt;
-        @AuraEnabled public Datetime lastOpenedAt;
         @AuraEnabled public Datetime bouncedAt;
         @AuraEnabled public String bounceType;
         @AuraEnabled public String bounceDescription;
@@ -93,26 +79,8 @@ public with sharing class SugatiCommunicationHubController {
 
     public class AttachmentSendBundle {
         public Set<Id> contentDocumentIds = new Set<Id>();
-        public List<Attachment> legacyAttachments = new List<Attachment>();
+        public List<Attachment> attachmentRecords = new List<Attachment>();
         public List<ContentVersion> contentVersions = new List<ContentVersion>();
-    }
-
-    public class PreviewRequest {
-        @AuraEnabled public Id opportunityId;
-        @AuraEnabled public Id templateId;
-        @AuraEnabled public Id sugatiEmailTemplateConfigId;
-        @AuraEnabled public Id relatedRecordId;
-        @AuraEnabled public List<Id> recipientIds;
-        @AuraEnabled public List<String> recipientEmails;
-        @AuraEnabled public List<String> recipientNames;
-        @AuraEnabled public String subjectTemplate;
-        @AuraEnabled public String bodyTemplate;
-    }
-
-    public class PreviewResponse {
-        @AuraEnabled public String subject;
-        @AuraEnabled public String bodyHtml;
-        @AuraEnabled public List<RecipientDTO> recipients;
     }
 
     public class SendRequest {
@@ -166,11 +134,6 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String deliveryMode;
         @AuraEnabled public List<DraftRecipientInput> recipients;
         @AuraEnabled public List<AttachmentDTO> attachments;
-    }
-
-    @AuraEnabled(cacheable=true)
-    public static List<AttachmentDTO> getOpportunityAttachments(Id opportunityId) {
-        return getRecordAttachments(opportunityId, opportunityId);
     }
 
     @AuraEnabled(cacheable=true)
@@ -236,50 +199,6 @@ public with sharing class SugatiCommunicationHubController {
             // fall through to generic label
         }
         return 'Related Record';
-    }
-
-    @AuraEnabled
-    public static AttachmentDTO uploadOpportunityFile(Id opportunityId, String fileName, String fileDataBase64) {
-        return uploadRecordFile(opportunityId, opportunityId, fileName, fileDataBase64);
-    }
-
-    @AuraEnabled
-    public static AttachmentDTO uploadRecordFile(
-        Id parentRecordId,
-        Id opportunityId,
-        String fileName,
-        String fileDataBase64
-    ) {
-        Id publishParentId = parentRecordId != null ? parentRecordId : opportunityId;
-        if (publishParentId == null) {
-            throw new AuraHandledException('A related record or Opportunity is required to upload a file.');
-        }
-        if (String.isBlank(fileName)) {
-            throw new AuraHandledException('File name is required.');
-        }
-        Set<Id> additionalParents = new Set<Id>();
-        if (opportunityId != null && opportunityId != publishParentId) {
-            additionalParents.add(opportunityId);
-        }
-        ContentFileService fileService = new ContentFileService();
-        Set<Id> docIds = fileService.createFiles(
-            new List<String>{ fileName },
-            new List<String>{ fileDataBase64 },
-            publishParentId,
-            additionalParents
-        );
-        if (docIds.isEmpty()) {
-            throw new AuraHandledException('Unable to upload file to the selected record.');
-        }
-        Id docId = new List<Id>(docIds)[0];
-        List<ContentVersion> versions = fileService.loadLatestByDocumentIds(new Set<Id>{ docId });
-        if (versions.isEmpty()) {
-            throw new AuraHandledException('Uploaded file could not be read back from Salesforce Files.');
-        }
-        ContentVersion latest = versions[0];
-        AttachmentDTO dto = mapContentVersionToAttachment(latest, true);
-        dto.isPendingUpload = false;
-        return dto;
     }
 
     @AuraEnabled(cacheable=true)
@@ -783,33 +702,6 @@ public with sharing class SugatiCommunicationHubController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<TemplateDTO> getTemplates(Id opportunityId, String stage, String recipientType, String channel) {
-        List<TemplateDTO> out = new List<TemplateDTO>();
-        SugatiCommunicationHubEmailService.LegacyTemplateCatalogDTO catalog = SugatiCommunicationHubEmailService.getSendEmailTemplateCatalog(
-            opportunityId
-        );
-        if (catalog == null || catalog.templates == null) {
-            return out;
-        }
-        for (SugatiCommunicationHubEmailService.LegacyTemplateRowDTO row : catalog.templates) {
-            if (!String.isBlank(stage) && !stageMatches(row.templateStage, stage)) {
-                continue;
-            }
-            TemplateDTO dto = new TemplateDTO();
-            dto.id = row.id;
-            dto.name = row.name;
-            dto.subject = '';
-            dto.body = '';
-            dto.stage = String.isNotBlank(row.templateStage) ? row.templateStage : '';
-            dto.type = row.relatedToRecord;
-            dto.channel = String.isBlank(channel) ? EMAIL_CHANNEL : channel;
-            dto.meta = row.meta;
-            out.add(dto);
-        }
-        return out;
-    }
-
-    @AuraEnabled(cacheable=true)
     public static List<SugatiCommunicationHubEmailService.EmailAddressOptionDTO> getSendEmailBccDefaults() {
         return SugatiCommunicationHubEmailService.getSendEmailBccDefaults();
     }
@@ -820,17 +712,17 @@ public with sharing class SugatiCommunicationHubController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static SugatiCommunicationHubEmailService.LegacyTemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
+    public static SugatiCommunicationHubEmailService.TemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
         return SugatiCommunicationHubEmailService.getSendEmailTemplateCatalog(opportunityId);
     }
 
     @AuraEnabled
-    public static SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
+    public static SugatiCommunicationHubEmailService.EmailTemplateLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
         return SugatiCommunicationHubEmailService.loadDefaultSendEmailTemplate(opportunityId);
     }
 
     @AuraEnabled
-    public static SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loadSendEmailTemplate(
+    public static SugatiCommunicationHubEmailService.EmailTemplateLoadDTO loadSendEmailTemplate(
         Id opportunityId,
         Id configId,
         Id relatedRecordId,
@@ -970,8 +862,6 @@ public with sharing class SugatiCommunicationHubController {
             dto.logOpenCount = logOpenCount;
             dto.logClickCount = logClickCount;
             dto.deliveredAt = row.Delivered_At__c;
-            dto.firstOpenedAt = row.First_Opened_At__c;
-            dto.lastOpenedAt = row.Last_Opened_At__c;
             dto.bouncedAt = row.Bounced_At__c;
             dto.bounceType = row.Bounce_Type__c;
             dto.bounceDescription = row.Bounce_Description__c;
@@ -1181,61 +1071,6 @@ public with sharing class SugatiCommunicationHubController {
             logIds.add(rec.Comm_Log__c);
         }
         return logIds;
-    }
-
-    @AuraEnabled
-    public static PreviewResponse previewMessage(PreviewRequest request) {
-        validatePreviewRequest(request);
-        PreviewResponse response = new PreviewResponse();
-        response.recipients = recipientsByInputs(request.recipientIds, request.recipientEmails, request.recipientNames);
-
-        String composedSubject = blankSafe(request.subjectTemplate);
-        String composedBody = blankSafe(request.bodyTemplate);
-        if (String.isNotBlank(composedSubject) && String.isNotBlank(composedBody)) {
-            response.subject = composedSubject;
-            response.bodyHtml = composedBody;
-            return response;
-        }
-
-        Id configId = request.sugatiEmailTemplateConfigId != null
-            ? request.sugatiEmailTemplateConfigId
-            : request.templateId;
-        Id relatedId = request.relatedRecordId != null ? request.relatedRecordId : request.opportunityId;
-        SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loaded = SugatiCommunicationHubEmailService.loadSendEmailTemplate(
-            request.opportunityId,
-            configId,
-            relatedId,
-            null,
-            null
-        );
-        response.subject = blankSafe(loaded.subject);
-        response.bodyHtml = blankSafe(loaded.bodyHtml);
-        return response;
-    }
-
-    @AuraEnabled
-    public static PreviewResponse previewMessageDirect(
-        Id opportunityId,
-        Id templateId,
-        Id sugatiEmailTemplateConfigId,
-        Id relatedRecordId,
-        List<Id> recipientIds,
-        List<String> recipientEmails,
-        List<String> recipientNames,
-        String subjectTemplate,
-        String bodyTemplate
-    ) {
-        PreviewRequest request = new PreviewRequest();
-        request.opportunityId = opportunityId;
-        request.templateId = templateId;
-        request.sugatiEmailTemplateConfigId = sugatiEmailTemplateConfigId;
-        request.relatedRecordId = relatedRecordId;
-        request.recipientIds = recipientIds == null ? new List<Id>() : recipientIds;
-        request.recipientEmails = recipientEmails == null ? new List<String>() : recipientEmails;
-        request.recipientNames = recipientNames == null ? new List<String>() : recipientNames;
-        request.subjectTemplate = subjectTemplate;
-        request.bodyTemplate = bodyTemplate;
-        return previewMessage(request);
     }
 
     @AuraEnabled
@@ -1820,26 +1655,6 @@ public with sharing class SugatiCommunicationHubController {
         return rec.Email_Address__c;
     }
 
-    private class PreviewRequestBuilder {
-        private SendRequest source;
-        PreviewRequestBuilder(SendRequest req) {
-            source = req;
-        }
-        PreviewRequest build() {
-            PreviewRequest req = new PreviewRequest();
-            req.opportunityId = source.opportunityId;
-            req.templateId = source.templateId;
-            req.sugatiEmailTemplateConfigId = source.sugatiEmailTemplateConfigId;
-            req.relatedRecordId = source.relatedRecordId;
-            req.recipientIds = source.recipientIds;
-            req.recipientEmails = source.recipientEmails;
-            req.recipientNames = source.recipientNames;
-            req.subjectTemplate = source.subjectTemplate;
-            req.bodyTemplate = source.bodyTemplate;
-            return req;
-        }
-    }
-
     private static List<Comm_Recipient__c> buildCommRecipientsFromSendRequest(Id commLogId, SendRequest request) {
         List<Comm_Recipient__c> rows = new List<Comm_Recipient__c>();
         rows.addAll(buildCommRecipientRowsFromJson(commLogId, request.toRecipientsJson, 'TO'));
@@ -2248,7 +2063,7 @@ public with sharing class SugatiCommunicationHubController {
             return false;
         }
         return !sendBundle.contentDocumentIds.isEmpty() ||
-            (sendBundle.legacyAttachments != null && !sendBundle.legacyAttachments.isEmpty()) ||
+            (sendBundle.attachmentRecords != null && !sendBundle.attachmentRecords.isEmpty()) ||
             (sendBundle.contentVersions != null && !sendBundle.contentVersions.isEmpty());
     }
 
@@ -2258,7 +2073,7 @@ public with sharing class SugatiCommunicationHubController {
             return bundle;
         }
         Set<Id> docIds = new Set<Id>();
-        Set<Id> legacyIds = new Set<Id>();
+        Set<Id> attachmentObjectIds = new Set<Id>();
         for (String rawId : attachmentRecordIds) {
             if (String.isBlank(rawId)) {
                 continue;
@@ -2270,18 +2085,18 @@ public with sharing class SugatiCommunicationHubController {
             if (key.startsWith('069')) {
                 docIds.add((Id) key);
             } else if (key.startsWith('00P')) {
-                legacyIds.add((Id) key);
+                attachmentObjectIds.add((Id) key);
             }
         }
         if (!docIds.isEmpty()) {
             bundle.contentDocumentIds.addAll(docIds);
             bundle.contentVersions = loadContentVersionsForSend(docIds);
         }
-        if (!legacyIds.isEmpty() && Schema.sObjectType.Attachment.isAccessible()) {
-            bundle.legacyAttachments = [
+        if (!attachmentObjectIds.isEmpty() && Schema.sObjectType.Attachment.isAccessible()) {
+            bundle.attachmentRecords = [
                 SELECT Id, Name, Body, ContentType
                 FROM Attachment
-                WHERE Id IN :legacyIds
+                WHERE Id IN :attachmentObjectIds
             ];
         }
         return bundle;
@@ -2303,8 +2118,8 @@ public with sharing class SugatiCommunicationHubController {
                 out.add(efa);
             }
         }
-        if (sendBundle.legacyAttachments != null) {
-            for (Attachment att : sendBundle.legacyAttachments) {
+        if (sendBundle.attachmentRecords != null) {
+            for (Attachment att : sendBundle.attachmentRecords) {
                 if (att == null || att.Body == null || att.Body.size() == 0) {
                     continue;
                 }
@@ -2665,15 +2480,6 @@ public with sharing class SugatiCommunicationHubController {
         return out;
     }
 
-    private static Boolean isPostmarkInfrastructureError(Exception ex) {
-        String message = toUserFacingExceptionMessage(ex).toLowerCase();
-        return message.contains('postmark') ||
-            message.contains('named credential') ||
-            message.contains('callout') ||
-            message.contains('unauthorized endpoint') ||
-            message.contains('could not find');
-    }
-
     private static String toUserFacingExceptionMessage(Exception ex) {
         if (ex == null) {
             return 'Unknown error';
@@ -2682,94 +2488,6 @@ public with sharing class SugatiCommunicationHubController {
             return ex.getMessage();
         }
         return String.isNotBlank(ex.getMessage()) ? ex.getMessage() : ex.getTypeName();
-    }
-
-    private static List<RecipientDTO> recipientsByInputs(List<Id> ids, List<String> emails, List<String> names) {
-        List<RecipientDTO> out = new List<RecipientDTO>();
-        Map<Id, Contact> contactsById = new Map<Id, Contact>();
-        if (ids != null && !ids.isEmpty()) {
-            contactsById = new Map<Id, Contact>([
-                SELECT Id, Name, Email
-                FROM Contact
-                WHERE Id IN :ids
-            ]);
-            for (Id idValue : ids) {
-                if (!contactsById.containsKey(idValue)) {
-                    continue;
-                }
-                Contact c = contactsById.get(idValue);
-                RecipientDTO dto = new RecipientDTO();
-                dto.id = c.Id;
-                dto.name = c.Name;
-                dto.email = c.Email;
-                dto.initials = buildInitials(c.Name);
-                dto.role = 'Traveller';
-                dto.roleKey = 'traveller';
-                dto.status = 'Booked';
-                dto.statusKey = 'booked';
-                dto.selected = true;
-                dto.audience = 'travellers';
-                out.add(dto);
-            }
-        }
-
-        Set<String> existingEmails = new Set<String>();
-        for (RecipientDTO dto : out) {
-            if (!String.isBlank(dto.email)) {
-                existingEmails.add(dto.email.toLowerCase());
-            }
-        }
-
-        if (emails != null) {
-            for (Integer i = 0; i < emails.size(); i++) {
-                String email = emails[i];
-                if (String.isBlank(email)) {
-                    continue;
-                }
-                String normalized = email.toLowerCase();
-                if (existingEmails.contains(normalized)) {
-                    continue;
-                }
-                RecipientDTO dto = new RecipientDTO();
-                dto.id = null;
-                dto.email = email;
-                dto.name = (names != null && i < names.size()) ? names[i] : email;
-                dto.initials = buildInitials(dto.name);
-                dto.role = 'External';
-                dto.roleKey = 'traveller';
-                dto.status = 'Booked';
-                dto.statusKey = 'booked';
-                dto.selected = true;
-                dto.audience = 'travellers';
-                out.add(dto);
-                existingEmails.add(normalized);
-            }
-        }
-        return out;
-    }
-
-    private static String buildTemplateActiveFilter(Map<String, Schema.SObjectField> fieldsMap) {
-        if (fieldsMap.containsKey('Is_Active__c')) {
-            return ' AND Is_Active__c = true';
-        }
-        if (fieldsMap.containsKey('Template_Status__c')) {
-            return ' AND Template_Status__c = \'Active\'';
-        }
-        return '';
-    }
-
-    private static String blankToDash(String value) {
-        return String.isBlank(value) ? '-' : value;
-    }
-
-    private static Boolean stageMatches(String templateStage, String filterStage) {
-        if (String.isBlank(filterStage)) {
-            return true;
-        }
-        if (String.isBlank(templateStage)) {
-            return true;
-        }
-        return templateStage.trim().equalsIgnoreCase(filterStage.trim());
     }
 
     private static String blankSafe(String value) {
@@ -2886,7 +2604,7 @@ public with sharing class SugatiCommunicationHubController {
                     continue;
                 }
                 seen.add(recordKey);
-                AttachmentDTO dto = mapLegacyAttachmentToDto(att, selected.contains(att.Id));
+                AttachmentDTO dto = mapAttachmentRecordToDto(att, selected.contains(att.Id));
                 if (dto != null) {
                     out.add(dto);
                 }
@@ -2962,7 +2680,7 @@ public with sharing class SugatiCommunicationHubController {
         return dto;
     }
 
-    private static AttachmentDTO mapLegacyAttachmentToDto(Attachment att, Boolean selected) {
+    private static AttachmentDTO mapAttachmentRecordToDto(Attachment att, Boolean selected) {
         if (att == null) {
             return null;
         }
@@ -3037,7 +2755,7 @@ public with sharing class SugatiCommunicationHubController {
         Set<Id> docIds = normalizeContentDocumentIds(existingDocumentIds);
         docIds.addAll(extractContentDocumentIdsFromRecordIds(attachmentRecordIds));
         docIds.addAll(createUploadedContentDocuments(newFileNames, newFileDataBase64, commLogId, opportunityId));
-        docIds.addAll(copyLegacyAttachmentsToContentDocuments(attachmentRecordIds, commLogId, opportunityId));
+        docIds.addAll(copyAttachmentRecordsToContentDocuments(attachmentRecordIds, commLogId, opportunityId));
         return docIds;
     }
 
@@ -3053,7 +2771,7 @@ public with sharing class SugatiCommunicationHubController {
         return docIds;
     }
 
-    private static Set<Id> copyLegacyAttachmentsToContentDocuments(
+    private static Set<Id> copyAttachmentRecordsToContentDocuments(
         List<String> attachmentRecordIds,
         Id publishParentId,
         Id opportunityId
@@ -3065,12 +2783,12 @@ public with sharing class SugatiCommunicationHubController {
         AttachmentSendBundle bundle = buildSendBundle(
             attachmentRecordIds
         );
-        if (bundle.legacyAttachments == null || bundle.legacyAttachments.isEmpty()) {
+        if (bundle.attachmentRecords == null || bundle.attachmentRecords.isEmpty()) {
             return createdDocIds;
         }
         ContentFileService fileService = new ContentFileService();
         Set<Id> additionalParents = new Set<Id>();
-        for (Attachment att : bundle.legacyAttachments) {
+        for (Attachment att : bundle.attachmentRecords) {
             if (att == null || att.Body == null || att.Body.size() == 0) {
                 continue;
             }
@@ -3302,10 +3020,6 @@ public with sharing class SugatiCommunicationHubController {
         new ContentFileService().linkDocumentsToParents(toLink, new Set<Id>{ commLogId });
     }
 
-    private static void linkContentDocumentsToParents(Set<Id> contentDocumentIds, Set<Id> parentIds) {
-        new ContentFileService().linkDocumentsToParents(contentDocumentIds, parentIds);
-    }
-
     private static void deleteContentDocumentLinksForParents(Set<Id> parentIds) {
         if (parentIds == null || parentIds.isEmpty()) {
             return;
@@ -3396,12 +3110,6 @@ public with sharing class SugatiCommunicationHubController {
         String first = parts[0].substring(0, 1).toUpperCase();
         String second = parts.size() > 1 ? parts[1].substring(0, 1).toUpperCase() : first;
         return first + second;
-    }
-
-    private static void validatePreviewRequest(PreviewRequest request) {
-        if (request == null || request.opportunityId == null) {
-            throw new AuraHandledException('Opportunity is required for preview.');
-        }
     }
 
     private static void applySendRequestOpportunityFallbacks(SendRequest request) {

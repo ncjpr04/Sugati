@@ -14,7 +14,7 @@ public with sharing class SugatiCommunicationHubEmailService {
         @AuraEnabled public Boolean isDefault;
     }
 
-    public class LegacyTemplateRowDTO {
+    public class TemplateRowDTO {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
         @AuraEnabled public String templateName;
@@ -33,8 +33,8 @@ public with sharing class SugatiCommunicationHubEmailService {
         @AuraEnabled public String objectType;
     }
 
-    public class LegacyTemplateCatalogDTO {
-        @AuraEnabled public List<LegacyTemplateRowDTO> templates;
+    public class TemplateCatalogDTO {
+        @AuraEnabled public List<TemplateRowDTO> templates;
         @AuraEnabled public List<RelatedRecordOptionDTO> relatedRecords;
         @AuraEnabled public String opportunityStage;
         @AuraEnabled public String templateStageForOpportunity;
@@ -42,7 +42,7 @@ public with sharing class SugatiCommunicationHubEmailService {
         @AuraEnabled public List<String> opportunityStageOrder;
     }
 
-    public class LegacyEmailLoadDTO {
+    public class EmailTemplateLoadDTO {
         @AuraEnabled public String subject;
         @AuraEnabled public String bodyHtml;
         @AuraEnabled public List<EmailAddressOptionDTO> toAddresses;
@@ -60,9 +60,9 @@ public with sharing class SugatiCommunicationHubEmailService {
     // --- Public API (composer + template picker) ---
 
     @AuraEnabled(cacheable=true)
-    public static LegacyTemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
-        LegacyTemplateCatalogDTO catalog = new LegacyTemplateCatalogDTO();
-        catalog.templates = new List<LegacyTemplateRowDTO>();
+    public static TemplateCatalogDTO getSendEmailTemplateCatalog(Id opportunityId) {
+        TemplateCatalogDTO catalog = new TemplateCatalogDTO();
+        catalog.templates = new List<TemplateRowDTO>();
         catalog.relatedRecords = buildRelatedRecordOptions(opportunityId);
         catalog.currentUserId = UserInfo.getUserId();
         catalog.opportunityStage = resolveOpportunityStageName(opportunityId);
@@ -113,12 +113,12 @@ public with sharing class SugatiCommunicationHubEmailService {
     }
 
     @AuraEnabled
-    public static LegacyEmailLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
+    public static EmailTemplateLoadDTO loadDefaultSendEmailTemplate(Id opportunityId) {
         return loadSendEmailTemplate(opportunityId, null, opportunityId, null, null);
     }
 
     @AuraEnabled
-    public static LegacyEmailLoadDTO loadSendEmailTemplate(
+    public static EmailTemplateLoadDTO loadSendEmailTemplate(
         Id opportunityId,
         Id configId,
         Id relatedRecordId,
@@ -129,7 +129,7 @@ public with sharing class SugatiCommunicationHubEmailService {
             throw new AuraHandledException('Opportunity is required.');
         }
 
-        LegacyEmailLoadDTO result = new LegacyEmailLoadDTO();
+        EmailTemplateLoadDTO result = new EmailTemplateLoadDTO();
         result.toAddresses = new List<EmailAddressOptionDTO>();
         result.ccAddresses = new List<EmailAddressOptionDTO>();
         result.bccAddresses = new List<EmailAddressOptionDTO>();
@@ -232,7 +232,7 @@ public with sharing class SugatiCommunicationHubEmailService {
 
     @AuraEnabled(cacheable=true)
     public static List<EmailAddressOptionDTO> getSendEmailBccDefaults() {
-        LegacyEmailLoadDTO scratch = new LegacyEmailLoadDTO();
+        EmailTemplateLoadDTO scratch = new EmailTemplateLoadDTO();
         scratch.bccAddresses = new List<EmailAddressOptionDTO>();
         addCurrentUserBcc(scratch);
         return scratch.bccAddresses;
@@ -267,7 +267,7 @@ public with sharing class SugatiCommunicationHubEmailService {
 
     // --- Recipients: TO / CC / BCC for composer ---
 
-    private static void applyRecipients(LegacyEmailLoadDTO result, Id opportunityId, Id previewContactId) {
+    private static void applyRecipients(EmailTemplateLoadDTO result, Id opportunityId, Id previewContactId) {
         Opportunity opp = queryOpportunity(opportunityId);
         if (opp == null) {
             addCurrentUserBcc(result);
@@ -457,7 +457,7 @@ public with sharing class SugatiCommunicationHubEmailService {
     }
 
     private static void addTo(
-        LegacyEmailLoadDTO result,
+        EmailTemplateLoadDTO result,
         Set<String> seen,
         String email,
         String label,
@@ -478,7 +478,7 @@ public with sharing class SugatiCommunicationHubEmailService {
         result.toAddresses.add(dto);
     }
 
-    private static void addCurrentUserBcc(LegacyEmailLoadDTO result) {
+    private static void addCurrentUserBcc(EmailTemplateLoadDTO result) {
         if (String.isBlank(UserInfo.getUserEmail())) {
             return;
         }
@@ -681,8 +681,8 @@ public with sharing class SugatiCommunicationHubEmailService {
         return opp != null && opp.sugati__O_Agent__c != null;
     }
 
-    private static LegacyTemplateRowDTO mapTemplateRow(sugati__Email_Template__c row) {
-        LegacyTemplateRowDTO dto = new LegacyTemplateRowDTO();
+    private static TemplateRowDTO mapTemplateRow(sugati__Email_Template__c row) {
+        TemplateRowDTO dto = new TemplateRowDTO();
         dto.id = row.Id;
         dto.name = row.Name;
         dto.templateName = row.sugati__ET_Template_Name__c;

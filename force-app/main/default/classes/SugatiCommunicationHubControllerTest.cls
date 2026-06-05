@@ -72,21 +72,14 @@ private class SugatiCommunicationHubControllerTest {
     @IsTest
     static void testReadMethodsAndPreview() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
-        List<Contact> contacts = [SELECT Id FROM Contact ORDER BY LastName ASC];
 
         Test.startTest();
         SugatiCommunicationHubController.HubContextDTO ctx = SugatiCommunicationHubController.getHubContext(opp.Id);
         List<SugatiCommunicationHubController.RecipientDTO> recipients = SugatiCommunicationHubController.getRecipients(opp.Id);
-        List<SugatiCommunicationHubController.TemplateDTO> templates =
-            SugatiCommunicationHubController.getTemplates(opp.Id, null, null, 'Email');
-        SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loaded =
-            SugatiCommunicationHubEmailService.loadDefaultSendEmailTemplate(opp.Id);
-        SugatiCommunicationHubController.PreviewRequest req = new SugatiCommunicationHubController.PreviewRequest();
-        req.opportunityId = opp.Id;
-        req.recipientIds = new List<Id>{ contacts[0].Id };
-        req.subjectTemplate = 'Trip {{Opportunity.Name}}';
-        req.bodyTemplate = '<p>{{Owner.Name}}</p><p>{{Opportunity.StageName}}</p>';
-        SugatiCommunicationHubController.PreviewResponse preview = SugatiCommunicationHubController.previewMessage(req);
+        SugatiCommunicationHubEmailService.TemplateCatalogDTO catalog =
+            SugatiCommunicationHubController.getSendEmailTemplateCatalog(opp.Id);
+        SugatiCommunicationHubEmailService.EmailTemplateLoadDTO loaded =
+            SugatiCommunicationHubController.loadDefaultSendEmailTemplate(opp.Id);
         Test.stopTest();
 
         System.assertEquals(opp.Id, ctx.opportunityId);
@@ -111,9 +104,10 @@ private class SugatiCommunicationHubControllerTest {
             }
         }
         System.assert(hasSupplierContact, 'Expected operational supplier contacts on B2C bookings');
+        System.assertNotEquals(null, catalog);
         System.assertNotEquals(null, loaded);
-        System.assertNotEquals(null, preview.subject, 'Preview should return rendered subject');
-        System.assertNotEquals(null, preview.bodyHtml, 'Preview should return rendered HTML from legacy template load');
+        System.assertNotEquals(null, loaded.subject, 'Default template should return a subject');
+        System.assertNotEquals(null, loaded.bodyHtml, 'Default template should return rendered HTML');
     }
 
     @IsTest
@@ -498,7 +492,7 @@ private class SugatiCommunicationHubControllerTest {
     }
 
     @IsTest
-    static void testGetRecordAttachmentsIncludesFilesAndLegacyAttachments() {
+    static void testGetRecordAttachmentsIncludesFilesAndAttachments() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         ContentVersion cv = new ContentVersion(
@@ -515,43 +509,19 @@ private class SugatiCommunicationHubControllerTest {
             Visibility = 'AllUsers'
         );
 
-        Attachment legacy = new Attachment(
+        Attachment attachmentRecord = new Attachment(
             ParentId = opp.Id,
             Name = 'ATOL.pdf',
             Body = Blob.valueOf('atol'),
             ContentType = 'application/pdf'
         );
-        insert legacy;
+        insert attachmentRecord;
 
         List<SugatiCommunicationHubController.AttachmentDTO> rows = SugatiCommunicationHubController.getRecordAttachments(
             opp.Id,
             opp.Id
         );
-        System.assert(rows.size() >= 2, 'Expected both Salesforce Files and legacy attachments');
-    }
-
-    @IsTest
-    static void testUploadOpportunityFileLinksToOpportunity() {
-        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
-
-        Test.startTest();
-        SugatiCommunicationHubController.AttachmentDTO uploaded = SugatiCommunicationHubController.uploadOpportunityFile(
-            opp.Id,
-            'proposal.pdf',
-            EncodingUtil.base64Encode(Blob.valueOf('Sample PDF bytes'))
-        );
-        Test.stopTest();
-
-        System.assertNotEquals(null, uploaded.contentDocumentId);
-        System.assertEquals(
-            1,
-            [
-                SELECT COUNT()
-                FROM ContentDocumentLink
-                WHERE LinkedEntityId = :opp.Id AND ContentDocumentId = :uploaded.contentDocumentId
-            ],
-            'Uploaded file should be linked to the Opportunity immediately'
-        );
+        System.assert(rows.size() >= 2, 'Expected both Salesforce Files and Attachment records');
     }
 
     @IsTest

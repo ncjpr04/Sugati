@@ -508,7 +508,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
         try {
             const loaded = await loadDefaultSendEmailTemplate({ opportunityId: this.opportunityId });
-            this.applyLegacyLoad(loaded);
+            this.applyTemplateLoad(loaded);
         } catch (e) {
             const message = e?.body?.message || e?.message || 'Unable to load default Send Email template.';
             this.showToast('Template not loaded', message, 'warning');
@@ -534,7 +534,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
                 clientGroupId: null,
                 previewAsContactId: null
             });
-            this.applyLegacyLoad(loaded, detail);
+            this.applyTemplateLoad(loaded, detail);
         } catch (e) {
             this.showToast('Template load failed', e?.body?.message || e?.message || 'Unable to load template.', 'error');
         }
@@ -572,7 +572,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.ensureFromSelected();
         try {
             const bccDefaults = await getSendEmailBccDefaults();
-            this.bccChips = this.mapLegacyAddressesToChips(bccDefaults || [], 'bcc');
+            this.bccChips = this.mapAddressesToChips(bccDefaults || [], 'bcc');
         } catch (e) {
             // eslint-disable-next-line no-console
             console.warn('Send Email BCC defaults not loaded', e);
@@ -590,7 +590,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         });
     }
 
-    applyLegacyLoad(loaded, meta) {
+    applyTemplateLoad(loaded, meta) {
         if (!loaded) {
             return;
         }
@@ -607,9 +607,9 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.activeTemplateMeta = meta?.meta || loaded.sfEmailTemplateName || '';
         this.subject = loaded.subject || '';
         this.bodyTemplate = loaded.bodyHtml || '';
-        const templateTo = this.mapLegacyAddressesToChips(loaded.toAddresses || [], 'to');
-        const templateCc = this.mapLegacyAddressesToChips(loaded.ccAddresses || [], 'cc');
-        const templateBcc = this.mapLegacyAddressesToChips(loaded.bccAddresses || [], 'bcc');
+        const templateTo = this.mapAddressesToChips(loaded.toAddresses || [], 'to');
+        const templateCc = this.mapAddressesToChips(loaded.ccAddresses || [], 'cc');
+        const templateBcc = this.mapAddressesToChips(loaded.bccAddresses || [], 'bcc');
         if (!(this.toChips || []).length) {
             this.toChips = templateTo;
         }
@@ -648,7 +648,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
     }
 
-    mapLegacyAddressesToChips(addresses, prefix) {
+    mapAddressesToChips(addresses, prefix) {
         return (addresses || []).map((opt, index) => {
             const label = opt.label || opt.email || '';
             const paren = label.indexOf('(');
@@ -662,7 +662,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return {
                 id: contactId || `${prefix}-${index}-${opt.email}`,
                 contactId,
-                audience: this.resolveLegacyChipAudience(opt, contactId),
+                audience: this.resolveChipAudience(opt, contactId),
                 name: name || opt.email,
                 email: opt.email,
                 initials: this.buildInitialsFromName(name || opt.email),
@@ -672,7 +672,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         });
     }
 
-    resolveLegacyChipAudience(opt, contactId) {
+    resolveChipAudience(opt, contactId) {
         if (contactId) {
             return 'travellers';
         }

@@ -46,7 +46,7 @@ private class SugatiCommunicationHubEmailServiceTest {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Test.startTest();
-        SugatiCommunicationHubEmailService.LegacyEmailLoadDTO loaded =
+        SugatiCommunicationHubEmailService.EmailTemplateLoadDTO loaded =
             SugatiCommunicationHubEmailService.loadDefaultSendEmailTemplate(opp.Id);
         Test.stopTest();
 
@@ -62,7 +62,7 @@ private class SugatiCommunicationHubEmailServiceTest {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Test.startTest();
-        SugatiCommunicationHubEmailService.LegacyTemplateCatalogDTO catalog =
+        SugatiCommunicationHubEmailService.TemplateCatalogDTO catalog =
             SugatiCommunicationHubEmailService.getSendEmailTemplateCatalog(opp.Id);
         List<SugatiCommunicationHubEmailService.EmailAddressOptionDTO> bcc =
             SugatiCommunicationHubEmailService.getSendEmailBccDefaults();
