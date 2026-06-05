@@ -162,13 +162,15 @@ private class SugatiCommunicationHubControllerTest {
 
         System.assertNotEquals(null, res.commLogId);
         System.assertEquals('Sent', res.status);
+        System.assertEquals('NATIVE-TEST', res.providerMessageId);
 
         Comm_Log__c log = [
-            SELECT Id, Status__c, Opportunity__c, Subject__c, Body_HTML__c, Sent_By__c, Sent_By__r.Email
+            SELECT Id, Status__c, Opportunity__c, Subject__c, Body_HTML__c, Sent_By__c, Sent_By__r.Email, Message_Id__c
             FROM Comm_Log__c
             WHERE Id = :res.commLogId
             LIMIT 1
         ];
+        System.assertEquals('NATIVE-TEST', log.Message_Id__c);
         System.assertEquals('Sent', log.Status__c);
         System.assertEquals(opp.Id, log.Opportunity__c);
         System.assertEquals('Trip Test', log.Subject__c);
@@ -182,8 +184,15 @@ private class SugatiCommunicationHubControllerTest {
         ];
         System.assertNotEquals(null, log.From_Address__c, 'From_Address__c should be set on send');
 
-        Integer recCount = [SELECT COUNT() FROM Comm_Recipient__c WHERE Comm_Log__c = :log.Id];
-        System.assertEquals(3, recCount, 'Expected To, Cc, and Bcc recipient rows');
+        List<Comm_Recipient__c> recs = [
+            SELECT Message_Id__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c = :log.Id
+        ];
+        System.assertEquals(3, recs.size(), 'Expected To, Cc, and Bcc recipient rows');
+        for (Comm_Recipient__c rec : recs) {
+            System.assertEquals('NATIVE-TEST', rec.Message_Id__c);
+        }
     }
 
     @IsTest
@@ -638,5 +647,27 @@ private class SugatiCommunicationHubControllerTest {
         List<SugatiCommunicationHubController.HistoryItemDTO> travellers =
             SugatiCommunicationHubController.getHistory(opp.Id, null, null, 'travellers', null);
         System.assert(!travellers.isEmpty(), 'Traveller audience filter should match draft log');
+    }
+
+    @IsTest
+    static void testPostmarkRfcMessageIdExtraction() {
+        String body =
+            'From: Shivam Mittal <shivamm@aptclouds.com>\r\n' +
+            'Date: Fri, 05 Jun 2026 06:18:37 +0000\r\n' +
+            'Subject: Test Email\r\n' +
+            'Message-Id: <7ff56b58-2ea7-4eb6-a170-41ead2c9c965@mtasv.net>\r\n' +
+            'To: nitinc@aptclouds.com\r\n';
+        System.assertEquals(
+            '<7ff56b58-2ea7-4eb6-a170-41ead2c9c965@mtasv.net>',
+            PostmarkEmailService.extractRfcMessageIdFromBody(body)
+        );
+        System.assertEquals(
+            '<7ff56b58-2ea7-4eb6-a170-41ead2c9c965@mtasv.net>',
+            PostmarkEmailService.buildPostmarkRfcMessageId('7ff56b58-2ea7-4eb6-a170-41ead2c9c965')
+        );
+        System.assertEquals(
+            '<POSTMARK-TEST@mtasv.net>',
+            PostmarkEmailService.resolveOutboundRfcMessageId('POSTMARK-TEST')
+        );
     }
 }

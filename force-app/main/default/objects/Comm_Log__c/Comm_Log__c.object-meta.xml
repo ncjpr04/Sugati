@@ -155,8 +155,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Comm Log</label>
     <nameField>
+        <displayFormat>CL-{0000}</displayFormat>
         <label>Comm Log Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Comm Logs</pluralLabel>
     <searchLayouts></searchLayouts>

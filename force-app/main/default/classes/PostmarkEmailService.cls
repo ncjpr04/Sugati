@@ -2,6 +2,8 @@ public class PostmarkEmailService {
 
     private static final String POSTMARK_ENDPOINT =
         'callout:Postmark/email';
+    private static final String POSTMARK_OUTBOUND_ENDPOINT =
+        'callout:Postmark/messages/outbound/';
 
     public class PostmarkEmailRequest {
         public String fromAddress;
@@ -97,5 +99,85 @@ public class PostmarkEmailService {
             '): ' +
             res.getBody()
         );
+    }
+
+    public static String resolveOutboundRfcMessageId(String postmarkMessageId) {
+        if (String.isBlank(postmarkMessageId)) {
+            return null;
+        }
+        String uuid = postmarkMessageId.trim();
+        if (isRfcMessageId(uuid)) {
+            return uuid;
+        }
+        if (!Test.isRunningTest()) {
+            try {
+                String body = fetchOutboundMessageBody(uuid);
+                String extracted = extractRfcMessageIdFromBody(body);
+                if (String.isNotBlank(extracted)) {
+                    return extracted;
+                }
+            } catch (Exception ex) {
+                System.debug(
+                    LoggingLevel.WARN,
+                    'Postmark outbound lookup failed, deriving RFC Message-Id: ' + ex.getMessage()
+                );
+            }
+        }
+        return buildPostmarkRfcMessageId(uuid);
+    }
+
+    public static String buildPostmarkRfcMessageId(String postmarkUuid) {
+        if (String.isBlank(postmarkUuid)) {
+            return null;
+        }
+        String value = postmarkUuid.trim();
+        if (isRfcMessageId(value)) {
+            return value;
+        }
+        return '<' + value + '@mtasv.net>';
+    }
+
+    private static Boolean isRfcMessageId(String value) {
+        return String.isNotBlank(value) && value.startsWith('<') && value.contains('@') && value.endsWith('>');
+    }
+
+    @TestVisible
+    private static String fetchOutboundMessageBody(String postmarkMessageId) {
+        Http http = new Http();
+        HttpRequest httpReq = new HttpRequest();
+        httpReq.setEndpoint(POSTMARK_OUTBOUND_ENDPOINT + EncodingUtil.urlEncode(postmarkMessageId, 'UTF-8'));
+        httpReq.setMethod('GET');
+        httpReq.setHeader('Accept', 'application/json');
+        httpReq.setTimeout(30000);
+        HttpResponse res = http.send(httpReq);
+        if (res.getStatusCode() != 200) {
+            throw new CalloutException(
+                'Postmark outbound lookup failed (' + res.getStatusCode() + '): ' + res.getBody()
+            );
+        }
+        Map<String, Object> payload = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
+        Object bodyRaw = payload.get('Body');
+        return bodyRaw == null ? null : String.valueOf(bodyRaw);
+    }
+
+    @TestVisible
+    private static String extractRfcMessageIdFromBody(String body) {
+        if (String.isBlank(body)) {
+            return null;
+        }
+        String normalized = body.replace('\r\n', '\n');
+        for (String line : normalized.split('\n')) {
+            if (String.isBlank(line)) {
+                continue;
+            }
+            String trimmed = line.trim();
+            if (!trimmed.toLowerCase().startsWith('message-id:')) {
+                continue;
+            }
+            String value = trimmed.substring('message-id:'.length()).trim();
+            return String.isBlank(value) ? null : value;
+        }
+        Matcher matcher = Pattern.compile('(?i)Message-Id:\\s*(<[^>]+>)').matcher(body);
+        return matcher.find() ? matcher.group(1).trim() : null;
     }
 }

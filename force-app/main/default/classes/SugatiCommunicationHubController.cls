@@ -74,7 +74,7 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public Datetime bouncedAt;
         @AuraEnabled public String bounceType;
         @AuraEnabled public String bounceDescription;
-        @AuraEnabled public String postmarkMessageId;
+        @AuraEnabled public String messageId;
         @AuraEnabled public String trackingSummary;
     }
 
@@ -868,7 +868,7 @@ public with sharing class SugatiCommunicationHubController {
             'SELECT Id, Channel__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
             'Body_HTML__c, Delivery_Mode__c, From_Address__c, Sent_By__r.Name, Sent_By__r.Email, ' +
             'Open_Count__c, Click_Count__c, First_Opened_At__c, Last_Opened_At__c, Delivered_At__c, ' +
-            'Bounced_At__c, Bounce_Type__c, Bounce_Description__c, Spam_Reported_At__c, Postmark_Message_Id__c ' +
+            'Bounced_At__c, Bounce_Type__c, Bounce_Description__c, Spam_Reported_At__c, Message_Id__c ' +
             'FROM Comm_Log__c WHERE Opportunity__c = :opportunityId';
         if (!String.isBlank(channelFilter)) {
             soql += ' AND Channel__c = :channelFilter';
@@ -885,7 +885,7 @@ public with sharing class SugatiCommunicationHubController {
         if (issueLogIds != null) {
             soql += ' AND Id IN :issueLogIds';
         }
-        soql += ' ORDER BY Last_Modified_At__c DESC NULLS LAST, Sent_At__c DESC NULLS LAST, CreatedDate DESC';
+        soql += ' ORDER BY Sent_At__c DESC NULLS LAST, Last_Modified_At__c DESC NULLS LAST, CreatedDate DESC';
 
         List<Comm_Log__c> logs = Database.query(soql);
         if (logs.isEmpty()) {
@@ -899,7 +899,7 @@ public with sharing class SugatiCommunicationHubController {
 
         Map<Id, List<Comm_Recipient__c>> recipientsByLog = new Map<Id, List<Comm_Recipient__c>>();
         for (Comm_Recipient__c rec : [
-            SELECT Id, Name, Comm_Log__c, Status__c, Contact__c, Contact__r.Name, Email_Address__c
+            SELECT Id, Name, Comm_Log__c, Status__c, Contact__c, Contact__r.Name, Email_Address__c, Message_Id__c
             FROM Comm_Recipient__c
             WHERE Comm_Log__c IN :logIds
         ]) {
@@ -975,7 +975,7 @@ public with sharing class SugatiCommunicationHubController {
             dto.bouncedAt = row.Bounced_At__c;
             dto.bounceType = row.Bounce_Type__c;
             dto.bounceDescription = row.Bounce_Description__c;
-            dto.postmarkMessageId = row.Postmark_Message_Id__c;
+            dto.messageId = resolveHistoryMessageId(row.Message_Id__c, recs);
             dto.trackingSummary = buildTrackingSummary(
                 row.Status__c,
                 row.Delivered_At__c,
@@ -1030,6 +1030,111 @@ public with sharing class SugatiCommunicationHubController {
             parts.add('Spam complaint');
         }
         return parts.isEmpty() ? null : String.join(parts, ' · ');
+    }
+
+    private static String resolveHistoryMessageId(String logMessageId, List<Comm_Recipient__c> recipients) {
+        if (String.isNotBlank(logMessageId)) {
+            return logMessageId.trim();
+        }
+        if (recipients == null) {
+            return null;
+        }
+        for (Comm_Recipient__c rec : recipients) {
+            if (rec != null && String.isNotBlank(rec.Message_Id__c)) {
+                return rec.Message_Id__c.trim();
+            }
+        }
+        return null;
+    }
+
+    private static void applySendMessageIds(
+        Comm_Log__c log,
+        List<Comm_Recipient__c> recipientRows,
+        String messageId
+    ) {
+        applySendMessageIds(log, recipientRows, messageId, messageId);
+    }
+
+    private static void applySendMessageIds(
+        Comm_Log__c log,
+        List<Comm_Recipient__c> recipientRows,
+        String logMessageId,
+        String recipientMessageId
+    ) {
+        String recMessageId = String.isNotBlank(recipientMessageId) ? recipientMessageId : logMessageId;
+        if (log != null) {
+            log.Message_Id__c = logMessageId;
+            log.Status__c = 'Sent';
+        }
+        if (recipientRows == null) {
+            return;
+        }
+        for (Comm_Recipient__c rec : recipientRows) {
+            if (rec == null) {
+                continue;
+            }
+            rec.Message_Id__c = recMessageId;
+            rec.Status__c = 'Sent';
+            rec.Delivered_At__c = null;
+        }
+    }
+
+    private class PostmarkSendOutcome {
+        public String postmarkUuid;
+        public String logMessageId;
+    }
+
+    private static void applySendMessageIdsToPersisted(Id commLogId, String messageId) {
+        if (commLogId == null || String.isBlank(messageId)) {
+            return;
+        }
+        update new Comm_Log__c(Id = commLogId, Message_Id__c = messageId);
+        List<Comm_Recipient__c> recipientRows = [
+            SELECT Id
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c = :commLogId
+        ];
+        for (Comm_Recipient__c rec : recipientRows) {
+            rec.Message_Id__c = messageId;
+        }
+        if (!recipientRows.isEmpty()) {
+            update recipientRows;
+        }
+    }
+
+    @future
+    private static void scheduleNativeMessageIdBackfill(Id commLogId, Id whatId, Long sentAfterEpoch) {
+        if (commLogId == null || whatId == null) {
+            return;
+        }
+        Comm_Log__c existing = [
+            SELECT Message_Id__c
+            FROM Comm_Log__c
+            WHERE Id = :commLogId
+            LIMIT 1
+        ];
+        if (String.isNotBlank(existing.Message_Id__c)) {
+            return;
+        }
+        Datetime sentAfter = Datetime.newInstance(sentAfterEpoch);
+        String messageId = resolveSentEmailMessageId(whatId, sentAfter);
+        applySendMessageIdsToPersisted(commLogId, messageId);
+    }
+
+    private static Id resolveEmailWhatId(SendRequest request) {
+        if (request == null) {
+            return null;
+        }
+        if (request.opportunityId != null) {
+            return request.opportunityId;
+        }
+        if (request.relatedRecordId != null) {
+            String relatedKey = String.valueOf(request.relatedRecordId);
+            if (relatedKey.startsWith('006') && (relatedKey.length() == 15 || relatedKey.length() == 18)) {
+                return request.relatedRecordId;
+            }
+        }
+        return null;
     }
 
     private static Set<Id> resolveAudienceLogIds(Id opportunityId, String audienceFilter) {
@@ -1260,8 +1365,11 @@ public with sharing class SugatiCommunicationHubController {
         Savepoint sendSavepoint;
         try {
             String providerMessageId;
+            List<Comm_Recipient__c> recipientRows = new List<Comm_Recipient__c>();
             Set<Id> attachmentDocIds;
-            if (request.deliveryMode == 'postmark') {
+            Boolean isPostmark = request.deliveryMode == 'postmark';
+
+            if (isPostmark) {
                 // Postmark requires callout before any DML in the transaction.
                 attachmentDocIds = buildAttachmentDocumentIdSet(
                     request.attachmentContentDocumentIds,
@@ -1275,14 +1383,36 @@ public with sharing class SugatiCommunicationHubController {
                     request.attachmentRecordIds,
                     attachmentDocIds
                 );
-                providerMessageId = sendViaPostmark(request, postmarkBundle);
+                PostmarkSendOutcome postmarkOutcome = sendViaPostmark(request, postmarkBundle);
+                providerMessageId = postmarkOutcome.logMessageId;
                 sendSavepoint = Database.setSavepoint();
+                insert log;
+                recipientRows = buildCommRecipientsFromSendRequest(log.Id, request);
+                applySendMessageIds(
+                    log,
+                    recipientRows,
+                    postmarkOutcome.logMessageId,
+                    postmarkOutcome.postmarkUuid
+                );
+                if (!recipientRows.isEmpty()) {
+                    insert recipientRows;
+                }
+                attachmentDocIds.addAll(
+                    createUploadedContentDocuments(
+                        request.newAttachmentFileNames,
+                        request.newAttachmentFileData,
+                        log.Id,
+                        null
+                    )
+                );
+                syncCommLogAttachments(log.Id, attachmentDocIds);
+                update log;
             } else if (request.deliveryMode == 'native') {
                 sendSavepoint = Database.setSavepoint();
                 insert log;
-                List<Comm_Recipient__c> nativeRecRows = buildCommRecipientsFromSendRequest(log.Id, request);
-                if (!nativeRecRows.isEmpty()) {
-                    insert nativeRecRows;
+                recipientRows = buildCommRecipientsFromSendRequest(log.Id, request);
+                if (!recipientRows.isEmpty()) {
+                    insert recipientRows;
                 }
                 attachmentDocIds = buildAttachmentDocumentIdSet(
                     request.attachmentContentDocumentIds,
@@ -1297,44 +1427,32 @@ public with sharing class SugatiCommunicationHubController {
                     request.attachmentRecordIds,
                     attachmentDocIds
                 );
-                providerMessageId = sendViaNativeSalesforce(request, nativeBundle);
-                for (Comm_Recipient__c rec : nativeRecRows) {
-                    rec.Status__c = 'Sent';
-                    rec.Delivered_At__c = null;
-                    rec.Postmark_Id__c = providerMessageId;
-                }
-                if (!nativeRecRows.isEmpty()) {
-                    update nativeRecRows;
-                }
-                log.Status__c = 'Sent';
-                update log;
-            } else {
-                throw new AuraHandledException('Unsupported delivery mode: ' + request.deliveryMode);
-            }
-
-            if (request.deliveryMode == 'postmark') {
-                insert log;
-                List<Comm_Recipient__c> recRows = buildCommRecipientsFromSendRequest(log.Id, request);
-                for (Comm_Recipient__c rec : recRows) {
-                    rec.Status__c = 'Sent';
-                    rec.Delivered_At__c = null;
-                    rec.Postmark_Id__c = providerMessageId;
-                }
-                if (!recRows.isEmpty()) {
-                    insert recRows;
-                }
-                log.Postmark_Message_Id__c = providerMessageId;
-                attachmentDocIds.addAll(
-                    createUploadedContentDocuments(
-                        request.newAttachmentFileNames,
-                        request.newAttachmentFileData,
-                        log.Id,
-                        null
+                List<TravellerSendTarget> nativeToTargets = parseTravellerSendTargets(request);
+                List<String> nativeCc = cleanEmailList(request.ccEmails);
+                List<String> nativeBcc = cleanEmailList(request.bccEmails);
+                validateNativeSendTargets(nativeToTargets, nativeCc, nativeBcc, nativeBundle);
+                Id emailWhatId = resolveEmailWhatId(request);
+                Datetime sentAfter = System.now().addSeconds(-10);
+                dispatchNativeEmailMessages(
+                    buildOutboundEmailMessages(
+                        request,
+                        nativeToTargets,
+                        nativeCc,
+                        nativeBcc,
+                        nativeBundle
                     )
                 );
-                syncCommLogAttachments(log.Id, attachmentDocIds);
-                log.Status__c = 'Sent';
+                providerMessageId = resolveSentEmailMessageId(emailWhatId, sentAfter);
+                applySendMessageIds(log, recipientRows, providerMessageId);
                 update log;
+                if (!recipientRows.isEmpty()) {
+                    update recipientRows;
+                }
+                if (String.isBlank(providerMessageId) && log.Id != null && emailWhatId != null) {
+                    scheduleNativeMessageIdBackfill(log.Id, emailWhatId, sentAfter.getTime());
+                }
+            } else {
+                throw new AuraHandledException('Unsupported delivery mode: ' + request.deliveryMode);
             }
 
             SendResponse response = new SendResponse();
@@ -1880,13 +1998,12 @@ public with sharing class SugatiCommunicationHubController {
         private Id groupMemberId;
     }
 
-    private static String sendViaNativeSalesforce(
-        SendRequest request,
+    private static void validateNativeSendTargets(
+        List<TravellerSendTarget> toTargets,
+        List<String> ccAddresses,
+        List<String> bccAddresses,
         AttachmentSendBundle sendBundle
     ) {
-        List<TravellerSendTarget> toTargets = parseTravellerSendTargets(request);
-        List<String> ccAddresses = cleanEmailList(request.ccEmails);
-        List<String> bccAddresses = cleanEmailList(request.bccEmails);
         List<String> toAddresses = new List<String>();
         for (TravellerSendTarget target : toTargets) {
             if (target != null && !String.isBlank(target.email)) {
@@ -1897,7 +2014,6 @@ public with sharing class SugatiCommunicationHubController {
         if (toAddresses.isEmpty() && ccAddresses.isEmpty() && bccAddresses.isEmpty()) {
             throw new AuraHandledException('At least one recipient is required.');
         }
-
         if (
             sendBundle != null &&
             hasAttachmentPayload(sendBundle) &&
@@ -1907,21 +2023,55 @@ public with sharing class SugatiCommunicationHubController {
                 'Selected attachments could not be read. Check file access on the related record or re-upload the files.'
             );
         }
+    }
 
-        List<Messaging.SingleEmailMessage> messages = buildOutboundEmailMessages(
-            request,
-            toTargets,
-            ccAddresses,
-            bccAddresses,
-            sendBundle
-        );
-
+    private static String resolveSentEmailMessageId(Id whatId, Datetime sentAfter) {
+        if (whatId == null) {
+            return Test.isRunningTest() ? 'NATIVE-TEST' : null;
+        }
         if (Test.isRunningTest()) {
             return 'NATIVE-TEST';
         }
+        List<EmailMessage> emails = [
+            SELECT Id, MessageIdentifier
+            FROM EmailMessage
+            WHERE (RelatedToId = :whatId OR ParentId = :whatId)
+              AND CreatedDate >= :sentAfter
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        if (!emails.isEmpty()) {
+            return resolveNativeEmailMessageKey(emails[0]);
+        }
+        List<Task> tasks = [
+            SELECT Id
+            FROM Task
+            WHERE WhatId = :whatId
+              AND CreatedDate >= :sentAfter
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        if (tasks.isEmpty()) {
+            return null;
+        }
+        emails = [
+            SELECT Id, MessageIdentifier
+            FROM EmailMessage
+            WHERE ActivityId = :tasks[0].Id
+            ORDER BY CreatedDate DESC
+            LIMIT 1
+        ];
+        return emails.isEmpty() ? null : resolveNativeEmailMessageKey(emails[0]);
+    }
 
-        dispatchNativeEmailMessages(messages);
-        return 'NATIVE-' + String.valueOf(Crypto.getRandomLong()).replace('-', '');
+    private static String resolveNativeEmailMessageKey(EmailMessage email) {
+        if (email == null) {
+            return null;
+        }
+        if (String.isNotBlank(email.MessageIdentifier)) {
+            return email.MessageIdentifier.trim();
+        }
+        return email.Id != null ? String.valueOf(email.Id) : null;
     }
 
     private static String normalizeDeliveryMode(String rawMode) {
@@ -2048,7 +2198,7 @@ public with sharing class SugatiCommunicationHubController {
                 bccAddresses,
                 subjectText,
                 bodyHtml,
-                request.opportunityId,
+                resolveEmailWhatId(request),
                 request.orgWideEmailAddressId,
                 sendBundle
             )
@@ -2422,12 +2572,15 @@ public with sharing class SugatiCommunicationHubController {
         return out;
     }
 
-    private static String sendViaPostmark(
+    private static PostmarkSendOutcome sendViaPostmark(
         SendRequest request,
         AttachmentSendBundle sendBundle
     ) {
+        PostmarkSendOutcome outcome = new PostmarkSendOutcome();
         if (Test.isRunningTest()) {
-            return 'POSTMARK-TEST';
+            outcome.postmarkUuid = 'POSTMARK-TEST';
+            outcome.logMessageId = '<POSTMARK-TEST@mtasv.net>';
+            return outcome;
         }
 
         List<TravellerSendTarget> toTargets = parseTravellerSendTargets(request);
@@ -2444,7 +2597,6 @@ public with sharing class SugatiCommunicationHubController {
             bccAddresses,
             sendBundle
         );
-        String lastMessageId = 'POSTMARK-SENT';
         String fromAddress = resolvePostmarkFromAddress(request.orgWideEmailAddressId);
         List<Map<String, Object>> postmarkAttachments = buildPostmarkAttachments(sendBundle);
         postmarkAttachments.addAll(
@@ -2470,10 +2622,17 @@ public with sharing class SugatiCommunicationHubController {
                 }
                 PostmarkEmailService.PostmarkEmailResponse response = PostmarkEmailService.sendEmail(payload);
                 if (response != null && String.isNotBlank(response.MessageID)) {
-                    lastMessageId = response.MessageID;
+                    outcome.postmarkUuid = response.MessageID;
+                    outcome.logMessageId = PostmarkEmailService.resolveOutboundRfcMessageId(response.MessageID);
                 }
             }
-            return lastMessageId;
+            if (String.isBlank(outcome.logMessageId)) {
+                outcome.logMessageId = 'POSTMARK-SENT';
+            }
+            if (String.isBlank(outcome.postmarkUuid)) {
+                outcome.postmarkUuid = outcome.logMessageId;
+            }
+            return outcome;
         } catch (Exception ex) {
             throw new AuraHandledException(
                 'Postmark is not available (' +

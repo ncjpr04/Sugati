@@ -19,6 +19,7 @@ export default class SugatiCommunicationHistory extends LightningElement {
     channelFilter = null;
     audienceFilter = null;
     statusGroupFilter = null;
+    showFilterPanel = false;
     expandedId = null;
     activeSidebar = 'all';
     _items = DEFAULT_ITEMS.map((i) => ({ ...i }));
@@ -40,7 +41,7 @@ export default class SugatiCommunicationHistory extends LightningElement {
     wiredHistory(result) {
         this._wiredHistoryResult = result;
         const data = result?.data;
-        this._items = (data || []).map((row) => this.mapHistoryRow(row));
+        this._items = this.sortHistoryItems((data || []).map((row) => this.mapHistoryRow(row)));
         if (this.isDefaultFilters) {
             this._summaryCounts = {
                 email: this._items.filter((x) => x.channel === 'email').length,
@@ -101,7 +102,22 @@ export default class SugatiCommunicationHistory extends LightningElement {
     }
 
     get rootClass() {
-        return this.isHubMode ? 'hub' : 'history-layout';
+        if (this.isHubMode) {
+            return 'hub';
+        }
+        return this.showSidebar ? 'history-layout history-layout-filtered' : 'history-layout';
+    }
+
+    get showSidebar() {
+        return this.isHubMode || this.showFilterPanel;
+    }
+
+    get hasActiveFilters() {
+        return !this.isDefaultFilters || this.activeSidebar === 'drafts';
+    }
+
+    get filterButtonClass() {
+        return this.showFilterPanel || this.hasActiveFilters ? 'btn btn-sec on' : 'btn btn-sec';
     }
 
     get isDefaultFilters() {
@@ -296,6 +312,17 @@ export default class SugatiCommunicationHistory extends LightningElement {
         this.statusGroupFilter = this.statusGroupFilter === key ? null : key;
     }
 
+    handleToggleFilterPanel() {
+        this.showFilterPanel = !this.showFilterPanel;
+    }
+
+    handleClearFilters() {
+        this.activeSidebar = 'all';
+        this.channelFilter = null;
+        this.audienceFilter = null;
+        this.statusGroupFilter = null;
+    }
+
     @api
     async refreshHistory() {
         if (this._wiredHistoryResult) {
@@ -345,14 +372,18 @@ export default class SugatiCommunicationHistory extends LightningElement {
             recipientLabel: 'Recipients',
             recipients: entry.recipients || 'Recipients',
             delivery: 'Postmark',
+            showDeliveryPill: true,
+            deliveryPillClass: 'pill p-delivery-postmark',
+            deliveryPillLabel: 'Postmark',
             attachmentsLabel: entry.attachments || 'None',
             emailHeading: entry.subject || 'Message Sent',
             emailBody: 'Message sent successfully.',
             hasAttachments: false,
             attachmentChips: [],
-            messageId: entry.messageId
+            messageId: entry.messageId,
+            sortTimestamp: Date.now()
         };
-        this._items = [newItem, ...this._items];
+        this._items = this.sortHistoryItems([newItem, ...this._items]);
         this.expandedId = newItem.id;
         if (this.isDefaultFilters) {
             this.emailCount += 1;
@@ -366,16 +397,20 @@ export default class SugatiCommunicationHistory extends LightningElement {
         const statusPresentation = this.resolveStatusPresentation(row.status);
         const sentDate = row.sentAt ? new Date(row.sentAt) : null;
         const lastModifiedDate = row.lastModifiedAt ? new Date(row.lastModifiedAt) : null;
-        const activityDate = lastModifiedDate || sentDate;
         const when = isDraft
             ? lastModifiedDate
                 ? lastModifiedDate.toLocaleString()
                 : sentDate
                     ? sentDate.toLocaleString()
                     : 'Just now'
-            : activityDate
-                ? activityDate.toLocaleString()
-                : 'Just now';
+            : sentDate
+                ? sentDate.toLocaleString()
+                : lastModifiedDate
+                    ? lastModifiedDate.toLocaleString()
+                    : 'Just now';
+        const sortTimestamp = isDraft
+            ? (lastModifiedDate?.getTime() ?? sentDate?.getTime() ?? 0)
+            : (sentDate?.getTime() ?? lastModifiedDate?.getTime() ?? 0);
         const lastEdited = lastModifiedDate
             ? lastModifiedDate.toLocaleString()
             : sentDate
@@ -397,6 +432,7 @@ export default class SugatiCommunicationHistory extends LightningElement {
                 row.deliveredAt ||
                 row.bouncedAt ||
                 row.bounceType);
+        const deliveryPill = this.resolveDeliveryModePill(ch, isDraft, row.deliveryMode);
         return {
             id: row.id,
             channel: ch,
@@ -413,7 +449,8 @@ export default class SugatiCommunicationHistory extends LightningElement {
             statusLabel: `● ${row.status || 'Sent'}`,
             statusClass: statusPresentation.detailClass,
             statusStyle: statusPresentation.detailStyle,
-            sentAt: when,
+            sentAt: isDraft ? when : sentDate ? sentDate.toLocaleString() : when,
+            sortTimestamp,
             sentBy: row.sentBy || 'System',
             fromDisplay: row.fromDisplay || this.formatFromFallback(row.sentBy, row.fromEmail),
             recipientLabel: row.recipientCount === 1 ? 'Recipient' : 'Recipients',
@@ -431,7 +468,34 @@ export default class SugatiCommunicationHistory extends LightningElement {
             bounceLabel: row.bounceType
                 ? `${row.bounceType}${row.bounceDescription ? ` — ${row.bounceDescription}` : ''}`
                 : row.bounceDescription || null,
-            postmarkMessageId: row.postmarkMessageId || null
+            messageId: row.messageId || null,
+            showDeliveryPill: deliveryPill.show,
+            deliveryPillClass: deliveryPill.pillClass,
+            deliveryPillLabel: deliveryPill.pillLabel
+        };
+    }
+
+    resolveDeliveryModePill(channel, isDraft, deliveryMode) {
+        if (channel !== 'email' || isDraft) {
+            return { show: false, pillClass: '', pillLabel: '' };
+        }
+        const normalized = (deliveryMode || 'postmark').trim().toLowerCase();
+        if (
+            normalized === 'native' ||
+            normalized === 'salesforce' ||
+            normalized === 'sf' ||
+            normalized.includes('native')
+        ) {
+            return {
+                show: true,
+                pillClass: 'pill p-delivery-native',
+                pillLabel: 'Native'
+            };
+        }
+        return {
+            show: true,
+            pillClass: 'pill p-delivery-postmark',
+            pillLabel: 'Postmark'
         };
     }
 
@@ -519,6 +583,10 @@ export default class SugatiCommunicationHistory extends LightningElement {
             return '';
         }
         return content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    sortHistoryItems(items) {
+        return [...items].sort((a, b) => (b.sortTimestamp || 0) - (a.sortTimestamp || 0));
     }
 
     buildAttachmentChips(summary) {

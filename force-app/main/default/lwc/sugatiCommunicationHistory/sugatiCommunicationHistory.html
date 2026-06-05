@@ -1,6 +1,6 @@
 <template>
     <div class={rootClass}>
-        <template lwc:if={isHubMode}>
+        <template lwc:if={showSidebar}>
             <div class="hub-sb">
                 <div class="sb-ey">Workspace</div>
                 <div class={allSidebarClass} data-key="all" onclick={handleSidebarClick}>All Communications</div>
@@ -44,7 +44,10 @@
                 </div>
                 <template lwc:if={isHistoryOnly}>
                     <div class="history-actions">
-                        <button type="button" class="btn btn-sec">Filter</button>
+                        <button type="button" class={filterButtonClass} onclick={handleToggleFilterPanel}>Filter</button>
+                        <template lwc:if={hasActiveFilters}>
+                            <button type="button" class="btn-ghost" onclick={handleClearFilters}>Clear</button>
+                        </template>
                         <button type="button" class="btn-ghost">Export</button>
                     </div>
                 </template>
@@ -91,6 +94,9 @@
                             <div class="tl-subj">{item.subject}</div>
                             <div class="tl-meta">
                                 <span class={item.tagClass}>{item.tagLabel}</span>
+                                <template lwc:if={item.showDeliveryPill}>
+                                    <span class={item.deliveryPillClass}>{item.deliveryPillLabel}</span>
+                                </template>
                                 <span class="tl-who">{item.who}</span>
                                 <span class={item.pillClass}>{item.pillLabel}</span>
                                 <span class="tl-when">{item.when}</span>
@@ -202,6 +208,9 @@
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Sent by</span><span class="tl-dm-val">{item.sentBy}</span></div>
                                                 <div class="tl-dm-row"><span class="tl-dm-label">{item.recipientLabel}</span><span class="tl-dm-val">{item.recipients}</span></div>
                                                 <div class="tl-dm-row"><span class="tl-dm-label">Delivery</span><span class="tl-dm-val">{item.delivery}</span></div>
+                                                <template lwc:if={item.messageId}>
+                                                    <div class="tl-dm-row"><span class="tl-dm-label">Message ID</span><span class="tl-dm-val tl-dm-mono">{item.messageId}</span></div>
+                                                </template>
                                                 <template lwc:if={item.hasTracking}>
                                                     <div class="tl-dm-row"><span class="tl-dm-label">Tracking</span><span class="tl-dm-val">{item.trackingSummary}</span></div>
                                                     <template lwc:if={item.openCountLabel}>
@@ -212,9 +221,6 @@
                                                     </template>
                                                     <template lwc:if={item.bounceLabel}>
                                                         <div class="tl-dm-row"><span class="tl-dm-label">Bounce</span><span class="tl-dm-val">{item.bounceLabel}</span></div>
-                                                    </template>
-                                                    <template lwc:if={item.postmarkMessageId}>
-                                                        <div class="tl-dm-row"><span class="tl-dm-label">Message ID</span><span class="tl-dm-val tl-dm-mono">{item.postmarkMessageId}</span></div>
                                                     </template>
                                                 </template>
                                                 <template lwc:if={item.template}>

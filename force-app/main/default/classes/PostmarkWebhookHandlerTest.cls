@@ -3,7 +3,6 @@ private class PostmarkWebhookHandlerTest {
     @IsTest
     static void testDeliveryWebhookUpdatesRecipientAndLog() {
         Comm_Log__c log = new Comm_Log__c(
-            Name = 'Webhook Log Delivery',
             Channel__c = 'Email',
             Direction__c = 'Outbound',
             Subject__c = 'Subject',
@@ -18,7 +17,7 @@ private class PostmarkWebhookHandlerTest {
             Comm_Log__c = log.Id,
             Email_Address__c = 'delivery@example.com',
             Status__c = 'Sent',
-            Postmark_Id__c = 'pm-msg-delivery-001'
+            Message_Id__c = 'pm-msg-delivery-001'
         );
         insert rec;
 
@@ -41,28 +40,27 @@ private class PostmarkWebhookHandlerTest {
         System.assertNotEquals(null, updatedRec.Delivered_At__c);
 
         Comm_Log__c updatedLog = [
-            SELECT Status__c, Delivered_At__c, Postmark_Message_Id__c, Last_Modified_At__c
+            SELECT Status__c, Delivered_At__c, Message_Id__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id = :log.Id
         ];
         System.assertEquals('Delivered', updatedLog.Status__c);
         System.assertNotEquals(null, updatedLog.Delivered_At__c);
-        System.assertEquals('pm-msg-delivery-001', updatedLog.Postmark_Message_Id__c);
+        System.assertEquals('pm-msg-delivery-001', updatedLog.Message_Id__c);
         System.assertNotEquals(null, updatedLog.Last_Modified_At__c);
         System.assertEquals(200, RestContext.response.statusCode);
     }
 
     @IsTest
-    static void testDeliveryWebhookMatchesLogPostmarkMessageId() {
+    static void testDeliveryWebhookMatchesLogMessageId() {
         Comm_Log__c log = new Comm_Log__c(
-            Name = 'Webhook Log Message Id Fallback',
             Channel__c = 'Email',
             Direction__c = 'Outbound',
             Subject__c = 'Subject',
             Body_HTML__c = '<p>Body</p>',
             Status__c = 'Sent',
             Delivery_Mode__c = 'postmark',
-            Postmark_Message_Id__c = 'pm-msg-log-only-001'
+            Message_Id__c = 'pm-msg-log-only-001'
         );
         insert log;
 
@@ -96,7 +94,6 @@ private class PostmarkWebhookHandlerTest {
     @IsTest
     static void testOpenAndBounceWebhookTracking() {
         Comm_Log__c log = new Comm_Log__c(
-            Name = 'Webhook Log Open Bounce',
             Channel__c = 'Email',
             Direction__c = 'Outbound',
             Subject__c = 'Subject 2',
@@ -111,7 +108,7 @@ private class PostmarkWebhookHandlerTest {
             Comm_Log__c = log.Id,
             Email_Address__c = 'openbounce@example.com',
             Status__c = 'Sent',
-            Postmark_Id__c = 'pm-msg-openbounce-001'
+            Message_Id__c = 'pm-msg-openbounce-001'
         );
         insert rec;
 
@@ -163,14 +160,13 @@ private class PostmarkWebhookHandlerTest {
     @IsTest
     static void testSpamAndClickWebhooks() {
         Comm_Log__c log = new Comm_Log__c(
-            Name = 'Webhook Log Spam Click',
             Channel__c = 'Email',
             Direction__c = 'Outbound',
             Subject__c = 'Subject',
             Body_HTML__c = '<p>Body</p>',
             Status__c = 'Sent',
             Delivery_Mode__c = 'postmark',
-            Postmark_Message_Id__c = 'pm-msg-spam-click-001'
+            Message_Id__c = 'pm-msg-spam-click-001'
         );
         insert log;
 
@@ -179,7 +175,7 @@ private class PostmarkWebhookHandlerTest {
             Comm_Log__c = log.Id,
             Email_Address__c = 'spamclick@example.com',
             Status__c = 'Sent',
-            Postmark_Id__c = 'pm-msg-spam-click-001'
+            Message_Id__c = 'pm-msg-spam-click-001'
         );
         insert rec;
 
@@ -225,7 +221,6 @@ private class PostmarkWebhookHandlerTest {
     @IsTest
     static void testOpenWebhookFiltersRecipientByEmail() {
         Comm_Log__c log = new Comm_Log__c(
-            Name = 'Webhook Log Open Filter',
             Channel__c = 'Email',
             Direction__c = 'Outbound',
             Subject__c = 'Subject',
@@ -240,14 +235,14 @@ private class PostmarkWebhookHandlerTest {
             Comm_Log__c = log.Id,
             Email_Address__c = 'opena@example.com',
             Status__c = 'Sent',
-            Postmark_Id__c = 'pm-msg-open-filter-001'
+            Message_Id__c = 'pm-msg-open-filter-001'
         );
         Comm_Recipient__c recB = new Comm_Recipient__c(
             Name = 'Recipient B',
             Comm_Log__c = log.Id,
             Email_Address__c = 'openb@example.com',
             Status__c = 'Sent',
-            Postmark_Id__c = 'pm-msg-open-filter-001'
+            Message_Id__c = 'pm-msg-open-filter-001'
         );
         insert new List<Comm_Recipient__c>{ recA, recB };
 

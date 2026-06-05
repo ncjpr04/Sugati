@@ -65,6 +65,11 @@
     overflow: hidden;
 }
 
+.history-layout-filtered {
+    display: grid;
+    grid-template-columns: 224px 1fr;
+}
+
 /* ── Sidebar ── */
 .hub-sb {
     border-right: 1px solid var(--b1);
@@ -218,6 +223,13 @@
     font-size: 12px;
     cursor: pointer;
     font-family: inherit;
+}
+
+.btn-sec.on {
+    border-color: var(--ac-b);
+    background: var(--ac-s);
+    color: var(--warm-black);
+    font-weight: 500;
 }
 
 .btn-ghost {
@@ -405,6 +417,24 @@
 .p-spam      { background: rgba(180, 83, 9, 0.12); color: var(--warn); }
 .p-received  { background: var(--ok-s); color: var(--ok); }
 .p-failed    { background: var(--err-s); color: var(--err); }
+
+.p-delivery-postmark {
+    background: rgba(255, 197, 67, 0.14);
+    color: #7a5c00;
+    border: 1px solid rgba(255, 197, 67, 0.35);
+    font-size: 9px;
+    padding: 2px 7px;
+    letter-spacing: 0.02em;
+}
+
+.p-delivery-native {
+    background: rgba(43, 108, 176, 0.1);
+    color: var(--info);
+    border: 1px solid rgba(43, 108, 176, 0.22);
+    font-size: 9px;
+    padding: 2px 7px;
+    letter-spacing: 0.02em;
+}
 
 .tl-act {
     font-size: 11px;

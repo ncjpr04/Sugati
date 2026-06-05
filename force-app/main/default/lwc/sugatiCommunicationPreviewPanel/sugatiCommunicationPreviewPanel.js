@@ -34,6 +34,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     sendTitle = 'Sending…';
     sendSubtitle = '';
     sendSucceeded = false;
+    lastProviderMessageId = null;
     resolvedBody = '';
     recipientLabel = '';
     fromLabel = '';
@@ -639,6 +640,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
             if (result?.status === 'Failed') {
                 throw new Error(result?.message || 'Send failed.');
             }
+            this.lastProviderMessageId = result?.providerMessageId || null;
             this.sendSucceeded = true;
             this.sendPhase = 'sent';
             this.sendTitle = this.previewChannel === 'email' ? 'Email Sent' : 'Message Sent';
@@ -661,13 +663,14 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                         subject: this.subject,
                         who: this.toLine,
                         recipients: this.toLine,
-                        messageId: `PM-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+                        messageId: this.lastProviderMessageId || null
                     }
                 })
             );
         }
         this.sendSucceeded = false;
         this.sendPhase = 'idle';
+        this.lastProviderMessageId = null;
     }
 
     resolveOpportunityId() {

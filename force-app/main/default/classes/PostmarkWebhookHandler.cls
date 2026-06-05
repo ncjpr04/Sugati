@@ -85,7 +85,7 @@ global without sharing class PostmarkWebhookHandler {
             return;
         }
         List<Comm_Log__c> logs = [
-            SELECT Id, Click_Count__c, Postmark_Message_Id__c, Last_Modified_At__c
+            SELECT Id, Click_Count__c, Message_Id__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id IN :commLogIds
         ];
@@ -93,8 +93,8 @@ global without sharing class PostmarkWebhookHandler {
             Integer clickCount = log.Click_Count__c == null ? 0 : Integer.valueOf(log.Click_Count__c);
             log.Click_Count__c = clickCount + 1;
             log.Last_Modified_At__c = eventAt;
-            if (String.isBlank(log.Postmark_Message_Id__c)) {
-                log.Postmark_Message_Id__c = messageId;
+            if (String.isBlank(log.Message_Id__c)) {
+                log.Message_Id__c = messageId;
             }
         }
         if (!logs.isEmpty()) {
@@ -115,7 +115,7 @@ global without sharing class PostmarkWebhookHandler {
             return;
         }
         List<Comm_Log__c> logs = [
-            SELECT Id, Status__c, Bounce_Type__c, Bounce_Description__c, Bounced_At__c, Postmark_Message_Id__c, Last_Modified_At__c
+            SELECT Id, Status__c, Bounce_Type__c, Bounce_Description__c, Bounced_At__c, Message_Id__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id IN :commLogIds
         ];
@@ -125,8 +125,8 @@ global without sharing class PostmarkWebhookHandler {
             log.Bounce_Description__c = description;
             log.Bounced_At__c = eventAt;
             log.Last_Modified_At__c = eventAt;
-            if (String.isBlank(log.Postmark_Message_Id__c)) {
-                log.Postmark_Message_Id__c = messageId;
+            if (String.isBlank(log.Message_Id__c)) {
+                log.Message_Id__c = messageId;
             }
         }
         if (!logs.isEmpty()) {
@@ -143,7 +143,7 @@ global without sharing class PostmarkWebhookHandler {
             return;
         }
         List<Comm_Log__c> logs = [
-            SELECT Id, Status__c, Spam_Reported_At__c, Postmark_Message_Id__c, Last_Modified_At__c
+            SELECT Id, Status__c, Spam_Reported_At__c, Message_Id__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id IN :commLogIds
         ];
@@ -151,8 +151,8 @@ global without sharing class PostmarkWebhookHandler {
             log.Status__c = 'Spam Complaint';
             log.Spam_Reported_At__c = eventAt;
             log.Last_Modified_At__c = eventAt;
-            if (String.isBlank(log.Postmark_Message_Id__c)) {
-                log.Postmark_Message_Id__c = messageId;
+            if (String.isBlank(log.Message_Id__c)) {
+                log.Message_Id__c = messageId;
             }
         }
         if (!logs.isEmpty()) {
@@ -171,7 +171,7 @@ global without sharing class PostmarkWebhookHandler {
             return;
         }
         List<Comm_Log__c> logs = [
-            SELECT Id, Status__c, Delivered_At__c, Postmark_Message_Id__c, Last_Modified_At__c
+            SELECT Id, Status__c, Delivered_At__c, Message_Id__c, Last_Modified_At__c
             FROM Comm_Log__c
             WHERE Id IN :commLogIds
         ];
@@ -181,8 +181,8 @@ global without sharing class PostmarkWebhookHandler {
             }
             log.Delivered_At__c = eventAt;
             log.Last_Modified_At__c = eventAt;
-            if (String.isBlank(log.Postmark_Message_Id__c)) {
-                log.Postmark_Message_Id__c = messageId;
+            if (String.isBlank(log.Message_Id__c)) {
+                log.Message_Id__c = messageId;
             }
         }
         if (!logs.isEmpty()) {
@@ -195,7 +195,7 @@ global without sharing class PostmarkWebhookHandler {
             return;
         }
         List<Comm_Log__c> logs = [
-            SELECT Id, Status__c, Open_Count__c, First_Opened_At__c, Last_Opened_At__c, Postmark_Message_Id__c, Last_Modified_At__c, Delivered_At__c
+            SELECT Id, Status__c, Open_Count__c, First_Opened_At__c, Last_Opened_At__c, Message_Id__c, Last_Modified_At__c, Delivered_At__c
             FROM Comm_Log__c
             WHERE Id IN :commLogIds
         ];
@@ -211,8 +211,8 @@ global without sharing class PostmarkWebhookHandler {
             if (log.Delivered_At__c == null) {
                 log.Delivered_At__c = eventAt;
             }
-            if (String.isBlank(log.Postmark_Message_Id__c)) {
-                log.Postmark_Message_Id__c = messageId;
+            if (String.isBlank(log.Message_Id__c)) {
+                log.Message_Id__c = messageId;
             }
         }
         if (!logs.isEmpty()) {
@@ -224,7 +224,7 @@ global without sharing class PostmarkWebhookHandler {
         List<Comm_Recipient__c> recipients = [
             SELECT Id, Status__c
             FROM Comm_Recipient__c
-            WHERE Postmark_Id__c = :messageId
+            WHERE Message_Id__c = :messageId
         ];
         for (Comm_Recipient__c rec : recipients) {
             rec.Status__c = statusValue;
@@ -239,7 +239,7 @@ global without sharing class PostmarkWebhookHandler {
         List<Comm_Recipient__c> recipients = [
             SELECT Id, Comm_Log__c, Status__c, Delivered_At__c, Open_Count__c, Opened_At__c, Email_Address__c
             FROM Comm_Recipient__c
-            WHERE Postmark_Id__c = :messageId
+            WHERE Message_Id__c = :messageId
         ];
         if (!recipients.isEmpty() && String.isNotBlank(recipientEmail)) {
             List<Comm_Recipient__c> filtered = new List<Comm_Recipient__c>();
@@ -260,10 +260,11 @@ global without sharing class PostmarkWebhookHandler {
             return recipients;
         }
         Set<Id> logIds = new Set<Id>();
+        String rfcMessagePattern = '%' + messageId + '%';
         for (Comm_Log__c log : [
             SELECT Id
             FROM Comm_Log__c
-            WHERE Postmark_Message_Id__c = :messageId
+            WHERE Message_Id__c = :messageId OR Message_Id__c LIKE :rfcMessagePattern
             LIMIT 50
         ]) {
             logIds.add(log.Id);
