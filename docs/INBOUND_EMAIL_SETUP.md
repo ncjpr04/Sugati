@@ -67,7 +67,7 @@ These fields must be deployed before inbound processing works:
 
 1. Read `In-Reply-To` / `References` from the received email.
 2. Match that value to `Comm_Log__c.Message_Id__c` on an existing outbound log.
-3. Create a new inbound `Comm_Log__c` with `Parent_Comm_Log__c` pointing to the matched log.
+3. Create a new inbound `Comm_Log__c` with `Parent_Comm_Log__c` pointing to the matched log and `Delivery_Mode__c` copied from the parent (e.g. `postmark` or `native`).
 4. Compare the received email `fromAddress` with the parent log's `Comm_Recipient__c.Email_Address__c` rows.
 5. Create one `Comm_Recipient__c` on the inbound log using the matched parent recipient's:
    - `Email_Address__c`

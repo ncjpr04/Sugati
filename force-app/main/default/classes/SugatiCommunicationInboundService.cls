@@ -1,6 +1,5 @@
 public without sharing class SugatiCommunicationInboundService {
     private static final String EMAIL_CHANNEL = 'Email';
-    private static final String INBOUND_DELIVERY_MODE = 'inbound';
 
     public static Messaging.InboundEmailResult processInboundEmail(
         Messaging.InboundEmail email,
@@ -16,7 +15,6 @@ public without sharing class SugatiCommunicationInboundService {
             String inboundMessageId = normalizeMessageId(resolveHeaderValue(email, 'Message-Id'));
             if (String.isNotBlank(inboundMessageId) && inboundLogExists(inboundMessageId)) {
                 result.success = true;
-                result.message = 'Duplicate inbound ignored: ' + inboundMessageId;
                 return result;
             }
 
@@ -32,7 +30,6 @@ public without sharing class SugatiCommunicationInboundService {
                     envelope
                 );
                 result.success = true;
-                result.message = 'No parent Comm_Log match';
                 return result;
             }
 
@@ -46,7 +43,7 @@ public without sharing class SugatiCommunicationInboundService {
             inboundLog.Body_HTML__c = resolveInboundBody(email);
             inboundLog.Message_Id__c = inboundMessageId;
             inboundLog.Sent_At__c = System.now();
-            inboundLog.Delivery_Mode__c = INBOUND_DELIVERY_MODE;
+            inboundLog.Delivery_Mode__c = parentLog.Delivery_Mode__c;
             insert inboundLog;
 
             Comm_Recipient__c matchedParentRecipient = findMatchingParentRecipient(
@@ -63,7 +60,6 @@ public without sharing class SugatiCommunicationInboundService {
             saveInboundAttachments(email, inboundLog.Id);
 
             result.success = true;
-            result.message = 'Inbound Comm Log created: ' + inboundLog.Id;
             return result;
         } catch (Exception ex) {
             System.debug(
@@ -74,7 +70,6 @@ public without sharing class SugatiCommunicationInboundService {
                     ex.getStackTraceString()
             );
             result.success = false;
-            result.message = ex.getMessage();
             return result;
         }
     }
@@ -153,15 +148,6 @@ public without sharing class SugatiCommunicationInboundService {
         );
 
         result.success = true;
-        result.message =
-            'Mailbox forwarding verification captured in Comm_Log__c: ' +
-            verificationLog.Id +
-            (String.isNotBlank(verificationUrl)
-                ? ' | verificationUrl=' + verificationUrl
-                : '') +
-            (String.isNotBlank(verificationCode)
-                ? ' | verificationCode=' + verificationCode
-                : '');
         return result;
     }
 
@@ -418,7 +404,7 @@ public without sharing class SugatiCommunicationInboundService {
             return null;
         }
         List<Comm_Log__c> exactMatches = [
-            SELECT Id, Opportunity__c, Message_Id__c
+            SELECT Id, Opportunity__c, Message_Id__c, Delivery_Mode__c
             FROM Comm_Log__c
             WHERE Message_Id__c = :candidate
             ORDER BY CreatedDate DESC
@@ -434,7 +420,7 @@ public without sharing class SugatiCommunicationInboundService {
         }
         String likePattern = '%' + strippedUuid + '%';
         List<Comm_Log__c> fuzzyMatches = [
-            SELECT Id, Opportunity__c, Message_Id__c
+            SELECT Id, Opportunity__c, Message_Id__c, Delivery_Mode__c
             FROM Comm_Log__c
             WHERE Message_Id__c LIKE :likePattern
             ORDER BY CreatedDate DESC

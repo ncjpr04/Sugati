@@ -1,0 +1,181 @@
+<template>
+    <div class={overlayClass} role="dialog" aria-modal="true" aria-label="Email conversation" onclick={handleBackdropClick}>
+        <div class="conv-panel" role="document" onclick={stopProp}>
+            <div class="conv-hdr">
+                <div class="conv-hdr-top">
+                    <div class="conv-hdr-main">
+                        <div class="conv-eyebrow">Email thread</div>
+                        <h2 class="conv-subject">{subject}</h2>
+                        <div class="conv-chip-row">
+                            <span class="conv-chip conv-chip-count">{messageCountLabel}</span>
+                            <span class="conv-chip conv-chip-stats">{threadStatsLabel}</span>
+                            <template lwc:if={threadMeta.rootDeliveryLabel}>
+                                <span class="conv-chip conv-chip-delivery">{threadMeta.rootDeliveryLabel}</span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="conv-hdr-actions">
+                        <button type="button" class="conv-icon-btn" title="Jump to latest" onclick={handleJumpToLatest} data-action="jump-latest">↓</button>
+                        <button type="button" class="conv-icon-btn" title={collapseAllLabel} onclick={handleToggleCollapseAll}>⇕</button>
+                        <button type="button" class="conv-icon-btn conv-close" title="Close" onclick={handleClose}>✕</button>
+                    </div>
+                </div>
+
+                <template lwc:if={hasRootMeta}>
+                    <div class="conv-parent-compact">
+                        <div class="conv-parent-line">
+                            <span class="conv-pair">
+                                <b>Status</b>
+                                <span class={rootStatusClass}>{threadMeta.rootStatus}</span>
+                            </span>
+                            <template lwc:if={threadMeta.rootMessageId}>
+                                <span class="conv-pair conv-pair-id">
+                                    <b>Message ID</b>
+                                    <span class="mono">{threadMeta.rootMessageId}</span>
+                                    <button type="button" class="conv-copy-btn" data-copy={threadMeta.rootMessageId} onclick={handleCopy}>Copy</button>
+                                </span>
+                            </template>
+                            <template lwc:if={threadMeta.threadStartedLabel}>
+                                <span class="conv-pair"><b>Started</b> {threadMeta.threadStartedLabel}</span>
+                            </template>
+                            <template lwc:if={threadMeta.threadLastActivityLabel}>
+                                <span class="conv-pair"><b>Last activity</b> {threadMeta.threadLastActivityLabel}</span>
+                            </template>
+                        </div>
+                        <div class="conv-parent-line conv-parent-line-meta">
+                            <template lwc:if={hasRootFrom}>
+                                <span class="conv-pair conv-pair-party">
+                                    <b>From</b>
+                                    <span class="conv-party-detail">
+                                        <template lwc:if={rootFromName}>
+                                            <span class="conv-party-name">{rootFromName}</span>
+                                        </template>
+                                        <template lwc:if={rootFromEmail}>
+                                            <span class="conv-party-email">{rootFromEmail}</span>
+                                        </template>
+                                    </span>
+                                </span>
+                            </template>
+                            <template lwc:if={hasRootTo}>
+                                <span class="conv-pair conv-pair-party">
+                                    <b>To</b>
+                                    <span class="conv-party-list">
+                                        <template for:each={rootToParties} for:item="to">
+                                            <span key={to.key} class="conv-party-detail">
+                                                <template lwc:if={to.showName}>
+                                                    <span class="conv-party-name">{to.name}</span>
+                                                </template>
+                                                <template lwc:if={to.showEmail}>
+                                                    <span class="conv-party-email">{to.email}</span>
+                                                </template>
+                                            </span>
+                                        </template>
+                                    </span>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <template lwc:if={showCopyFeedback}>
+                <div class="conv-toast">{copyFeedback}</div>
+            </template>
+
+            <div class="conv-toolbar">
+                <button type="button" class="conv-tool-btn" onclick={handleToggleCollapseAll}>{collapseAllLabel}</button>
+                <button type="button" class="conv-tool-btn" data-action="jump-latest" onclick={handleJumpToLatest}>Jump to latest</button>
+            </div>
+
+            <div class="conv-scroll">
+                <template lwc:if={isLoading}>
+                    <div class="conv-loading">
+                        <div class="conv-spinner"></div>
+                        <div>Loading conversation…</div>
+                    </div>
+                </template>
+                <template lwc:elseif={hasMessages}>
+                    <template for:each={displayMessages} for:item="msg">
+                        <article key={msg.key} class={msg.rowClass} data-id={msg.key} data-scroll-id={msg.key} onclick={handleToggleMessage}>
+                            <div class="conv-msg-row">
+                                <div class="conv-index">{msg.index}</div>
+                                <div class="conv-avatar" aria-hidden="true">{msg.initials}</div>
+                                <div class="conv-msg-main">
+                                    <div class="conv-msg-top">
+                                        <span class="conv-sender">{msg.senderLine}</span>
+                                        <span class={msg.rootBadgeClass}>{msg.rootBadgeLabel}</span>
+                                        <template lwc:if={msg.isExpanded}>
+                                            <span class={msg.statusClass}>{msg.statusLabel}</span>
+                                        </template>
+                                        <template lwc:else>
+                                            <span class="conv-snippet">{msg.snippet}</span>
+                                        </template>
+                                    </div>
+                                    <template lwc:if={msg.isExpanded}>
+                                        <div class="conv-meta-line">
+                                            {msg.recipientLine}
+                                            <template lwc:if={msg.showDelivery}>
+                                                <span class="conv-meta-sep">·</span>
+                                                <span>{msg.deliveryLabel}</span>
+                                            </template>
+                                        </div>
+                                        <div class="conv-meta-line conv-meta-full">{msg.fullTimeLabel}</div>
+                                    </template>
+                                </div>
+                                <div class="conv-msg-side">
+                                    <span class="conv-time">{msg.timeLabel}</span>
+                                    <span class={msg.chevronClass}>›</span>
+                                </div>
+                            </div>
+
+                            <template lwc:if={msg.isExpanded}>
+                                <div class="conv-body-wrap">
+                                    <div class="conv-body-card">
+                                        <div class="conv-body" data-body-host data-id={msg.key}></div>
+                                    </div>
+                                    <template lwc:if={msg.hasAttachments}>
+                                        <div class="conv-att-row">
+                                            <span class="conv-att-label">Attachments</span>
+                                            <template for:each={msg.attachmentChips} for:item="chip">
+                                                <button
+                                                    key={chip.id}
+                                                    type="button"
+                                                    class="conv-att-chip"
+                                                    title="Open attachment"
+                                                    data-doc-id={chip.contentDocumentId}
+                                                    data-att-id={chip.attachmentRecordId}
+                                                    data-kind={chip.storageKind}
+                                                    onclick={handleOpenAttachment}
+                                                >
+                                                    <span class="conv-att-chip-name">{chip.name}</span>
+                                                    <template lwc:if={chip.meta}>
+                                                        <span class="conv-att-chip-meta">{chip.meta}</span>
+                                                    </template>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <template lwc:if={msg.showMessageId}>
+                                        <div class="conv-msg-id-row">
+                                            <span class="conv-msg-id-label">Message ID</span>
+                                            <span class="conv-msg-id-val">{msg.messageId}</span>
+                                            <button type="button" class="conv-copy-btn" data-copy={msg.messageId} onclick={handleCopy}>Copy</button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </article>
+                    </template>
+                </template>
+                <template lwc:else>
+                    <div class="conv-empty-state">No messages in this conversation.</div>
+                </template>
+            </div>
+
+            <div class="conv-footer">
+                <button type="button" class="conv-action-btn conv-action-primary" onclick={handleReply}>↩ Reply</button>
+                <button type="button" class="conv-action-btn" onclick={handleReplyAll}>↪ Reply All</button>
+            </div>
+        </div>
+    </div>
+</template>

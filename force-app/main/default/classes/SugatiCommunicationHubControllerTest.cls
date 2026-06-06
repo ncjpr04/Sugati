@@ -233,7 +233,7 @@ private class SugatiCommunicationHubControllerTest {
         System.assertNotEquals(null, log.Last_Modified_At__c, 'Draft save should stamp Last_Modified_At__c');
 
         List<SugatiCommunicationHubController.HistoryItemDTO> history =
-            SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null);
+            SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null, false);
         System.assertEquals(1, history.size());
         System.assertNotEquals(null, history[0].lastModifiedAt, 'History should expose last modified for drafts');
         System.assertNotEquals(null, history[0].fromDisplay, 'History should expose from display for drafts');
@@ -583,9 +583,108 @@ private class SugatiCommunicationHubControllerTest {
         );
 
         List<SugatiCommunicationHubController.HistoryItemDTO> history =
-            SugatiCommunicationHubController.getHistory(opp.Id, null, null, null, null);
+            SugatiCommunicationHubController.getHistory(opp.Id, null, null, null, null, false);
         System.assert(!history.isEmpty());
         System.assert(history[0].attachmentCount >= 2);
+    }
+
+    @IsTest
+    static void testConversationThreadAndRootOnlyHistory() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        Contact traveller = [SELECT Id, Name, Email FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
+
+        Comm_Log__c parentLog = new Comm_Log__c(
+            Opportunity__c = opp.Id,
+            Channel__c = 'Email',
+            Direction__c = 'Outbound',
+            Subject__c = 'Acknowledgement Email',
+            Body_HTML__c = '<p>Thank you for your enquiry.</p>',
+            Status__c = 'Sent',
+            Sent_At__c = System.now().addMinutes(-30),
+            Message_Id__c = '<parent@mtasv.net>',
+            From_Address__c = 'agent@example.com',
+            Delivery_Mode__c = 'postmark'
+        );
+        insert parentLog;
+
+        insert new Comm_Recipient__c(
+            Comm_Log__c = parentLog.Id,
+            Contact__c = traveller.Id,
+            Name = traveller.Name,
+            Email_Address__c = traveller.Email,
+            Recipient_Type__c = 'Traveller',
+            Status__c = 'Sent'
+        );
+
+        Comm_Log__c inboundLog = new Comm_Log__c(
+            Opportunity__c = opp.Id,
+            Channel__c = 'Email',
+            Direction__c = 'Inbound',
+            Subject__c = 'Re: Acknowledgement Email',
+            Body_HTML__c = '<p>Thanks, looks good.</p>',
+            Status__c = 'Received',
+            Sent_At__c = System.now().addMinutes(-10),
+            Parent_Comm_Log__c = parentLog.Id,
+            From_Address__c = traveller.Email,
+            Delivery_Mode__c = 'postmark'
+        );
+        insert inboundLog;
+
+        insert new Comm_Recipient__c(
+            Comm_Log__c = inboundLog.Id,
+            Contact__c = traveller.Id,
+            Name = traveller.Name,
+            Email_Address__c = traveller.Email,
+            Recipient_Type__c = 'Traveller',
+            Status__c = 'Inbound'
+        );
+
+        insert new ContentVersion(
+            Title = 'Outbound itinerary',
+            PathOnClient = 'outbound-itinerary.pdf',
+            VersionData = Blob.valueOf('outbound attachment'),
+            FirstPublishLocationId = parentLog.Id
+        );
+        insert new ContentVersion(
+            Title = 'Inbound reply file',
+            PathOnClient = 'inbound-reply.pdf',
+            VersionData = Blob.valueOf('inbound attachment'),
+            FirstPublishLocationId = inboundLog.Id
+        );
+
+        Test.startTest();
+        List<SugatiCommunicationHubController.HistoryItemDTO> allHistory =
+            SugatiCommunicationHubController.getHistory(opp.Id, null, null, null, null, false);
+        List<SugatiCommunicationHubController.HistoryItemDTO> rootHistory =
+            SugatiCommunicationHubController.getHistory(opp.Id, null, null, null, null, true);
+        SugatiCommunicationHubController.ConversationThreadDTO thread =
+            SugatiCommunicationHubController.getConversationThread(inboundLog.Id);
+        Test.stopTest();
+
+        System.assertEquals(2, allHistory.size(), 'History should include outbound and inbound rows');
+        System.assertEquals(1, rootHistory.size(), 'Hub root filter should return parent outbound only');
+        System.assertEquals(parentLog.Id, rootHistory[0].id);
+        System.assertEquals(2, rootHistory[0].threadMessageCount);
+
+        System.assertEquals(parentLog.Id, thread.threadRootId);
+        System.assertEquals('Acknowledgement Email', thread.subject);
+        System.assertEquals('Sent', thread.rootStatus);
+        System.assertEquals(1, thread.outboundCount);
+        System.assertEquals(1, thread.inboundCount);
+        System.assertEquals('<parent@mtasv.net>', thread.rootMessageId);
+        System.assertNotEquals(null, thread.rootFromParty);
+        System.assertEquals(1, thread.rootToParties.size());
+        System.assertEquals(traveller.Email, thread.rootToParties[0].email);
+        System.assertEquals(2, thread.messages.size());
+        System.assertEquals(true, thread.messages[0].isThreadRoot);
+        System.assertEquals('Outbound', thread.messages[0].direction);
+        System.assertEquals('Inbound', thread.messages[1].direction);
+        System.assert(thread.messages[0].snippet.contains('Thank you'));
+        System.assert(thread.messages[1].snippet.contains('Thanks'));
+        System.assertEquals(1, thread.messages[0].attachments.size());
+        System.assertEquals(1, thread.messages[1].attachments.size());
+        System.assertNotEquals(null, thread.messages[0].attachments[0].contentDocumentId);
+        System.assertNotEquals(null, thread.messages[1].attachments[0].contentDocumentId);
     }
 
     @IsTest
@@ -611,11 +710,11 @@ private class SugatiCommunicationHubControllerTest {
         );
 
         List<SugatiCommunicationHubController.HistoryItemDTO> drafts =
-            SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null);
+            SugatiCommunicationHubController.getHistory(opp.Id, null, 'Draft', null, null, false);
         System.assertEquals(1, drafts.size(), 'Draft filter should return draft log');
 
         List<SugatiCommunicationHubController.HistoryItemDTO> travellers =
-            SugatiCommunicationHubController.getHistory(opp.Id, null, null, 'travellers', null);
+            SugatiCommunicationHubController.getHistory(opp.Id, null, null, 'travellers', null, false);
         System.assert(!travellers.isEmpty(), 'Traveller audience filter should match draft log');
     }
 

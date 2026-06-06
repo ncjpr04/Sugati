@@ -393,6 +393,13 @@
 
 .tl-who  { font-size: 11px; color: var(--t3); }
 .tl-when { font-size: 11px; color: var(--t4); }
+.tl-thread-count {
+    font-size: 10px;
+    color: var(--info);
+    background: var(--info-s);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
 
 .pill {
     display: inline-flex;
@@ -436,7 +443,17 @@
     letter-spacing: 0.02em;
 }
 
-.tl-act {
+.tl-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    align-self: start;
+    margin-top: 2px;
+}
+
+.tl-act,
+.tl-conv {
     font-size: 11px;
     color: var(--t3);
     padding: 4px 12px;
@@ -446,11 +463,16 @@
     cursor: pointer;
     white-space: nowrap;
     font-family: inherit;
-    align-self: start;
-    margin-top: 2px;
 }
 
-.tl-act:hover {
+.tl-conv {
+    color: var(--info);
+    border-color: rgba(43, 108, 176, 0.25);
+    background: var(--info-s);
+}
+
+.tl-act:hover,
+.tl-conv:hover {
     background: var(--s2);
     color: var(--warm-black);
 }

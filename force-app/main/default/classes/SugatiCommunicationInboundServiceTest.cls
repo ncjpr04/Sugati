@@ -35,7 +35,8 @@ private class SugatiCommunicationInboundServiceTest {
             Body_HTML__c = '<p>Outbound body</p>',
             Status__c = 'Sent',
             Message_Id__c = '<abc@mtasv.net>',
-            From_Address__c = 'agent@example.com'
+            From_Address__c = 'agent@example.com',
+            Delivery_Mode__c = 'postmark'
         );
         insert parentLog;
 
@@ -96,7 +97,7 @@ private class SugatiCommunicationInboundServiceTest {
         System.assert(inboundLog.Body_HTML__c.contains('Thanks for the update'));
         System.assertEquals('<inbound-001@example.com>', inboundLog.Message_Id__c);
         System.assertEquals('Email', inboundLog.Channel__c);
-        System.assertEquals('inbound', inboundLog.Delivery_Mode__c);
+        System.assertEquals('postmark', inboundLog.Delivery_Mode__c);
 
         Comm_Recipient__c inboundRecipient = [
             SELECT Email_Address__c, Contact__c, Recipient_Type__c, Name, Status__c
@@ -358,7 +359,6 @@ private class SugatiCommunicationInboundServiceTest {
         Test.stopTest();
 
         System.assertEquals(true, result.success);
-        System.assert(result.message.contains(verificationUrl));
         System.assertEquals(
             1,
             [
@@ -367,6 +367,13 @@ private class SugatiCommunicationInboundServiceTest {
                 WHERE Delivery_Mode__c = 'mailbox_verification'
             ]
         );
+        Comm_Log__c verificationLog = [
+            SELECT Body_HTML__c
+            FROM Comm_Log__c
+            WHERE Delivery_Mode__c = 'mailbox_verification'
+            LIMIT 1
+        ];
+        System.assert(verificationLog.Body_HTML__c.contains(verificationUrl));
     }
 
     @IsTest
@@ -396,7 +403,6 @@ private class SugatiCommunicationInboundServiceTest {
         Test.stopTest();
 
         System.assertEquals(true, result.success);
-        System.assert(result.message.contains(verificationUrl));
 
         Comm_Log__c verificationLog = [
             SELECT Id, Direction__c, Status__c, Delivery_Mode__c, Body_HTML__c, Subject__c

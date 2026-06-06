@@ -99,6 +99,9 @@
                                 </template>
                                 <span class="tl-who">{item.who}</span>
                                 <span class={item.pillClass}>{item.pillLabel}</span>
+                                <template lwc:if={item.threadCountLabel}>
+                                    <span class="tl-thread-count">{item.threadCountLabel}</span>
+                                </template>
                                 <span class="tl-when">{item.when}</span>
                             </div>
 
@@ -229,6 +232,11 @@
                                                 <template lwc:if={item.attachmentsLabel}>
                                                     <div class="tl-dm-row"><span class="tl-dm-label">Attachments</span><span class="tl-dm-val">{item.attachmentsLabel}</span></div>
                                                 </template>
+                                                <template lwc:if={item.showConversationButton}>
+                                                    <div class="tl-dm-row tl-dm-row-btn">
+                                                        <button type="button" class="btn-primary full" data-id={item.id} onclick={handleViewConversation}>View full conversation</button>
+                                                    </div>
+                                                </template>
                                                 <template lwc:if={item.typeLabel}>
                                                     <div class="tl-dm-row"><span class="tl-dm-label">Type</span><span class="tl-dm-val">{item.typeLabel}</span></div>
                                                 </template>
@@ -242,7 +250,12 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="tl-act" data-id={item.id} onclick={handleToggle}>{item.buttonLabel}</button>
+                        <div class="tl-actions">
+                            <template lwc:if={item.showConversationButton}>
+                                <button type="button" class="tl-conv" data-id={item.id} onclick={handleViewConversation}>Conversation</button>
+                            </template>
+                            <button type="button" class="tl-act" data-id={item.id} onclick={handleToggle}>{item.buttonLabel}</button>
+                        </div>
                     </div>
                 </template>
                 </template>
@@ -252,4 +265,10 @@
             </div>
         </div>
     </div>
+
+    <c-sugati-communication-conversation-modal
+        is-open={conversationOpen}
+        is-loading={conversationLoading}
+        onclose={handleCloseConversation}
+    ></c-sugati-communication-conversation-modal>
 </template>

@@ -71,6 +71,64 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public String bounceDescription;
         @AuraEnabled public String messageId;
         @AuraEnabled public String trackingSummary;
+        @AuraEnabled public String direction;
+        @AuraEnabled public Id parentCommLogId;
+        @AuraEnabled public Id threadRootId;
+        @AuraEnabled public Integer threadMessageCount;
+    }
+
+    public class ConversationPartyDTO {
+        @AuraEnabled public String name;
+        @AuraEnabled public String email;
+    }
+
+    public class ConversationThreadDTO {
+        @AuraEnabled public Id threadRootId;
+        @AuraEnabled public String subject;
+        @AuraEnabled public List<ConversationMessageDTO> messages;
+        @AuraEnabled public String rootStatus;
+        @AuraEnabled public String rootDirection;
+        @AuraEnabled public String rootFromDisplay;
+        @AuraEnabled public String rootSentBy;
+        @AuraEnabled public Datetime rootSentAt;
+        @AuraEnabled public String rootSentAtLabel;
+        @AuraEnabled public String rootDeliveryMode;
+        @AuraEnabled public String rootDeliveryLabel;
+        @AuraEnabled public String rootRecipientSummary;
+        @AuraEnabled public String rootMessageId;
+        @AuraEnabled public ConversationPartyDTO rootFromParty;
+        @AuraEnabled public List<ConversationPartyDTO> rootToParties;
+        @AuraEnabled public Integer inboundCount;
+        @AuraEnabled public Integer outboundCount;
+        @AuraEnabled public String threadStartedLabel;
+        @AuraEnabled public String threadLastActivityLabel;
+        @AuraEnabled public List<String> participants;
+    }
+
+    public class ConversationMessageDTO {
+        @AuraEnabled public Id id;
+        @AuraEnabled public String direction;
+        @AuraEnabled public Id parentCommLogId;
+        @AuraEnabled public String senderName;
+        @AuraEnabled public String senderEmail;
+        @AuraEnabled public String senderDisplay;
+        @AuraEnabled public String senderVia;
+        @AuraEnabled public String recipientSummary;
+        @AuraEnabled public String subject;
+        @AuraEnabled public String snippet;
+        @AuraEnabled public String bodyHtml;
+        @AuraEnabled public Datetime sentAt;
+        @AuraEnabled public String sentAtLabel;
+        @AuraEnabled public String sentAtFullLabel;
+        @AuraEnabled public String relativeLabel;
+        @AuraEnabled public Boolean isOutbound;
+        @AuraEnabled public Boolean isThreadRoot;
+        @AuraEnabled public String status;
+        @AuraEnabled public String messageId;
+        @AuraEnabled public String deliveryMode;
+        @AuraEnabled public Integer attachmentCount;
+        @AuraEnabled public String attachmentSummary;
+        @AuraEnabled public List<AttachmentDTO> attachments;
     }
 
     public class AttachmentDTO {
@@ -753,7 +811,8 @@ public with sharing class SugatiCommunicationHubController {
         String channelFilter,
         String statusFilter,
         String audienceFilter,
-        String statusGroupFilter
+        String statusGroupFilter,
+        Boolean rootOnly
     ) {
         Set<Id> audienceLogIds = resolveAudienceLogIds(opportunityId, audienceFilter);
         if (audienceLogIds != null && audienceLogIds.isEmpty()) {
@@ -767,10 +826,15 @@ public with sharing class SugatiCommunicationHubController {
 
         String soql =
             'SELECT Id, Channel__c, Direction__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
-            'Body_HTML__c, Delivery_Mode__c, From_Address__c, Sent_By__r.Name, Sent_By__r.Email, ' +
+            'Body_HTML__c, Delivery_Mode__c, From_Address__c, Parent_Comm_Log__c, Sent_By__r.Name, Sent_By__r.Email, ' +
             'Open_Count__c, Click_Count__c, First_Opened_At__c, Last_Opened_At__c, Delivered_At__c, ' +
             'Bounced_At__c, Bounce_Type__c, Bounce_Description__c, Spam_Reported_At__c, Message_Id__c ' +
             'FROM Comm_Log__c WHERE Opportunity__c = :opportunityId';
+        if (rootOnly == true) {
+            soql +=
+                ' AND (Status__c = \'Draft\' OR Parent_Comm_Log__c = NULL)' +
+                ' AND (Delivery_Mode__c = NULL OR Delivery_Mode__c != \'mailbox_verification\')';
+        }
         if (!String.isBlank(channelFilter)) {
             soql += ' AND Channel__c = :channelFilter';
         }
@@ -890,9 +954,453 @@ public with sharing class SugatiCommunicationHubController {
                 row.Bounce_Type__c,
                 row.Spam_Reported_At__c
             );
+            dto.direction = row.Direction__c;
+            dto.parentCommLogId = row.Parent_Comm_Log__c;
+            dto.threadRootId = row.Parent_Comm_Log__c == null ? row.Id : row.Parent_Comm_Log__c;
             out.add(dto);
         }
+
+        applyThreadMessageCounts(opportunityId, out);
         return out;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static ConversationThreadDTO getConversationThread(Id commLogId) {
+        ConversationThreadDTO thread = new ConversationThreadDTO();
+        thread.messages = new List<ConversationMessageDTO>();
+        if (commLogId == null) {
+            return thread;
+        }
+
+        Id threadRootId = resolveThreadRootId(commLogId);
+        Comm_Log__c rootLog = [
+            SELECT
+                Id,
+                Opportunity__c,
+                Subject__c,
+                Status__c,
+                Direction__c,
+                Channel__c,
+                Sent_At__c,
+                CreatedDate,
+                Delivery_Mode__c,
+                From_Address__c,
+                Message_Id__c,
+                Sent_By__r.Name,
+                Sent_By__r.Email
+            FROM Comm_Log__c
+            WHERE Id = :threadRootId
+            LIMIT 1
+        ];
+        thread.threadRootId = rootLog.Id;
+        thread.subject = String.isNotBlank(rootLog.Subject__c) ? rootLog.Subject__c : 'Conversation';
+
+        List<Comm_Recipient__c> rootRecipients = [
+            SELECT Id, Name, Email_Address__c, Contact__c, Contact__r.Name, Recipient_Type__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c = :threadRootId
+        ];
+        populateConversationThreadRoot(thread, rootLog, rootRecipients);
+
+        Set<Id> memberIds = collectThreadMemberIds(rootLog.Opportunity__c, threadRootId);
+        if (memberIds.isEmpty()) {
+            return thread;
+        }
+
+        List<Comm_Log__c> logs = [
+            SELECT
+                Id,
+                Channel__c,
+                Direction__c,
+                Subject__c,
+                Status__c,
+                Sent_At__c,
+                CreatedDate,
+                Body_HTML__c,
+                Delivery_Mode__c,
+                From_Address__c,
+                Parent_Comm_Log__c,
+                Message_Id__c,
+                Sent_By__r.Name,
+                Sent_By__r.Email
+            FROM Comm_Log__c
+            WHERE Id IN :memberIds
+            ORDER BY Sent_At__c ASC NULLS LAST, CreatedDate ASC
+        ];
+
+        Map<Id, List<Comm_Recipient__c>> recipientsByLog = new Map<Id, List<Comm_Recipient__c>>();
+        for (Comm_Recipient__c rec : [
+            SELECT Id, Name, Comm_Log__c, Email_Address__c, Contact__c, Contact__r.Name, Recipient_Type__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c IN :memberIds
+        ]) {
+            if (!recipientsByLog.containsKey(rec.Comm_Log__c)) {
+                recipientsByLog.put(rec.Comm_Log__c, new List<Comm_Recipient__c>());
+            }
+            recipientsByLog.get(rec.Comm_Log__c).add(rec);
+        }
+        Map<Id, List<AttachmentDTO>> attachmentsByLog = queryAttachmentsByParentIds(memberIds);
+
+        for (Comm_Log__c row : logs) {
+            List<Comm_Recipient__c> recs = recipientsByLog.containsKey(row.Id)
+                ? recipientsByLog.get(row.Id)
+                : new List<Comm_Recipient__c>();
+            List<AttachmentDTO> attachments = attachmentsByLog.containsKey(row.Id)
+                ? attachmentsByLog.get(row.Id)
+                : new List<AttachmentDTO>();
+            thread.messages.add(buildConversationMessage(row, recs, attachments, threadRootId));
+        }
+        applyConversationThreadStats(thread);
+        return thread;
+    }
+
+    private static void populateConversationThreadRoot(
+        ConversationThreadDTO thread,
+        Comm_Log__c rootLog,
+        List<Comm_Recipient__c> rootRecipients
+    ) {
+        if (thread == null || rootLog == null) {
+            return;
+        }
+        List<String> recipientNames = new List<String>();
+        for (Comm_Recipient__c rec : rootRecipients) {
+            String who = resolveRecipientDisplayName(rec);
+            if (!String.isBlank(who)) {
+                recipientNames.add(who);
+            }
+        }
+
+        thread.rootStatus = rootLog.Status__c;
+        thread.rootDirection = rootLog.Direction__c;
+        thread.rootSentBy = rootLog.Sent_By__r != null ? rootLog.Sent_By__r.Name : null;
+        thread.rootFromDisplay = resolveHistoryFromDisplay(
+            rootLog.From_Address__c,
+            rootLog.Sent_By__r,
+            rootLog.Direction__c == 'Inbound' ? rootRecipients : null
+        );
+        thread.rootSentAt = rootLog.Sent_At__c != null ? rootLog.Sent_At__c : rootLog.CreatedDate;
+        thread.rootSentAtLabel = formatConversationFullTimestamp(thread.rootSentAt);
+        thread.rootDeliveryMode = rootLog.Delivery_Mode__c;
+        thread.rootDeliveryLabel = resolveConversationDeliveryLabel(rootLog.Delivery_Mode__c);
+        thread.rootRecipientSummary = recipientNames.isEmpty() ? null : String.join(recipientNames, ', ');
+        thread.rootMessageId = rootLog.Message_Id__c;
+        thread.rootFromParty = resolveConversationRootFromParty(rootLog, rootRecipients);
+        thread.rootToParties = resolveConversationRootToParties(rootLog, rootRecipients);
+    }
+
+    private static ConversationPartyDTO resolveConversationRootFromParty(
+        Comm_Log__c rootLog,
+        List<Comm_Recipient__c> rootRecipients
+    ) {
+        ConversationPartyDTO party = new ConversationPartyDTO();
+        if (rootLog == null) {
+            return party;
+        }
+        if (rootLog.Direction__c == 'Inbound') {
+            if (rootRecipients != null && !rootRecipients.isEmpty()) {
+                Comm_Recipient__c sender = rootRecipients[0];
+                party.name = resolveRecipientDisplayName(sender);
+                party.email = sender == null ? null : sender.Email_Address__c;
+            }
+            if (String.isBlank(party.email) && !String.isBlank(rootLog.From_Address__c)) {
+                party.email = rootLog.From_Address__c.trim();
+            }
+            return party;
+        }
+
+        party.name = rootLog.Sent_By__r != null ? rootLog.Sent_By__r.Name : null;
+        party.email = rootLog.Sent_By__r != null ? rootLog.Sent_By__r.Email : null;
+        if (!String.isBlank(rootLog.From_Address__c)) {
+            String fromAddress = rootLog.From_Address__c.trim();
+            if (fromAddress.contains('<') && fromAddress.contains('>')) {
+                Integer openIdx = fromAddress.indexOf('<');
+                Integer closeIdx = fromAddress.indexOf('>');
+                if (openIdx > 0 && closeIdx > openIdx) {
+                    party.name = fromAddress.substring(0, openIdx).trim();
+                    party.email = fromAddress.substring(openIdx + 1, closeIdx).trim();
+                    return party;
+                }
+            }
+            if (String.isBlank(party.email)) {
+                party.email = fromAddress;
+            }
+        }
+        return party;
+    }
+
+    private static List<ConversationPartyDTO> resolveConversationRootToParties(
+        Comm_Log__c rootLog,
+        List<Comm_Recipient__c> rootRecipients
+    ) {
+        List<ConversationPartyDTO> parties = new List<ConversationPartyDTO>();
+        if (rootLog == null || rootRecipients == null || rootRecipients.isEmpty()) {
+            return parties;
+        }
+        if (rootLog.Direction__c == 'Inbound') {
+            return parties;
+        }
+        for (Comm_Recipient__c rec : rootRecipients) {
+            ConversationPartyDTO party = new ConversationPartyDTO();
+            party.name = resolveRecipientDisplayName(rec);
+            party.email = rec == null ? null : rec.Email_Address__c;
+            parties.add(party);
+        }
+        return parties;
+    }
+
+    private static void applyConversationThreadStats(ConversationThreadDTO thread) {
+        if (thread == null || thread.messages == null) {
+            return;
+        }
+        thread.inboundCount = 0;
+        thread.outboundCount = 0;
+        Set<String> participantKeys = new Set<String>();
+        List<String> participants = new List<String>();
+        Datetime firstAt;
+        Datetime lastAt;
+
+        for (ConversationMessageDTO message : thread.messages) {
+            if (message == null) {
+                continue;
+            }
+            if (message.isOutbound == true) {
+                thread.outboundCount++;
+            } else {
+                thread.inboundCount++;
+            }
+            String participant = String.isNotBlank(message.senderDisplay)
+                ? message.senderDisplay
+                : message.senderName;
+            if (!String.isBlank(participant)) {
+                String key = participant.trim().toLowerCase();
+                if (!participantKeys.contains(key)) {
+                    participantKeys.add(key);
+                    participants.add(participant);
+                }
+            }
+            if (message.sentAt != null) {
+                if (firstAt == null || message.sentAt < firstAt) {
+                    firstAt = message.sentAt;
+                }
+                if (lastAt == null || message.sentAt > lastAt) {
+                    lastAt = message.sentAt;
+                }
+            }
+        }
+
+        thread.participants = participants;
+        thread.threadStartedLabel = formatConversationFullTimestamp(firstAt);
+        thread.threadLastActivityLabel = formatConversationFullTimestamp(lastAt);
+    }
+
+    private static String resolveConversationDeliveryLabel(String deliveryMode) {
+        if (String.isBlank(deliveryMode)) {
+            return 'Postmark';
+        }
+        String normalized = deliveryMode.trim().toLowerCase();
+        if (normalized == 'native' || normalized.contains('native') || normalized == 'salesforce' || normalized == 'sf') {
+            return 'Native';
+        }
+        if (normalized == 'postmark') {
+            return 'Postmark';
+        }
+        return deliveryMode;
+    }
+
+    private static void applyThreadMessageCounts(Id opportunityId, List<HistoryItemDTO> rows) {
+        if (rows == null || rows.isEmpty()) {
+            return;
+        }
+        Set<Id> rootIds = new Set<Id>();
+        for (HistoryItemDTO row : rows) {
+            if (row != null && row.threadRootId != null) {
+                rootIds.add(row.threadRootId);
+            }
+        }
+        if (rootIds.isEmpty()) {
+            return;
+        }
+
+        Map<Id, Set<Id>> membersByRoot = new Map<Id, Set<Id>>();
+        for (Id rootId : rootIds) {
+            membersByRoot.put(rootId, collectThreadMemberIds(opportunityId, rootId));
+        }
+        for (HistoryItemDTO row : rows) {
+            if (row == null || row.threadRootId == null) {
+                continue;
+            }
+            Set<Id> members = membersByRoot.get(row.threadRootId);
+            row.threadMessageCount = members == null ? 1 : members.size();
+            row.threadRootId = row.threadRootId;
+        }
+    }
+
+    private static Id resolveThreadRootId(Id commLogId) {
+        Id currentId = commLogId;
+        while (currentId != null) {
+            Comm_Log__c row = [
+                SELECT Id, Parent_Comm_Log__c
+                FROM Comm_Log__c
+                WHERE Id = :currentId
+                LIMIT 1
+            ];
+            if (row.Parent_Comm_Log__c == null) {
+                return row.Id;
+            }
+            currentId = row.Parent_Comm_Log__c;
+        }
+        return commLogId;
+    }
+
+    private static Set<Id> collectThreadMemberIds(Id opportunityId, Id rootId) {
+        Set<Id> memberIds = new Set<Id>{ rootId };
+        Boolean growing = true;
+        while (growing) {
+            growing = false;
+            for (Comm_Log__c row : [
+                SELECT Id
+                FROM Comm_Log__c
+                WHERE Opportunity__c = :opportunityId AND Parent_Comm_Log__c IN :memberIds AND Id NOT IN :memberIds
+            ]) {
+                memberIds.add(row.Id);
+                growing = true;
+            }
+        }
+        return memberIds;
+    }
+
+    private static ConversationMessageDTO buildConversationMessage(
+        Comm_Log__c row,
+        List<Comm_Recipient__c> recs,
+        List<AttachmentDTO> attachments,
+        Id threadRootId
+    ) {
+        ConversationMessageDTO message = new ConversationMessageDTO();
+        message.id = row.Id;
+        message.direction = row.Direction__c;
+        message.parentCommLogId = row.Parent_Comm_Log__c;
+        message.isOutbound = row.Direction__c != 'Inbound';
+        message.isThreadRoot = row.Id == threadRootId;
+        message.status = row.Status__c;
+        message.messageId = row.Message_Id__c;
+        message.deliveryMode = row.Delivery_Mode__c;
+        message.subject = row.Subject__c;
+        message.bodyHtml = row.Body_HTML__c;
+        message.snippet = buildConversationSnippet(row.Body_HTML__c);
+        message.sentAt = row.Sent_At__c != null ? row.Sent_At__c : row.CreatedDate;
+        message.sentAtLabel = formatConversationTimestamp(message.sentAt);
+        message.sentAtFullLabel = formatConversationFullTimestamp(message.sentAt);
+        message.relativeLabel = formatConversationRelativeTime(message.sentAt);
+        message.attachmentCount = attachments == null ? 0 : attachments.size();
+        message.attachmentSummary = summarizeAttachmentNames(attachments);
+        message.attachments = attachments == null ? new List<AttachmentDTO>() : attachments;
+
+        List<String> recipientNames = new List<String>();
+        for (Comm_Recipient__c rec : recs) {
+            String who = resolveRecipientDisplayName(rec);
+            if (!String.isBlank(who)) {
+                recipientNames.add(who);
+            }
+        }
+        message.recipientSummary = recipientNames.isEmpty() ? null : String.join(recipientNames, ', ');
+
+        if (message.isOutbound) {
+            message.senderName = row.Sent_By__r != null ? row.Sent_By__r.Name : 'Sugati';
+            message.senderEmail = row.Sent_By__r != null ? row.Sent_By__r.Email : row.From_Address__c;
+            message.senderDisplay = formatUserFromDisplay(message.senderName, message.senderEmail);
+            message.senderVia = resolveConversationSenderVia(row.Delivery_Mode__c);
+        } else {
+            message.senderName = resolveInboundSenderName(recs, row.From_Address__c);
+            message.senderEmail = resolveInboundSenderEmail(recs, row.From_Address__c);
+            message.senderDisplay = resolveHistoryFromDisplay(row.From_Address__c, row.Sent_By__r, recs);
+            message.senderVia = null;
+        }
+        return message;
+    }
+
+    private static String buildConversationSnippet(String bodyHtml) {
+        if (String.isBlank(bodyHtml)) {
+            return '';
+        }
+        String plain = bodyHtml.replaceAll('<[^>]+>', ' ').replaceAll('\\s+', ' ').trim();
+        if (plain.length() <= 140) {
+            return plain;
+        }
+        return plain.substring(0, 137) + '...';
+    }
+
+    private static String formatConversationTimestamp(Datetime value) {
+        if (value == null) {
+            return '';
+        }
+        return value.format('h:mm a');
+    }
+
+    private static String formatConversationFullTimestamp(Datetime value) {
+        if (value == null) {
+            return '';
+        }
+        return value.format('EEE, d MMM yyyy, h:mm a');
+    }
+
+    private static String formatConversationRelativeTime(Datetime value) {
+        if (value == null) {
+            return '';
+        }
+        Long diffMs = System.now().getTime() - value.getTime();
+        Long diffMinutes = diffMs / (1000 * 60);
+        if (diffMinutes < 1) {
+            return 'just now';
+        }
+        if (diffMinutes < 60) {
+            return diffMinutes + (diffMinutes == 1 ? ' minute ago' : ' minutes ago');
+        }
+        Long diffHours = diffMinutes / 60;
+        if (diffHours < 24) {
+            return diffHours + (diffHours == 1 ? ' hour ago' : ' hours ago');
+        }
+        Long diffDays = diffHours / 24;
+        if (diffDays < 7) {
+            return diffDays + (diffDays == 1 ? ' day ago' : ' days ago');
+        }
+        return value.format('d MMM yyyy');
+    }
+
+    private static String resolveConversationSenderVia(String deliveryMode) {
+        if (String.isBlank(deliveryMode)) {
+            return 'salesforce.com';
+        }
+        String normalized = deliveryMode.trim().toLowerCase();
+        if (normalized == 'postmark') {
+            return 'postmark.com';
+        }
+        if (normalized == 'native' || normalized.contains('native')) {
+            return 'salesforce.com';
+        }
+        return null;
+    }
+
+    private static String resolveInboundSenderName(
+        List<Comm_Recipient__c> recs,
+        String fallbackFromAddress
+    ) {
+        if (recs != null && !recs.isEmpty() && String.isNotBlank(recs[0].Name)) {
+            return recs[0].Name.trim();
+        }
+        if (!String.isBlank(fallbackFromAddress)) {
+            return fallbackFromAddress.trim();
+        }
+        return 'Unknown sender';
+    }
+
+    private static String resolveInboundSenderEmail(
+        List<Comm_Recipient__c> recs,
+        String fallbackFromAddress
+    ) {
+        if (recs != null && !recs.isEmpty() && String.isNotBlank(recs[0].Email_Address__c)) {
+            return recs[0].Email_Address__c.trim();
+        }
+        return String.isBlank(fallbackFromAddress) ? null : fallbackFromAddress.trim();
     }
 
     private static String buildTrackingSummary(
@@ -2636,6 +3144,10 @@ public with sharing class SugatiCommunicationHubController {
         if (parentIds == null || parentIds.isEmpty()) {
             return out;
         }
+        Set<String> seenByParent = new Set<String>();
+        for (Id parentId : parentIds) {
+            out.put(parentId, new List<AttachmentDTO>());
+        }
         for (ContentDocumentLink link : [
             SELECT
                 LinkedEntityId,
@@ -2650,12 +3162,35 @@ public with sharing class SugatiCommunicationHubController {
             if (link.LinkedEntityId == null || link.ContentDocumentId == null) {
                 continue;
             }
-            if (!out.containsKey(link.LinkedEntityId)) {
-                out.put(link.LinkedEntityId, new List<AttachmentDTO>());
+            String dedupeKey = String.valueOf(link.LinkedEntityId) + ':' + String.valueOf(link.ContentDocumentId);
+            if (seenByParent.contains(dedupeKey)) {
+                continue;
             }
+            seenByParent.add(dedupeKey);
             AttachmentDTO dto = mapContentDocumentToAttachment(link.ContentDocument, true);
             if (dto != null) {
                 out.get(link.LinkedEntityId).add(dto);
+            }
+        }
+        if (Schema.sObjectType.Attachment.isAccessible()) {
+            for (Attachment att : [
+                SELECT Id, Name, Body, ContentType, ParentId
+                FROM Attachment
+                WHERE ParentId IN :parentIds
+                ORDER BY CreatedDate DESC
+            ]) {
+                if (att.ParentId == null) {
+                    continue;
+                }
+                String dedupeKey = String.valueOf(att.ParentId) + ':' + String.valueOf(att.Id);
+                if (seenByParent.contains(dedupeKey)) {
+                    continue;
+                }
+                seenByParent.add(dedupeKey);
+                AttachmentDTO dto = mapAttachmentRecordToDto(att, true);
+                if (dto != null && out.containsKey(att.ParentId)) {
+                    out.get(att.ParentId).add(dto);
+                }
             }
         }
         return out;

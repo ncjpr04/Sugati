@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import getHistory from '@salesforce/apex/SugatiCommunicationHubController.getHistory';
+import getConversationThread from '@salesforce/apex/SugatiCommunicationHubController.getConversationThread';
 
 const DEFAULT_ITEMS = [];
 
@@ -22,6 +23,8 @@ export default class SugatiCommunicationHistory extends LightningElement {
     showFilterPanel = false;
     expandedId = null;
     activeSidebar = 'all';
+    conversationOpen = false;
+    conversationLoading = false;
     _items = DEFAULT_ITEMS.map((i) => ({ ...i }));
 
     emailCount = 0;
@@ -36,7 +39,8 @@ export default class SugatiCommunicationHistory extends LightningElement {
         channelFilter: '$channelFilterParam',
         statusFilter: '$statusFilterParam',
         audienceFilter: '$audienceFilterParam',
-        statusGroupFilter: '$statusGroupFilterParam'
+        statusGroupFilter: '$statusGroupFilterParam',
+        rootOnly: '$rootOnlyParam'
     })
     wiredHistory(result) {
         this._wiredHistoryResult = result;
@@ -160,6 +164,10 @@ export default class SugatiCommunicationHistory extends LightningElement {
         return 'All Communications';
     }
 
+    get rootOnlyParam() {
+        return this.isHubMode;
+    }
+
     get timelineItems() {
         return this._items.map((item) => ({
             ...item,
@@ -169,7 +177,9 @@ export default class SugatiCommunicationHistory extends LightningElement {
             buttonLabel: this.expandedId === item.id ? 'Close' : 'View',
             isEmail: item.channel === 'email',
             isWa: item.channel === 'wa',
-            isIa: item.channel === 'ia'
+            isIa: item.channel === 'ia',
+            showConversationButton: item.showConversationButton,
+            threadCountLabel: item.threadCountLabel
         }));
     }
 
@@ -259,7 +269,12 @@ export default class SugatiCommunicationHistory extends LightningElement {
     }
 
     handleRowClick(event) {
-        if (event.target.classList.contains('tl-act')) {
+        const target = event.target;
+        if (
+            target.classList.contains('tl-act') ||
+            target.classList.contains('tl-conv') ||
+            target.classList.contains('btn-primary')
+        ) {
             return;
         }
         const id = event.currentTarget.dataset.id;
@@ -270,6 +285,33 @@ export default class SugatiCommunicationHistory extends LightningElement {
         event.stopPropagation();
         const id = event.currentTarget.dataset.id;
         this.expandedId = this.expandedId === id ? null : id;
+    }
+
+    async handleViewConversation(event) {
+        event.stopPropagation();
+        const commLogId = event.currentTarget.dataset.id;
+        if (!commLogId || this.conversationLoading) {
+            return;
+        }
+        this.conversationLoading = true;
+        this.conversationOpen = true;
+        try {
+            const thread = await getConversationThread({ commLogId });
+            const modal = this.template.querySelector('c-sugati-communication-conversation-modal');
+            if (modal) {
+                modal.setThread(thread);
+            }
+        } catch (error) {
+            this.conversationOpen = false;
+            // eslint-disable-next-line no-console
+            console.error('Failed to load conversation thread', error);
+        } finally {
+            this.conversationLoading = false;
+        }
+    }
+
+    handleCloseConversation() {
+        this.conversationOpen = false;
     }
 
     stopProp(event) {
@@ -433,9 +475,18 @@ export default class SugatiCommunicationHistory extends LightningElement {
                 row.bouncedAt ||
                 row.bounceType);
         const deliveryPill = this.resolveDeliveryModePill(ch, isDraft, row.deliveryMode);
+        const threadMessageCount = row.threadMessageCount || 1;
+        const showConversationButton = ch === 'email' && !isDraft;
+        const threadCountLabel =
+            threadMessageCount > 1 ? `${threadMessageCount} messages in thread` : null;
         return {
             id: row.id,
             channel: ch,
+            direction: row.direction,
+            threadRootId: row.threadRootId,
+            threadMessageCount,
+            showConversationButton,
+            threadCountLabel,
             subject: row.subject || 'Untitled message',
             who: recipientText,
             pillClass: statusPresentation.pillClass,
