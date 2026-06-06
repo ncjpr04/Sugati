@@ -38,6 +38,11 @@
                 <default>false</default>
                 <label>Queued</label>
             </value>
+            <value>
+                <fullName>Inbound</fullName>
+                <default>false</default>
+                <label>Inbound</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

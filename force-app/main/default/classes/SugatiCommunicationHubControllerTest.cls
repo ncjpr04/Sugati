@@ -640,4 +640,87 @@ private class SugatiCommunicationHubControllerTest {
             PostmarkEmailService.resolveOutboundRfcMessageId('POSTMARK-TEST')
         );
     }
+
+    @IsTest
+    static void testCommHubReplyToConstant() {
+        System.assertEquals(
+            'b221519@skit.ac.in',
+            SugatiCommunicationHubController.getCommHubReplyToForTest()
+        );
+    }
+
+    @IsTest
+    static void testNativeSendSetsReplyTo() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        List<Contact> contacts = [SELECT Id, Email FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
+
+        SugatiCommunicationHubController.lastNativeReplyTo = null;
+
+        Test.startTest();
+        SugatiCommunicationHubController.sendMessage(
+            opp.Id,
+            new List<String>{ contacts[0].Email },
+            null,
+            null,
+            JSON.serialize(new List<String>{ contacts[0].Email }),
+            null,
+            null,
+            JSON.serialize(
+                new List<Object>{
+                    new Map<String, Object>{ 'email' => contacts[0].Email, 'contactId' => contacts[0].Id }
+                }
+            ),
+            'native',
+            null,
+            null,
+            opp.Id,
+            'Reply-To test',
+            '<p>Body</p>',
+            null,
+            null,
+            null,
+            null
+        );
+        Test.stopTest();
+
+        System.assertEquals(
+            'b221519@skit.ac.in',
+            SugatiCommunicationHubController.lastNativeReplyTo,
+            'Native send should set Reply-To on the outbound email'
+        );
+    }
+
+    private static String capturedPostmarkBody;
+
+    @IsTest
+    static void testPostmarkPayloadIncludesReplyTo() {
+        capturedPostmarkBody = null;
+        Test.setMock(HttpCalloutMock.class, new PostmarkReplyToCaptureMock());
+
+        PostmarkEmailService.PostmarkEmailRequest req = new PostmarkEmailService.PostmarkEmailRequest();
+        req.fromAddress = 'sender@example.com';
+        req.To = 'recipient@example.com';
+        req.Subject = 'Reply-To payload test';
+        req.HtmlBody = '<p>Body</p>';
+        req.ReplyTo = SugatiCommunicationHubController.getCommHubReplyToForTest();
+
+        Test.startTest();
+        PostmarkEmailService.sendEmail(req);
+        Test.stopTest();
+
+        System.assert(
+            capturedPostmarkBody != null && capturedPostmarkBody.contains('b221519@skit.ac.in'),
+            'Postmark payload should include the Communication Hub Reply-To address'
+        );
+    }
+
+    private class PostmarkReplyToCaptureMock implements HttpCalloutMock {
+        public HTTPResponse respond(HTTPRequest req) {
+            capturedPostmarkBody = req.getBody();
+            HTTPResponse res = new HTTPResponse();
+            res.setStatusCode(200);
+            res.setBody('{"MessageID":"reply-to-test-uuid","To":"recipient@example.com","SubmittedAt":"2026-06-05T00:00:00Z"}');
+            return res;
+        }
+    }
 }

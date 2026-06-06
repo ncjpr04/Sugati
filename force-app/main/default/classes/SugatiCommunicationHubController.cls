@@ -1,5 +1,14 @@
 public with sharing class SugatiCommunicationHubController {
     private static final String EMAIL_CHANNEL = 'Email';
+    private static final String COMM_HUB_REPLY_TO = 'b221519@skit.ac.in';
+
+    @TestVisible
+    private static String lastNativeReplyTo;
+
+    @TestVisible
+    private static String getCommHubReplyToForTest() {
+        return COMM_HUB_REPLY_TO;
+    }
     public class HubContextDTO {
         @AuraEnabled public Id opportunityId;
         @AuraEnabled public String opportunityName;
@@ -757,7 +766,7 @@ public with sharing class SugatiCommunicationHubController {
         }
 
         String soql =
-            'SELECT Id, Channel__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
+            'SELECT Id, Channel__c, Direction__c, Subject__c, Status__c, Sent_At__c, Last_Modified_At__c, CreatedDate, ' +
             'Body_HTML__c, Delivery_Mode__c, From_Address__c, Sent_By__r.Name, Sent_By__r.Email, ' +
             'Open_Count__c, Click_Count__c, First_Opened_At__c, Last_Opened_At__c, Delivered_At__c, ' +
             'Bounced_At__c, Bounce_Type__c, Bounce_Description__c, Spam_Reported_At__c, Message_Id__c ' +
@@ -847,7 +856,11 @@ public with sharing class SugatiCommunicationHubController {
             dto.lastModifiedAt = row.Last_Modified_At__c != null ? row.Last_Modified_At__c : row.CreatedDate;
             dto.sentBy = row.Sent_By__r != null ? row.Sent_By__r.Name : null;
             dto.fromEmail = row.Sent_By__r != null ? row.Sent_By__r.Email : null;
-            dto.fromDisplay = resolveHistoryFromDisplay(row.From_Address__c, row.Sent_By__r);
+            dto.fromDisplay = resolveHistoryFromDisplay(
+                row.From_Address__c,
+                row.Sent_By__r,
+                row.Direction__c == 'Inbound' ? recs : null
+            );
             dto.bodyHtml = row.Body_HTML__c;
             dto.deliveryMode = row.Delivery_Mode__c;
             dto.recipientCount = recs.size();
@@ -2047,6 +2060,10 @@ public with sharing class SugatiCommunicationHubController {
         if (opportunityId != null) {
             mail.setWhatId(opportunityId);
         }
+        mail.setReplyTo(COMM_HUB_REPLY_TO);
+        if (Test.isRunningTest()) {
+            lastNativeReplyTo = COMM_HUB_REPLY_TO;
+        }
         mail.setSaveAsActivity(true);
 
         List<Messaging.EmailFileAttachment> fileAttachments = buildEmailFileAttachments(
@@ -2421,6 +2438,7 @@ public with sharing class SugatiCommunicationHubController {
             for (Messaging.SingleEmailMessage mail : messages) {
                 PostmarkEmailService.PostmarkEmailRequest payload = new PostmarkEmailService.PostmarkEmailRequest();
                 payload.fromAddress = fromAddress;
+                payload.ReplyTo = COMM_HUB_REPLY_TO;
                 payload.To = String.join(mail.getToAddresses(), ',');
                 payload.Subject = mail.getSubject();
                 payload.HtmlBody = mail.getHtmlBody();
@@ -3242,9 +3260,27 @@ public with sharing class SugatiCommunicationHubController {
         return trimmedEmail;
     }
 
-    private static String resolveHistoryFromDisplay(String fromAddress, User sentBy) {
+    private static String resolveHistoryFromDisplay(
+        String fromAddress,
+        User sentBy,
+        List<Comm_Recipient__c> inboundRecipients
+    ) {
         if (!String.isBlank(fromAddress)) {
             return fromAddress.trim();
+        }
+        if (inboundRecipients != null && !inboundRecipients.isEmpty()) {
+            Comm_Recipient__c sender = inboundRecipients[0];
+            String senderName = resolveRecipientDisplayName(sender);
+            String senderEmail = sender == null ? null : sender.Email_Address__c;
+            if (String.isNotBlank(senderName) && String.isNotBlank(senderEmail)) {
+                return senderName + ' <' + senderEmail.trim() + '>';
+            }
+            if (String.isNotBlank(senderEmail)) {
+                return senderEmail.trim();
+            }
+            if (String.isNotBlank(senderName)) {
+                return senderName;
+            }
         }
         if (sentBy == null) {
             return 'Unknown sender';
