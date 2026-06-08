@@ -44,6 +44,13 @@ export default class SugatiCommunicationHistory extends LightningElement {
     })
     wiredHistory(result) {
         this._wiredHistoryResult = result;
+        const error = result?.error;
+        if (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to load communication history', error);
+            this._items = [];
+            return;
+        }
         const data = result?.data;
         this._items = this.sortHistoryItems((data || []).map((row) => this.mapHistoryRow(row)));
         if (this.isDefaultFilters) {
@@ -290,6 +297,11 @@ export default class SugatiCommunicationHistory extends LightningElement {
     async handleViewConversation(event) {
         event.stopPropagation();
         const commLogId = event.currentTarget.dataset.id;
+        await this.openConversation(commLogId);
+    }
+
+    @api
+    async openConversation(commLogId) {
         if (!commLogId || this.conversationLoading) {
             return;
         }
@@ -312,6 +324,17 @@ export default class SugatiCommunicationHistory extends LightningElement {
 
     handleCloseConversation() {
         this.conversationOpen = false;
+    }
+
+    handleReplyCompose(event) {
+        this.conversationOpen = false;
+        this.dispatchEvent(
+            new CustomEvent('replycompose', {
+                detail: event.detail,
+                bubbles: true,
+                composed: true
+            })
+        );
     }
 
     stopProp(event) {

@@ -175,6 +175,16 @@ public with sharing class SugatiCommunicationHubController {
         @AuraEnabled public List<String> attachmentRecordIds;
         @AuraEnabled public List<String> newAttachmentFileNames;
         @AuraEnabled public List<String> newAttachmentFileData;
+        @AuraEnabled public Id parentCommLogId;
+    }
+
+    public class ReplyComposeContextDTO {
+        @AuraEnabled public Id parentCommLogId;
+        @AuraEnabled public String subject;
+        @AuraEnabled public List<RecipientDTO> toRecipients;
+        @AuraEnabled public List<String> lockedToEmails;
+        @AuraEnabled public Boolean lockFromAddress;
+        @AuraEnabled public Boolean replyAll;
     }
 
     public class SendResponse {
@@ -876,6 +886,8 @@ public with sharing class SugatiCommunicationHubController {
 
         Map<Id, List<AttachmentDTO>> attachmentsByLog = queryAttachmentsByParentIds(logIds);
 
+        Map<Id, Id> parentByLogId = queryParentMapForOpportunity(opportunityId);
+
         List<HistoryItemDTO> out = new List<HistoryItemDTO>();
         for (Comm_Log__c row : logs) {
             List<Comm_Recipient__c> recs = recipientsByLog.containsKey(row.Id) ? recipientsByLog.get(row.Id) : new List<Comm_Recipient__c>();
@@ -956,7 +968,7 @@ public with sharing class SugatiCommunicationHubController {
             );
             dto.direction = row.Direction__c;
             dto.parentCommLogId = row.Parent_Comm_Log__c;
-            dto.threadRootId = row.Parent_Comm_Log__c == null ? row.Id : row.Parent_Comm_Log__c;
+            dto.threadRootId = resolveThreadRootIdInMap(row.Id, parentByLogId);
             out.add(dto);
         }
 
@@ -1052,6 +1064,64 @@ public with sharing class SugatiCommunicationHubController {
         }
         applyConversationThreadStats(thread);
         return thread;
+    }
+
+    @AuraEnabled
+    public static ReplyComposeContextDTO getReplyComposeContext(Id commLogId, Boolean replyAll) {
+        ReplyComposeContextDTO context = new ReplyComposeContextDTO();
+        context.toRecipients = new List<RecipientDTO>();
+        context.lockedToEmails = new List<String>();
+        context.lockFromAddress = true;
+        context.replyAll = replyAll == true;
+        if (commLogId == null) {
+            return context;
+        }
+
+        Comm_Log__c targetLog = [
+            SELECT
+                Id,
+                Opportunity__c,
+                Direction__c,
+                Subject__c,
+                From_Address__c,
+                Sent_By__r.Name,
+                Sent_By__r.Email
+            FROM Comm_Log__c
+            WHERE Id = :commLogId
+            LIMIT 1
+        ];
+        List<Comm_Recipient__c> targetRecipients = [
+            SELECT Id, Name, Email_Address__c, Contact__c, Contact__r.Name, Recipient_Type__c, Email_Send_Type__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c = :commLogId
+        ];
+
+        Id threadRootId = resolveThreadRootId(commLogId);
+        Comm_Log__c rootLog = [
+            SELECT Id, Subject__c
+            FROM Comm_Log__c
+            WHERE Id = :threadRootId
+            LIMIT 1
+        ];
+
+        context.parentCommLogId = commLogId;
+        context.subject = buildReplySubject(rootLog.Subject__c);
+
+        Set<String> excludedEmails = collectInternalSenderEmails(targetLog.Opportunity__c);
+        List<RecipientDTO> replyTo = new List<RecipientDTO>();
+        if (replyAll == true) {
+            Set<Id> memberIds = collectThreadMemberIds(targetLog.Opportunity__c, threadRootId);
+            replyTo = collectConversationParticipantRecipients(memberIds, excludedEmails);
+            context.lockedToEmails = extractRecipientEmails(replyTo);
+        } else {
+            replyTo = resolveReplyToForMessage(targetLog, targetRecipients, excludedEmails);
+            if (!replyTo.isEmpty()) {
+                context.lockedToEmails.add(replyTo[0].email);
+            }
+        }
+
+        context.toRecipients = enrichReplyRecipientsWithCatalog(replyTo, targetLog.Opportunity__c);
+        return context;
     }
 
     private static void populateConversationThreadRoot(
@@ -1235,21 +1305,309 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
-    private static Id resolveThreadRootId(Id commLogId) {
-        Id currentId = commLogId;
-        while (currentId != null) {
-            Comm_Log__c row = [
-                SELECT Id, Parent_Comm_Log__c
-                FROM Comm_Log__c
-                WHERE Id = :currentId
-                LIMIT 1
-            ];
-            if (row.Parent_Comm_Log__c == null) {
-                return row.Id;
+    private static String buildReplySubject(String subject) {
+        String base = String.isBlank(subject) ? 'Conversation' : subject.trim();
+        if (base.toLowerCase().startsWith('re:')) {
+            return base;
+        }
+        return 'Re: ' + base;
+    }
+
+    private static Set<String> collectInternalSenderEmails(Id opportunityId) {
+        Set<String> excluded = new Set<String>();
+        String currentUserEmail = UserInfo.getUserEmail();
+        if (!String.isBlank(currentUserEmail)) {
+            excluded.add(currentUserEmail.trim().toLowerCase());
+        }
+        if (opportunityId == null) {
+            return excluded;
+        }
+        for (Comm_Log__c row : [
+            SELECT From_Address__c, Sent_By__r.Email
+            FROM Comm_Log__c
+            WHERE Opportunity__c = :opportunityId AND Direction__c = 'Outbound'
+        ]) {
+            if (!String.isBlank(row.From_Address__c)) {
+                excluded.add(normalizeEmailKey(row.From_Address__c));
             }
-            currentId = row.Parent_Comm_Log__c;
+            if (row.Sent_By__r != null && !String.isBlank(row.Sent_By__r.Email)) {
+                excluded.add(normalizeEmailKey(row.Sent_By__r.Email));
+            }
+        }
+        return excluded;
+    }
+
+    private static String normalizeEmailKey(String value) {
+        if (String.isBlank(value)) {
+            return '';
+        }
+        String trimmed = value.trim();
+        if (trimmed.contains('<') && trimmed.contains('>')) {
+            Integer openIdx = trimmed.indexOf('<');
+            Integer closeIdx = trimmed.indexOf('>');
+            if (openIdx >= 0 && closeIdx > openIdx) {
+                trimmed = trimmed.substring(openIdx + 1, closeIdx).trim();
+            }
+        }
+        return trimmed.toLowerCase();
+    }
+
+    private static List<RecipientDTO> resolveReplyToForMessage(
+        Comm_Log__c targetLog,
+        List<Comm_Recipient__c> targetRecipients,
+        Set<String> excludedEmails
+    ) {
+        List<RecipientDTO> rows = new List<RecipientDTO>();
+        if (targetLog == null) {
+            return rows;
+        }
+        if (targetLog.Direction__c == 'Inbound') {
+            RecipientDTO sender = buildReplyRecipientFromInbound(targetLog, targetRecipients);
+            if (sender != null && !isExcludedReplyEmail(sender.email, excludedEmails)) {
+                rows.add(sender);
+            }
+            return rows;
+        }
+
+        Integer idx = 0;
+        for (Comm_Recipient__c rec : targetRecipients) {
+            if (rec == null) {
+                continue;
+            }
+            String emailSendType = rec.Email_Send_Type__c == null ? 'TO' : rec.Email_Send_Type__c.trim().toUpperCase();
+            if (emailSendType != 'TO') {
+                continue;
+            }
+            RecipientDTO row = buildReplyRecipientFromCommRecipient(rec, idx++);
+            if (row != null && !isExcludedReplyEmail(row.email, excludedEmails)) {
+                rows.add(row);
+            }
+        }
+        return rows;
+    }
+
+    private static List<RecipientDTO> collectConversationParticipantRecipients(
+        Set<Id> memberIds,
+        Set<String> excludedEmails
+    ) {
+        List<RecipientDTO> rows = new List<RecipientDTO>();
+        if (memberIds == null || memberIds.isEmpty()) {
+            return rows;
+        }
+        Map<Id, Comm_Log__c> logsById = new Map<Id, Comm_Log__c>(
+            [
+                SELECT Id, Direction__c, From_Address__c, Sent_By__r.Name, Sent_By__r.Email
+                FROM Comm_Log__c
+                WHERE Id IN :memberIds
+            ]
+        );
+        Map<Id, List<Comm_Recipient__c>> recipientsByLog = new Map<Id, List<Comm_Recipient__c>>();
+        for (Comm_Recipient__c rec : [
+            SELECT Id, Name, Email_Address__c, Contact__c, Contact__r.Name, Recipient_Type__c, Email_Send_Type__c, Comm_Log__c
+            FROM Comm_Recipient__c
+            WHERE Comm_Log__c IN :memberIds
+        ]) {
+            if (!recipientsByLog.containsKey(rec.Comm_Log__c)) {
+                recipientsByLog.put(rec.Comm_Log__c, new List<Comm_Recipient__c>());
+            }
+            recipientsByLog.get(rec.Comm_Log__c).add(rec);
+        }
+
+        Map<String, RecipientDTO> byEmail = new Map<String, RecipientDTO>();
+        Integer idx = 0;
+        for (Id logId : logsById.keySet()) {
+            Comm_Log__c row = logsById.get(logId);
+            List<Comm_Recipient__c> recs = recipientsByLog.containsKey(logId)
+                ? recipientsByLog.get(logId)
+                : new List<Comm_Recipient__c>();
+            if (row.Direction__c == 'Inbound') {
+                RecipientDTO sender = buildReplyRecipientFromInbound(row, recs);
+                addReplyRecipientIfNew(byEmail, sender, excludedEmails, idx++);
+                continue;
+            }
+            for (Comm_Recipient__c rec : recs) {
+                RecipientDTO participant = buildReplyRecipientFromCommRecipient(rec, idx++);
+                addReplyRecipientIfNew(byEmail, participant, excludedEmails, idx);
+            }
+        }
+        rows.addAll(byEmail.values());
+        return rows;
+    }
+
+    private static void addReplyRecipientIfNew(
+        Map<String, RecipientDTO> byEmail,
+        RecipientDTO row,
+        Set<String> excludedEmails,
+        Integer idx
+    ) {
+        if (row == null || String.isBlank(row.email) || isExcludedReplyEmail(row.email, excludedEmails)) {
+            return;
+        }
+        String key = normalizeEmailKey(row.email);
+        if (!byEmail.containsKey(key)) {
+            byEmail.put(key, row);
+        }
+    }
+
+    private static Boolean isExcludedReplyEmail(String email, Set<String> excludedEmails) {
+        if (String.isBlank(email) || excludedEmails == null || excludedEmails.isEmpty()) {
+            return false;
+        }
+        return excludedEmails.contains(normalizeEmailKey(email));
+    }
+
+    private static RecipientDTO buildReplyRecipientFromInbound(
+        Comm_Log__c inboundLog,
+        List<Comm_Recipient__c> inboundRecipients
+    ) {
+        String name = resolveInboundSenderName(inboundRecipients, inboundLog.From_Address__c);
+        String email = resolveInboundSenderEmail(inboundRecipients, inboundLog.From_Address__c);
+        if (String.isBlank(email)) {
+            return null;
+        }
+        RecipientDTO row = new RecipientDTO();
+        row.name = String.isNotBlank(name) ? name : email;
+        row.email = email.trim();
+        row.role = 'Traveller';
+        row.audience = 'travellers';
+        row.initials = buildRecipientInitials(row.name);
+        if (!inboundRecipients.isEmpty() && inboundRecipients[0].Contact__c != null) {
+            row.contactId = inboundRecipients[0].Contact__c;
+        }
+        return row;
+    }
+
+    private static RecipientDTO buildReplyRecipientFromCommRecipient(Comm_Recipient__c rec, Integer idx) {
+        if (rec == null || String.isBlank(rec.Email_Address__c)) {
+            return null;
+        }
+        RecipientDTO row = new RecipientDTO();
+        row.name = resolveRecipientDisplayName(rec);
+        row.email = rec.Email_Address__c.trim();
+        row.role = rec.Recipient_Type__c;
+        row.audience = inferAudienceFromRecipientType(rec.Recipient_Type__c);
+        row.contactId = rec.Contact__c;
+        row.initials = buildRecipientInitials(row.name);
+        return row;
+    }
+
+    private static String inferAudienceFromRecipientType(String recipientType) {
+        String normalized = String.isBlank(recipientType) ? '' : recipientType.trim().toLowerCase();
+        if (normalized.contains('supplier') || normalized.contains('agent')) {
+            return 'suppliers';
+        }
+        return 'travellers';
+    }
+
+    private static String buildRecipientInitials(String name) {
+        if (String.isBlank(name)) {
+            return '?';
+        }
+        List<String> parts = name.trim().split('\\s+');
+        if (parts.isEmpty()) {
+            return '?';
+        }
+        if (parts.size() == 1) {
+            return parts[0].length() > 1 ? parts[0].substring(0, 2).toUpperCase() : parts[0].toUpperCase();
+        }
+        return (parts[0].substring(0, 1) + parts[parts.size() - 1].substring(0, 1)).toUpperCase();
+    }
+
+    private static List<String> extractRecipientEmails(List<RecipientDTO> rows) {
+        List<String> emails = new List<String>();
+        if (rows == null) {
+            return emails;
+        }
+        for (RecipientDTO row : rows) {
+            if (row != null && !String.isBlank(row.email)) {
+                emails.add(row.email.trim());
+            }
+        }
+        return emails;
+    }
+
+    private static List<RecipientDTO> enrichReplyRecipientsWithCatalog(
+        List<RecipientDTO> rows,
+        Id opportunityId
+    ) {
+        if (rows == null || rows.isEmpty()) {
+            return new List<RecipientDTO>();
+        }
+        Map<String, RecipientDTO> catalogByEmail = new Map<String, RecipientDTO>();
+        for (RecipientDTO catalogRow : getRecipients(opportunityId)) {
+            if (catalogRow != null && !String.isBlank(catalogRow.email)) {
+                catalogByEmail.put(normalizeEmailKey(catalogRow.email), catalogRow);
+            }
+        }
+        List<RecipientDTO> out = new List<RecipientDTO>();
+        Integer idx = 0;
+        for (RecipientDTO row : rows) {
+            if (row == null || String.isBlank(row.email)) {
+                continue;
+            }
+            RecipientDTO match = catalogByEmail.get(normalizeEmailKey(row.email));
+            out.add(match != null ? match : row);
+            idx++;
+        }
+        return out;
+    }
+
+    private static Map<Id, Id> queryParentMapForOpportunity(Id opportunityId) {
+        Map<Id, Id> parentByLogId = new Map<Id, Id>();
+        if (opportunityId == null) {
+            return parentByLogId;
+        }
+        for (Comm_Log__c row : [
+            SELECT Id, Parent_Comm_Log__c
+            FROM Comm_Log__c
+            WHERE Opportunity__c = :opportunityId
+        ]) {
+            parentByLogId.put(row.Id, row.Parent_Comm_Log__c);
+        }
+        return parentByLogId;
+    }
+
+    private static Id resolveThreadRootIdInMap(Id commLogId, Map<Id, Id> parentByLogId) {
+        if (commLogId == null) {
+            return null;
+        }
+        if (parentByLogId == null || parentByLogId.isEmpty()) {
+            return commLogId;
+        }
+        Id currentId = commLogId;
+        Set<Id> visited = new Set<Id>();
+        while (currentId != null) {
+            if (visited.contains(currentId)) {
+                return commLogId;
+            }
+            visited.add(currentId);
+            if (!parentByLogId.containsKey(currentId)) {
+                return currentId;
+            }
+            Id parentId = parentByLogId.get(currentId);
+            if (parentId == null) {
+                return currentId;
+            }
+            currentId = parentId;
         }
         return commLogId;
+    }
+
+    private static Id resolveThreadRootId(Id commLogId) {
+        if (commLogId == null) {
+            return null;
+        }
+        List<Comm_Log__c> anchors = [
+            SELECT Opportunity__c
+            FROM Comm_Log__c
+            WHERE Id = :commLogId
+            LIMIT 1
+        ];
+        if (anchors.isEmpty()) {
+            return commLogId;
+        }
+        Map<Id, Id> parentByLogId = queryParentMapForOpportunity(anchors[0].Opportunity__c);
+        return resolveThreadRootIdInMap(commLogId, parentByLogId);
     }
 
     private static Set<Id> collectThreadMemberIds(Id opportunityId, Id rootId) {
@@ -1613,6 +1971,7 @@ public with sharing class SugatiCommunicationHubController {
         List<Id> attachmentContentDocumentIds,
         List<String> newAttachmentFileNames,
         List<String> newAttachmentFileData,
+        Id parentCommLogId,
         SendRequest request
     ) {
         try {
@@ -1634,6 +1993,7 @@ public with sharing class SugatiCommunicationHubController {
                 attachmentContentDocumentIds,
                 newAttachmentFileNames,
                 newAttachmentFileData,
+                parentCommLogId,
                 request
             );
         } catch (AuraHandledException ex) {
@@ -1661,9 +2021,13 @@ public with sharing class SugatiCommunicationHubController {
         List<Id> attachmentContentDocumentIds,
         List<String> newAttachmentFileNames,
         List<String> newAttachmentFileData,
+        Id parentCommLogId,
         SendRequest request
     ) {
         request = request != null ? request : new SendRequest();
+        if (parentCommLogId != null) {
+            request.parentCommLogId = parentCommLogId;
+        }
         mergeAttachmentParams(request, attachmentContentDocumentIds, newAttachmentFileNames, newAttachmentFileData);
         if (String.isNotBlank(toRecipientsJson)) {
             request.toRecipientsJson = toRecipientsJson;
@@ -1718,6 +2082,9 @@ public with sharing class SugatiCommunicationHubController {
         log.Delivery_Mode__c = request.deliveryMode;
         log.Send_Method__c = request.deliveryMode == 'postmark' ? 'Postmark' : 'Native Salesforce';
         log.Status__c = 'Sent';
+        if (request.parentCommLogId != null) {
+            log.Parent_Comm_Log__c = request.parentCommLogId;
+        }
         Savepoint sendSavepoint;
         try {
             String providerMessageId;
@@ -1951,7 +2318,8 @@ public with sharing class SugatiCommunicationHubController {
         List<String> attachmentRecordIds,
         List<String> newAttachmentFileNames,
         List<String> newAttachmentFileData,
-        Id orgWideEmailAddressId
+        Id orgWideEmailAddressId,
+        Id parentCommLogId
     ) {
         if (opportunityId == null) {
             throw new AuraHandledException('Opportunity is required to save a draft.');
@@ -1996,6 +2364,9 @@ public with sharing class SugatiCommunicationHubController {
             log.From_Address__c = resolveFromAddressDisplay(orgWideEmailAddressId);
             log.Delivery_Mode__c = deliveryMode;
             log.Status__c = 'Draft';
+            if (parentCommLogId != null) {
+                log.Parent_Comm_Log__c = parentCommLogId;
+            }
             stampDraftLastModified(log);
             insert log;
             insertDraftRecipients(log.Id, recipients == null ? new List<DraftRecipientInput>() : recipients);

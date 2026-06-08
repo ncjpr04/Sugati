@@ -46,6 +46,7 @@
         <div class="pages">
             <div class={hubPageClass}>
                 <c-sugati-communication-history
+                    class="hub-history"
                     display-mode="hub"
                     opportunity-id={effectiveOpportunityId}
                     draft-count={stats.draft}
@@ -58,6 +59,7 @@
                     trip-subtitle={tripSubtitle}
                     onchannelnav={handleHistoryChannelNav}
                     oncontinuedraft={handleContinueDraft}
+                    onreplycompose={handleReplyCompose}
                 ></c-sugati-communication-history>
             </div>
 
@@ -78,6 +80,7 @@
                         stage-label={stageLabel}
                         onnavigatepreview={handleNavigatePreview}
                         onopentemplates={handleOpenTemplatePicker}
+                        ontemplatenotfound={handleTemplateNotFound}
                         ondraftsaved={handleDraftSaved}
                         ondraftdiscarded={handleDraftDiscarded}
                         onrecipientsloaded={syncRecipientStateFromComposer}
@@ -126,6 +129,7 @@
                         trip-subtitle={tripSubtitle}
                         onchannelnav={handleHistoryChannelNav}
                         oncontinuedraft={handleContinueDraft}
+                        onreplycompose={handleReplyCompose}
                     ></c-sugati-communication-history>
                 </div>
             </template>

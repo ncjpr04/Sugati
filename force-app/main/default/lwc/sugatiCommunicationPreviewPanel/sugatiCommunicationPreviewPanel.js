@@ -35,6 +35,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     sendSubtitle = '';
     sendSucceeded = false;
     lastProviderMessageId = null;
+    _lastSentCommLogId = null;
     resolvedBody = '';
     recipientLabel = '';
     fromLabel = '';
@@ -508,7 +509,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                 bodyTemplate: payload?.bodyTemplate || this._previewPayload?.bodyTemplate || this.resolvedBody || '',
                 deliveryMode: this.deliveryMode,
                 channel: 'Email',
-                orgWideEmailAddressId: this._previewPayload?.orgWideEmailAddressId || null
+                orgWideEmailAddressId: this._previewPayload?.orgWideEmailAddressId || null,
+                parentCommLogId: payload?.parentCommLogId || this._previewPayload?.parentCommLogId || null
             });
             this.dispatchEvent(
                 new CustomEvent('draftsaved', {
@@ -595,6 +597,8 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
             }
             const templateConfigId = payload.sugatiEmailTemplateConfigId || payload.templateId || null;
             const relatedRecordId = payload.relatedRecordId || opportunityId;
+            const parentCommLogId =
+                payload.parentCommLogId || this._previewPayload?.parentCommLogId || null;
             const result = await sendMessage({
                 opportunityId,
                 toEmails,
@@ -613,6 +617,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                 attachmentContentDocumentIds: attachmentPayload.attachmentContentDocumentIds,
                 newAttachmentFileNames: attachmentPayload.newAttachmentFileNames,
                 newAttachmentFileData: attachmentPayload.newAttachmentFileData,
+                parentCommLogId,
                 request: {
                     opportunityId,
                     templateId: payload.sugatiEmailTemplateConfigId || payload.templateId || null,
@@ -634,13 +639,15 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                     attachmentContentDocumentIds: attachmentPayload.attachmentContentDocumentIds,
                     attachmentRecordIds: attachmentPayload.attachmentRecordIds,
                     newAttachmentFileNames: attachmentPayload.newAttachmentFileNames,
-                    newAttachmentFileData: attachmentPayload.newAttachmentFileData
+                    newAttachmentFileData: attachmentPayload.newAttachmentFileData,
+                    parentCommLogId
                 }
             });
             if (result?.status === 'Failed') {
                 throw new Error(result?.message || 'Send failed.');
             }
             this.lastProviderMessageId = result?.providerMessageId || null;
+            this._lastSentCommLogId = result?.commLogId || null;
             this.sendSucceeded = true;
             this.sendPhase = 'sent';
             this.sendTitle = this.previewChannel === 'email' ? 'Email Sent' : 'Message Sent';
@@ -656,6 +663,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     handleSendComplete() {
         this.sendModalOpen = false;
         if (this.sendSucceeded) {
+            const payload = this.resolveSendPayload();
             this.dispatchEvent(
                 new CustomEvent('sent', {
                     detail: {
@@ -663,7 +671,10 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
                         subject: this.subject,
                         who: this.toLine,
                         recipients: this.toLine,
-                        messageId: this.lastProviderMessageId || null
+                        messageId: this.lastProviderMessageId || null,
+                        commLogId: this._lastSentCommLogId || null,
+                        parentCommLogId:
+                            payload?.parentCommLogId || this._previewPayload?.parentCommLogId || null
                     }
                 })
             );
@@ -671,6 +682,7 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         this.sendSucceeded = false;
         this.sendPhase = 'idle';
         this.lastProviderMessageId = null;
+        this._lastSentCommLogId = null;
     }
 
     resolveOpportunityId() {

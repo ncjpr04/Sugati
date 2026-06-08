@@ -49,17 +49,23 @@
                             value={fromComboboxValue}
                             options={fromOptions}
                             onchange={handleFromChange}
+                            disabled={isFromLocked}
                         ></lightning-combobox>
                     </div>
                 </div>
                 <div class="addr-row">
                     <div class="addr-key">To</div>
                     <div class="addr-val">
-                        <template for:each={toChips} for:item="chip">
-                            <div key={chip.id} class="r-chip">
+                        <template for:each={displayToChips} for:item="chip">
+                            <div key={chip.id} class={chip.chipClass}>
                                 <div class="r-chip-av">{chip.initials}</div>
                                 {chip.name} ({chip.email})
-                                <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveChip}>×</span>
+                                <template lwc:if={chip.isLocked}>
+                                    <span class="r-chip-lock" title="Required reply recipient">🔒</span>
+                                </template>
+                                <template lwc:else>
+                                    <span class="r-chip-x" data-email={chip.email} onclick={handleRemoveChip}>×</span>
+                                </template>
                             </div>
                         </template>
                         <div class="r-add-wrap" data-field="to" onclick={stopAddrWrapPropagation}>
@@ -262,9 +268,12 @@
             </div>
             <div class="subj-row">
                 <input
-                    class="subj-input"
+                    class={subjectInputClass}
                     type="text"
                     value={subject}
+                    disabled={isSubjectLocked}
+                    readonly={isSubjectLocked}
+                    title={subjectLockTitle}
                     onfocus={handleSubjectFocus}
                     oninput={handleSubjectChange}
                     onclick={handleSubjectCursor}
@@ -281,17 +290,21 @@
                 <div class="etb-sep"></div>
                 <button type="button" class="etb etb-ai" onclick={handleOpenAi}>✦ AI Assist</button>
             </div>
-            <div
-                class="editor-body"
-                contenteditable="true"
-                lwc:dom="manual"
-                data-placeholder="Continue writing, or use ✦ AI Assist to generate from trip data…"
-                oninput={handleBodyInput}
-                onfocus={handleBodyFocus}
-                onclick={handleBodyCursor}
-                onkeyup={handleBodyCursor}
-                onmouseup={handleBodyCursor}
-            ></div>
+            <div class="editor-shell" onmousedown={handleBodyMouseDown}>
+                <div
+                    class="editor-body"
+                    contenteditable="true"
+                    lwc:dom="manual"
+                    data-placeholder="Continue writing, or use ✦ AI Assist to generate from trip data…"
+                    oninput={handleBodyInput}
+                    onfocus={handleBodyFocus}
+                    onmousedown={handleBodyMouseDown}
+                    onclick={handleBodyCursor}
+                    onkeyup={handleBodyCursor}
+                    onmouseup={handleBodyCursor}
+                    onpaste={handleBodyPaste}
+                ></div>
+            </div>
         </div>
 
         <div class="tools-panel">

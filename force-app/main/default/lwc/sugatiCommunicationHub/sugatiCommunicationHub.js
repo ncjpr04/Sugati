@@ -3,6 +3,7 @@ import { CurrentPageReference } from 'lightning/navigation';
 import { refreshApex } from '@salesforce/apex';
 import getHubContext from '@salesforce/apex/SugatiCommunicationHubController.getHubContext';
 import getDraftForEdit from '@salesforce/apex/SugatiCommunicationHubController.getDraftForEdit';
+import getReplyComposeContext from '@salesforce/apex/SugatiCommunicationHubController.getReplyComposeContext';
 
 const VIEWS = {
     HUB: 'hub',
@@ -38,6 +39,7 @@ export default class SugatiCommunicationHub extends LightningElement {
     ccRecipients = [];
     bccRecipients = [];
     draftForEdit = null;
+    pendingReplyParentCommLogId = null;
     historyRefreshKey = 0;
     _wiredHubContextResult;
     _pageRecordId;
@@ -62,6 +64,7 @@ export default class SugatiCommunicationHub extends LightningElement {
 
     beginNewMessage() {
         this.draftForEdit = null;
+        this.pendingReplyParentCommLogId = null;
         this.previewPayload = {};
         this.toRecipients = [];
         this.ccRecipients = [];
@@ -268,10 +271,27 @@ export default class SugatiCommunicationHub extends LightningElement {
     }
 
     handleDraftDiscarded(event) {
-        if (event?.detail?.hadSavedDraft) {
-            this.currentView = VIEWS.HUB;
-        }
+        const isReplyDiscard = !!(
+            event?.detail?.isReplyCompose && event?.detail?.parentCommLogId
+        );
+        const conversationCommLogId = event?.detail?.parentCommLogId || null;
+
+        this.showTemplatePicker = false;
+        this.beginNewMessage();
+        this.currentView = VIEWS.HUB;
         this.scheduleHubDataRefresh();
+
+        if (isReplyDiscard && conversationCommLogId) {
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            requestAnimationFrame(() => {
+                this.openHubConversation(conversationCommLogId);
+            });
+        }
+    }
+
+    handleTemplateNotFound() {
+        this.currentView = VIEWS.EMAIL;
+        this.showTemplatePicker = true;
     }
 
     handleDraftSaved() {
@@ -354,7 +374,14 @@ export default class SugatiCommunicationHub extends LightningElement {
             sugatiEmailTemplateConfigId:
                 templateContext.sugatiEmailTemplateConfigId || payload.sugatiEmailTemplateConfigId || null,
             relatedRecordId:
-                templateContext.relatedRecordId || payload.relatedRecordId || this.effectiveOpportunityId
+                templateContext.relatedRecordId || payload.relatedRecordId || this.effectiveOpportunityId,
+            parentCommLogId:
+                (typeof composer.getReplyParentCommLogId === 'function'
+                    ? composer.getReplyParentCommLogId()
+                    : null) ||
+                this.pendingReplyParentCommLogId ||
+                payload.parentCommLogId ||
+                null
         };
     }
 
@@ -394,9 +421,23 @@ export default class SugatiCommunicationHub extends LightningElement {
         }
     }
 
-    handleSent() {
+    handleSent(event) {
+        const isReplySend = !!(
+            event?.detail?.parentCommLogId ||
+            this.previewPayload?.parentCommLogId ||
+            this.pendingReplyParentCommLogId
+        );
+        const conversationCommLogId =
+            event?.detail?.commLogId ||
+            event?.detail?.parentCommLogId ||
+            this.previewPayload?.parentCommLogId ||
+            this.pendingReplyParentCommLogId ||
+            null;
+
         this.beginNewMessage();
-        this.currentView = VIEWS.HISTORY;
+        this.showTemplatePicker = false;
+        this.previewPayload = {};
+
         Promise.resolve().then(() => {
             const composer = this.template.querySelector('c-sugati-communication-email-composer');
             if (composer && typeof composer.resetComposer === 'function') {
@@ -404,6 +445,27 @@ export default class SugatiCommunicationHub extends LightningElement {
             }
         });
         this.scheduleHubDataRefresh();
+
+        if (isReplySend && conversationCommLogId) {
+            this.currentView = VIEWS.HUB;
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            requestAnimationFrame(() => {
+                this.openHubConversation(conversationCommLogId);
+            });
+            return;
+        }
+
+        this.currentView = VIEWS.HISTORY;
+    }
+
+    async openHubConversation(commLogId) {
+        if (!commLogId) {
+            return;
+        }
+        const hubHistory = this.template.querySelector('c-sugati-communication-history.hub-history');
+        if (hubHistory && typeof hubHistory.openConversation === 'function') {
+            await hubHistory.openConversation(commLogId);
+        }
     }
 
     handleHistoryChannelNav(event) {
@@ -475,6 +537,9 @@ export default class SugatiCommunicationHub extends LightningElement {
             return;
         }
         const composer = this.template.querySelector('c-sugati-communication-email-composer');
+        if (composer && typeof composer.isReplyCompose === 'function' && composer.isReplyCompose()) {
+            return;
+        }
         if (composer && typeof composer.hasActiveTemplateSelection === 'function') {
             if (!composer.hasActiveTemplateSelection()) {
                 this.showTemplatePicker = true;
@@ -482,6 +547,34 @@ export default class SugatiCommunicationHub extends LightningElement {
             return;
         }
         this.showTemplatePicker = true;
+    }
+
+    async handleReplyCompose(event) {
+        const parentCommLogId = event?.detail?.parentCommLogId;
+        const replyAll = !!event?.detail?.replyAll;
+        if (!parentCommLogId) {
+            return;
+        }
+        this.beginNewMessage();
+        this.pendingReplyParentCommLogId = parentCommLogId;
+        this.showTemplatePicker = false;
+        this.currentView = VIEWS.EMAIL;
+        try {
+            const context = await getReplyComposeContext({
+                commLogId: parentCommLogId,
+                replyAll
+            });
+            context.parentCommLogId = context.parentCommLogId || parentCommLogId;
+            await Promise.resolve();
+            const composer = this.template.querySelector('c-sugati-communication-email-composer');
+            if (composer && typeof composer.startReplyCompose === 'function') {
+                await composer.startReplyCompose(context);
+            }
+            this.syncRecipientStateFromComposer();
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to open reply composer', e);
+        }
     }
 
     handleViewWa() {

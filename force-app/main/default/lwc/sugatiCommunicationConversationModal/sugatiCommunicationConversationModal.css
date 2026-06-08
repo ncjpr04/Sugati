@@ -408,6 +408,23 @@
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.conv-delivery-chip {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--s2);
+    color: var(--t2);
+    border: 1px solid var(--b1);
+    flex-shrink: 0;
+}
+
+.conv-delivery-meta {
+    font-weight: 600;
+    color: var(--t2);
 }
 
 .conv-dir-out {

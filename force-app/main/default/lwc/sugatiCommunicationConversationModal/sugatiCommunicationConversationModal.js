@@ -162,6 +162,7 @@ export default class SugatiCommunicationConversationModal extends NavigationMixi
             return {
                 ...msg,
                 isExpanded,
+                isCollapsed: !isExpanded,
                 rowClass: isExpanded ? 'conv-msg expanded' : 'conv-msg collapsed',
                 chevronClass: isExpanded ? 'conv-chevron open' : 'conv-chevron'
             };
@@ -373,19 +374,41 @@ export default class SugatiCommunicationConversationModal extends NavigationMixi
         }, 1800);
     }
 
-    handleReply() {
+    resolveReplyTargetMessageId() {
+        if (!this._messages.length) {
+            return null;
+        }
+        if (this.expandAllActive) {
+            return this._messages[this._messages.length - 1].key;
+        }
+        if (this.expandedId) {
+            return this.expandedId;
+        }
+        return this._messages[this._messages.length - 1].key;
+    }
+
+    dispatchReplyCompose(replyAll) {
+        const parentCommLogId = this.resolveReplyTargetMessageId();
+        if (!parentCommLogId) {
+            return;
+        }
         this.dispatchEvent(
-            new CustomEvent('reply', {
-                detail: { threadRootId: this.threadMeta.threadRootId }
+            new CustomEvent('replycompose', {
+                detail: {
+                    parentCommLogId,
+                    replyAll: !!replyAll,
+                    threadRootId: this.threadMeta.threadRootId
+                }
             })
         );
+        this.handleClose();
+    }
+
+    handleReply() {
+        this.dispatchReplyCompose(false);
     }
 
     handleReplyAll() {
-        this.dispatchEvent(
-            new CustomEvent('replyAll', {
-                detail: { threadRootId: this.threadMeta.threadRootId }
-            })
-        );
+        this.dispatchReplyCompose(true);
     }
 }

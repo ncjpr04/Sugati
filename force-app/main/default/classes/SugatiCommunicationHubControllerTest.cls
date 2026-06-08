@@ -150,6 +150,7 @@ private class SugatiCommunicationHubControllerTest {
             null,
             null,
             null,
+            null,
             req
         );
         Test.stopTest();
@@ -213,6 +214,7 @@ private class SugatiCommunicationHubControllerTest {
             null,
             null,
             null,
+            null,
             null
         );
         Test.stopTest();
@@ -262,6 +264,7 @@ private class SugatiCommunicationHubControllerTest {
             null,
             null,
             null,
+            null,
             null
         );
 
@@ -287,6 +290,7 @@ private class SugatiCommunicationHubControllerTest {
             '<p>Updated body</p>',
             'native',
             'Email',
+            null,
             null,
             null,
             null,
@@ -362,6 +366,7 @@ private class SugatiCommunicationHubControllerTest {
             null,
             null,
             null,
+            null,
             req
         );
         Test.stopTest();
@@ -404,6 +409,7 @@ private class SugatiCommunicationHubControllerTest {
             '<p>Body</p>',
             'postmark',
             'Email',
+            null,
             null,
             null,
             null,
@@ -469,6 +475,7 @@ private class SugatiCommunicationHubControllerTest {
             null,
             req.newAttachmentFileNames,
             req.newAttachmentFileData,
+            null,
             req
         );
         Test.stopTest();
@@ -562,6 +569,7 @@ private class SugatiCommunicationHubControllerTest {
             new List<String>{ String.valueOf(oppDocId) },
             new List<String>{ 'welcome.txt' },
             new List<String>{ EncodingUtil.base64Encode(Blob.valueOf('Hello attachment')) },
+            null,
             null
         );
         Test.stopTest();
@@ -688,6 +696,117 @@ private class SugatiCommunicationHubControllerTest {
     }
 
     @IsTest
+    static void testReplyComposeContextAndParentOnSend() {
+        Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
+        Contact traveller = [SELECT Id, Name, Email FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
+
+        Comm_Log__c parentLog = new Comm_Log__c(
+            Opportunity__c = opp.Id,
+            Channel__c = 'Email',
+            Direction__c = 'Outbound',
+            Subject__c = 'Trip update',
+            Body_HTML__c = '<p>Your itinerary is ready.</p>',
+            Status__c = 'Sent',
+            Sent_At__c = System.now().addHours(-2),
+            From_Address__c = 'agent@example.com',
+            Delivery_Mode__c = 'postmark'
+        );
+        insert parentLog;
+
+        insert new Comm_Recipient__c(
+            Comm_Log__c = parentLog.Id,
+            Contact__c = traveller.Id,
+            Name = traveller.Name,
+            Email_Address__c = traveller.Email,
+            Recipient_Type__c = 'Traveller',
+            Email_Send_Type__c = 'TO',
+            Status__c = 'Sent'
+        );
+
+        Comm_Log__c inboundLog = new Comm_Log__c(
+            Opportunity__c = opp.Id,
+            Channel__c = 'Email',
+            Direction__c = 'Inbound',
+            Subject__c = 'Re: Trip update',
+            Body_HTML__c = '<p>Can we add an extra night?</p>',
+            Status__c = 'Received',
+            Sent_At__c = System.now().addHours(-1),
+            Parent_Comm_Log__c = parentLog.Id,
+            From_Address__c = traveller.Email,
+            Delivery_Mode__c = 'postmark'
+        );
+        insert inboundLog;
+
+        insert new Comm_Recipient__c(
+            Comm_Log__c = inboundLog.Id,
+            Contact__c = traveller.Id,
+            Name = traveller.Name,
+            Email_Address__c = traveller.Email,
+            Recipient_Type__c = 'Traveller',
+            Status__c = 'Inbound'
+        );
+
+        Test.startTest();
+        SugatiCommunicationHubController.ReplyComposeContextDTO replyContext =
+            SugatiCommunicationHubController.getReplyComposeContext(inboundLog.Id, false);
+        SugatiCommunicationHubController.ReplyComposeContextDTO replyAllContext =
+            SugatiCommunicationHubController.getReplyComposeContext(inboundLog.Id, true);
+
+        SugatiCommunicationHubController.SendRequest request = new SugatiCommunicationHubController.SendRequest();
+        request.opportunityId = opp.Id;
+        request.channel = 'Email';
+        request.deliveryMode = 'native';
+        request.toEmails = new List<String>{ traveller.Email };
+        request.resolvedSubject = 'Re: Trip update';
+        request.resolvedBodyHtml = '<p>Yes, we can arrange that.</p>';
+        request.parentCommLogId = inboundLog.Id;
+
+        SugatiCommunicationHubController.SendResponse response = SugatiCommunicationHubController.sendMessage(
+            opp.Id,
+            request.toEmails,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            request.deliveryMode,
+            null,
+            null,
+            opp.Id,
+            request.resolvedSubject,
+            request.resolvedBodyHtml,
+            null,
+            null,
+            null,
+            inboundLog.Id,
+            request
+        );
+        Test.stopTest();
+
+        System.assertEquals(inboundLog.Id, replyContext.parentCommLogId);
+        System.assertEquals('Re: Trip update', replyContext.subject);
+        System.assertEquals(true, replyContext.lockFromAddress);
+        System.assertEquals(1, replyContext.toRecipients.size());
+        System.assertEquals(traveller.Email, replyContext.toRecipients[0].email);
+        System.assertEquals(1, replyContext.lockedToEmails.size());
+        System.assertEquals(traveller.Email, replyContext.lockedToEmails[0]);
+
+        System.assertEquals(true, replyAllContext.replyAll);
+        System.assert(!replyAllContext.toRecipients.isEmpty());
+        System.assert(!replyAllContext.lockedToEmails.isEmpty());
+
+        Comm_Log__c replyLog = [
+            SELECT Id, Parent_Comm_Log__c, Subject__c, Direction__c
+            FROM Comm_Log__c
+            WHERE Id = :response.commLogId
+        ];
+        System.assertEquals(inboundLog.Id, replyLog.Parent_Comm_Log__c);
+        System.assertEquals('Outbound', replyLog.Direction__c);
+        System.assertEquals('Re: Trip update', replyLog.Subject__c);
+    }
+
+    @IsTest
     static void testGetHistorySidebarFilters() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
         List<Contact> contacts = [SELECT Id, Email, Name FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
@@ -775,6 +894,7 @@ private class SugatiCommunicationHubControllerTest {
             opp.Id,
             'Reply-To test',
             '<p>Body</p>',
+            null,
             null,
             null,
             null,

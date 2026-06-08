@@ -48,7 +48,6 @@
                         <template lwc:if={hasActiveFilters}>
                             <button type="button" class="btn-ghost" onclick={handleClearFilters}>Clear</button>
                         </template>
-                        <button type="button" class="btn-ghost">Export</button>
                     </div>
                 </template>
             </div>
@@ -270,5 +269,6 @@
         is-open={conversationOpen}
         is-loading={conversationLoading}
         onclose={handleCloseConversation}
+        onreplycompose={handleReplyCompose}
     ></c-sugati-communication-conversation-modal>
 </template>

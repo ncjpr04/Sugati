@@ -81,8 +81,11 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     _draftAttachmentRows = [];
     _draftForEditPayload = null;
     _isBlankCompose = false;
+    _replyContext = null;
+    _replyParentCommLogId = null;
     isUploadingAttachments = false;
     _boundDocClick = null;
+    _boundComposeCapture = null;
 
     @wire(getRecipients, { opportunityId: '$opportunityId' })
     wiredRecipients({ data }) {
@@ -151,6 +154,10 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     connectedCallback() {
         this._boundDocClick = this.handleDocumentClick.bind(this);
         document.addEventListener('click', this._boundDocClick);
+        this._boundComposeCapture = this.handleComposeCapture.bind(this);
+        ['mousedown', 'click', 'dblclick'].forEach((eventName) => {
+            document.addEventListener(eventName, this._boundComposeCapture, true);
+        });
         this.loadTemplates();
         this.loadFromAddresses();
     }
@@ -159,6 +166,44 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         if (this._boundDocClick) {
             document.removeEventListener('click', this._boundDocClick);
         }
+        if (this._boundComposeCapture) {
+            ['mousedown', 'click', 'dblclick'].forEach((eventName) => {
+                document.removeEventListener(eventName, this._boundComposeCapture, true);
+            });
+        }
+    }
+
+    handleComposeCapture(event) {
+        const compose = this.template?.querySelector('.compose-c');
+        if (!compose || !this.eventTargetsComposeArea(event, compose)) {
+            return;
+        }
+        event.stopPropagation();
+        const anchor = event.target?.closest?.('a');
+        if (anchor && (event.type === 'click' || event.type === 'mousedown')) {
+            event.preventDefault();
+        }
+    }
+
+    eventTargetsComposeArea(event, composeRoot) {
+        const path = typeof event.composedPath === 'function' ? event.composedPath() : [];
+        if (path.length && path.includes(composeRoot)) {
+            return true;
+        }
+        return composeRoot.contains(event.target);
+    }
+
+    neutralizeRecordLinksInHtml(html) {
+        if (!html) {
+            return '';
+        }
+        let safeHtml = html;
+        safeHtml = safeHtml.replace(
+            /<a\b([^>]*?)href\s*=\s*["'][^"']*(?:\/lightning\/r\/|\/006)[^"']*["']([^>]*)>([\s\S]*?)<\/a>/gi,
+            '<span class="mt"$1$2>$3</span>'
+        );
+        safeHtml = safeHtml.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, '<span class="mt"$1>$2</span>');
+        return safeHtml;
     }
 
     @api
@@ -218,6 +263,45 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             ...c,
             role: c.role || 'Traveller'
         }));
+    }
+
+    get displayToChips() {
+        const locked = new Set(
+            (this._replyContext?.lockedToEmails || []).map((email) => (email || '').trim().toLowerCase())
+        );
+        return (this.toChips || []).map((chip) => {
+            const isLocked = locked.has((chip.email || '').trim().toLowerCase());
+            return {
+                ...chip,
+                isLocked,
+                chipClass: isLocked ? 'r-chip locked' : 'r-chip'
+            };
+        });
+    }
+
+    get isFromLocked() {
+        return this._replyContext?.lockFromAddress === true;
+    }
+
+    get isSubjectLocked() {
+        return this.isReplyCompose();
+    }
+
+    get subjectInputClass() {
+        return this.isSubjectLocked ? 'subj-input locked' : 'subj-input';
+    }
+
+    get subjectLockTitle() {
+        return this.isSubjectLocked
+            ? 'Subject is locked for replies to keep the email in the same thread'
+            : '';
+    }
+
+    get replyComposeLabel() {
+        if (!this.isReplyCompose()) {
+            return '';
+        }
+        return this._replyContext?.replyAll ? 'Reply all' : 'Reply';
     }
 
     get isComposerRecordStep() {
@@ -501,6 +585,23 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.notifyRecipientsUpdated();
     }
 
+    notifyTemplatePickerRequired() {
+        this.dispatchEvent(
+            new CustomEvent('templatenotfound', {
+                bubbles: true,
+                composed: true
+            })
+        );
+    }
+
+    buildDiscardEventDetail(hadSavedDraft) {
+        return {
+            hadSavedDraft: !!hadSavedDraft,
+            isReplyCompose: this.isReplyCompose(),
+            parentCommLogId: this.getReplyParentCommLogId()
+        };
+    }
+
     @api
     async loadDefaultTemplate() {
         if (!this.opportunityId || this.editingCommLogId) {
@@ -508,10 +609,15 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
         try {
             const loaded = await loadDefaultSendEmailTemplate({ opportunityId: this.opportunityId });
+            if (!loaded) {
+                this.notifyTemplatePickerRequired();
+                return;
+            }
             this.applyTemplateLoad(loaded);
         } catch (e) {
             const message = e?.body?.message || e?.message || 'Unable to load default Send Email template.';
             this.showToast('Template not loaded', message, 'warning');
+            this.notifyTemplatePickerRequired();
             // eslint-disable-next-line no-console
             console.warn('Default Send Email template not loaded', e);
         }
@@ -534,9 +640,14 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
                 clientGroupId: null,
                 previewAsContactId: null
             });
+            if (!loaded) {
+                this.notifyTemplatePickerRequired();
+                return;
+            }
             this.applyTemplateLoad(loaded, detail);
         } catch (e) {
             this.showToast('Template load failed', e?.body?.message || e?.message || 'Unable to load template.', 'error');
+            this.notifyTemplatePickerRequired();
         }
     }
 
@@ -592,6 +703,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     applyTemplateLoad(loaded, meta) {
         if (!loaded) {
+            this.notifyTemplatePickerRequired();
             return;
         }
         this._isBlankCompose = false;
@@ -606,7 +718,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.activeTemplateName = meta?.name || loaded.sfEmailTemplateName || 'Send Email';
         this.activeTemplateMeta = meta?.meta || loaded.sfEmailTemplateName || '';
         this.subject = loaded.subject || '';
-        this.bodyTemplate = loaded.bodyHtml || '';
+        this.bodyTemplate = this.neutralizeRecordLinksInHtml(loaded.bodyHtml || '');
         const templateTo = this.mapAddressesToChips(loaded.toAddresses || [], 'to');
         const templateCc = this.mapAddressesToChips(loaded.ccAddresses || [], 'cc');
         const templateBcc = this.mapAddressesToChips(loaded.bccAddresses || [], 'bcc');
@@ -815,7 +927,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._isBlankCompose = false;
         this.editingCommLogId = draft.commLogId || null;
         this.subject = draft.subject || '';
-        this.bodyTemplate = draft.bodyHtml || '';
+        this.bodyTemplate = this.neutralizeRecordLinksInHtml(draft.bodyHtml || '');
         this.deliveryMode = draft.deliveryMode || 'postmark';
         const draftRecipients = draft.recipients || [];
         this.toChips = draftRecipients
@@ -1118,10 +1230,91 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         if (this.editingCommLogId) {
             return true;
         }
+        if (this.isReplyCompose()) {
+            return true;
+        }
         if (this.sugatiEmailTemplateConfigId) {
             return true;
         }
         return this._isBlankCompose;
+    }
+
+    @api
+    isReplyCompose() {
+        return !!this._replyContext?.parentCommLogId;
+    }
+
+    @api
+    getReplyParentCommLogId() {
+        return this._replyParentCommLogId || this._replyContext?.parentCommLogId || null;
+    }
+
+    @api
+    async startReplyCompose(context) {
+        if (!context?.parentCommLogId) {
+            return;
+        }
+        this.resetComposer();
+        this._replyParentCommLogId = context.parentCommLogId;
+        this._replyContext = {
+            parentCommLogId: context.parentCommLogId,
+            lockedToEmails: (context.lockedToEmails || [])
+                .map((email) => (email || '').trim().toLowerCase())
+                .filter(Boolean),
+            lockFromAddress: context.lockFromAddress !== false,
+            replyAll: !!context.replyAll
+        };
+        this._isBlankCompose = true;
+        this.sugatiEmailTemplateConfigId = null;
+        this.relatedRecordId = this.opportunityId || null;
+        this.attachmentParentLabel = '';
+        this.activeTemplateId = null;
+        this.activeTemplateName = 'Reply';
+        this.activeTemplateMeta = this._replyContext.replyAll
+            ? 'Reply all — blank compose'
+            : 'Reply — blank compose';
+        this.subject = context.subject || '';
+        this.bodyTemplate = '';
+        this.ccChips = [];
+        this.bccChips = [];
+        this._fromUserPicked = false;
+        this._fromRestoredFromDraft = false;
+        this._bodyCursorPos = 0;
+        this._bodySelectionRange = null;
+        this._editorSyncedHtml = null;
+        this._attachments = (this._attachments || []).map((row) => ({
+            ...row,
+            checked: false,
+            autoSuggested: false
+        }));
+        this._pendingUploads = [];
+        this._draftSelectedDocIds = null;
+        this._draftSelectedRecordIds = null;
+        this._draftAttachmentRows = [];
+        this.attCount = 0;
+        const recipients = (context.toRecipients || []).filter((row) => (row?.email || '').trim());
+        this.toChips = recipients.map((row, index) => this.mapSelectorRecipientToChip(row, index, 'to'));
+        this.rebuildAttachmentList();
+        this.ensureFromSelected();
+        try {
+            const bccDefaults = await getSendEmailBccDefaults();
+            this.bccChips = this.mapAddressesToChips(bccDefaults || [], 'bcc');
+        } catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('Send Email BCC defaults not loaded', e);
+        }
+        this.persistDraft();
+        this.notifyRecipientsUpdated();
+        this.refreshRecordAttachments();
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        requestAnimationFrame(() => {
+            const editor = this.template?.querySelector('.editor-body');
+            if (editor) {
+                editor.innerHTML = '';
+            }
+            this.syncBodyEditorFromState();
+            this.focusBodyAtCursor();
+        });
     }
 
     @api
@@ -1132,6 +1325,8 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     @api
     resetComposer() {
         this.editingCommLogId = null;
+        this._replyContext = null;
+        this._replyParentCommLogId = null;
         this._isBlankCompose = false;
         this.sugatiEmailTemplateConfigId = null;
         this.relatedRecordId = null;
@@ -1178,7 +1373,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     syncBodyFromEditor() {
         const editor = this.template?.querySelector('.editor-body');
         if (editor) {
-            this.bodyTemplate = editor.innerHTML || '';
+            this.bodyTemplate = this.neutralizeRecordLinksInHtml(editor.innerHTML || '');
             this._editorSyncedHtml = this.bodyTemplate;
         }
     }
@@ -1202,7 +1397,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     applyComposeState(state) {
         if (!state) return;
         this.subject = state.subject || '';
-        this.bodyTemplate = state.bodyTemplate || '';
+        this.bodyTemplate = this.neutralizeRecordLinksInHtml(state.bodyTemplate || '');
         this.activeTemplateId = state.activeTemplateId || null;
         this.activeTemplateName = state.activeTemplateName || '';
         this.activeTemplateMeta = state.activeTemplateMeta || '';
@@ -1220,8 +1415,15 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     handleRemoveChip(event) {
         const email = event.currentTarget.dataset.email;
+        const locked = new Set(
+            (this._replyContext?.lockedToEmails || []).map((row) => (row || '').trim().toLowerCase())
+        );
+        if (locked.has((email || '').trim().toLowerCase())) {
+            return;
+        }
         this.toChips = this.toChips.filter((c) => c.email !== email);
         this.persistDraft();
+        this.notifyRecipientsUpdated();
     }
 
     handleRemoveCcChip(event) {
@@ -1648,7 +1850,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         if (!editor) {
             return;
         }
-        const nextHtml = this.bodyTemplate || '';
+        const nextHtml = this.neutralizeRecordLinksInHtml(this.bodyTemplate || '');
         if (this._editorSyncedHtml === nextHtml && editor.innerHTML === nextHtml) {
             return;
         }
@@ -1727,7 +1929,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         } else {
             document.execCommand(action, false, null);
         }
-        this.bodyTemplate = editor.innerHTML;
+        this.bodyTemplate = this.neutralizeRecordLinksInHtml(editor.innerHTML);
         this._editorSyncedHtml = this.bodyTemplate;
         this.captureBodySelection();
         this.persistDraft();
@@ -1743,10 +1945,10 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     handleAiApply(event) {
         const { mode, body, subjects } = event.detail;
-        if (mode === 'subject' && subjects && subjects.length) {
+        if (mode === 'subject' && subjects && subjects.length && !this.isSubjectLocked) {
             this.subject = subjects[0];
         } else if (body) {
-            this.bodyTemplate = body || '';
+            this.bodyTemplate = this.neutralizeRecordLinksInHtml(body || '');
             this._bodyCursorPos = this.plainTextFromHtml(this.bodyTemplate).length;
             this._editorSyncedHtml = null;
             requestAnimationFrame(() => this.syncBodyEditorFromState());
@@ -1760,6 +1962,9 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     handleSubjectChange(event) {
+        if (this.isSubjectLocked) {
+            return;
+        }
         this._lastFocusedField = 'subject';
         this.subject = event.target.value;
         this._subjectCursorPos = event.target.selectionStart ?? this.subject.length;
@@ -1771,6 +1976,10 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._subjectCursorPos = event.target.selectionStart ?? (this.subject || '').length;
     }
 
+    handleBodyMouseDown(event) {
+        event.stopPropagation();
+    }
+
     handleBodyFocus() {
         this._lastFocusedField = 'body';
         this.captureBodySelection();
@@ -1779,13 +1988,37 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     handleBodyInput() {
         this._lastFocusedField = 'body';
         const editor = this.template.querySelector('.editor-body');
-        this.bodyTemplate = editor ? editor.innerHTML : '';
+        this.bodyTemplate = editor ? this.neutralizeRecordLinksInHtml(editor.innerHTML) : '';
+        if (editor && editor.innerHTML !== this.bodyTemplate) {
+            editor.innerHTML = this.bodyTemplate;
+        }
         this._editorSyncedHtml = this.bodyTemplate;
         this.captureBodySelection();
         this.persistDraft();
     }
 
-    handleBodyCursor() {
+    handleBodyPaste(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const text = event.clipboardData?.getData('text/plain') || '';
+        if (!text) {
+            return;
+        }
+        const editor = this.template.querySelector('.editor-body');
+        if (!editor) {
+            return;
+        }
+        editor.focus();
+        this.restoreBodySelection(editor);
+        document.execCommand('insertText', false, text);
+        this.bodyTemplate = this.neutralizeRecordLinksInHtml(editor.innerHTML || '');
+        this._editorSyncedHtml = this.bodyTemplate;
+        this.captureBodySelection();
+        this.persistDraft();
+    }
+
+    handleBodyCursor(event) {
+        event.stopPropagation();
         this._lastFocusedField = 'body';
         this.captureBodySelection();
     }
@@ -1843,7 +2076,8 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             bodyTemplate: this.bodyTemplate || '',
             deliveryMode: this.deliveryMode || 'postmark',
             channel: 'Email',
-            orgWideEmailAddressId: this.orgWideEmailAddressId || null
+            orgWideEmailAddressId: this.orgWideEmailAddressId || null,
+            parentCommLogId: this.getReplyParentCommLogId()
         };
     }
 
@@ -1876,7 +2110,15 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
         const hasSavedDraft = !!this.editingCommLogId;
         if (!hasSavedDraft && !this.hasComposeContent) {
+            const discardDetail = this.buildDiscardEventDetail(false);
             this.resetComposer();
+            this.dispatchEvent(
+                new CustomEvent('draftdiscarded', {
+                    detail: discardDetail,
+                    bubbles: true,
+                    composed: true
+                })
+            );
             return;
         }
 
@@ -1889,13 +2131,14 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
         this.isDiscarding = true;
         try {
+            const discardDetail = this.buildDiscardEventDetail(hasSavedDraft);
             if (hasSavedDraft) {
                 await discardDraftDirect({ commLogId: this.editingCommLogId });
             }
             this.resetComposer();
             this.dispatchEvent(
                 new CustomEvent('draftdiscarded', {
-                    detail: { hadSavedDraft: hasSavedDraft },
+                    detail: discardDetail,
                     bubbles: true,
                     composed: true
                 })
@@ -1973,6 +2216,7 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             sugatiEmailTemplateConfigId: this.sugatiEmailTemplateConfigId,
             relatedRecordId: this.relatedRecordId,
             editingCommLogId: this.editingCommLogId || null,
+            parentCommLogId: this.getReplyParentCommLogId(),
             attachments: this.getSelectedAttachmentsForPayload(),
             ...this.buildDraftAttachmentArrays()
         };

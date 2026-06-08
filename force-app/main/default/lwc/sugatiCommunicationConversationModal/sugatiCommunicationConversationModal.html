@@ -104,10 +104,11 @@
                                     <div class="conv-msg-top">
                                         <span class="conv-sender">{msg.senderLine}</span>
                                         <span class={msg.rootBadgeClass}>{msg.rootBadgeLabel}</span>
-                                        <template lwc:if={msg.isExpanded}>
-                                            <span class={msg.statusClass}>{msg.statusLabel}</span>
+                                        <span class={msg.statusClass}>{msg.statusLabel}</span>
+                                        <template lwc:if={msg.showDelivery}>
+                                            <span class="conv-delivery-chip">{msg.deliveryLabel}</span>
                                         </template>
-                                        <template lwc:else>
+                                        <template lwc:if={msg.isCollapsed}>
                                             <span class="conv-snippet">{msg.snippet}</span>
                                         </template>
                                     </div>
@@ -116,7 +117,7 @@
                                             {msg.recipientLine}
                                             <template lwc:if={msg.showDelivery}>
                                                 <span class="conv-meta-sep">·</span>
-                                                <span>{msg.deliveryLabel}</span>
+                                                <span class="conv-delivery-meta">{msg.deliveryLabel}</span>
                                             </template>
                                         </div>
                                         <div class="conv-meta-line conv-meta-full">{msg.fullTimeLabel}</div>
