@@ -527,10 +527,6 @@ export default class SugatiCommunicationTemplatePicker extends LightningElement 
         this.pendingRelatedRecordId = event.target.value;
     }
 
-    handleRelatedRecordChange(event) {
-        this.pendingRelatedRecordId = event.detail.value;
-    }
-
     handleConfirmRelatedRecord() {
         if (!this.pendingTemplate || !this.pendingRelatedRecordId) {
             return;

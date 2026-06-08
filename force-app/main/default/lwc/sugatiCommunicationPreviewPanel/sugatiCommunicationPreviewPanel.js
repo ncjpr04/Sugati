@@ -27,7 +27,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     deliveryMode = 'native';
     scheduleMode = 'now';
     scheduledAt = null;
-    previewAsContactId = null;
 
     sendModalOpen = false;
     sendPhase = 'idle';
@@ -39,7 +38,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
     resolvedBody = '';
     recipientLabel = '';
     fromLabel = '';
-    previewAsLabel = '';
     _pendingBodyHtml = '';
     isPreviewLoading = false;
     isSavingDraft = false;
@@ -66,10 +64,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
             });
         }
         this._travellerContactByEmail = map;
-        // Preview-as section disabled for now.
-        // if (this._isConnected) {
-        //     this.syncPreviewAsFromPayload();
-        // }
     }
 
     @api
@@ -84,8 +78,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         }
         this.fromLabel = this._previewPayload?.fromLabel || '';
         this.recipientLabel = (this._previewPayload?.recipients || []).map((r) => r.name || r.email).join(', ');
-        // Preview-as section disabled for now.
-        // this.syncPreviewAsFromPayload();
         if (this._isConnected) {
             this.loadPreview();
         }
@@ -102,8 +94,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         }
         this.fromLabel = this._previewPayload?.fromLabel || '';
         this.recipientLabel = (this._previewPayload?.recipients || []).map((r) => r.name || r.email).join(', ');
-        // Preview-as section disabled for now.
-        // this.syncPreviewAsFromPayload();
         this.initializePreview();
     }
 
@@ -117,62 +107,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
 
     async initializePreview() {
         await this.loadPreview();
-    }
-
-    syncPreviewAsFromPayload() {
-        const personas = this.buildPreviewAsPersonas();
-        if (!personas.length) {
-            this.previewAsContactId = null;
-            this.previewAsLabel = '';
-            return;
-        }
-        const stillValid = personas.some((p) => p.contactId === this.previewAsContactId);
-        if (!stillValid) {
-            this.previewAsContactId = personas[0].contactId;
-        }
-        const active = personas.find((p) => p.contactId === this.previewAsContactId);
-        this.previewAsLabel = active?.name || '';
-    }
-
-    buildPreviewAsPersonas() {
-        const chips = [
-            ...(this._previewPayload?.recipients || []),
-            ...(this._previewPayload?.ccRecipients || []),
-            ...(this._previewPayload?.bccRecipients || [])
-        ];
-        const seen = new Set();
-        const list = [];
-        for (const chip of chips) {
-            const contactId = this.resolveContactIdForChip(chip);
-            if (!contactId || seen.has(contactId)) {
-                continue;
-            }
-            seen.add(contactId);
-            list.push({
-                contactId,
-                name: chip.name || chip.email || 'Traveller'
-            });
-        }
-        return list;
-    }
-
-    isContactId(value) {
-        return value && /^003[a-zA-Z0-9]{12,15}$/.test(value);
-    }
-
-    resolveContactIdForChip(chip) {
-        if (chip?.contactId && this.isContactId(chip.contactId)) {
-            return chip.contactId;
-        }
-        const audience = chip?.audience || '';
-        if (audience === 'travellers' && chip?.id && this.isContactId(chip.id)) {
-            return chip.id;
-        }
-        const email = (chip?.email || '').trim().toLowerCase();
-        if (email && this._travellerContactByEmail?.has(email)) {
-            return this._travellerContactByEmail.get(email);
-        }
-        return null;
     }
 
     get toLine() {
@@ -235,22 +169,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
         return this.scheduleMode === 'later';
     }
 
-    get previewAsOptions() {
-        return []; // Preview-as section disabled for now.
-    }
-
-    get hasPreviewAsOptions() {
-        return false; // Preview-as section disabled for now.
-    }
-
-    get showPreviewAsEmpty() {
-        return false; // Preview-as section disabled for now.
-    }
-
-    get showPreviewAsHint() {
-        return false; // Preview-as section disabled for now.
-    }
-
     get sendBtnClass() {
         const ch = this.previewChannel;
         const disabled = this.sendButtonDisabled ? ' disabled' : '';
@@ -298,16 +216,6 @@ export default class SugatiCommunicationPreviewPanel extends LightningElement {
 
     handleScheduledAtChange(event) {
         this.scheduledAt = event.detail.value || null;
-    }
-
-    handlePreviewAs(event) {
-        const contactId = event.currentTarget.dataset.contactId;
-        if (!contactId || contactId === this.previewAsContactId) {
-            return;
-        }
-        this.previewAsContactId = contactId;
-        const active = this.buildPreviewAsPersonas().find((p) => p.contactId === contactId);
-        this.previewAsLabel = active?.name || '';
     }
 
     handleBack() {

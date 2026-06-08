@@ -414,48 +414,6 @@ export default class SugatiCommunicationHistory extends LightningElement {
         );
     }
 
-    @api
-    addSentEntry(entry) {
-        const newItem = {
-            id: `tl-${Date.now()}`,
-            channel: 'email',
-            subject: entry.subject || 'Your Tokyo Honeymoon — Final Itinerary',
-            who: entry.who || 'Recipients',
-            pillClass: 'pill p-go',
-            pillLabel: '✓ Sent',
-            when: 'Today',
-            dotColor: 'var(--ok)',
-            tagClass: 'tag tag-email',
-            tagLabel: '✉ Email',
-            isDraft: false,
-            isNew: true,
-            statusLabel: '● Sent',
-            statusClass: 'tl-dm-status opened',
-            statusStyle: '',
-            sentAt: entry.sentAt || 'Just now',
-            sentBy: 'System',
-            recipientLabel: 'Recipients',
-            recipients: entry.recipients || 'Recipients',
-            delivery: 'Postmark',
-            showDeliveryPill: true,
-            deliveryPillClass: 'pill p-delivery-postmark',
-            deliveryPillLabel: 'Postmark',
-            attachmentsLabel: entry.attachments || 'None',
-            emailHeading: entry.subject || 'Message Sent',
-            emailBody: 'Message sent successfully.',
-            hasAttachments: false,
-            attachmentChips: [],
-            messageId: entry.messageId,
-            sortTimestamp: Date.now()
-        };
-        this._items = this.sortHistoryItems([newItem, ...this._items]);
-        this.expandedId = newItem.id;
-        if (this.isDefaultFilters) {
-            this.emailCount += 1;
-            this._summaryCounts = { ...this._summaryCounts, email: this.emailCount };
-        }
-    }
-
     mapHistoryRow(row) {
         const ch = row.channel === 'WhatsApp' ? 'wa' : row.channel === 'In-App' ? 'ia' : 'email';
         const isDraft = row.status === 'Draft';

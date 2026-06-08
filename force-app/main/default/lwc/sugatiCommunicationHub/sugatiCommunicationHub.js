@@ -15,8 +15,6 @@ const VIEWS = {
     PREVIEW: 'preview',
     HISTORY: 'history'
 };
-const HARDCODED_OPPORTUNITY_ID = '006d3000005oJpNAAU';
-const DEBUG_PREVIEW_FLOW = true;
 
 export default class SugatiCommunicationHub extends LightningElement {
     @api recordId;
@@ -59,7 +57,7 @@ export default class SugatiCommunicationHub extends LightningElement {
         if (this._pageRecordId) {
             return this._pageRecordId;
         }
-        return HARDCODED_OPPORTUNITY_ID;
+        return null;
     }
 
     beginNewMessage() {
@@ -230,9 +228,6 @@ export default class SugatiCommunicationHub extends LightningElement {
     handleNavigateRecipients(event) {
         const composer = this.template.querySelector('c-sugati-communication-email-composer');
         if (composer) {
-            if (typeof composer.persistComposerState === 'function') {
-                composer.persistComposerState();
-            }
             if (typeof composer.getRecipientState === 'function') {
                 const state = composer.getRecipientState();
                 this.toRecipients = state?.to || this.toRecipients;
@@ -393,20 +388,11 @@ export default class SugatiCommunicationHub extends LightningElement {
     }
 
     handleNavigatePreview(event) {
-        if (DEBUG_PREVIEW_FLOW) {
-            console.log(
-                '[Hub] handleNavigatePreview detail',
-                JSON.parse(JSON.stringify(event?.detail || {}))
-            );
-        }
         this.previewChannel = event.detail?.channel || 'email';
         this.previewPayload = this.buildSendPayloadFromComposer({
             ...(event.detail || {}),
             opportunityId: this.effectiveOpportunityId
         });
-        if (DEBUG_PREVIEW_FLOW) {
-            console.log('[Hub] previewPayload assigned', JSON.parse(JSON.stringify(this.previewPayload)));
-        }
         this.currentView = VIEWS.PREVIEW;
     }
 
@@ -604,23 +590,6 @@ export default class SugatiCommunicationHub extends LightningElement {
         this.showTemplatePicker = false;
         const composer = this.template.querySelector('c-sugati-communication-email-composer');
         composer?.applyTemplateSelection?.(event.detail);
-    }
-
-    mergeRecipientsByEmail(existing, selected) {
-        const byEmail = new Map();
-        (existing || []).forEach((row) => {
-            const email = (row.email || '').trim().toLowerCase();
-            if (email) {
-                byEmail.set(email, row);
-            }
-        });
-        (selected || []).forEach((row) => {
-            const email = (row.email || '').trim().toLowerCase();
-            if (email) {
-                byEmail.set(email, row);
-            }
-        });
-        return [...byEmail.values()];
     }
 
     applySelectedRecipients() {

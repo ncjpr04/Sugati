@@ -5,7 +5,6 @@ import getRecordAttachments from '@salesforce/apex/SugatiCommunicationHubControl
 import getOrgWideFromAddresses from '@salesforce/apex/SugatiCommunicationHubController.getOrgWideFromAddresses';
 import getSendEmailBccDefaults from '@salesforce/apex/SugatiCommunicationHubController.getSendEmailBccDefaults';
 import getRecipients from '@salesforce/apex/SugatiCommunicationHubController.getRecipients';
-import loadDefaultSendEmailTemplate from '@salesforce/apex/SugatiCommunicationHubController.loadDefaultSendEmailTemplate';
 import loadSendEmailTemplate from '@salesforce/apex/SugatiCommunicationHubController.loadSendEmailTemplate';
 import saveDraftDirect from '@salesforce/apex/SugatiCommunicationHubController.saveDraftDirect';
 import discardDraftDirect from '@salesforce/apex/SugatiCommunicationHubController.discardDraftDirect';
@@ -18,8 +17,6 @@ import USER_ID from '@salesforce/user/Id';
 import { getRecord } from 'lightning/uiRecordApi';
 import USER_NAME from '@salesforce/schema/User.Name';
 import USER_EMAIL from '@salesforce/schema/User.Email';
-
-const DEBUG_PREVIEW_FLOW = true;
 
 export default class SugatiCommunicationEmailComposer extends LightningElement {
     @api opportunityId;
@@ -206,11 +203,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         return safeHtml;
     }
 
-    @api
-    persistComposerState() {
-        // Composer state is no longer persisted in browser storage.
-    }
-
     renderedCallback() {
         if (this._focusAddrSearch && this._activeAddrDropdown) {
             this._focusAddrSearch = false;
@@ -220,14 +212,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             }
         }
         this.syncBodyEditorFromState();
-    }
-
-    persistDraft() {
-        // Intentionally no-op: email composer no longer uses browser storage.
-    }
-
-    clearDraftStorage() {
-        // Intentionally no-op: email composer no longer uses browser storage.
     }
 
     get addrSearchTerm() {
@@ -452,11 +436,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         return `No ${type} records found on this Opportunity. Add one on the trip or choose a different template.`;
     }
 
-    @api
-    async refreshTemplates() {
-        await this.loadTemplates();
-    }
-
     get attachments() {
         return this._attachments.map((a) => ({
             ...a,
@@ -543,7 +522,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             [],
             (recipients || []).filter((r) => (r?.email || '').trim()).map((r, i) => this.mapSelectorRecipientToChip(r, i, 'to'))
         );
-        this.persistDraft();
         this.notifyRecipientsUpdated();
     }
 
@@ -553,7 +531,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             [],
             (recipients || []).filter((r) => (r?.email || '').trim()).map((r, i) => this.mapSelectorRecipientToChip(r, i, 'cc'))
         );
-        this.persistDraft();
         this.notifyRecipientsUpdated();
     }
 
@@ -563,7 +540,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             [],
             (recipients || []).filter((r) => (r?.email || '').trim()).map((r, i) => this.mapSelectorRecipientToChip(r, i, 'bcc'))
         );
-        this.persistDraft();
         this.notifyRecipientsUpdated();
     }
 
@@ -581,7 +557,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         } else {
             this.toChips = this.mergeRecipientChips(this.toChips || [], incoming);
         }
-        this.persistDraft();
         this.notifyRecipientsUpdated();
     }
 
@@ -600,27 +575,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             isReplyCompose: this.isReplyCompose(),
             parentCommLogId: this.getReplyParentCommLogId()
         };
-    }
-
-    @api
-    async loadDefaultTemplate() {
-        if (!this.opportunityId || this.editingCommLogId) {
-            return;
-        }
-        try {
-            const loaded = await loadDefaultSendEmailTemplate({ opportunityId: this.opportunityId });
-            if (!loaded) {
-                this.notifyTemplatePickerRequired();
-                return;
-            }
-            this.applyTemplateLoad(loaded);
-        } catch (e) {
-            const message = e?.body?.message || e?.message || 'Unable to load default Send Email template.';
-            this.showToast('Template not loaded', message, 'warning');
-            this.notifyTemplatePickerRequired();
-            // eslint-disable-next-line no-console
-            console.warn('Default Send Email template not loaded', e);
-        }
     }
 
     @api
@@ -688,7 +642,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             // eslint-disable-next-line no-console
             console.warn('Send Email BCC defaults not loaded', e);
         }
-        this.persistDraft();
         this.notifyRecipientsUpdated();
         this.refreshRecordAttachments();
         requestAnimationFrame(() => {
@@ -735,7 +688,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._editorSyncedHtml = null;
         requestAnimationFrame(() => this.syncBodyEditorFromState());
         this.applyAutoAttachmentsFromTemplate(loaded);
-        this.persistDraft();
         this.refreshRecordAttachments();
     }
 
@@ -817,7 +769,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     handleFromChange(event) {
         this._fromUserPicked = true;
         this.orgWideEmailAddressId = event.detail.value ?? '';
-        this.persistDraft();
     }
 
     mapSelectorRecipientToChip(recipient, index, prefix) {
@@ -993,23 +944,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.updateAttCount();
     }
 
-    applySelectedAttachmentIds(selectedIds) {
-        this.applySelectedAttachmentRecordIds(selectedIds);
-    }
-
-    getSelectedAttachmentRecordIds() {
-        return (this._attachments || [])
-            .filter((row) => row.checked)
-            .map((row) => row.attachmentRecordId || row.contentDocumentId || row.id)
-            .filter(Boolean);
-    }
-
-    getSelectedContentDocumentIds() {
-        return (this._attachments || [])
-            .filter((row) => row.checked && row.contentDocumentId)
-            .map((row) => row.contentDocumentId);
-    }
-
     rebuildAttachmentList() {
         const rows = [];
         const seen = new Set();
@@ -1137,7 +1071,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             if (stagedRows.length) {
                 this._pendingUploads = [...(this._pendingUploads || []), ...stagedRows];
                 this.rebuildAttachmentList();
-                this.persistDraft();
                 this.showToast(
                     'Files added',
                     `${stagedRows.length} file(s) will be saved to the communication log when you save draft or send.`,
@@ -1303,7 +1236,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             // eslint-disable-next-line no-console
             console.warn('Send Email BCC defaults not loaded', e);
         }
-        this.persistDraft();
         this.notifyRecipientsUpdated();
         this.refreshRecordAttachments();
         // eslint-disable-next-line @lwc/lwc/no-async-operation
@@ -1393,26 +1325,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         };
     }
 
-    @api
-    applyComposeState(state) {
-        if (!state) return;
-        this.subject = state.subject || '';
-        this.bodyTemplate = this.neutralizeRecordLinksInHtml(state.bodyTemplate || '');
-        this.activeTemplateId = state.activeTemplateId || null;
-        this.activeTemplateName = state.activeTemplateName || '';
-        this.activeTemplateMeta = state.activeTemplateMeta || '';
-        this._lastFocusedField = state.lastFocusedField || 'body';
-        this._subjectCursorPos = state.subjectCursorPos || 0;
-        this._bodyCursorPos = state.bodyCursorPos || 0;
-        this._bodySelectionRange = null;
-        this._editorSyncedHtml = null;
-        requestAnimationFrame(() => {
-            this.syncBodyEditorFromState();
-            this.focusBodyAtCursor();
-        });
-        this.persistDraft();
-    }
-
     handleRemoveChip(event) {
         const email = event.currentTarget.dataset.email;
         const locked = new Set(
@@ -1422,29 +1334,17 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return;
         }
         this.toChips = this.toChips.filter((c) => c.email !== email);
-        this.persistDraft();
         this.notifyRecipientsUpdated();
     }
 
     handleRemoveCcChip(event) {
         const email = event.currentTarget.dataset.email;
         this.ccChips = this.ccChips.filter((c) => c.email !== email);
-        this.persistDraft();
     }
 
     handleRemoveBccChip(event) {
         const email = event.currentTarget.dataset.email;
         this.bccChips = this.bccChips.filter((c) => c.email !== email);
-        this.persistDraft();
-    }
-
-    handleBccNav() {
-        this.openAddrDropdown('bcc');
-    }
-
-    @api
-    openRecipientPicker(target) {
-        this.openAddrDropdown(target);
     }
 
     openAddrDropdown(target) {
@@ -1753,7 +1653,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             attachmentParentLabel: match?.label || this.tripName || ''
         });
         this.resetComposerTemplateStep();
-        this.persistDraft();
     }
 
     selectComposerTemplateById(id) {
@@ -1772,7 +1671,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
                 meta: selected.meta,
                 relatedRecordId: this.opportunityId
             });
-            this.persistDraft();
             return;
         }
         const matches = this.filterRelatedRecords(relatedType);
@@ -1802,17 +1700,14 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             return match ? { ...row, checked: !!match.checked } : row;
         });
         this.updateAttCount();
-        this.persistDraft();
     }
 
     handleDeliveryPostmark() {
         this.deliveryMode = 'postmark';
-        this.persistDraft();
     }
 
     handleDeliveryNative() {
         this.deliveryMode = 'native';
-        this.persistDraft();
     }
 
     @api
@@ -1932,7 +1827,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.bodyTemplate = this.neutralizeRecordLinksInHtml(editor.innerHTML);
         this._editorSyncedHtml = this.bodyTemplate;
         this.captureBodySelection();
-        this.persistDraft();
     }
 
     handleOpenAi() {
@@ -1954,7 +1848,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             requestAnimationFrame(() => this.syncBodyEditorFromState());
         }
         this.showAiAssist = false;
-        this.persistDraft();
     }
 
     handleSubjectFocus() {
@@ -1968,7 +1861,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this._lastFocusedField = 'subject';
         this.subject = event.target.value;
         this._subjectCursorPos = event.target.selectionStart ?? this.subject.length;
-        this.persistDraft();
     }
 
     handleSubjectCursor(event) {
@@ -1994,7 +1886,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         }
         this._editorSyncedHtml = this.bodyTemplate;
         this.captureBodySelection();
-        this.persistDraft();
     }
 
     handleBodyPaste(event) {
@@ -2014,7 +1905,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
         this.bodyTemplate = this.neutralizeRecordLinksInHtml(editor.innerHTML || '');
         this._editorSyncedHtml = this.bodyTemplate;
         this.captureBodySelection();
-        this.persistDraft();
     }
 
     handleBodyCursor(event) {
@@ -2195,7 +2085,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
 
     handlePreview() {
         this.syncBodyFromEditor();
-        this.persistDraft();
         const detail = {
             channel: 'email',
             opportunityId: this.opportunityId,
@@ -2220,9 +2109,6 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
             attachments: this.getSelectedAttachmentsForPayload(),
             ...this.buildDraftAttachmentArrays()
         };
-        if (DEBUG_PREVIEW_FLOW) {
-            console.log('[Composer] navigatepreview detail', JSON.parse(JSON.stringify(detail)));
-        }
         this.dispatchEvent(
             new CustomEvent('navigatepreview', {
                 detail
