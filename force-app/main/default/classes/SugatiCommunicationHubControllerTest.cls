@@ -860,10 +860,30 @@ private class SugatiCommunicationHubControllerTest {
     }
 
     @IsTest
-    static void testCommHubReplyToConstant() {
+    static void testCommHubReplyToFallsBackToUserEmailWhenSettingBlank() {
+        Comm_Hub_Setting__c settings = new Comm_Hub_Setting__c(
+            SetupOwnerId = UserInfo.getUserId()
+        );
+        settings.Reply_To_Email__c = null;
+        upsert settings;
+
         System.assertEquals(
-            'b221519@skit.ac.in',
-            SugatiCommunicationHubController.getCommHubReplyToForTest()
+            UserInfo.getUserEmail(),
+            SugatiCommunicationHubController.getCommHubReplyToForTest(null)
+        );
+    }
+
+    @IsTest
+    static void testCommHubReplyToUsesHierarchySetting() {
+        Comm_Hub_Setting__c settings = new Comm_Hub_Setting__c(
+            SetupOwnerId = UserInfo.getUserId()
+        );
+        settings.Reply_To_Email__c = 'inbound@example.com';
+        upsert settings;
+
+        System.assertEquals(
+            'inbound@example.com',
+            SugatiCommunicationHubController.getCommHubReplyToForTest(null)
         );
     }
 
@@ -872,6 +892,7 @@ private class SugatiCommunicationHubControllerTest {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
         List<Contact> contacts = [SELECT Id, Email FROM Contact ORDER BY CreatedDate ASC LIMIT 1];
 
+        upsertCommHubReplyToSetting('inbound@example.com');
         SugatiCommunicationHubController.lastNativeReplyTo = null;
 
         Test.startTest();
@@ -903,7 +924,7 @@ private class SugatiCommunicationHubControllerTest {
         Test.stopTest();
 
         System.assertEquals(
-            'b221519@skit.ac.in',
+            'inbound@example.com',
             SugatiCommunicationHubController.lastNativeReplyTo,
             'Native send should set Reply-To on the outbound email'
         );
@@ -914,6 +935,7 @@ private class SugatiCommunicationHubControllerTest {
     @IsTest
     static void testPostmarkPayloadIncludesReplyTo() {
         capturedPostmarkBody = null;
+        upsertCommHubReplyToSetting('inbound@example.com');
         Test.setMock(HttpCalloutMock.class, new PostmarkReplyToCaptureMock());
 
         PostmarkEmailService.PostmarkEmailRequest req = new PostmarkEmailService.PostmarkEmailRequest();
@@ -921,16 +943,24 @@ private class SugatiCommunicationHubControllerTest {
         req.To = 'recipient@example.com';
         req.Subject = 'Reply-To payload test';
         req.HtmlBody = '<p>Body</p>';
-        req.ReplyTo = SugatiCommunicationHubController.getCommHubReplyToForTest();
+        req.ReplyTo = SugatiCommunicationHubController.getCommHubReplyToForTest(null);
 
         Test.startTest();
         PostmarkEmailService.sendEmail(req);
         Test.stopTest();
 
         System.assert(
-            capturedPostmarkBody != null && capturedPostmarkBody.contains('b221519@skit.ac.in'),
+            capturedPostmarkBody != null && capturedPostmarkBody.contains('inbound@example.com'),
             'Postmark payload should include the Communication Hub Reply-To address'
         );
+    }
+
+    private static void upsertCommHubReplyToSetting(String replyToEmail) {
+        Comm_Hub_Setting__c settings = new Comm_Hub_Setting__c(
+            SetupOwnerId = UserInfo.getUserId()
+        );
+        settings.Reply_To_Email__c = replyToEmail;
+        upsert settings;
     }
 
     private class PostmarkReplyToCaptureMock implements HttpCalloutMock {

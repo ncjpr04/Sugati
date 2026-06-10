@@ -1,13 +1,36 @@
 public with sharing class SugatiCommunicationHubController {
     private static final String EMAIL_CHANNEL = 'Email';
-    private static final String COMM_HUB_REPLY_TO = 'b221519@skit.ac.in';
 
     @TestVisible
     private static String lastNativeReplyTo;
 
     @TestVisible
-    private static String getCommHubReplyToForTest() {
-        return COMM_HUB_REPLY_TO;
+    private static String getCommHubReplyToForTest(Id orgWideEmailAddressId) {
+        return resolveCommHubReplyTo(orgWideEmailAddressId);
+    }
+
+    private static String resolveCommHubReplyTo(Id orgWideEmailAddressId) {
+        Comm_Hub_Setting__c settings = Comm_Hub_Setting__c.getInstance();
+        if (settings != null && String.isNotBlank(settings.Reply_To_Email__c)) {
+            return settings.Reply_To_Email__c.trim();
+        }
+        return resolveFromEmailAddress(orgWideEmailAddressId);
+    }
+
+    private static String resolveFromEmailAddress(Id orgWideEmailAddressId) {
+        if (orgWideEmailAddressId != null) {
+            List<OrgWideEmailAddress> rows = [
+                SELECT Address
+                FROM OrgWideEmailAddress
+                WHERE Id = :orgWideEmailAddressId
+                LIMIT 1
+            ];
+            if (!rows.isEmpty() && String.isNotBlank(rows[0].Address)) {
+                return rows[0].Address.trim();
+            }
+        }
+        String userEmail = UserInfo.getUserEmail();
+        return String.isNotBlank(userEmail) ? userEmail.trim() : null;
     }
     public class HubContextDTO {
         @AuraEnabled public Id opportunityId;
@@ -2939,9 +2962,12 @@ public with sharing class SugatiCommunicationHubController {
         if (opportunityId != null) {
             mail.setWhatId(opportunityId);
         }
-        mail.setReplyTo(COMM_HUB_REPLY_TO);
+        String replyTo = resolveCommHubReplyTo(orgWideEmailAddressId);
+        if (String.isNotBlank(replyTo)) {
+            mail.setReplyTo(replyTo);
+        }
         if (Test.isRunningTest()) {
-            lastNativeReplyTo = COMM_HUB_REPLY_TO;
+            lastNativeReplyTo = replyTo;
         }
         mail.setSaveAsActivity(true);
 
@@ -3317,7 +3343,7 @@ public with sharing class SugatiCommunicationHubController {
             for (Messaging.SingleEmailMessage mail : messages) {
                 PostmarkEmailService.PostmarkEmailRequest payload = new PostmarkEmailService.PostmarkEmailRequest();
                 payload.fromAddress = fromAddress;
-                payload.ReplyTo = COMM_HUB_REPLY_TO;
+                payload.ReplyTo = resolveCommHubReplyTo(request.orgWideEmailAddressId);
                 payload.To = String.join(mail.getToAddresses(), ',');
                 payload.Subject = mail.getSubject();
                 payload.HtmlBody = mail.getHtmlBody();

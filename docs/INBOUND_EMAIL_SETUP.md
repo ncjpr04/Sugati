@@ -4,9 +4,21 @@ This guide covers org configuration required after deploying the inbound messagi
 
 ## Overview
 
-Outbound emails from the Communication Hub set `Reply-To: b221519@skit.ac.in`. Replies to that address must be forwarded into Salesforce Email Service, which runs `SugatiCommunicationInboundEmailHandler` to create inbound `Comm_Log__c` records threaded to the original outbound message.
+Outbound emails from the Communication Hub set `Reply-To` from **Comm Hub Setting → Reply-To Email** (`Comm_Hub_Setting__c.Reply_To_Email__c`). If that field is blank, the code falls back to the outbound **From** address (selected org-wide email, or the sending user's email). Replies to that mailbox must be forwarded into Salesforce Email Service, which runs `SugatiCommunicationInboundEmailHandler` to create inbound `Comm_Log__c` records threaded to the original outbound message.
 
-## 1. Email Service run-as user
+## 1. Set the org Reply-To mailbox
+
+1. In Setup, search for **Custom Settings**.
+2. Open **Comm Hub Setting** → **Manage** → **New**.
+3. Set **Reply-To Email** to the mailbox you control for this org (e.g. `inbound@yourcompany.com`).
+4. Save at **org default**, **profile**, or **user** level — the code reads the effective hierarchy value for the sending user (`getInstance()`).
+5. Every outbound Communication Hub email (Postmark and native) will use this address as `Reply-To`.
+
+Each org should use its own mailbox. Configure forwarding from that mailbox in step 4 below.
+
+**Tip:** If Reply-To still looks like the From address, confirm the setting is saved at org/profile/user level (not only viewed in Setup without a saved hierarchy record). Org Id starts with `00D`; profile with `00e`; user with `005`.
+
+## 2. Email Service run-as user
 
 The Email Service metadata uses `shivamm@aptclouds.com.sugdevext` as `runAsUser` for the dev org (Salesforce **username**). Gmail verification notifications are sent to that user's **Email** field (`shivamm@aptclouds.com`). For other orgs, update [`force-app/main/default/emailservices/Comm_Hub_Inbound.xml`](../force-app/main/default/emailservices/Comm_Hub_Inbound.xml) to the integration user's username before deploy.
 
@@ -17,7 +29,7 @@ That user needs:
 
 Deploy the handler, service, and email service metadata together.
 
-## 2. Activate the Email Service
+## 3. Activate the Email Service
 
 1. In Setup, search for **Email Services**.
 2. Open **Comm_Hub_Inbound**.
@@ -25,13 +37,13 @@ Deploy the handler, service, and email service metadata together.
 4. Open the **comm_hub_inbound** email address.
 5. Copy the full generated address (format: `commhubinbound@<unique>.salesforce.com`).
 
-## 3. Forward replies from the Reply-To mailbox
+## 4. Forward replies from the Reply-To mailbox
 
-Configure `b221519@skit.ac.in` to automatically forward all received messages to the Salesforce Email Service address from step 2.
+Configure the **Reply-To Email** from step 1 to automatically forward all received messages to the Salesforce Email Service address from step 3.
 
 Typical mailbox setup:
 
-1. Sign in to the `b221519@skit.ac.in` mailbox.
+1. Sign in to the Reply-To mailbox configured in step 1.
 2. In Gmail: **Settings** → **Forwarding and POP/IMAP** → **Add a forwarding address** → paste the Salesforce address from step 2.
 3. Gmail sends a **verification email to the Salesforce address** (not to your inbox). The inbound handler captures it automatically.
 4. Complete verification using one of these:
@@ -41,10 +53,10 @@ Typical mailbox setup:
 5. After Gmail shows the address as verified, enable **Forward a copy of incoming mail to** that Salesforce address.
 6. Keep a copy in the mailbox if your provider supports it (optional, for troubleshooting).
 
-## 4. End-to-end verification
+## 5. End-to-end verification
 
 1. Send an outbound email from the Communication Hub on a test Opportunity (Postmark or Native mode).
-2. Confirm the sent email header includes `Reply-To: b221519@skit.ac.in`.
+2. Confirm the sent email header includes `Reply-To: <your Comm Hub Setting Reply-To Email>`.
 3. Reply from one of the original recipient addresses.
 4. Wait for forwarding and Email Service processing.
 5. In Salesforce, verify:
@@ -84,7 +96,7 @@ These fields must be deployed before inbound processing works:
 |---|---|
 | Gmail forwarding stuck on "Verify" | Click **Re-send email** in Gmail, then check run-as user inbox or `Comm_Log__c` where `Delivery_Mode__c = mailbox_verification` for the verification link |
 | No inbound log created | Confirm email reached Salesforce Email Service (Setup → Email Services → Comm_Hub_Inbound). Parent match requires `In-Reply-To` or `References` to match `Comm_Log__c.Message_Id__c` on an outbound log |
-| Email Service not invoked | Forwarding rule on `b221519@skit.ac.in` to the `commhubinbound@...salesforce.com` address |
+| Email Service not invoked | Forwarding rule on the org Reply-To mailbox to the `commhubinbound@...salesforce.com` address |
 | Handler error / no DML | `runAsUser` permissions, required fields deployed, debug logs for `SugatiCommunicationInboundService` |
 | Parent not matched | Resend a **new** outbound email so `Message_Id__c` is populated, then reply to that message |
 | Duplicate logs | Inbound deduplication uses inbound `Message-Id`; verify mail server is not generating new IDs on forward |
@@ -92,4 +104,4 @@ These fields must be deployed before inbound processing works:
 ## Out of scope in this release
 
 - Inbound emails with no matching parent Comm Log are ignored
-- Reply-To is hardcoded to `b221519@skit.ac.in` in `SugatiCommunicationHubController`
+- Reply-To is configured per org in **Comm Hub Setting** (`Reply_To_Email__c`); when blank, it falls back to the outbound From address

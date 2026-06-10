@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reply_To_Email__c</fullName>
+    <description>Mailbox address placed on outbound Communication Hub emails as Reply-To. When blank, the outbound From address is used instead. Replies must be forwarded to the Salesforce Email Service for inbound capture.</description>
+    <externalId>false</externalId>
+    <label>Reply-To Email</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
