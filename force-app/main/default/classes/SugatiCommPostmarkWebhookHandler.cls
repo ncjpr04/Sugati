@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/postmark/webhook/*')
-global without sharing class PostmarkWebhookHandler {
+global without sharing class SugatiCommPostmarkWebhookHandler {
     @HttpPost
     global static void handleWebhook() {
         RestRequest req = RestContext.request;
@@ -368,3 +368,5 @@ global without sharing class PostmarkWebhookHandler {
         return value == null ? null : String.valueOf(value);
     }
 }
+
+

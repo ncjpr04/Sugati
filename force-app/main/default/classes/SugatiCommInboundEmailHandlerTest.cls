@@ -1,5 +1,5 @@
 @IsTest
-private class SugatiCommunicationInboundServiceTest {
+private class SugatiCommInboundEmailHandlerTest {
     @TestSetup
     static void setupData() {
         Account acc = new Account(Name = 'Inbound Test Account');
@@ -65,7 +65,7 @@ private class SugatiCommunicationInboundServiceTest {
         envelope.toAddress = 'commhubinbound@example.salesforce.com';
 
         Test.startTest();
-        Messaging.InboundEmailResult result = SugatiCommunicationInboundService.processInboundEmail(
+        Messaging.InboundEmailResult result = processInbound(
             inbound,
             envelope
         );
@@ -138,7 +138,7 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        Messaging.InboundEmailResult result = SugatiCommunicationInboundService.processInboundEmail(
+        Messaging.InboundEmailResult result = processInbound(
             inbound,
             new Messaging.InboundEnvelope()
         );
@@ -180,7 +180,7 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        SugatiCommunicationInboundService.processInboundEmail(inbound, new Messaging.InboundEnvelope());
+        processInbound(inbound, new Messaging.InboundEnvelope());
         Test.stopTest();
 
         Comm_Log__c inboundLog = [
@@ -218,8 +218,8 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        SugatiCommunicationInboundService.processInboundEmail(inbound, new Messaging.InboundEnvelope());
-        SugatiCommunicationInboundService.processInboundEmail(inbound, new Messaging.InboundEnvelope());
+        processInbound(inbound, new Messaging.InboundEnvelope());
+        processInbound(inbound, new Messaging.InboundEnvelope());
         Test.stopTest();
 
         System.assertEquals(
@@ -242,7 +242,7 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        Messaging.InboundEmailResult result = SugatiCommunicationInboundService.processInboundEmail(
+        Messaging.InboundEmailResult result = processInbound(
             inbound,
             new Messaging.InboundEnvelope()
         );
@@ -286,7 +286,7 @@ private class SugatiCommunicationInboundServiceTest {
         inbound.binaryAttachments = new List<Messaging.InboundEmail.BinaryAttachment>{ attachment };
 
         Test.startTest();
-        SugatiCommunicationInboundService.processInboundEmail(inbound, new Messaging.InboundEnvelope());
+        processInbound(inbound, new Messaging.InboundEnvelope());
         Test.stopTest();
 
         Comm_Log__c inboundLog = [
@@ -327,7 +327,7 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        SugatiCommunicationInboundService.processInboundEmail(inbound, new Messaging.InboundEnvelope());
+        processInbound(inbound, new Messaging.InboundEnvelope());
         Test.stopTest();
 
         System.assertEquals(
@@ -352,7 +352,7 @@ private class SugatiCommunicationInboundServiceTest {
         );
 
         Test.startTest();
-        Messaging.InboundEmailResult result = SugatiCommunicationInboundService.processInboundEmail(
+        Messaging.InboundEmailResult result = processInbound(
             inbound,
             new Messaging.InboundEnvelope()
         );
@@ -396,7 +396,7 @@ private class SugatiCommunicationInboundServiceTest {
         envelope.toAddress = 'commhubinbound@example.salesforce.com';
 
         Test.startTest();
-        Messaging.InboundEmailResult result = SugatiCommunicationInboundService.processInboundEmail(
+        Messaging.InboundEmailResult result = processInbound(
             inbound,
             envelope
         );
@@ -420,7 +420,7 @@ private class SugatiCommunicationInboundServiceTest {
     }
 
     @IsTest
-    static void testHandlerDelegatesToService() {
+    static void testHandleInboundEmail() {
         Opportunity opp = [SELECT Id FROM Opportunity LIMIT 1];
 
         Comm_Log__c parentLog = new Comm_Log__c(
@@ -451,6 +451,14 @@ private class SugatiCommunicationInboundServiceTest {
 
         System.assertEquals(true, result.success);
         System.assertEquals(1, [SELECT COUNT() FROM Comm_Log__c WHERE Direction__c = 'Inbound']);
+    }
+
+    private static Messaging.InboundEmailResult processInbound(
+        Messaging.InboundEmail inbound,
+        Messaging.InboundEnvelope envelope
+    ) {
+        return new SugatiCommunicationInboundEmailHandler()
+            .handleInboundEmail(inbound, envelope);
     }
 
     private static Messaging.InboundEmail buildInboundEmail(
@@ -494,3 +502,5 @@ private class SugatiCommunicationInboundServiceTest {
         return header;
     }
 }
+
+

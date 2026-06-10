@@ -97,7 +97,7 @@ These fields must be deployed before inbound processing works:
 | Gmail forwarding stuck on "Verify" | Click **Re-send email** in Gmail, then check run-as user inbox or `Comm_Log__c` where `Delivery_Mode__c = mailbox_verification` for the verification link |
 | No inbound log created | Confirm email reached Salesforce Email Service (Setup → Email Services → Comm_Hub_Inbound). Parent match requires `In-Reply-To` or `References` to match `Comm_Log__c.Message_Id__c` on an outbound log |
 | Email Service not invoked | Forwarding rule on the org Reply-To mailbox to the `commhubinbound@...salesforce.com` address |
-| Handler error / no DML | `runAsUser` permissions, required fields deployed, debug logs for `SugatiCommunicationInboundService` |
+| Handler error / no DML | `runAsUser` permissions, required fields deployed, debug logs for `SugatiCommunicationInboundEmailHandler` |
 | Parent not matched | Resend a **new** outbound email so `Message_Id__c` is populated, then reply to that message |
 | Duplicate logs | Inbound deduplication uses inbound `Message-Id`; verify mail server is not generating new IDs on forward |
 

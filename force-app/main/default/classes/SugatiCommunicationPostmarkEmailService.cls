@@ -1,4 +1,4 @@
-public class PostmarkEmailService {
+public class SugatiCommunicationPostmarkEmailService {
 
     private static final String POSTMARK_ENDPOINT =
         'callout:Postmark/email';

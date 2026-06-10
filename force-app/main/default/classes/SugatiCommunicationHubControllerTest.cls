@@ -847,15 +847,15 @@ private class SugatiCommunicationHubControllerTest {
             'To: nitinc@aptclouds.com\r\n';
         System.assertEquals(
             '<7ff56b58-2ea7-4eb6-a170-41ead2c9c965@mtasv.net>',
-            PostmarkEmailService.extractRfcMessageIdFromBody(body)
+            SugatiCommunicationPostmarkEmailService.extractRfcMessageIdFromBody(body)
         );
         System.assertEquals(
             '<7ff56b58-2ea7-4eb6-a170-41ead2c9c965@mtasv.net>',
-            PostmarkEmailService.buildPostmarkRfcMessageId('7ff56b58-2ea7-4eb6-a170-41ead2c9c965')
+            SugatiCommunicationPostmarkEmailService.buildPostmarkRfcMessageId('7ff56b58-2ea7-4eb6-a170-41ead2c9c965')
         );
         System.assertEquals(
             '<POSTMARK-TEST@mtasv.net>',
-            PostmarkEmailService.resolveOutboundRfcMessageId('POSTMARK-TEST')
+            SugatiCommunicationPostmarkEmailService.resolveOutboundRfcMessageId('POSTMARK-TEST')
         );
     }
 
@@ -938,7 +938,7 @@ private class SugatiCommunicationHubControllerTest {
         upsertCommHubReplyToSetting('inbound@example.com');
         Test.setMock(HttpCalloutMock.class, new PostmarkReplyToCaptureMock());
 
-        PostmarkEmailService.PostmarkEmailRequest req = new PostmarkEmailService.PostmarkEmailRequest();
+        SugatiCommunicationPostmarkEmailService.PostmarkEmailRequest req = new SugatiCommunicationPostmarkEmailService.PostmarkEmailRequest();
         req.fromAddress = 'sender@example.com';
         req.To = 'recipient@example.com';
         req.Subject = 'Reply-To payload test';
@@ -946,7 +946,7 @@ private class SugatiCommunicationHubControllerTest {
         req.ReplyTo = SugatiCommunicationHubController.getCommHubReplyToForTest(null);
 
         Test.startTest();
-        PostmarkEmailService.sendEmail(req);
+        SugatiCommunicationPostmarkEmailService.sendEmail(req);
         Test.stopTest();
 
         System.assert(

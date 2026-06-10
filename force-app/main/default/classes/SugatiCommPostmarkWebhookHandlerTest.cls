@@ -1,5 +1,5 @@
 @IsTest
-private class PostmarkWebhookHandlerTest {
+private class SugatiCommPostmarkWebhookHandlerTest {
     @IsTest
     static void testDeliveryWebhookUpdatesRecipientAndLog() {
         Comm_Log__c log = new Comm_Log__c(
@@ -29,7 +29,7 @@ private class PostmarkWebhookHandlerTest {
         RestContext.request = req;
         RestContext.response = res;
 
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Recipient__c updatedRec = [
             SELECT Status__c, Delivered_At__c
@@ -80,7 +80,7 @@ private class PostmarkWebhookHandlerTest {
         RestContext.request = req;
         RestContext.response = res;
 
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Recipient__c updatedRec = [
             SELECT Status__c, Delivered_At__c
@@ -120,7 +120,7 @@ private class PostmarkWebhookHandlerTest {
         RestContext.request = openReq;
         RestContext.response = openRes;
 
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Log__c afterOpen = [
             SELECT Status__c, Open_Count__c, First_Opened_At__c, Last_Opened_At__c
@@ -143,7 +143,7 @@ private class PostmarkWebhookHandlerTest {
         RestContext.response = bounceRes;
 
         Test.startTest();
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
         Test.stopTest();
 
         Comm_Log__c afterBounce = [
@@ -188,7 +188,7 @@ private class PostmarkWebhookHandlerTest {
         RestResponse spamRes = new RestResponse();
         RestContext.request = spamReq;
         RestContext.response = spamRes;
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Log__c afterSpam = [
             SELECT Status__c, Spam_Reported_At__c
@@ -207,7 +207,7 @@ private class PostmarkWebhookHandlerTest {
         RestResponse clickRes = new RestResponse();
         RestContext.request = clickReq;
         RestContext.response = clickRes;
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Log__c afterClick = [
             SELECT Click_Count__c, Last_Modified_At__c
@@ -255,7 +255,7 @@ private class PostmarkWebhookHandlerTest {
         RestResponse openRes = new RestResponse();
         RestContext.request = openReq;
         RestContext.response = openRes;
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         Comm_Recipient__c updatedA = [
             SELECT Status__c, Open_Count__c
@@ -282,8 +282,10 @@ private class PostmarkWebhookHandlerTest {
         RestContext.request = req;
         RestContext.response = res;
 
-        PostmarkWebhookHandler.handleWebhook();
+        SugatiCommPostmarkWebhookHandler.handleWebhook();
 
         System.assertEquals(400, RestContext.response.statusCode);
     }
 }
+
+

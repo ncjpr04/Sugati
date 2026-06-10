@@ -3341,7 +3341,7 @@ public with sharing class SugatiCommunicationHubController {
         );
         try {
             for (Messaging.SingleEmailMessage mail : messages) {
-                PostmarkEmailService.PostmarkEmailRequest payload = new PostmarkEmailService.PostmarkEmailRequest();
+                SugatiCommunicationPostmarkEmailService.PostmarkEmailRequest payload = new SugatiCommunicationPostmarkEmailService.PostmarkEmailRequest();
                 payload.fromAddress = fromAddress;
                 payload.ReplyTo = resolveCommHubReplyTo(request.orgWideEmailAddressId);
                 payload.To = String.join(mail.getToAddresses(), ',');
@@ -3358,10 +3358,10 @@ public with sharing class SugatiCommunicationHubController {
                 if (!postmarkAttachments.isEmpty()) {
                     payload.Attachments = toPostmarkAttachmentPayload(postmarkAttachments);
                 }
-                PostmarkEmailService.PostmarkEmailResponse response = PostmarkEmailService.sendEmail(payload);
+                SugatiCommunicationPostmarkEmailService.PostmarkEmailResponse response = SugatiCommunicationPostmarkEmailService.sendEmail(payload);
                 if (response != null && String.isNotBlank(response.MessageID)) {
                     outcome.postmarkUuid = response.MessageID;
-                    outcome.logMessageId = PostmarkEmailService.resolveOutboundRfcMessageId(response.MessageID);
+                    outcome.logMessageId = SugatiCommunicationPostmarkEmailService.resolveOutboundRfcMessageId(response.MessageID);
                 }
             }
             if (String.isBlank(outcome.logMessageId)) {
@@ -3380,10 +3380,10 @@ public with sharing class SugatiCommunicationHubController {
         }
     }
 
-    private static List<PostmarkEmailService.PostmarkAttachment> toPostmarkAttachmentPayload(
+    private static List<SugatiCommunicationPostmarkEmailService.PostmarkAttachment> toPostmarkAttachmentPayload(
         List<Map<String, Object>> rawAttachments
     ) {
-        List<PostmarkEmailService.PostmarkAttachment> out = new List<PostmarkEmailService.PostmarkAttachment>();
+        List<SugatiCommunicationPostmarkEmailService.PostmarkAttachment> out = new List<SugatiCommunicationPostmarkEmailService.PostmarkAttachment>();
         if (rawAttachments == null || rawAttachments.isEmpty()) {
             return out;
         }
@@ -3391,7 +3391,7 @@ public with sharing class SugatiCommunicationHubController {
             if (row == null) {
                 continue;
             }
-            PostmarkEmailService.PostmarkAttachment att = new PostmarkEmailService.PostmarkAttachment();
+            SugatiCommunicationPostmarkEmailService.PostmarkAttachment att = new SugatiCommunicationPostmarkEmailService.PostmarkAttachment();
             att.Name = row.containsKey('Name') ? String.valueOf(row.get('Name')) : null;
             att.Content = row.containsKey('Content') ? String.valueOf(row.get('Content')) : null;
             att.ContentType = row.containsKey('ContentType') ? String.valueOf(row.get('ContentType')) : null;
