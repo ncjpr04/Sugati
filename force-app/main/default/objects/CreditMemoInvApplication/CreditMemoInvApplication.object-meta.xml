@@ -87,11 +87,5 @@
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <enableFeeds>false</enableFeeds>
     <externalSharingModel>ControlledByParent</externalSharingModel>
-    <searchLayouts>
-        <searchResultsAdditionalFields>Amount</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Type</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>AppliedDate</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>UnappliedDate</searchResultsAdditionalFields>
-    </searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>
 </CustomObject>

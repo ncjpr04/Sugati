@@ -4156,7 +4156,9 @@ public with sharing class SugatiCommunicationHubController {
                 return formatUserFromDisplay(rows[0].DisplayName, rows[0].Address);
             }
         }
-        return formatUserFromDisplay(UserInfo.getName(), UserInfo.getUserEmail());
+        throw new AuraHandledException(
+            'A From address is required. Please select an org-wide email address in the composer.'
+        );
     }
 
     private static String resolvePostmarkFromAddress(Id orgWideEmailAddressId) {
@@ -4171,13 +4173,9 @@ public with sharing class SugatiCommunicationHubController {
                 return formatPostmarkFrom(rows[0].DisplayName, rows[0].Address);
             }
         }
-        String userEmail = UserInfo.getUserEmail();
-        if (String.isBlank(userEmail)) {
-            throw new AuraHandledException(
-                'A From address is required. Select an org-wide email in the composer or ensure your user profile has an email address.'
-            );
-        }
-        return formatPostmarkFrom(UserInfo.getName(), userEmail);
+        throw new AuraHandledException(
+            'A From address is required. Select an org-wide email in the composer.'
+        );
     }
 
     private static String formatPostmarkFrom(String displayName, String email) {

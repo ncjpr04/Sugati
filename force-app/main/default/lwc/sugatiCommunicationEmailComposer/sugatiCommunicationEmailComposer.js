@@ -465,17 +465,10 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
     }
 
     get fromOptions() {
-        const userFallback = {
-            label: this.currentUserEmail
-                ? `${this.currentUserName || 'Me'} <${this.currentUserEmail}>`
-                : 'Current user',
-            value: ''
-        };
-        const orgRows = (this._fromOptions || []).map((row) => ({
+        return (this._fromOptions || []).map((row) => ({
             label: row.label || row.email,
             value: row.value
         }));
-        return [userFallback, ...orgRows];
     }
 
     get fromDisplay() {
@@ -485,34 +478,23 @@ export default class SugatiCommunicationEmailComposer extends LightningElement {
                 return match.label;
             }
         }
-        if (this.currentUserName && this.currentUserEmail) {
-            return `${this.currentUserName} <${this.currentUserEmail}>`;
-        }
-        return this.currentUserName || this.currentUserEmail || 'Current User';
+        return 'Select a From address';
     }
 
     get resolvedFromEmail() {
-        if (this.orgWideEmailAddressId) {
-            const match = (this._fromOptions || []).find((o) => o.value === this.orgWideEmailAddressId);
-            return (match?.email || '').trim();
-        }
-        return (this.currentUserEmail || '').trim();
+        const match = (this._fromOptions || []).find((o) => o.value === this.orgWideEmailAddressId);
+        return (match?.email || '').trim();
     }
 
     ensureFromSelected() {
         if (this._fromUserPicked || this._fromRestoredFromDraft) {
             return;
         }
-        if (!this._fromAddressesLoadComplete || !this._currentUserLoaded) {
+        if (!this._fromAddressesLoadComplete) {
             return;
         }
-        const userEmail = (this.currentUserEmail || '').trim().toLowerCase();
         const options = this._fromOptions || [];
-        const match =
-            options.find((row) => row.isDefault) ||
-            (userEmail
-                ? options.find((row) => (row.email || '').trim().toLowerCase() === userEmail)
-                : null);
+        const match = options.find((row) => row.isDefault);
         this.orgWideEmailAddressId = match?.value || '';
     }
 
